@@ -36,13 +36,11 @@
     "./core/lib": "./dist/lib/index.mjs",
     "./core/preferences": "./dist/preferences/index.mjs",
     "./epub": "./dist/components/Epub/index.mjs",
-    "./epub/unstyled": "./dist/components/Epub/unstyled.mjs",
     "./epub/styles": "./dist/components/Epub/index.css",
     "./misc": "./dist/components/Misc/index.mjs",
     "./misc/styles": "./dist/components/Misc/index.css",
     "./next": "./dist/next-lib/index.mjs",
     "./webpub": "./dist/components/WebPub/index.mjs",
-    "./webpub/unstyled": "./dist/components/WebPub/unstyled.mjs",
     "./webpub/styles": "./dist/components/WebPub/index.css"
   },
   "scripts": {
