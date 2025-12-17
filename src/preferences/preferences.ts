@@ -297,6 +297,9 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       // keys never includes "auto"
       keys: Record<Exclude<ThemeKey<K>, "auto"> & string, ThemeTokens>;
     };
+    classNames?: {
+      dockedPanel?: string;
+    };
   };
   affordances: {
     scroll: {

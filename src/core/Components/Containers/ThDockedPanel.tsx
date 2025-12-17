@@ -7,6 +7,8 @@ import { ThContainerProps } from "./ThContainer";
 
 import { FocusScope, useObjectRef } from "react-aria";
 import { useFirstFocusable } from "./hooks/useFirstFocusable";
+import { usePreferences } from "@/preferences";
+import classNames from "classnames";
 
 export interface ThDockedPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "children">, ThContainerProps {
   isOpen: boolean;
@@ -19,9 +21,11 @@ export const ThDockedPanel = ({
   portal,
   focusOptions,
   children, 
+  className,
   ...props 
 }: ThDockedPanelProps) => {
   const resolvedRef = useObjectRef(ref as React.RefObject<HTMLDivElement | null>);
+  const { preferences } = usePreferences();
 
   const updatedFocusOptions = focusOptions ? {
     ...focusOptions,
@@ -40,6 +44,7 @@ export const ThDockedPanel = ({
       >
         <div
           ref={ resolvedRef } 
+          className={ classNames(className, className, preferences.theming.classNames?.dockedPanel) }
           { ...props }
         >
           { children }
