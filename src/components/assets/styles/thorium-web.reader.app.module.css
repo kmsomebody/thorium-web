@@ -35,7 +35,7 @@
   box-sizing: border-box;
   gap: 2px;
   touch-action: manipulation;
-  background-color: var(--theme-background);
+  background-color: var(--th-theme-background);
 }
 
 .bottomBar {
@@ -54,18 +54,18 @@
   height: 100vh;
   height: 100dvh;
   max-height: 100%;
-  background-color: var(--theme-background);
+  background-color: var(--th-theme-background);
 }
 
 :global(.thorium_web_stackedUI) .topBar,
 :global(.thorium_web_stackedUI) .bottomBar {
-  flex: 0 0 calc(var(--icon-size, 24px) * 2.5);
-  height: calc(var(--icon-size, 24px) * 2.5);
+  flex: 0 0 calc(var(--th-icon-size, 24px) * 2.5);
+  height: calc(var(--th-icon-size, 24px) * 2.5);
 }
 
 :global(.thorium_web_stackedUI.thorium_web_isImmersive:not(.thorium_web_isHovering)) .topBar,
 :global(.thorium_web_stackedUI.thorium_web_isImmersive:not(.thorium_web_isHovering)) .bottomBar {
-  opacity: var(--theme-immerse);
+  opacity: var(--th-theme-immerse);
 }
 
 /* Layered UI */
@@ -79,7 +79,7 @@
   height: 100vh;
   height: 100dvh;
   max-height: 100%;
-  background-color: var(--theme-background);
+  background-color: var(--th-theme-background);
 }
 
 :global(.thorium_web_layeredUI) .topBar,
@@ -87,9 +87,9 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: calc(var(--icon-size, 24px) * 2.5);
+  height: calc(var(--th-icon-size, 24px) * 2.5);
   z-index: 2;
-  box-shadow: var(--theme-elevate);
+  box-shadow: var(--th-theme-elevate);
   overflow: hidden;
   transition-property: transform, box-shadow;
   transition-duration: 200ms;
@@ -106,13 +106,13 @@
 }
 
 :global(.thorium_web_layeredUI.thorium_web_isImmersive:not(.thorium_web_isHovering)) .topBar {
-  transform: translateY(calc(var(--icon-size, 24px) * -2.5));
+  transform: translateY(calc(var(--th-icon-size, 24px) * -2.5));
   box-shadow: none;
   overflow: unset;
 }
 
 :global(.thorium_web_layeredUI.thorium_web_isImmersive:not(.thorium_web_isHovering)) .bottomBar {
-  transform: translateY(calc(var(--icon-size, 24px) * 2.5));
+  transform: translateY(calc(var(--th-icon-size, 24px) * 2.5));
   box-shadow: none;
 }
 
@@ -120,7 +120,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: calc(var(--icon-size, 24px) * 2.5);
+  height: calc(var(--th-icon-size, 24px) * 2.5);
   pointer-events: auto;
   opacity: 0;
   z-index: 1000;
@@ -130,7 +130,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: calc(var(--icon-size, 24px) * 2.5);
+  height: calc(var(--th-icon-size, 24px) * 2.5);
   pointer-events: auto;
   opacity: 0;
   z-index: 1000;
@@ -141,7 +141,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: calc(var(--icon-size, 24px) * 2.5);
+  height: calc(var(--th-icon-size, 24px) * 2.5);
   pointer-events: auto;
   opacity: 0;
   z-index: 1000;

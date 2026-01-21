@@ -1,7 +1,7 @@
 .wrapper {}
 
 .group {
-  margin: calc(var(--layout-spacing) * 2) 0; 
+  margin: calc(var(--th-layout-spacing) * 2) 0; 
 }
 
 .advancedGroup {
@@ -22,14 +22,14 @@
 }
 
 .groupLabel {
-  padding-top: calc(var(--icon-size, 24px) * (1/3));
+  padding-top: calc(var(--th-icon-size, 24px) * (1/3));
 }
 
 .radioWrapper,
 .groupWrapper {
-  margin: var(--layout-spacing) 0;
+  margin: var(--th-layout-spacing) 0;
   text-align: center;
-  border-radius: var(--layout-radius);
+  border-radius: var(--th-layout-radius);
 }
 
 .numberField .groupWrapper {
@@ -39,14 +39,14 @@
 .radioWrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 100px), 1fr));
-  gap: calc(var(--layout-spacing) / 4);
+  gap: calc(var(--th-layout-spacing) / 4);
   width: 100%; 
 }
 
 .groupWrapper {
   display: flex;
   width: fit-content;
-  gap: var(--layout-spacing) calc(var(--layout-spacing) / 2);
+  gap: var(--th-layout-spacing) calc(var(--th-layout-spacing) / 2);
 }
 
 .advancedGroup .radioWrapper {
@@ -54,7 +54,7 @@
 }
 
 .groupWrapper[data-focus-within]:has(input[data-focus-visible]) {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .numberFieldWrapper,
@@ -86,20 +86,20 @@
 /* Number field */
 
 .numberField .input {
-  background-color: var(--theme-background);
-  color: var(--theme-text);
+  background-color: var(--th-theme-background);
+  color: var(--th-theme-text);
   font-weight: bold;
   align-self: center;
   max-width: 20ch;
 }
 
 .groupWrapper[data-disabled] .input {
-  color: var(--theme-disable)
+  color: var(--th-theme-disable)
 }
 
 .radio {
-  padding: calc(var(--layout-spacing) / 2);
-  border-radius: var(--layout-radius);
+  padding: calc(var(--th-layout-spacing) / 2);
+  border-radius: var(--th-layout-radius);
   box-sizing: border-box;
   border: 2px solid transparent;
 }
@@ -108,7 +108,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: calc(var(--layout-spacing) / 2);
+  gap: calc(var(--th-layout-spacing) / 2);
   min-width: 0;
   width: 100%;
 }
@@ -134,24 +134,24 @@
 }
 
 .radio:not(.themeRadio)[data-selected] {
-  border: 2px solid var(--theme-subdue);
+  border: 2px solid var(--th-theme-subdue);
 }
 
 .radio[data-disabled] {
-  color: var(--theme-disable);
+  color: var(--th-theme-disable);
 }
 
 .radio[data-hovered] {
-  background-color: var(--theme-hover);
+  background-color: var(--th-theme-hover);
 }
 
 .radio[data-focus-visible] {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .radio svg {
-  width: var(--icon-size, 32px);
-  height: var(--icon-size, 32px);
+  width: var(--th-icon-size, 32px);
+  height: var(--th-icon-size, 32px);
   /* So that it’s the same color as text based on state */
   fill: currentColor;
 }
@@ -161,12 +161,12 @@
   grid-template-columns: repeat(2, 1fr);
   grid-auto-flow: row;
   max-width: 100%;
-  gap: calc(var(--layout-spacing) / 2);
+  gap: calc(var(--th-layout-spacing) / 2);
 }
 
 .themeRadio {
-  padding-block: calc(var(--layout-spacing) / 4);
-  padding-inline: calc((var(--icon-size, 24px) * 5/6) + (var(--layout-spacing) / 4));
+  padding-block: calc(var(--th-layout-spacing) / 4);
+  padding-inline: calc((var(--th-icon-size, 24px) * 5/6) + (var(--th-layout-spacing) / 4));
   position: relative;
   white-space: nowrap;
   overflow: hidden;
@@ -174,8 +174,8 @@
 }
 
 .themeRadio svg {
-  width: calc(var(--icon-size, 24px) * 5/6);
-  height: calc(var(--icon-size, 24px) * 5/6);
+  width: calc(var(--th-icon-size, 24px) * 5/6);
+  height: calc(var(--th-icon-size, 24px) * 5/6);
   position: absolute;
   inset-inline-end: 5px;
   inset-block-end: 5px;
@@ -185,7 +185,7 @@
 
 .separator {
   border: none;
-  border-top: 1px solid var(--theme-subdue);
+  border-top: 1px solid var(--th-theme-subdue);
 }
 
 /* Slider */
@@ -195,10 +195,10 @@
   grid-template-areas: "label output"
                        "track track";
   grid-template-columns: 1fr auto;
-  gap: calc(var(--layout-spacing) / 2);
-  color: var(--theme-text);
+  gap: calc(var(--th-layout-spacing) / 2);
+  color: var(--th-theme-text);
   flex-direction: column;
-  max-width: min(calc(100% - (var(--layout-spacing) / 2)), 80%);
+  max-width: min(calc(100% - (var(--th-layout-spacing) / 2)), 80%);
 }
 
 .sliderLabel {
@@ -215,7 +215,7 @@
 
 .slider[data-disabled] .sliderLabel,
 .slider[data-disabled] .sliderOutput {
-  color: var(--theme-disable);
+  color: var(--th-theme-disable);
 }
 
 .sliderTrack {
@@ -224,14 +224,14 @@
   height: 30px;
   width: auto;
   box-sizing: border-box;
-  margin-inline: calc(var(--layout-spacing) / 2);
+  margin-inline: calc(var(--th-layout-spacing) / 2);
 }
 
 .sliderTrack::before {
   content: "";
   display: block;
   position: absolute;
-  background: var(--theme-subdue);
+  background: var(--th-theme-subdue);
   height: 3px;
   width: 100%;
   top: 50%;
@@ -242,27 +242,27 @@
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 50%;
-  background: var(--theme-text);
-  border: 2px solid var(--theme-subdue);
+  background: var(--th-theme-text);
+  border: 2px solid var(--th-theme-subdue);
   top: 50%;
 }
 
 .slider[data-disabled] .sliderThumb {
-  background: var(--theme-disable);
-  border: 2px solid var(--theme-disable);
+  background: var(--th-theme-disable);
+  border: 2px solid var(--th-theme-disable);
 }
 
 .sliderThumb[data-dragging] {
-  background: var(--theme-subdue);
+  background: var(--th-theme-subdue);
 }
 
 .sliderThumb[data-focus-visible] {
-  outline: 2px solid var(--theme-focus);
-  border: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
+  border: 2px solid var(--th-theme-focus);
 }
 
 .sliderPlaceholder {
-  color: var(--theme-subdue);  
+  color: var(--th-theme-subdue);  
 }
 
 /* Slider with ticks */
@@ -272,17 +272,17 @@
     /* Track line */
     linear-gradient(
       to right,
-      var(--theme-subdue) 0%,
-      var(--theme-subdue) 100%
+      var(--th-theme-subdue) 0%,
+      var(--th-theme-subdue) 100%
     ) 0 50% / 100% 3px no-repeat,
 
     /* Ticks */
     repeating-linear-gradient(
       to right,
-      var(--theme-text) 0%,
-      var(--theme-text) 1px,
+      var(--th-theme-text) 0%,
+      var(--th-theme-text) 1px,
       transparent 1px,
-      transparent calc((100% - 2px) / var(--slider-ticks, 10))
+      transparent calc((100% - 2px) / var(--th-slider-ticks, 10))
     ) 0 50% / 100% 15px no-repeat;
   height: 15px;
   transform: translateY(-50%);
@@ -297,8 +297,8 @@
     /* First tick */
     linear-gradient(
       to right,
-      var(--theme-subdue) 0%,
-      var(--theme-subdue) 3px,
+      var(--th-theme-subdue) 0%,
+      var(--th-theme-subdue) 3px,
       transparent 3px,
       transparent 100%
     ) 0 50% / 100% 20px no-repeat,
@@ -306,8 +306,8 @@
     /* Last tick */
     linear-gradient(
       to left,
-      var(--theme-subdue) 0%,
-      var(--theme-subdue) 3px,
+      var(--th-theme-subdue) 0%,
+      var(--th-theme-subdue) 3px,
       transparent 3px,
       transparent 100%
     ) 100% 50% / 100% 20px no-repeat;
@@ -323,40 +323,40 @@
 /* Dropdown */
 
 .dropdown[data-disabled] {
-  color: var(--theme-disable);
+  color: var(--th-theme-disable);
 }
 
 .dropdownButton {
-  margin-top: var(--layout-spacing);
+  margin-top: var(--th-layout-spacing);
   position: relative;
-  padding-block: calc(var(--layout-spacing) / 2);
-  padding-inline: calc(var(--layout-spacing) / 2) calc(var(--icon-size, 24px) * 6/5);
-  border-radius: var(--layout-radius);
+  padding-block: calc(var(--th-layout-spacing) / 2);
+  padding-inline: calc(var(--th-layout-spacing) / 2) calc(var(--th-icon-size, 24px) * 6/5);
+  border-radius: var(--th-layout-radius);
   box-sizing: border-box;
-  border: 1px solid var(--theme-subdue);
+  border: 1px solid var(--th-theme-subdue);
   max-width: 100%;
 }
 
 .dropdownButton[data-focus-visible] {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .dropdownButton svg {
-  width: calc(var(--icon-size, 24px) * 5/6);
-  height: calc(var(--icon-size, 24px) * 5/6);
+  width: calc(var(--th-icon-size, 24px) * 5/6);
+  height: calc(var(--th-icon-size, 24px) * 5/6);
   position: absolute;
-  inset-inline-end: calc(var(--layout-spacing) / 4);
-  inset-block-start: calc(var(--layout-spacing) / 2);
+  inset-inline-end: calc(var(--th-layout-spacing) / 4);
+  inset-block-start: calc(var(--th-layout-spacing) / 2);
   fill: currentColor;
 }
 
 .dropdownPopover {
-  background-color: var(--theme-background);
-  color: var(--theme-text);
-  padding: calc(var(--layout-spacing) / 2);
-  border-radius: var(--layout-radius);
-  border: 1px solid var(--theme-subdue);
-  filter: drop-shadow(var(--theme-elevate));
+  background-color: var(--th-theme-background);
+  color: var(--th-theme-text);
+  padding: calc(var(--th-layout-spacing) / 2);
+  border-radius: var(--th-layout-radius);
+  border: 1px solid var(--th-theme-subdue);
+  filter: drop-shadow(var(--th-theme-elevate));
   box-sizing: border-box;
   width: max-content;
   /* TMP: Needs to be higher than bottom sheet, which requires hack for Safari iOS */
@@ -366,23 +366,23 @@
 .dropdownListbox {
   display: flex;
   flex-direction: column;
-  gap: calc(var(--layout-spacing) / 2);
+  gap: calc(var(--th-layout-spacing) / 2);
 }
 
 .dropdownListboxItem {
-  padding: calc(var(--layout-spacing) / 4);
+  padding: calc(var(--th-layout-spacing) / 4);
 }
 
 .dropdownListboxItem[data-selected] {
-  color: var(--theme-subdue);
+  color: var(--th-theme-subdue);
 }
 
 .dropdownListboxItem[data-focus-visible] {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .dropdownListboxItem[data-disabled] {
-  color: var(--theme-disable);
+  color: var(--th-theme-disable);
 }
 
 /* Switch */
@@ -390,16 +390,16 @@
 .switch {
   display: flex;
   align-items: center;
-  gap: clamp(10px, calc(var(--layout-spacing) / 2), 20px);
-  color: var(--theme-text);
-  margin: var(--layout-spacing) 0;
+  gap: clamp(10px, calc(var(--th-layout-spacing) / 2), 20px);
+  color: var(--th-theme-text);
+  margin: var(--th-layout-spacing) 0;
 }
 
 .switchIndicator {
   width: 2rem;
   height: 1.143rem;
-  border: 2px solid var(--theme-subdue);
-  background: var(--theme-background);
+  border: 2px solid var(--th-theme-subdue);
+  background: var(--th-theme-background);
   border-radius: 1.143rem;
   transition: all 200ms;
   flex-shrink: 0;
@@ -411,29 +411,29 @@
   margin: 0.143rem;
   width: 0.857rem;
   height: 0.857rem;
-  background: var(--theme-subdue);
+  background: var(--th-theme-subdue);
   border-radius: 16px;
   transition: all 200ms;
 }
 
 .switch[data-selected] .switchIndicator::before {
-  background: var(--theme-text);
+  background: var(--th-theme-text);
   transform: translateX(100%);
 }
 
 :dir(rtl) .switch[data-selected] .switchIndicator::before {
-  background: var(--theme-text);
+  background: var(--th-theme-text);
   transform: translateX(-100%);
 }
 
 .switch[data-focus-visible] .switchIndicator {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .switch[data-disabled] {
-  color: var(--theme-disable);
+  color: var(--th-theme-disable);
 }
 
 .switch[data-disabled] .switchIndicator::before {
-  background: var(--theme-disable) !important;
+  background: var(--th-theme-disable) !important;
 }

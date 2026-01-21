@@ -1,8 +1,8 @@
 .wrapper {
-  --color-text: #333;
-  --color-text-secondary: #666;
-  --color-background: #fff;
-  --color-primary: #e0e0e0;
+  --th-color-text: #333;
+  --th-color-text-secondary: #666;
+  --th-color-background: #fff;
+  --th-color-primary: #e0e0e0;
 
   padding: 1rem;
   width: 100%;
@@ -12,7 +12,7 @@
   display: flex;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--th-color-primary);
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -48,18 +48,18 @@
   margin: 0 0 0.5rem;
   font-weight: 600;
   font-size: 1.25rem;
-  color: var(--color-text);
+  color: var(--th-color-text);
 }
 
 .author {
   margin: 0 0 0.75rem;
-  color: var(--color-text-secondary);
+  color: var(--th-color-text-secondary);
   font-size: 1rem;
 }
 
 .rendition {
-  background: var(--color-primary);
-  color: var(--color-text);
+  background: var(--th-color-primary);
+  color: var(--th-color-text);
   padding: 0.25rem 0.75rem;
   margin: 0;
   border-radius: 20px;

@@ -1,9 +1,9 @@
 .dockerWrapper {
   margin-inline-start: auto;
-  margin-inline-end: calc(var(--icon-size, 24px) * (1 / 4) * -1); /* Optical alingment */
+  margin-inline-end: calc(var(--th-icon-size, 24px) * (1 / 4) * -1); /* Optical alingment */
   display: flex;
   gap: 2px;
-  padding-inline-start: var(--layout-spacing);
+  padding-inline-start: var(--th-layout-spacing);
 }
 
 .docker {
@@ -17,7 +17,7 @@
 }
 
 .resizeHandle:focus-visible {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .resizeHandleGrab {
@@ -28,7 +28,7 @@
   width: 5px;
   height: 50px;
   border-radius: 5px;
-  background-color: var(--theme-subdue);
+  background-color: var(--th-theme-subdue);
 }
 
 .resizeHandleGrabLeft {

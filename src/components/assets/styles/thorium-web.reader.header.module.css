@@ -14,7 +14,7 @@
 
 .header h1 {
   font-size: 1rem;
-  color: var(--theme-text);
+  color: var(--th-theme-text);
   font-weight: normal;
   grid-area: header-center;
   justify-self: center;

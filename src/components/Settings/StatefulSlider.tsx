@@ -31,7 +31,7 @@ export const StatefulSlider = ({
   
   const style = {
     ...(displayTicks && props.range && props.step ? {
-      "--slider-ticks": (() => {
+      "--th-slider-ticks": (() => {
         const [min, max] = [Math.min(...props.range), Math.max(...props.range)];
         const step = props.step || 1;
         const range = max - min;

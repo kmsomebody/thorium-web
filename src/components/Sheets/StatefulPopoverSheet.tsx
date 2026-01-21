@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import { StatefulSheet } from "./models/sheets";
 import { ThSheetHeaderVariant } from "@/preferences/models/enums";
@@ -22,6 +22,7 @@ import { useWebkitPatch } from "./hooks/useWebkitPatch";
 import { useAppSelector } from "@/lib/hooks";
 
 import classNames from "classnames";
+import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface StatefulPopoverSheetProps extends StatefulSheet {
   placement?: PopoverProps["placement"];
@@ -52,6 +53,16 @@ export const StatefulPopoverSheet = ({
   const popoverBodyRef = useRef<HTMLDivElement | null>(null);
   const popoverCloseRef = useRef<HTMLButtonElement | null>(null);
 
+  // Update the CSS variable when the popover is open and header ref is available
+  useEffect(() => {
+    if (isOpen && popoverRef.current && popoverHeaderRef.current) {
+      popoverRef.current.style.setProperty(
+        `--${ prefixString("sheet-sticky-header") }`,
+        `${ popoverHeaderRef.current.clientHeight }px`
+      );
+    }
+  }, [isOpen]);
+
   // Warning: This is a temporary fix for a bug in React Aria Components.
   useWebkitPatch(!!isOpen);
 
@@ -80,9 +91,6 @@ export const StatefulPopoverSheet = ({
         isOpen={ isOpen }
         onOpenChange={ onOpenChange } 
         isKeyboardDismissDisabled={ dismissEscapeKeyClose }
-        style={{
-          "--sheet-sticky-header": popoverHeaderRef.current ? `${ popoverHeaderRef.current.clientHeight }px` : undefined
-        }}
         compounds={{
           dialog: {
             className: sheetStyles.dialog

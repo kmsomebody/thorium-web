@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 
 import { StatefulSheet } from "./models/sheets";
 import { ThDockingKeys, ThSheetHeaderVariant, ThLayoutDirection } from "@/preferences/models/enums";
@@ -19,6 +19,7 @@ import { useI18n } from "@/i18n";
 import { useAppSelector } from "@/lib/hooks";
 
 import classNames from "classnames";
+import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface StatefulDockedSheetProps extends StatefulSheet {
   flow: ThDockingKeys.start | ThDockingKeys.end | null;
@@ -41,11 +42,22 @@ export const StatefulDockedSheet = ({
   }: StatefulDockedSheetProps) => {
   const { t } = useI18n()
   const dockPortal = flow && document.getElementById(flow);
+  const dockedSheetRef = useRef<HTMLDivElement | null>(null);
   const dockedSheetHeaderRef = useRef<HTMLDivElement | null>(null);
   const dockedSheetBodyRef = useRef<HTMLDivElement | null>(null);
   const dockedSheetCloseRef = useRef<HTMLButtonElement | null>(null);
 
   const direction = useAppSelector(state => state.reader.direction);
+
+  // Update the CSS variable when the sheet is open and header ref is available
+  useEffect(() => {
+    if (isOpen && dockedSheetRef.current && dockedSheetHeaderRef.current) {
+      dockedSheetRef.current.style.setProperty(
+        `--${ prefixString("sheet-sticky-header") }`,
+        `${ dockedSheetHeaderRef.current.clientHeight }px`
+      );
+    }
+  }, [isOpen]);
 
   const classFromFlow = useCallback(() => {
     if (flow === ThDockingKeys.start) {
@@ -59,6 +71,7 @@ export const StatefulDockedSheet = ({
     return(
       <>
       <ThDockedPanel
+        ref={ dockedSheetRef }
         isOpen={ isOpen }
         portal={ dockPortal }
         focusOptions={{
@@ -77,9 +90,6 @@ export const StatefulDockedSheet = ({
           updateState: resetFocus
         }}
         className={ classNames(sheetStyles.docked, className, classFromFlow()) }
-        style={{
-          "--sheet-sticky-header": dockedSheetHeaderRef.current ? `${ dockedSheetHeaderRef.current.clientHeight }px` : undefined
-        }}
       >
         <ThContainerHeader 
           ref={ dockedSheetHeaderRef }

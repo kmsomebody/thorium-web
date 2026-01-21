@@ -1,24 +1,24 @@
 :global(.thorium_web_layeredUI.thorium_web_isImmersive:not(.thorium_web_isHovering)) .hint {
-  transform: translateY(calc(var(--icon-size, 24px) * 2.5));
+  transform: translateY(calc(var(--th-icon-size, 24px) * 2.5));
   transition-property: transform;
   transition-duration: 200ms; 
   transition-timing-function: ease-in-out;
 }
 
 :global(.thorium_web_layeredUI.thorium_web_isReflow.thorium_web_isScroll.thorium_web_isImmersive:not(.thorium_web_isHovering)) .hint {
-  outline: 1px solid var(--theme-subdue);
-  background-color: var(--theme-background);
+  outline: 1px solid var(--th-theme-subdue);
+  background-color: var(--th-theme-background);
 }
 
 .popover {
-  background-color: var(--theme-background);
-  color: var(--theme-text);
-  padding: calc(var(--layout-spacing) / 2);
-  border-radius: var(--layout-radius);
-  border: 1px solid var(--theme-subdue);
-  filter: drop-shadow(var(--theme-elevate));
+  background-color: var(--th-theme-background);
+  color: var(--th-theme-text);
+  padding: calc(var(--th-layout-spacing) / 2);
+  border-radius: var(--th-layout-radius);
+  border: 1px solid var(--th-theme-subdue);
+  filter: drop-shadow(var(--th-theme-elevate));
   box-sizing: border-box;
-  max-width: var(--constraints-popover, 500px);
+  max-width: var(--th-layout-constraints-popover, 500px);
   width: max-content;
 }
 
@@ -29,27 +29,27 @@
 .menuItem {
   display: flex;
   align-items: center;
-  gap: calc(var(--layout-spacing) / 2);
-  padding: calc(var(--layout-spacing) / 2);
-  border-radius: var(--layout-radius);
+  gap: calc(var(--th-layout-spacing) / 2);
+  padding: calc(var(--th-layout-spacing) / 2);
+  border-radius: var(--th-layout-radius);
   outline: none;
 }
 
 .menuItem[data-hovered] {
-  background-color: var(--theme-hover);
+  background-color: var(--th-theme-hover);
 }
 
 .menuItem[data-focus-visible] {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .menuItem[data-disabled] {
-  color: var(--theme-disable);
+  color: var(--th-theme-disable);
 }
 
 .menuItem > svg {
-  width: calc(var(--icon-size, 24px) / 1.5);
-  height: calc(var(--icon-size, 24px) / 1.5);
+  width: calc(var(--th-icon-size, 24px) / 1.5);
+  height: calc(var(--th-icon-size, 24px) / 1.5);
   fill: currentColor;
 }
 
@@ -60,9 +60,9 @@
 .menuItemShortcut {
   font-family: monospace;
   font-weight: bold;
-  color: var(--theme-subdue);
+  color: var(--th-theme-subdue);
   padding: 5px;
   margin-inline-start: auto;
-  border-radius: var(--layout-radius);
-  border: 1px solid var(--theme-subdue);
+  border-radius: var(--th-layout-radius);
+  border: 1px solid var(--th-theme-subdue);
 }

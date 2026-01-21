@@ -115,16 +115,21 @@ import { propsToCSSVars } from "@edrlab/thorium-web/core/helpers";
 
 ### `propsToCSSVars`
 
-Converts object properties to CSS custom properties recursively.
+Converts object properties to CSS custom properties recursively, with options for prefixing and property exclusion.
 
 ```typescript
 function propsToCSSVars(
   props: { [x: string]: any },
-  prefix?: string
+  options?: {
+    prefix?: string;
+    exclude?: string[];
+  } | string
 ): { [key: string]: any }
 ```
 
-**Example:**
+**Examples:**
+
+Basic usage with prefix:
 ```typescript
 const props = {
   color: "blue",
@@ -134,13 +139,29 @@ const props = {
   }
 };
 
-const cssVars = propsToCSSVars(props, "theme");
+const cssVars = propsToCSSVars(props, { prefix: "theme" });
 // Result:
 // {
 //   "--theme-color": "blue",
-//   "--spacing-padding": "16px",
-//   "--spacing-margin": "8px"
+//   "--theme-spacing-padding": "16px",
+//   "--theme-spacing-margin": "8px"
 // }
 ```
-> [!Note]
-> The prefix will not be applied to children in the object you pass.
+
+With exclude option:
+```typescript
+const cssVars = propsToCSSVars({
+  color: "red",
+  size: 14,
+  spacing: { top: 8, bottom: 16 }
+}, { 
+  prefix: "app",
+  exclude: ["size"]
+});
+// Result:
+// {
+//   "--app-color": "red",
+//   "--app-spacing-top": "8px",
+//   "--app-spacing-bottom": "16px"
+// }
+```

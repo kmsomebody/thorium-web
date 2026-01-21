@@ -76,33 +76,33 @@ For components themselves, you can use the `data` attribute referenced in [React
 
 #### Theming:
 
-- `--theme-background`: The background color of the current theme
-- `--theme-text`: The text color of the current theme
-- `--theme-link`: The link color of the current theme
-- `--theme-visited`: The visited link color of the current theme
-- `--theme-subdue`: The subdue color of the current theme
-- `--theme-disable`: The disable color of the current theme
-- `--theme-hover`: The hover color of the current theme
-- `--theme-onHover`: The on-hover color for text/icons of the current theme
-- `--theme-select`: The select background color of the current theme
-- `--theme-onSelect`: The on-select text color of the current theme
-- `--theme-focus`: The focus outline color of the current theme
-- `--theme-elevate`: The drop shadow color of the current theme
-- `--theme-immerse`: The immersive mode opacity of the current theme
+- `--th-theme-background`: The background color of the current theme
+- `--th-theme-text`: The text color of the current theme
+- `--th-theme-link`: The link color of the current theme
+- `--th-theme-visited`: The visited link color of the current theme
+- `--th-theme-subdue`: The subdue color of the current theme
+- `--th-theme-disable`: The disable color of the current theme
+- `--th-theme-hover`: The hover color of the current theme
+- `--th-theme-onHover`: The on-hover color for text/icons of the current theme
+- `--th-theme-select`: The select background color of the current theme
+- `--th-theme-onSelect`: The on-select text color of the current theme
+- `--th-theme-focus`: The focus outline color of the current theme
+- `--th-theme-elevate`: The drop shadow color of the current theme
+- `--th-theme-immerse`: The immersive mode opacity of the current theme
 
 #### Layout:
 
-- `--layout-spacing`: The spacing base for margins/paddings of the reader derived from preferences
-- `--layout-radius`: The border-radius of icons, containers, etc. of the reader derived from preferences
-- `--icon-size`: The size of icons in the reader derived from preferences
-- `--arrow-size`: The size of navigation arrows derived from preferences
-- `--arrow-offset`: The offset of navigation arrows derived from preferences
+- `--th-layout-spacing`: The spacing base for margins/paddings of the reader derived from preferences
+- `--th-layout-radius`: The border-radius of icons, containers, etc. of the reader derived from preferences
+- `--th-icon-size`: The size of icons in the reader derived from preferences
+- `--th-arrow-size`: The size of navigation arrows derived from preferences
+- `--th-arrow-offset`: The offset of navigation arrows derived from preferences
 - `--visual-viewport-height`: The height of the visual viewport of the reader (provided by React Aria)
 
 #### Sheets:
 
-- `--sheet-sticky-header`: The height of the sticky header of sheets
-- `--constraints-popover`: The max-width of popover sheets derived from preferences
-- `--constraints-bottomSheet`: The max-width of draggable bottom sheets derived from preferences
-- `--constraints-pagination`: The max-width for pagination components derived from preferences
-- `--defaults-scrim`: The default scrim/underlay background-color of sheets derived from preferences
+- `--th-sheet-sticky-header`: The height of the sticky header of sheets
+- `--th-layout-constraints-popover`: The max-width of popover sheets derived from preferences
+- `--th-layout-constraints-bottomSheet`: The max-width of draggable bottom sheets derived from preferences
+- `--th-layout-constraints-pagination`: The max-width for pagination components derived from preferences
+- `--th-layout-defaults-scrim`: The default scrim/underlay background-color of sheets derived from preferences

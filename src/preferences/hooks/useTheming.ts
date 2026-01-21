@@ -14,6 +14,7 @@ import { useForcedColors } from "@/core/Hooks/useForcedColors";
 import { useMonochrome } from "@/core/Hooks/useMonochrome";
 
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
+import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface ThemeTokens {
   background: CSSColor;
@@ -120,7 +121,7 @@ export const useTheming = <T extends string>({
       return;
     }
   
-    const props = propsToCSSVars(themeTokens, "theme");
+    const props = propsToCSSVars(themeTokens, { prefix: prefixString("theme") });
       
     for (let p in props) {
       document.documentElement.style.setProperty(p, props[p])

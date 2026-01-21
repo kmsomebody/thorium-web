@@ -23,6 +23,7 @@ import { useI18n } from "@/i18n";
 import { useAppSelector } from "@/lib/hooks";
 
 import classNames from "classnames";
+import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface StatefulBottomSheetProps extends StatefulSheet {};
 
@@ -316,7 +317,7 @@ export const StatefulBottomSheet = ({
           },
           backdrop: {
             className: classNames(sheetStyles.draggableBackdrop, scrimClassName),
-            style: { "--defaults-scrim": scrimPref.override }
+            style: { [`--${ prefixString("layout-defaults-scrim") }`]: scrimPref.override }
           }
         } }
       >

@@ -148,12 +148,12 @@ const bestFormat = getBestMatchingProgressionFormat(
 
 ## Props to CSS Variables
 
-Convert React/JS props to CSS custom properties.
+Convert React/JS props to CSS custom properties with options for prefixing and excluding specific properties.
 
 ```typescript
 import { propsToCSSVars } from "@edrlab/thorium-web/core/helpers";
 
-// Convert props to CSS variables
+// Basic usage with prefix
 const cssVars = propsToCSSVars({
   color: "red",
   size: "16px",
@@ -161,12 +161,31 @@ const cssVars = propsToCSSVars({
     top: "10px",
     bottom: "20px"
   }
-}, "th");
+}, { prefix: "th" });
 
 // Returns: {
 //   "--th-color": "red",
 //   "--th-size": "16px",
 //   "--th-spacing-top": "10px",
 //   "--th-spacing-bottom": "20px"
+// }
+
+// With exclude option
+const withExclude = propsToCSSVars({
+  color: "blue",
+  size: "18px",
+  spacing: {
+    top: "12px",
+    bottom: "24px"
+  }
+}, { 
+  prefix: "app",
+  exclude: ["size"] // Exclude the "size" property
+});
+
+// Returns: {
+//   "--app-color": "blue",
+//   "--app-spacing-top": "12px",
+//   "--app-spacing-bottom": "24px"
 // }
 ```

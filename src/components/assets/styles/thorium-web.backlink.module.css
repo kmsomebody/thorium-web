@@ -1,15 +1,15 @@
 .link {
   display: block;
   box-sizing: content-box;
-  padding: calc(var(--icon-size, 24px) * (1/4));
+  padding: calc(var(--th-icon-size, 24px) * (1/4));
   text-align: start;
-  border-radius: var(--layout-radius);
+  border-radius: var(--th-layout-radius);
   max-width: 100%;
-  height: var(--icon-size, 24px);
+  height: var(--th-icon-size, 24px);
 }
 
 .link svg {
-  fill: var(--theme-text);
+  fill: var(--th-theme-text);
   max-width: 100%;
   height: 100%;
 }
@@ -20,17 +20,17 @@
 }
 
 .link[data-hovered] {
-  background-color: var(--theme-hover);
+  background-color: var(--th-theme-hover);
 }
 
 .link[data-focus-visible] {
-  outline: 2px solid var(--theme-focus);
+  outline: 2px solid var(--th-theme-focus);
 }
 
 .link[data-disabled] {
-  color: var(--theme-disable)
+  color: var(--th-theme-disable)
 }
 
 .link[data-disabled] svg {
-  fill: var(--theme-disable);
+  fill: var(--th-theme-disable);
 }

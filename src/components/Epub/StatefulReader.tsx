@@ -114,6 +114,7 @@ import { getPlatformModifier } from "@/core/Helpers/keyboardUtilities";
 import { deserializePositions } from "@/helpers/deserializePositions";
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
+import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface ReadiumCSSSettings {
   columnCount: string;
@@ -242,9 +243,12 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
     systemKeys: preferences.theming.themes.systemThemes,
     breakpointsMap: preferences.theming.breakpoints,
     initProps: {
-      ...propsToCSSVars(preferences.theming.arrow, "arrow"), 
-      ...propsToCSSVars(preferences.theming.icon, "icon"),
-      ...propsToCSSVars(preferences.theming.layout, "layout")
+      ...propsToCSSVars(preferences.theming.arrow, { prefix: prefixString("arrow") }), 
+      ...propsToCSSVars(preferences.theming.icon, { prefix: prefixString("icon") }),
+      ...propsToCSSVars(preferences.theming.layout, { 
+        prefix: prefixString("layout"),
+        exclude: ["ui"]
+      })
     },
     onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
     onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),

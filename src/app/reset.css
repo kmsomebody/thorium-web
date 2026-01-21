@@ -27,6 +27,6 @@ input {
 }
 
 ::selection {
-  background-color: var(--theme-select);
-  color: var(--theme-onSelect);
+  background-color: var(--th-theme-select);
+  color: var(--th-theme-onSelect);
 }
