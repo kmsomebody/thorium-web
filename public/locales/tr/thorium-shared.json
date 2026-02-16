@@ -1,0 +1,81 @@
+{
+    "reader": {
+        "actions": {
+            "goBackward": "Geri git",
+            "goForward": "İleri git",
+            "goToNextChapter": {
+                "compact": "Sonraki",
+                "descriptive": "Sonraki bölüm"
+            },
+            "goToNextPage": {
+                "compact": "Sonraki",
+                "descriptive": "Sonraki sayfa"
+            },
+            "goToPosition": {
+                "compact": "Şuraya git…",
+                "descriptive": "Konuma git"
+            },
+            "goToPreviousChapter": {
+                "compact": "Önceki",
+                "descriptive": "Önceki bölüm"
+            },
+            "goToPreviousPage": {
+                "compact": "Önceki",
+                "descriptive": "Önceki sayfa"
+            }
+        },
+        "preferences": {
+            "columns": {
+                "auto": "Otomatik",
+                "dual": {
+                    "compact": "2 sütun",
+                    "descriptive": "İki sütun"
+                },
+                "single": {
+                    "compact": "1 sütun",
+                    "descriptive": "Tek sütun"
+                },
+                "title": "Sütunlar"
+            },
+            "fontFamily": {
+                "publisher": "Yayımcının yazı biçimi",
+                "sans": "Sans-serif",
+                "title": "Yazı biçimi ailesi"
+            },
+            "fontSize": "Yazı tipi boyutu",
+            "title": "Görüntüleme Ayarları"
+        },
+        "progression": {
+            "pagesLeft": {
+                "descriptive_one": "{{ count }} sayfa kaldı",
+                "descriptive_other": "{{ count }} sayfa kaldı"
+            },
+            "pagesLeftInChapter": {
+                "descriptive_one": "Bölümde, {{ count }} sayfa kaldı",
+                "descriptive_other": "Bölümde, {{ count }} sayfa kaldı"
+            },
+            "pagesLeftInPublication": {
+                "descriptive_one": "Eserde, {{ count }} sayfa kaldı",
+                "descriptive_other": "Eserde, {{ count }} sayfa kaldı"
+            },
+            "percentage": "%{{ percentage }}",
+            "positionsLeft": {
+                "descriptive_one": "Geriye {{ count }} kaldı",
+                "descriptive_other": "Geriye {{ count }} kaldı"
+            },
+            "positionsLeftInChapter": {
+                "descriptive_one": "Bölümde, geriye {{ count }} kaldı",
+                "descriptive_other": "Bölümde, geriye {{ count }} kaldı"
+            },
+            "positionsLeftInPublication": {
+                "descriptive_one": "Eserde, geriye {{ count }} kaldı",
+                "descriptive_other": "Eserde, geriye {{ count }} kaldı"
+            },
+            "range": "{{ start }}–{{ end }}",
+            "xOfY": {
+                "compact": "{{ x }} / {{ y }}",
+                "descriptive": "{{ x }} / {{ y }} ({{ z }})"
+            }
+        }
+    }
+}

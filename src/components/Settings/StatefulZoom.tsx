@@ -89,15 +89,15 @@ export const StatefulZoom = () => {
         defaultValue={ 1 } 
         value={ derivedState } 
         onChange={ async(value) => await updatePreference(value) } 
-        label={ isFXL ? t("reader.settings.zoom.title") : t("reader.settings.fontSize.title") }
+        label={ isFXL ? t("reader.preferences.zoom") : t("reader.preferences.fontSize") }
         placeholder={ placeholderText }
         range={ zoomRangeConfig.range }
         step={ zoomRangeConfig.step }
         steppers={{
           decrementIcon: isFXL ? ZoomOut : Decrease,
-          decrementLabel: isFXL ? t("reader.settings.zoom.decrease") : t("reader.settings.fontSize.decrease"),
+          decrementLabel: t("common.actions.decrease"),
           incrementIcon: isFXL ? ZoomIn : Increase,
-          incrementLabel: isFXL ? t("reader.settings.zoom.increase") : t("reader.settings.fontSize.increase")
+          incrementLabel: t("common.actions.increase")
         }}
         formatOptions={{ style: "percent" }} 
         isWheelDisabled={ true }
@@ -109,7 +109,7 @@ export const StatefulZoom = () => {
         defaultValue={ 1 } 
         value={ derivedState } 
         onChange={ async(value) => await updatePreference(value as number) } 
-        label={ isFXL ? t("reader.settings.zoom.title") : t("reader.settings.fontSize.title") }
+        label={ isFXL ? t("reader.preferences.zoom") : t("reader.preferences.fontSize") }
         placeholder={ placeholderText }
         range={ zoomRangeConfig.range }
         step={ zoomRangeConfig.step }

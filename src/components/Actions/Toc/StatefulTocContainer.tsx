@@ -173,7 +173,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
       sheetProps={ {
         id: ThActionsKeys.toc,
         triggerRef: triggerRef, 
-        heading: t("reader.toc.heading"),
+        heading: t("reader.tableOfContents.title"),
         className: tocStyles.wrapper,
         placement: "bottom",
         isOpen: actionState?.isOpen || false,
@@ -187,7 +187,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
       { tocTree && tocTree.length > 0 
       ? (<>
         <ThFormSearchField
-          aria-label={ t("reader.toc.search.label") }
+          aria-label={ t("common.actions.search") }
           value={ filterValue }
           onChange={ setFilterValue }
           onClear={ () => setFilterValue("") }
@@ -199,7 +199,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
             input: {
               ref: searchInputRef,
               className: tocStyles.searchInput,
-              placeholder: t("reader.toc.search.placeholder")
+              placeholder: t("common.actions.search")
             },
             searchIcon: {
               className: tocStyles.searchIcon,
@@ -207,7 +207,8 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
             },
             clearButton: {
               className: tocStyles.clearButton,
-              isDisabled: !filterValue
+              isDisabled: !filterValue,
+              "aria-label": t("common.actions.clear")
             }
           }}
         />
@@ -252,7 +253,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
           } }
         </Tree>
       </>) 
-      : <div className={ tocStyles.empty }>{ t("reader.toc.empty") }</div>
+      : <div className={ tocStyles.empty }>{ t("reader.tableOfContents.emptyState.description") }</div>
     }
     </StatefulSheetWrapper>
     </>

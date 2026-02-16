@@ -74,7 +74,7 @@ export const useTheming = <T extends string>({
   const monochrome = useMonochrome(onMonochromeChange);
   const reducedMotion = useReducedMotion(onReducedMotionChange);
   const reducedTransparency = useReducedTransparency(onReducedTransparencyChange);
-
+  
   const updateThemeColorMetaTag = useCallback((color: string): void => {
     if (typeof document === "undefined") return;
     

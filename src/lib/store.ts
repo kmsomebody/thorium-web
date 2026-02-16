@@ -9,6 +9,7 @@ import actionsReducer, { ActionsReducerState } from "@/lib/actionsReducer";
 import publicationReducer, { PublicationReducerState } from "./publicationReducer";
 import preferencesReducer, { PreferencesReducerState } from "./preferencesReducer";
 import webPubSettingsReducer, { WebPubSettingsReducerState } from "./webPubSettingsReducer";
+import { FontFamilyStateObject } from "./settingsReducer";
 
 import debounce from "debounce";
 
@@ -31,19 +32,17 @@ export type RootState = {
 
 const DEFAULT_STORAGE_KEY = "thorium-web-state";
 
-// TMP Migration
-// TODO: Remove this in the next minor version
-const migrateThemeState = (state: ThemeReducerState) => {
-  if (typeof state.theme === "string") {
+// Migrate font family state
+const migrateFontFamily = (stateSlice: SettingsReducerState | WebPubSettingsReducerState) => {
+  if (stateSlice?.fontFamily && typeof stateSlice.fontFamily === "string") {
     return {
-      ...state,
-      theme: {
-        reflow: state.theme,
-        fxl: state.theme
+      ...stateSlice,
+      fontFamily: {
+        default: stateSlice.fontFamily
       }
     };
   }
-  return state;
+  return stateSlice;
 };
 
 
@@ -65,7 +64,7 @@ const updateActionsState = (state: ActionsReducerState) => {
   };
 };
 
-const loadState = (storageKey?: string) => {
+const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
   try {
     const resolvedKey = storageKey || DEFAULT_STORAGE_KEY;
     const serializedState = localStorage.getItem(resolvedKey);
@@ -78,14 +77,26 @@ const loadState = (storageKey?: string) => {
         webPubSettings: undefined
       };
     }
-    const deserializedState = JSON.parse(serializedState);
-    deserializedState.actions = updateActionsState(deserializedState.actions);
     
-    // TMP Migration
-    // TODO: Remove this in the next minor version
-    deserializedState.theming = migrateThemeState(deserializedState.theming);
-
-    return deserializedState;
+    // Parse the state
+    let state = JSON.parse(serializedState);
+    
+    // Apply migrations
+    if (state) {
+      // Migrate font family state
+      if (state.settings) {
+        state.settings = migrateFontFamily(state.settings);
+      }
+      if (state.webPubSettings) {
+        state.webPubSettings = migrateFontFamily(state.webPubSettings);
+      }
+      
+      if (state.actions) {
+        state.actions = updateActionsState(state.actions);
+      }
+    }
+    
+    return state;
   } catch (err) {
     return { 
       actions: undefined, 

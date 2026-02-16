@@ -43,8 +43,8 @@ export const StatefulHyphens = ({ standalone = true }: StatefulSettingsItemProps
     <>
     <StatefulSwitch 
       standalone={ standalone }
-      heading={ t("reader.settings.hyphens.title") }
-      label={ t("reader.settings.hyphens.label") }
+      heading={ t("reader.preferences.hyphens.title") }
+      label={ t("reader.preferences.hyphens.label") }
       onChange={ async (isSelected: boolean) => await updatePreference(isSelected) }
       isSelected={ hyphens ?? false }
       isDisabled={ textAlign === ThTextAlignOptions.publisher }

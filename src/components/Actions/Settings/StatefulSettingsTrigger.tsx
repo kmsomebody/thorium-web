@@ -36,7 +36,7 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
     <>
     { (variant && variant === ThActionsTriggerVariant.menu) 
       ? <StatefulOverflowMenuItem 
-          label={ t("reader.settings.trigger") }
+          label={ t("reader.preferences.title") }
           SVGIcon={ TuneIcon }
           shortcut={ preferences.actions.keys[ThActionsKeys.settings].shortcut } 
           id={ ThActionsKeys.settings }
@@ -44,9 +44,9 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
         />
       : <StatefulActionIcon 
           visibility={ preferences.actions.keys[ThActionsKeys.settings].visibility }
-          aria-label={ t("reader.settings.trigger") }
+          aria-label={ t("reader.preferences.title") }
           placement="bottom" 
-          tooltipLabel={ t("reader.settings.tooltip") } 
+          tooltipLabel={ t("reader.preferences.title") } 
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           <TuneIcon aria-hidden="true" focusable="false" />

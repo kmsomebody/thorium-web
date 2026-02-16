@@ -47,7 +47,7 @@ export const StatefulLetterSpacing = ({ standalone = true }: StatefulSettingsIte
     { letterSpacingRangeConfig.variant === ThSettingsRangeVariant.numberField 
       ? <StatefulNumberField 
         standalone={ standalone }
-        label={ t("reader.settings.letterSpacing.title") }
+        label={ t("reader.preferences.letterSpacing") }
         placeholder={ placeholderText }
         defaultValue={ undefined } 
         value={ letterSpacing ?? undefined } 
@@ -56,8 +56,8 @@ export const StatefulLetterSpacing = ({ standalone = true }: StatefulSettingsIte
         range={ letterSpacingRangeConfig.range }
         step={ letterSpacingRangeConfig.step }
         steppers={{
-          decrementLabel: t("reader.settings.letterSpacing.decrease"),
-          incrementLabel: t("reader.settings.letterSpacing.increase")
+          decrementLabel: t("common.actions.decrease"),
+          incrementLabel: t("common.actions.increase")
         }}
         formatOptions={{ style: "percent" }} 
         isWheelDisabled={ true }
@@ -66,7 +66,7 @@ export const StatefulLetterSpacing = ({ standalone = true }: StatefulSettingsIte
       : <StatefulSlider
         standalone={ standalone }
         displayTicks={ letterSpacingRangeConfig.variant === ThSettingsRangeVariant.incrementedSlider }
-        label={ t("reader.settings.letterSpacing.title") }
+        label={ t("reader.preferences.letterSpacing") }
         placeholder={ placeholderText }
         defaultValue={ undefined } 
         value={ letterSpacing ?? undefined } 

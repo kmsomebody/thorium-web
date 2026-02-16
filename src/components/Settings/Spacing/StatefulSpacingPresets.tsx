@@ -125,7 +125,7 @@ export const StatefulSpacingPresets = ({ standalone }: StatefulSettingsItemProps
       id: key,
       icon: iconMap[key],
       value: key,
-      label: t(`reader.settings.spacing.presets.${ key }`)
+      label: t(`reader.preferences.spacing.presets.${ key === ThSpacingPresetKeys.publisher ? "default" : key }`)
     }));
   }, [spacingKeys, t]);
 
@@ -138,7 +138,7 @@ export const StatefulSpacingPresets = ({ standalone }: StatefulSettingsItemProps
     <>
     <StatefulRadioGroup
       standalone={ standalone }
-      label={ t("reader.settings.spacing.presets.title") }
+      label={ t("reader.preferences.spacing.presets.title") }
       orientation="horizontal"
       value={ spacing?.preset || ThSpacingPresetKeys.publisher }
       onChange={ async (val: string) => await updatePreference(val as ThSpacingPresetKeys) }

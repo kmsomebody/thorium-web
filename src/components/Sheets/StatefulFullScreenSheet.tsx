@@ -110,7 +110,7 @@ export const StatefulFullScreenSheet = ({
               : <ThCloseButton
                 ref={ fullScreenCloseRef }
                 className={ readerSharedUI.closeButton } 
-                aria-label={ t("reader.app.docker.close.trigger") } 
+                aria-label={ t("common.actions.close") } 
                 onPress={ onClosePress }
               />
             }

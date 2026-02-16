@@ -34,13 +34,13 @@ export const UnstableStatefulFontWeight = ({ standalone = true }: StatefulSettin
     {
       id: "default",
       icon: DefaultIcon,
-      label: t("reader.settings.fontWeight.default"), 
+      label: t("reader.preferences.fontWeight.normal"), 
       value: "default" 
     },
     {
       id: "bolder",
       icon: BolderIcon,
-      label: t("reader.settings.fontWeight.bolder"), 
+      label: t("reader.preferences.fontWeight.bold"), 
       value: "bolder" 
     }
   ];
@@ -70,7 +70,7 @@ export const UnstableStatefulFontWeight = ({ standalone = true }: StatefulSettin
     <>
     <StatefulRadioGroup 
       standalone={ standalone } 
-      label={ t("reader.settings.fontWeight.title") }
+      label={ t("reader.preferences.fontWeight.title") }
       orientation="horizontal" 
       value={ derivedValue } 
       onChange={ async (val: string) => await updatePreference(val as FontWeight) }

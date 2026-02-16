@@ -33,7 +33,7 @@ export const StatefulTocTrigger = ({ variant }: StatefulActionTriggerProps) => {
     <>
     { (variant && variant === ThActionsTriggerVariant.menu) 
       ? <StatefulOverflowMenuItem 
-          label={ t("reader.toc.trigger") }
+          label={ t("reader.tableOfContents.title") }
           SVGIcon={ TocIcon } 
           shortcut={ preferences.actions.keys[ThActionsKeys.toc].shortcut }
           id={ ThActionsKeys.toc }
@@ -41,9 +41,9 @@ export const StatefulTocTrigger = ({ variant }: StatefulActionTriggerProps) => {
         />
       : <StatefulActionIcon 
           visibility={ preferences.actions.keys[ThActionsKeys.toc].visibility }
-          aria-label={ t("reader.toc.trigger") } 
+          aria-label={ t("reader.tableOfContents.title") } 
           placement="bottom"
-          tooltipLabel={ t("reader.toc.tooltip") } 
+          tooltipLabel={ t("reader.tableOfContents.title") } 
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           <TocIcon aria-hidden="true" focusable="false" />

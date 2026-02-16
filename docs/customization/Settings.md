@@ -46,7 +46,56 @@ When used, a button will be added to access the nested components.
 
 ## Keys
 
-The `keys` object is used to configure range settings:
+The `keys` object is used to configure settings:
+
+- `fontFamily`;
+- `letterSpacing`;
+- `lineHeight`;
+- `paragraphIndent`;
+- `paragraphSpacing`;
+- `wordSpacing`;
+- `zoom`.
+
+### FontFamily
+
+See [Custom Fonts](CustomFonts.md).
+
+### LineHeight
+
+The `lineHeight` key accepts a `ThSettingsRadioPref` object with the following structure:
+
+```typescript
+{
+  // Whether unsetting the value is allowed, this will provide a Publisher option
+  allowUnset?: boolean; 
+  keys: {
+    [key in ThLineHeightOptions]: number;
+  }
+}
+```
+
+Where `ThLineHeightOptions` can be one of:
+
+- `small`: 1.3 (130% line height)
+- `medium`: 1.5 (150% line height)
+- `large`: 1.75 (175% line height)
+
+Example:
+
+```typescript
+{
+  allowUnset: false,
+  keys: {
+    small: 1.3,
+    medium: 1.5,
+    large: 1.75
+  }
+}
+```
+
+The `publisher` option (whose value is `null`) is automatically handled separately and doesn't need to be included in the configuration.
+
+### Ranges
 
 - `letterSpacing`;
 - `paragraphIndent`;
@@ -60,8 +109,6 @@ These ranges expect:
 - `placeholder` (optional): the placeholder text, as enum `ThSettingsRangePlaceholder`, `string`, or an object with `key` and `fallback` properties – the `key` should be a key from your translation files, and the `fallback` is the default value if the translation key is not found
 - `range` (optional): the min and max values, as `[number, number]`
 - `step` (optional): the step value, as `number`
-
-It also allows you to configure `lineHeight`, where the keys are `ThLineHeightKeys` and value is a number.
 
 ## Configuration Example
 
@@ -80,6 +127,7 @@ settings: {
     ThSettingsKeys.columns
   ],
   keys: {
+    ...,
     [ThSettingsKeys.letterSpacing]: {
       variant: ThSettingsRangeVariant.slider,
       range: [0, 0.5],

@@ -36,19 +36,19 @@ export const StatefulTextAlign = ({ standalone = true }: StatefulSettingsItemPro
     {
       id: ThTextAlignOptions.publisher,
       icon: BookIcon,
-      label: t("reader.settings.align.publisher"), 
+      label: t("reader.preferences.textAlign.default"), 
       value: ThTextAlignOptions.publisher 
     },
     {
       id: ThTextAlignOptions.start,
       icon: isRTL ? RightAlignIcon : LeftAlignIcon,
-      label: isRTL ? t("reader.settings.align.right") : t("reader.settings.align.left"), 
+      label: isRTL ? t("reader.preferences.textAlign.right") : t("reader.preferences.textAlign.left"), 
       value: ThTextAlignOptions.start 
     },
     {
       id: ThTextAlignOptions.justify,
       icon: JustifyIcon,
-      label: t("reader.settings.align.justify"), 
+      label: t("reader.preferences.textAlign.justify"), 
       value: ThTextAlignOptions.justify 
     }
   ];
@@ -88,7 +88,7 @@ export const StatefulTextAlign = ({ standalone = true }: StatefulSettingsItemPro
     <>
     <StatefulRadioGroup 
       standalone={ standalone } 
-      label={ t("reader.settings.align.title") }
+      label={ t("reader.preferences.textAlign.title") }
       orientation="horizontal" 
       value={ textAlign } 
       onChange={ async (val: string) => await updatePreference(val) }

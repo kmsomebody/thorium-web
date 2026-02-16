@@ -3,11 +3,13 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { InitOptions } from "i18next";
+import { supportedLocales } from "./supported-locales";
 
 export const DEFAULT_CONFIG: InitOptions = {
   fallbackLng: "en",
   load: "all",
   nonExplicitSupportedLngs: true,
+  supportedLngs: supportedLocales,
   detection: {
     order: ["navigator"],
     caches: []
@@ -18,8 +20,8 @@ export const DEFAULT_CONFIG: InitOptions = {
   backend: {
     loadPath: "/locales/{{lng}}/{{ns}}.json"
   },
-  ns: ["thorium-web"],
-  defaultNS: "thorium-web"
+  ns: ["thorium-shared", "thorium-web"],
+  defaultNS: ["thorium-web", "thorium-shared"]
 };
 
 export const initI18n = async (options: Partial<InitOptions> = {}) => {

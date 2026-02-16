@@ -101,7 +101,7 @@ export const StatefulJumpToPositionContainer = ({
         sheetProps={{
           id: ThActionsKeys.jumpToPosition,
           triggerRef: triggerRef,
-          heading: t("reader.jumpToPosition.heading"),
+          heading: t("reader.actions.goToPosition.descriptive"),
           className: jumpToPositionStyles.wrapper,
           placement: "bottom",
           isOpen: actionState?.isOpen || false,

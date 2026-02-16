@@ -44,19 +44,19 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
       {
         id: ThLineHeightOptions.small,
         icon: SmallIcon,
-        label: t("reader.settings.lineHeight.small"),
+        label: t("reader.preferences.lineHeight.small"),
         value: ThLineHeightOptions.small
       },
       {
         id: ThLineHeightOptions.medium,
         icon: MediumIcon,
-        label: t("reader.settings.lineHeight.medium"),
+        label: t("reader.preferences.lineHeight.medium"),
         value: ThLineHeightOptions.medium
       },
       {
         id: ThLineHeightOptions.large,
         icon: LargeIcon,
-        label: t("reader.settings.lineHeight.large"),
+        label: t("reader.preferences.lineHeight.large"),
         value: ThLineHeightOptions.large
       },
     ];
@@ -66,7 +66,7 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
       baseItems.unshift({
         id: ThLineHeightOptions.publisher,
         icon: BookIcon,
-        label: t("reader.settings.lineHeight.publisher"),
+        label: t("reader.preferences.lineHeight.default"),
         value: ThLineHeightOptions.publisher
       });
     }
@@ -93,7 +93,7 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
     <>
     <StatefulRadioGroup
       standalone={ standalone }
-      label={ t("reader.settings.lineHeight.title") }
+      label={ t("reader.preferences.lineHeight.title") }
       orientation="horizontal"
       value={ !isWebPub && publisherStyles ? ThLineHeightOptions.publisher : lineHeight }
       onChange={ async (val: string) => await updatePreference(val) }

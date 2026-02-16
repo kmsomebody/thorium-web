@@ -37,7 +37,7 @@ export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTrigger
     <>
     { (variant && variant === ThActionsTriggerVariant.menu) 
      ? <StatefulOverflowMenuItem 
-         label={ t("reader.jumpToPosition.trigger") }
+         label={ t("reader.actions.goToPosition.descriptive") }
           SVGIcon={ TargetIcon }
           shortcut={ preferences.actions.keys[ThActionsKeys.jumpToPosition].shortcut }
           id={ ThActionsKeys.jumpToPosition }
@@ -45,9 +45,9 @@ export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTrigger
         />
       : <StatefulActionIcon
           visibility={ preferences.actions.keys[ThActionsKeys.jumpToPosition].visibility } 
-          aria-label={ t("reader.jumpToPosition.trigger") }
+          aria-label={ t("reader.actions.goToPosition.descriptive") }
           placement="bottom" 
-          tooltipLabel={ t("reader.jumpToPosition.tooltip") }
+          tooltipLabel={ t("reader.actions.goToPosition.compact") }
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           <TargetIcon aria-hidden="true" focusable="false" />

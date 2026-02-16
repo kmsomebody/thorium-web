@@ -9,9 +9,9 @@ import {
 
 import { defaultSpacingSettingsMain, defaultSpacingSettingsSubpanel } from "@/preferences/models/const";
 
-import { usePlugins } from "@/components/Plugins/PluginProvider";
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";
+import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
 
 import { useAppSelector, useAppDispatch } from "@/lib";
 import {
@@ -57,7 +57,6 @@ export const useSpacingPresets = () => {
     baseline: {} 
   };
 
-  const { spacingSettingsComponentsMap } = usePlugins();
   const { reflowSpacingPresetKeys, fxlSpacingPresetKeys, webPubSpacingPresetKeys } = usePreferenceKeys();
 
   const { preferences } = usePreferences();
@@ -72,19 +71,13 @@ export const useSpacingPresets = () => {
       : reflowSpacingPresetKeys;
   }, [isWebPub, isFXL, webPubSpacingPresetKeys, fxlSpacingPresetKeys, reflowSpacingPresetKeys]);
 
-  // 1. Check if preset component is registered
-  const isComponentRegistered = !!spacingSettingsComponentsMap?.[ThSettingsKeys.spacingPresets];
-
-  // 2. Check if preset component is in display order
-  const mainDisplayOrder = preferences.settings?.spacing?.main || defaultSpacingSettingsMain;
-  const subPanelDisplayOrder = preferences.settings?.spacing?.subPanel || defaultSpacingSettingsSubpanel;
-
-  const isInMainPanel = mainDisplayOrder.includes(ThSpacingSettingsKeys.spacingPresets);
-  const isInSubPanel = subPanelDisplayOrder.includes(ThSpacingSettingsKeys.spacingPresets);
-  const isDisplayed = (isInMainPanel || isInSubPanel) && spacingKeys.length > 0;
-
-  // 3. Only apply presets if component is both registered AND displayed
-  const shouldApplyPresets = isComponentRegistered && isDisplayed;
+  // Check if spacing presets component is being used
+  const { isComponentUsed: shouldApplyPresets } = useSettingsComponentStatus({
+    settingsKey: ThSettingsKeys.spacingPresets,
+    publicationType: isWebPub ? "webpub" : isFXL ? "fxl" : "reflow",
+    componentType: "spacing",
+    additionalCondition: spacingKeys.length > 0
+  });
 
   // Get current state values from the already selected settings
   const {

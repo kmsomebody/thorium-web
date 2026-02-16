@@ -26,8 +26,97 @@ import {
 } from "./models/enums";
 import { ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility, ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
+import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
 
 export type I18nValue<T> = T | string | { key: string; fallback?: string };
+
+export interface SystemFontSource {
+  type: "system";
+}
+
+export interface BunnyFontSource {
+  type: "custom";
+  provider: "bunny";
+}
+
+export interface GoogleFontSource {
+  type: "custom";
+  provider: "google";
+}
+
+export interface LocalStaticFontFile {
+  path: string;
+  weight: number;
+  style: "normal" | "italic";
+}
+
+export interface LocalVariableFontFile {
+  path: string;
+  style?: "normal" | "italic";
+}
+
+export interface LocalStaticFontSource {
+  type: "custom";
+  provider: "local";
+  variant: "static";
+  files: LocalStaticFontFile[];
+}
+
+export interface LocalVariableFontSource {
+  type: "custom";
+  provider: "local";
+  variant: "variable";
+  files: LocalVariableFontFile[];
+}
+
+export type LocalFontSource = LocalStaticFontSource | LocalVariableFontSource;
+
+export type FontSource = SystemFontSource | BunnyFontSource | GoogleFontSource | LocalFontSource;
+
+export type VariableFontRangeConfig = {
+  min: number;
+  max: number;
+  step?: number;
+};
+
+export type WeightConfig =
+  | {
+      type: "static";
+      values: number[];
+    }
+  | {
+      type: "variable";
+    } & VariableFontRangeConfig;
+
+export interface FontSpec {
+  family: string;
+  fallbacks: string[];
+  weights: WeightConfig;
+  styles?: ("normal" | "italic")[];
+  widths?: VariableFontRangeConfig;
+  display?: "swap" | "block" | "fallback" | "optional";
+}
+
+export interface FontDefinition {
+  id: string;
+  name: string;
+  label?: I18nValue<string>;
+  source: FontSource;
+  spec: FontSpec;
+}
+
+export type FontCollection = Record<string, FontDefinition>;
+
+export type ValidatedLanguageCollection = {
+  fonts: FontCollection; 
+  supportedLanguages: string[] 
+};
+
+export type ThFontFamilyPref = {
+  default: FontCollection;
+} | {
+  [K in Exclude<string, "default">]: ValidatedLanguageCollection;
+};
 
 export type ThBackLinkContent = 
   | { 
@@ -160,8 +249,8 @@ export interface ThDockingPref<T extends string> {
 };
 
 export interface ThSettingsGroupPref<T> {
-  main?: T[];
-  subPanel?: T[] | null;
+  main: T[];
+  subPanel: T[] | null;
   header?: ThSheetHeaderVariant;
 }
 
@@ -180,6 +269,7 @@ export interface ThSettingsRadioPref<T extends string> {
 }
 
 export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
+  [ThSettingsKeys.fontFamily]: ThFontFamilyPref;
   [ThSettingsKeys.letterSpacing]: ThSettingsRangePref;
   [ThSettingsKeys.lineHeight]: ThSettingsRadioPref<Exclude<ThLineHeightOptions, ThLineHeightOptions.publisher>>;
   [ThSettingsKeys.paragraphIndent]: ThSettingsRangePref;
@@ -324,8 +414,8 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     fxlOrder: Array<SettingsKey<K>>;
     webPubOrder: Array<SettingsKey<K>>;
     keys: ThSettingsKeyTypes<K>;
-    text?: ThSettingsGroupPref<TextSettingsKey<K>>;
-    spacing?: ThSettingsGroupPref<SpacingSettingsKey<K>> & { presets?: ThSettingsSpacingPresets<K> };
+    text: ThSettingsGroupPref<TextSettingsKey<K>>;
+    spacing: ThSettingsGroupPref<SpacingSettingsKey<K>> & { presets?: ThSettingsSpacingPresets<K> };
   };
 }
 
@@ -337,6 +427,16 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
 export const createPreferences = <K extends CustomizableKeys = {}>(
   params: ThPreferences<K>
 ): ThPreferences<K> => {
+  // Validate locale preference
+  if (params.locale) {
+    // Extract language code from BCP-47 locale (e.g., "en-US" -> "en")
+    const languageCode = params.locale.split("-")[0];
+    if (!isSupportedLocale(languageCode)) {
+      console.warn(`Locale "${ params.locale }" is not supported. Supported locales: ${ supportedLocales.join(", ") }. Falling back to browser/OS language settings.`);
+      params.locale = undefined; // Let i18n fall back to browser/OS language settings
+    }
+  }
+
   // Helper function to validate keys against the provided order arrays
   const validateObjectKeys = <K extends string, V>(
     orderArrays: K[][],
@@ -497,6 +597,37 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
     }
   }
   
+  // Validate font family preferences for language conflicts
+  if (params.settings?.keys?.fontFamily) {
+    const fontFamilyPref = params.settings.keys.fontFamily;
+    const languageMap = new Map<string, string[]>();
+    
+    // Build a map of languages to the collections that support them
+    Object.entries(fontFamilyPref).forEach(([collectionName, collectionData]) => {
+      if (collectionName === "default") return;
+      
+      // Check if this collection has supportedLanguages (it's a ValidatedLanguageCollection)
+      const supportedLangs = "supportedLanguages" in collectionData ? 
+        (collectionData as ValidatedLanguageCollection).supportedLanguages : null;
+        
+      if (supportedLangs && Array.isArray(supportedLangs)) {
+        supportedLangs.forEach((lang: string) => {
+          if (!languageMap.has(lang)) {
+            languageMap.set(lang, []);
+          }
+          languageMap.get(lang)!.push(collectionName);
+        });
+      }
+    });
+    
+    // Check for conflicts and warn about them
+    languageMap.forEach((collections, language) => {
+      if (collections.length > 1) {
+        console.warn(`Language "${ language }" is supported by multiple font collections: ${ collections.join(", ") }. This may cause ambiguous font selection. Consider consolidating to a single collection per language.`);
+      }
+    });
+  }
+
   return params;
 };
 

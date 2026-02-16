@@ -102,6 +102,8 @@ More details in [the @cloudflare/next-on-pages repo](https://github.com/cloudfla
 
 We welcome contributions to Thorium web! If you're interested in helping out, please fork this repository and submit a pull request with your changes.
 
+The only exception to this rule is localization files, which are managed through a separate process. Please see the [Localization](./docs/Localization.md) documentation for more details.
+
 ## License
 
 Thorium Web is licensed under the [BSD-3-Clause license](https://opensource.org/licenses/BSD-3-Clause).

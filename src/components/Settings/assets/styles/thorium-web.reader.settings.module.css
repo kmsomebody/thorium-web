@@ -359,6 +359,7 @@
   filter: drop-shadow(var(--th-theme-elevate));
   box-sizing: border-box;
   width: max-content;
+  overflow-y: auto;
   /* TMP: Needs to be higher than bottom sheet, which requires hack for Safari iOS */
   z-index: 1000000 !important;
 }

@@ -29,13 +29,13 @@ export const StatefulLayout = () => {
     {
       id: ThLayoutOptions.paginated,
       icon: PaginatedIcon,
-      label: t("reader.settings.layout.paginated"),
+      label: t("reader.preferences.layout.paginated"),
       value: ThLayoutOptions.paginated
     },
     {
       id: ThLayoutOptions.scroll,
       icon: ScrollableIcon,
-      label: t("reader.settings.layout.scrolled"),
+      label: t("reader.preferences.layout.scrolled"),
       value: ThLayoutOptions.scroll
     }
   ];
@@ -50,7 +50,7 @@ export const StatefulLayout = () => {
     <>
     <StatefulRadioGroup
       standalone={ true }
-      label={ t("reader.settings.layout.title") }
+      label={ t("reader.preferences.layout.title") }
       orientation="horizontal"
       value={ isScroll ? ThLayoutOptions.scroll : ThLayoutOptions.paginated }
       onChange={ async (val: string) => await updatePreference(val) }

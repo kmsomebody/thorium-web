@@ -84,12 +84,12 @@ export const StatefulReaderFooter = ({
       links.previous = {
         node: breakpoint !== ThBreakpoints.compact && breakpoint !== ThBreakpoints.medium ? (
           <>
-            <span className={ readerStyles.srOnly }>{ t("reader.navigation.scroll.prevA11yLabel") }</span>
-            <span className={ readerPaginationStyles.label }>{ timeline?.previousItem?.title || previous.title || t("reader.navigation.scroll.prevLabel") }</span>
+            <span className={ readerStyles.srOnly }>{ t(isFXL ? "reader.actions.goToPreviousPage.descriptive" : "reader.actions.goToPreviousChapter.descriptive") }</span>
+            <span className={ readerPaginationStyles.label }>{ timeline?.previousItem?.title || previous.title || t(isFXL ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact") }</span>
           </>
         ) : (
           <>
-            <span className={ readerPaginationStyles.label }>{ t("reader.navigation.scroll.prevLabel") }</span>
+            <span className={ readerPaginationStyles.label }>{ t(isFXL ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact") }</span>
           </>
         ),
         onPress: () => go(previous, !reducedMotion, () => {})
@@ -100,12 +100,12 @@ export const StatefulReaderFooter = ({
       links.next = {
         node: breakpoint !== ThBreakpoints.compact && breakpoint !== ThBreakpoints.medium ? (
           <>
-            <span className={ readerStyles.srOnly }>{ t("reader.navigation.scroll.nextA11yLabel") }</span>
-            <span className={ readerPaginationStyles.label }>{ timeline?.nextItem?.title || next.title || t("reader.navigation.scroll.nextLabel") }</span>
+            <span className={ readerStyles.srOnly }>{ t(isFXL ? "reader.actions.goToNextPage.descriptive" : "reader.actions.goToNextChapter.descriptive") }</span>
+            <span className={ readerPaginationStyles.label }>{ timeline?.nextItem?.title || next.title || t(isFXL ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact") }</span>
           </>
         ) : ( 
           <>
-            <span className={ readerPaginationStyles.label }>{ t("reader.navigation.scroll.nextLabel") }</span>
+            <span className={ readerPaginationStyles.label }>{ t(isFXL ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact") }</span>
           </>
         ),
         onPress: () => go(next, !reducedMotion, () => {})
@@ -113,7 +113,7 @@ export const StatefulReaderFooter = ({
     }
 
     return links;
-  }, [go, previousLocator, nextLocator, t, timeline, breakpoint, reducedMotion]);
+  }, [go, previousLocator, nextLocator, t, timeline, breakpoint, reducedMotion, isFXL]);
 
   useEffect(() => {
     updateLinks();

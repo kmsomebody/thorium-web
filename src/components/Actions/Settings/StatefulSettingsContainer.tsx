@@ -168,14 +168,14 @@ export const StatefulSettingsContainer = ({
   const getHeading = useCallback(() => {
     switch (contains) {
       case ThSettingsContainerKeys.text:
-        return t("reader.settings.text.title");
+        return t("reader.preferences.text");
 
       case ThSettingsContainerKeys.spacing:
-        return t("reader.settings.spacing.title");
+        return t("reader.preferences.spacing.title");
 
       case ThSettingsContainerKeys.initial:
       default:
-        return t("reader.settings.heading");
+        return t("reader.preferences.title");
     }
   }, [contains, t]);
 

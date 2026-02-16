@@ -32,7 +32,7 @@ export const StatefulTextGroup = () => {
   return(
     <>
     <StatefulGroupWrapper<ThTextSettingsKeys> 
-      label={ t("reader.settings.text.title") }
+      label={ t("reader.preferences.text") }
       moreLabel={ t("reader.settings.text.advanced.trigger") }
       moreTooltip={ t("reader.settings.text.advanced.tooltip") }
       onPressMore={ setTextContainer }

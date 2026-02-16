@@ -40,8 +40,8 @@ export const StatefulTextNormalize = ({ standalone = true }: StatefulSettingsIte
     <>
     <StatefulSwitch 
       standalone={ standalone }
-      heading={ t("reader.settings.normalizeText.title") }
-      label={ t("reader.settings.normalizeText.label") }
+      heading={ t("reader.preferences.textNormalization.title") }
+      label={ t("reader.preferences.textNormalization.label") }
       onChange={ async (isSelected: boolean) => await updatePreference(isSelected) }
       isSelected={ textNormalization ?? false }
     />

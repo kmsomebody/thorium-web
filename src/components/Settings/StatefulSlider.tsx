@@ -86,7 +86,7 @@ export const StatefulSlider = ({
             tooltip: {
               className: readerSharedUI.tooltip
             },
-            label: resetLabel ?? t("reader.settings.reset")
+            label: resetLabel ?? t("common.actions.reset")
           }
         }
       }}

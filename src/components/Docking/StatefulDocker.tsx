@@ -79,7 +79,7 @@ export const StatefulDocker = ({
       <ThCloseButton 
         ref={ ref }
         className={ readerSharedUI.dockerButton } 
-        aria-label={ t("reader.app.docker.close.trigger") } 
+        aria-label={ t("common.actions.close") } 
         onPress={ onClose }
         compounds={ {
           tooltipTrigger: {
@@ -89,7 +89,7 @@ export const StatefulDocker = ({
           tooltip: {
             className: readerSharedUI.tooltip
           },
-          label: t("reader.app.docker.close.tooltip")
+          label: t("common.actions.close")
         }}
       />
     </Toolbar>

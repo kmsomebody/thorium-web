@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { 
-  defaultFontFamilyOptions, 
   ThemeKeyType, 
   usePreferenceKeys, 
   useTheming
@@ -19,7 +18,8 @@ import {
   ThLayoutUI,
   ThDocumentTitleFormat,
   ThSpacingSettingsKeys,
-  ThProgressionFormat
+  ThProgressionFormat,
+  ThSettingsKeys
 } from "../../preferences/models/enums";
 import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 
@@ -39,6 +39,7 @@ import {
   FXLFrameManager, 
   IEpubDefaults, 
   IEpubPreferences,  
+  IInjectablesConfig,  
   TextAlignment
 } from "@readium/navigator";
 import { 
@@ -58,6 +59,8 @@ import { StatefulReaderArrowButton } from "../StatefulReaderArrowButton";
 import { StatefulReaderFooter } from "../StatefulReaderFooter";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
+import { defaultTextSettingsMain, defaultTextSettingsSubpanel } from "@/preferences/models/const";
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { usePrevious } from "@/core/Hooks/usePrevious";
@@ -68,6 +71,7 @@ import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useSpacingPresets } from "../Settings/Spacing/hooks/useSpacingPresets";
 import { useLineHeight } from "../Settings/Spacing/hooks/useLineHeight";
 import { usePaginatedArrows } from "@/hooks/usePaginatedArrows";
+import { useFonts } from "@/core/Hooks/fonts/useFonts";
 
 import { toggleActionOpen } from "@/lib/actionsReducer";
 import { useAppSelector, useAppDispatch, useAppStore } from "@/lib/hooks";
@@ -101,9 +105,10 @@ import {
   setTimeline,
   setPublicationStart,
   setPublicationEnd,
-  setHasDisplayTransformability
+  setHasDisplayTransformability,
+  setFontLanguage
 } from "@/lib/publicationReducer";
-import { LineLengthStateObject } from "@/lib/settingsReducer";
+import { LineLengthStateObject, FontFamilyStateObject } from "@/lib/settingsReducer";
 
 import classNames from "classnames";
 import debounce from "debounce";
@@ -118,7 +123,7 @@ import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface ReadiumCSSSettings {
   columnCount: string;
-  fontFamily: keyof typeof defaultFontFamilyOptions | null;
+  fontFamily: FontFamilyStateObject;
   fontSize: number;
   fontWeight: number;
   hyphens: boolean | null;
@@ -189,10 +194,11 @@ export const StatefulReader = ({
 
 const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; selfHref: string }) => {
   const { fxlActionKeys, fxlThemeKeys, reflowActionKeys, reflowThemeKeys } = usePreferenceKeys();
-  const { preferences } = usePreferences();
+  const { preferences, resolveFontLanguage, getFontMetadata, getFontInjectables } = usePreferences();
   const { t } = useI18n();
   const { getEffectiveSpacingValue } = useSpacingPresets();
   const { occupySpace: arrowsOccupySpace } = usePaginatedArrows();
+  const { injectFontResources, removeFontResources, getAndroidFXLPatch } = useFonts();
   
   const [publication, setPublication] = useState<Publication | null>(null);
 
@@ -202,6 +208,13 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
 
   const isFXL = useAppSelector(state => state.publication.isFXL);
   const positionsList = useAppSelector(state => state.publication.positionsList);
+
+  // Check if font family component is being used
+  const { isComponentUsed: isFontFamilyUsed } = useSettingsComponentStatus({
+    settingsKey: ThSettingsKeys.fontFamily,
+    publicationType: isFXL ? "fxl" : "reflow",
+    componentType: "text"
+  });
 
   const textAlign = useAppSelector(state => state.settings.textAlign);
   const columnCount = useAppSelector(state => state.settings.columnCount);
@@ -745,7 +758,12 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
     if (!publication) return;
 
     dispatch(setRTL(publication.metadata.effectiveReadingProgression === ReadingProgression.rtl));
-    dispatch(setFXL(publication.metadata.effectiveLayout === Layout.fixed));
+
+    const isFXLPublication = publication.metadata.effectiveLayout === Layout.fixed;
+    dispatch(setFXL(isFXLPublication));
+
+    const resolvedFontLanguage = resolveFontLanguage(publication.metadata.languages?.[0], publication.metadata.effectiveReadingProgression);
+    dispatch(setFontLanguage(resolvedFontLanguage));
     
     const displayTransformability = publication.metadata.accessibility?.feature?.some(feature =>  feature && feature.value === Feature.DISPLAY_TRANSFORMABILITY.value);
     dispatch(setHasDisplayTransformability(displayTransformability));
@@ -761,13 +779,11 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
     fetchPositions()
       .catch(console.error)
       .then(() => {
-        const isFXL = publication.metadata.effectiveLayout === Layout.fixed;
-
         const initialPosition: Locator | null = getLocalData();
 
         const initialConstraint = cache.current.arrowsOccupySpace ? arrowsWidth.current : 0;
         
-        const themeKeys = isFXL ? fxlThemeKeys : reflowThemeKeys;
+        const themeKeys = isFXLPublication ? fxlThemeKeys : reflowThemeKeys;
         const theme = themeKeys.includes(cache.current.settings.theme as any) ? cache.current.settings.theme : "auto";
         const themeProps = buildThemeObject<ThemeKeyType>({
           theme: theme,
@@ -776,10 +792,10 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
           colorScheme: cache.current.colorScheme
         });
 
-        const epubPreferences: IEpubPreferences = isFXL ? {} : {
+        const epubPreferences: IEpubPreferences = isFXLPublication ? {} : {
           columnCount: cache.current.settings.columnCount === "auto" ? null : Number(cache.current.settings.columnCount),
           constraint: initialConstraint,
-          fontFamily: cache.current.settings.fontFamily && defaultFontFamilyOptions[cache.current.settings.fontFamily],
+          fontFamily: getFontMetadata(cache.current.settings.fontFamily[resolvedFontLanguage] ?? "")?.fontStack || null,
           fontSize: cache.current.settings.fontSize,
           fontWeight: cache.current.settings.fontWeight,
           hyphens: cache.current.settings.hyphens,
@@ -811,7 +827,7 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
           ...themeProps
         };
 
-        const defaults: IEpubDefaults = isFXL ? {} : {
+        const defaults: IEpubDefaults = isFXLPublication ? {} : {
           maximalLineLength: preferences.typography.maximalLineLength,
           minimalLineLength: preferences.typography.minimalLineLength,
           optimalLineLength: preferences.typography.optimalLineLength,
@@ -824,6 +840,36 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
             : (preferences.theming.icon.size || 24),
           experiments: preferences.experiments?.reflow || null
         }
+
+        let injectables: IInjectablesConfig | undefined;
+
+        if (isFXLPublication) {
+          const androidPatch = getAndroidFXLPatch();
+          if (androidPatch) {
+            injectables = {
+              allowedDomains: [window.location.origin],
+              rules: [{
+                resources: [/\.xhtml$/, /\.html$/],
+                prepend: [androidPatch]
+              }]
+            };
+          }
+        }
+        
+        if (!isFXLPublication && isFontFamilyUsed) {
+          const fontResources = getFontInjectables({ language: resolvedFontLanguage });
+          if (fontResources) {
+            injectFontResources(getFontInjectables(undefined, true));
+            injectables = {
+              allowedDomains: fontResources.allowedDomains,
+              rules: [{
+                resources: [/\.xhtml$/, /\.html$/],
+                prepend: fontResources.prepend,
+                append: fontResources.append
+              }]
+            };
+          }
+        }
   
         EpubNavigatorLoad({
           container: container.current, 
@@ -832,7 +878,8 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
           positionsList: positionsList,
           initialPosition: initialPosition ? new Locator(initialPosition) : undefined,
           preferences: epubPreferences,
-          defaults: defaults
+          defaults: defaults,
+          injectables: injectables
         }, () => p.observe(window));
       })
       .finally(() => {
@@ -844,8 +891,9 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
 
     return () => {
       EpubNavigatorDestroy(() => p.destroy());
+      if (!isFXL) removeFontResources();
     };
-  }, [publication, preferences, fxlThemeKeys, reflowThemeKeys]);
+  }, [publication, preferences, fxlThemeKeys, reflowThemeKeys, isFontFamilyUsed, injectFontResources, removeFontResources]);
 
   // If breakpoint is not defined, we are not ready to render
   // since useDocking needs it to derive the sheet type

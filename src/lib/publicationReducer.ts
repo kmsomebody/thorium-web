@@ -4,6 +4,7 @@ import { Locator } from "@readium/shared";
 import { UnstableTimeline } from "@/core/Hooks/useTimeline";
 
 export interface PublicationReducerState {
+  fontLanguage: string;
   isFXL: boolean;
   isRTL: boolean;
   hasDisplayTransformability: boolean;
@@ -14,6 +15,7 @@ export interface PublicationReducerState {
 }
 
 const initialState: PublicationReducerState = {
+  fontLanguage: "default",
   isFXL: false,
   isRTL: false,
   hasDisplayTransformability: false,
@@ -27,6 +29,9 @@ export const publicationSlice = createSlice({
   name: "publication",
   initialState,
   reducers: {
+    setFontLanguage: (state, action) => {
+      state.fontLanguage = action.payload
+    },
     setFXL: (state, action) => {
       state.isFXL = action.payload
     },
@@ -78,6 +83,7 @@ export const publicationSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { 
+  setFontLanguage,
   setFXL,
   setRTL,
   setHasDisplayTransformability,

@@ -58,7 +58,7 @@ export const StatefulPublisherStyles = ({ standalone = true }: StatefulSettingsI
     <>
     <StatefulSwitch 
       standalone={ standalone }
-      label={ t("reader.settings.publisherStyles.label") }
+      label={ t("reader.preferences.publisherStyles.label") }
       onChange={ async (isSelected: boolean) => await updatePreference(isSelected) }
       isSelected={ publisherStyles }
     />

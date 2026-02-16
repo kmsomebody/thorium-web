@@ -136,7 +136,7 @@ export const StatefulTheme = () => {
     <StatefulRadioGroup
       ref={ radioGroupRef }
       standalone={ true }
-      label={ t("reader.settings.themes.title") }
+      label={ t("reader.preferences.themes.title") }
       value={ theme }
       onChange={ async (val) => await updatePreference(val as ThemeKeyType) }
       useGraphicalNavigation={ false }
@@ -158,7 +158,7 @@ export const StatefulTheme = () => {
             onKeyDown={ onKeyDown }
           >
           <span>
-            { t(`reader.settings.themes.${ themeItem }`, { defaultValue: themeItem }) }
+            { t(`reader.preferences.themes.${ themeItem }`, { defaultValue: themeItem }) }
             { themeItem === theme && <CheckIcon aria-hidden="true" focusable="false" /> }
           </span>
         </Radio>

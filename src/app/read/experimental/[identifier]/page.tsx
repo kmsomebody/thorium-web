@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { ExperimentalWebPubStatefulReader } from "@/components/WebPub";
+import dynamic from "next/dynamic";
 import { StatefulLoader } from "@/components/Misc/StatefulLoader";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
@@ -12,6 +12,10 @@ const WEB_MANIFESTS = {
   "moby-dick": "https://readium.org/webpub-manifest/examples/MobyDick/manifest.json",
   "molly-hopper": "https://publication-server.readium.org/webpub/Z3M6Ly9yZWFkaXVtLXBsYXlncm91bmQtZmlsZXMvZGVtby9tb2xseS1ob3BwZXItdjEuMS53ZWJwdWI/manifest.json"
 }
+
+const ExperimentalWebPubStatefulReader = dynamic(() => import("@/components/WebPub").then(mod => ({ default: mod.ExperimentalWebPubStatefulReader })), {
+  ssr: false
+});
 
 type Params = { identifier: string };
 

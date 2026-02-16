@@ -121,9 +121,9 @@ export const StatefulReaderProgression = ({
         
       case ThProgressionFormat.positionsOfTotal:
         if (currentPositions.length > 0 && totalPositions) {
-          text = t("reader.app.progression.of", { 
-            current: formatPositions(currentPositions),
-            reference: totalPositions
+          text = t("reader.progression.xOfY.compact", { 
+            x: formatPositions(currentPositions),
+            y: totalPositions
           });
         }
         break;
@@ -131,18 +131,18 @@ export const StatefulReaderProgression = ({
       case ThProgressionFormat.positionsPercentOfTotal:
         if (currentPositions.length > 0 && totalPositions) {
           const percentage = Math.round((totalProgression || 0) * 100);
-          text = t("reader.app.progression.of", { 
-            current: formatPositions(currentPositions),
-            reference: totalPositions
-          }) + ` (${ percentage }%)`;
+          text = t("reader.progression.xOfY.descriptive", { 
+            x: formatPositions(currentPositions),
+            y: totalPositions,
+            z: `${ percentage }%`
+          });
         }
         break;
         
       case ThProgressionFormat.positionsLeft:
         if (positionsLeft !== undefined) {
-          text = t("reader.app.progression.positionsLeft", { 
-            count: positionsLeft,
-            reference: currentChapter || t("reader.app.progression.referenceFallback")
+          text = t(`reader.progression.positionsLeftInChapter.descriptive`, { 
+            count: positionsLeft
           });
         }
         break;
@@ -164,18 +164,18 @@ export const StatefulReaderProgression = ({
       case ThProgressionFormat.progressionOfResource:
         if (relativeProgression !== undefined) {
           const percentage = Math.round(relativeProgression * 100);
-          text = t("reader.app.progression.of", {
-            current: `${ percentage }%`,
-            reference: currentChapter || t("reader.app.progression.referenceFallback")
+          text = t("reader.progression.xOfY.compact", {
+            x: `${ percentage }%`,
+            y: currentChapter || t("reader.app.progression.referenceFallback")
           });
         }
         break;
 
       case ThProgressionFormat.readingOrderIndex:
         if (currentIndex !== undefined && totalItems !== undefined) {
-          text = t("reader.app.progression.of", {
-            current: currentIndex,
-            reference: totalItems
+          text = t("reader.progression.xOfY.compact", {
+            x: currentIndex,
+            y: totalItems
           });
         }
         break;

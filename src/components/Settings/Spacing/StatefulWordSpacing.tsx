@@ -47,7 +47,7 @@ export const StatefulWordSpacing = ({ standalone = true }: StatefulSettingsItemP
     { wordSpacingRangeConfig.variant === ThSettingsRangeVariant.numberField 
       ? <StatefulNumberField 
         standalone={ standalone }
-        label={ t("reader.settings.wordSpacing.title") }
+        label={ t("reader.preferences.wordSpacing") }
         placeholder={ placeholderText }
         defaultValue={ undefined } 
         value={ wordSpacing ?? undefined } 
@@ -56,8 +56,8 @@ export const StatefulWordSpacing = ({ standalone = true }: StatefulSettingsItemP
         range={ wordSpacingRangeConfig.range }
         step={ wordSpacingRangeConfig.step }
         steppers={{
-          decrementLabel: t("reader.settings.wordSpacing.decrease"),
-          incrementLabel: t("reader.settings.wordSpacing.increase")
+          decrementLabel: t("common.actions.decrease"),
+          incrementLabel: t("common.actions.increase")
         }}
         formatOptions={{ style: "percent" }} 
         isWheelDisabled={ true }
@@ -66,7 +66,7 @@ export const StatefulWordSpacing = ({ standalone = true }: StatefulSettingsItemP
       : <StatefulSlider
         standalone={ standalone }
         displayTicks={ wordSpacingRangeConfig.variant === ThSettingsRangeVariant.incrementedSlider }
-        label={ t("reader.settings.wordSpacing.title") }
+        label={ t("reader.preferences.wordSpacing") }
         placeholder={ placeholderText }
         defaultValue={ undefined } 
         value={ wordSpacing ?? undefined } 

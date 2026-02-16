@@ -1,0 +1,499 @@
+Locale Completion Status
+Reference language: en
+Generated: 2026-02-10T09:57:57.015Z
+
+
+Locale Completion Summary:
+----------------------------------------
+EN     [■■■■■■■■■■■■■■■■■■■■] 100%
+FI     [■■■■■■■■■■■■■■■■■■■□]  97%
+IT     [■■■■■■■■■■■■■■■■■■■□]  97%
+LT     [■■■■■■■■■■■■■■■■■■■□]  96%
+AR     [■■■■■■■■■■■■■■■■■■□□]  92%
+PT-BR  [■■■■■■■■■■■■■■■■■□□□]  85%
+PT-PT  [■■■■■■■■■■■■■■■■■□□□]  85%
+SV     [■■■■■■■■■■■■■■■■□□□□]  84%
+FR     [■■■■■■■■■■■■■■□□□□□□]  74%
+DA     [■■■■■■■■■■■■■□□□□□□□]  66%
+ET     [■■■■■■■■■■■□□□□□□□□□]  59%
+PL     [■■■■■■■■■■■□□□□□□□□□]  59%
+TA     [■■■■■■■■■■■□□□□□□□□□]  58%
+TR     [■■■■□□□□□□□□□□□□□□□□]  21%
+EL     [■■■□□□□□□□□□□□□□□□□□]  16%
+UK     [□□□□□□□□□□□□□□□□□□□□]   0%
+
+
+Inferred Usage Summary:
+----------------------------------------
+EN     [■■■■■■■■■■■■■■■■■■■■] 100%
+FI     [■■■■■■■■■■■■■■■■■■■■] 100%
+IT     [■■■■■■■■■■■■■■■■■■■■] 100%
+LT     [■■■■■■■■■■■■■■■■■■■■] 100%
+PT-BR  [■■■■■■■■■■■■■■■■■■■■] 100%
+PT-PT  [■■■■■■■■■■■■■■■■■■■■] 100%
+SV     [■■■■■■■■■■■■■■■■■■■■] 100%
+FR     [■■■■■■■■■■■■■■■■■■■■] 100%
+DA     [■■■■■■■■■■■■■■■■■■■□]  98%
+PL     [■■■■■■■■■■■■■■■■■■■□]  98%
+TA     [■■■■■■■■■■■■■■■■■■□□]  93%
+AR     [■■■■■■■■■■■■■■■■■■□□]  92%
+ET     [■■■■■■■■■■■□□□□□□□□□]  57%
+EL     [■■■■■□□□□□□□□□□□□□□□]  29%
+TR     [■■■□□□□□□□□□□□□□□□□□]  16%
+UK     [□□□□□□□□□□□□□□□□□□□□]   0%
+
+Locale Breakdown:
+----------------------------------------
+
+EN (100% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■■■ 100%  (185/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+FI (97% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■■□  97%  (179/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+IT (97% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■■□  97%  (179/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+LT (96% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  95%  (137/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■■□  96%  (178/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+AR (92% complete, 92% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
+   thorium-web.json      ■■■■■■■□□□  78%  (32/41)
+   TOTAL                 ■■■■■■■■■□  92%  (170/185)
+   USED                  ■■■■■■■■■□  92%  (79/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (7 keys):
+   • reader.jumpToPosition.label
+   • reader.overflowMenu.active.trigger
+   • reader.overflowMenu.active.tooltip
+   • reader.settings.spacing.advanced.trigger
+   • reader.settings.spacing.advanced.tooltip
+   • reader.settings.text.advanced.trigger
+   • reader.settings.text.advanced.tooltip
+
+
+PT-BR (85% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  81%  (116/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■□□  85%  (157/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+PT-PT (85% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  81%  (116/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■□□  85%  (157/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+SV (84% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■□□□  79%  (114/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■■□□  84%  (155/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+FR (74% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■□□□□  66%  (95/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■■□□□  74%  (136/185)
+   USED                  ■■■■■■■■■■ 100%  (86/86)
+
+DA (66% complete, 98% of inferred usage)
+   thorium-shared.json   ■■■■■□□□□□  57%  (82/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■■□□□□  66%  (123/185)
+   USED                  ■■■■■■■■■□  98%  (84/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+
+   SHARED (2 keys):
+   • reader.preferences.columns.single.compact
+   • reader.preferences.columns.dual.compact
+
+
+ET (59% complete, 57% of inferred usage)
+   thorium-shared.json   ■■■■□□□□□□  47%  (68/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■□□□□□  59%  (109/185)
+   USED                  ■■■■■□□□□□  57%  (49/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+
+   SHARED (37 keys):
+   • reader.preferences.text
+   • reader.preferences.spacing.title
+   • reader.preferences.title
+   • reader.tableOfContents.title
+   • reader.tableOfContents.emptyState.description
+   • reader.preferences.layout.paginated
+   • reader.preferences.layout.scrolled
+   • reader.preferences.layout.title
+   • reader.preferences.themes.title
+   • reader.preferences.letterSpacing
+   • reader.preferences.lineHeight.small
+   • reader.preferences.lineHeight.medium
+   • reader.preferences.lineHeight.large
+   • reader.preferences.lineHeight.default
+   • reader.preferences.lineHeight.title
+   • reader.preferences.paragraphIndent
+   • reader.preferences.paragraphSpacing
+   • reader.preferences.wordSpacing
+   • reader.preferences.publisherStyles.label
+   • reader.preferences.zoom
+   • reader.preferences.fontSize
+   • reader.preferences.fontFamily.publisher
+   • reader.preferences.fontFamily.title
+   • reader.preferences.fontWeight.normal
+   • reader.preferences.fontWeight.bold
+   • reader.preferences.fontWeight.title
+   • reader.preferences.hyphens.title
+   • reader.preferences.hyphens.label
+   • reader.preferences.textAlign.default
+   • reader.preferences.textAlign.right
+   • reader.preferences.textAlign.left
+   • reader.preferences.textAlign.justify
+   • reader.preferences.textAlign.title
+   • reader.preferences.textNormalization.title
+   • reader.preferences.textNormalization.label
+   • reader.progression.xOfY.compact
+   • reader.progression.xOfY.descriptive
+
+
+PL (59% complete, 98% of inferred usage)
+   thorium-shared.json   ■■■■□□□□□□  47%  (68/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■□□□□□  59%  (109/185)
+   USED                  ■■■■■■■■■□  98%  (84/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+
+   SHARED (2 keys):
+   • reader.preferences.spacing.presets.title
+   • common.actions.reset
+
+
+TA (58% complete, 93% of inferred usage)
+   thorium-shared.json   ■■■■□□□□□□  46%  (66/144)
+   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
+   TOTAL                 ■■■■■□□□□□  58%  (107/185)
+   USED                  ■■■■■■■■■□  93%  (80/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+
+   SHARED (6 keys):
+   • reader.preferences.columns.single.compact
+   • reader.preferences.columns.dual.compact
+   • reader.preferences.spacing.presets.title
+   • common.actions.reset
+   • reader.preferences.fontWeight.normal
+   • reader.preferences.fontWeight.bold
+
+
+TR (21% complete, 16% of inferred usage)
+   thorium-shared.json   ■■□□□□□□□□  27%  (39/144)
+   thorium-web.json      □□□□□□□□□□   0%  (0/41)
+   TOTAL                 ■■□□□□□□□□  21%  (39/185)
+   USED                  ■□□□□□□□□□  16%  (14/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (34 keys):
+   • reader.fullscreen.close
+   • reader.fullscreen.trigger
+   • reader.fullscreen.tooltip
+   • reader.jumpToPosition.label
+   • reader.jumpToPosition.go
+   • reader.overflowMenu.active.trigger
+   • reader.overflowMenu.active.tooltip
+   • reader.toc.entries
+   • reader.app.docker.fullscreen.trigger
+   • reader.app.docker.fullscreen.tooltip
+   • reader.app.docker.popover.trigger
+   • reader.app.docker.popover.tooltip
+   • reader.app.docker.wrapper
+   • reader.app.docking.dockingRight
+   • reader.app.docking.dockingLeft
+   • reader.app.docking.dockingClosed
+   • reader.app.docking.dockingCollapsed
+   • reader.app.docking.dockingEmpty
+   • reader.app.publicationWrapper
+   • reader.app.loading
+   • reader.settings.spacing.advanced.trigger
+   • reader.settings.spacing.advanced.tooltip
+   • reader.settings.text.advanced.trigger
+   • reader.settings.text.advanced.tooltip
+   • reader.app.back.trigger
+   • reader.app.header.backLink.tooltip
+   • reader.app.header.backLink.trigger
+   • reader.app.footer.label
+   • reader.navigation.scroll.wrapper
+   • reader.app.header.label
+   • reader.app.header.actions
+   • reader.app.progression.referenceFallback
+   • reader.app.progression.wrapper
+   • reader.app.header.runningHead
+
+   SHARED (38 keys):
+   • reader.preferences.text
+   • reader.preferences.spacing.title
+   • reader.tableOfContents.title
+   • common.actions.search
+   • common.actions.clear
+   • reader.tableOfContents.emptyState.description
+   • common.actions.close
+   • reader.preferences.layout.paginated
+   • reader.preferences.layout.scrolled
+   • reader.preferences.layout.title
+   • reader.preferences.themes.title
+   • reader.preferences.letterSpacing
+   • common.actions.decrease
+   • common.actions.increase
+   • reader.preferences.lineHeight.small
+   • reader.preferences.lineHeight.medium
+   • reader.preferences.lineHeight.large
+   • reader.preferences.lineHeight.default
+   • reader.preferences.lineHeight.title
+   • reader.preferences.paragraphIndent
+   • reader.preferences.paragraphSpacing
+   • reader.preferences.spacing.presets.title
+   • reader.preferences.wordSpacing
+   • common.actions.reset
+   • reader.preferences.publisherStyles.label
+   • reader.preferences.zoom
+   • reader.preferences.fontWeight.normal
+   • reader.preferences.fontWeight.bold
+   • reader.preferences.fontWeight.title
+   • reader.preferences.hyphens.title
+   • reader.preferences.hyphens.label
+   • reader.preferences.textAlign.default
+   • reader.preferences.textAlign.right
+   • reader.preferences.textAlign.left
+   • reader.preferences.textAlign.justify
+   • reader.preferences.textAlign.title
+   • reader.preferences.textNormalization.title
+   • reader.preferences.textNormalization.label
+
+
+EL (16% complete, 29% of inferred usage)
+   thorium-shared.json   □□□□□□□□□□   0%  (0/144)
+   thorium-web.json      ■■■■■■■□□□  73%  (30/41)
+   TOTAL                 ■□□□□□□□□□  16%  (30/185)
+   USED                  ■■□□□□□□□□  29%  (25/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (9 keys):
+   • reader.jumpToPosition.label
+   • reader.jumpToPosition.go
+   • reader.overflowMenu.active.trigger
+   • reader.overflowMenu.active.tooltip
+   • reader.toc.entries
+   • reader.settings.spacing.advanced.trigger
+   • reader.settings.spacing.advanced.tooltip
+   • reader.settings.text.advanced.trigger
+   • reader.settings.text.advanced.tooltip
+
+   SHARED (52 keys):
+   • reader.actions.goToPosition.descriptive
+   • reader.actions.goToPosition.compact
+   • reader.preferences.text
+   • reader.preferences.spacing.title
+   • reader.preferences.title
+   • reader.tableOfContents.title
+   • common.actions.search
+   • common.actions.clear
+   • reader.tableOfContents.emptyState.description
+   • common.actions.close
+   • reader.preferences.columns.auto
+   • reader.preferences.columns.single.compact
+   • reader.preferences.columns.dual.compact
+   • reader.preferences.columns.title
+   • reader.preferences.layout.paginated
+   • reader.preferences.layout.scrolled
+   • reader.preferences.layout.title
+   • reader.preferences.themes.title
+   • reader.preferences.letterSpacing
+   • common.actions.decrease
+   • common.actions.increase
+   • reader.preferences.lineHeight.small
+   • reader.preferences.lineHeight.medium
+   • reader.preferences.lineHeight.large
+   • reader.preferences.lineHeight.default
+   • reader.preferences.lineHeight.title
+   • reader.preferences.paragraphIndent
+   • reader.preferences.paragraphSpacing
+   • reader.preferences.spacing.presets.title
+   • reader.preferences.wordSpacing
+   • common.actions.reset
+   • reader.preferences.publisherStyles.label
+   • reader.preferences.zoom
+   • reader.preferences.fontSize
+   • reader.preferences.fontFamily.publisher
+   • reader.preferences.fontFamily.title
+   • reader.preferences.fontWeight.normal
+   • reader.preferences.fontWeight.bold
+   • reader.preferences.fontWeight.title
+   • reader.preferences.hyphens.title
+   • reader.preferences.hyphens.label
+   • reader.preferences.textAlign.default
+   • reader.preferences.textAlign.right
+   • reader.preferences.textAlign.left
+   • reader.preferences.textAlign.justify
+   • reader.preferences.textAlign.title
+   • reader.preferences.textNormalization.title
+   • reader.preferences.textNormalization.label
+   • reader.actions.goForward
+   • reader.actions.goBackward
+   • reader.progression.xOfY.compact
+   • reader.progression.xOfY.descriptive
+
+
+UK (0% complete, 0% of inferred usage)
+   thorium-shared.json   □□□□□□□□□□   0%  (0/144)
+   thorium-web.json      □□□□□□□□□□   0%  (0/41)
+   TOTAL                 □□□□□□□□□□   0%  (0/185)
+   USED                  □□□□□□□□□□   0%  (0/86)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (34 keys):
+   • reader.fullscreen.close
+   • reader.fullscreen.trigger
+   • reader.fullscreen.tooltip
+   • reader.jumpToPosition.label
+   • reader.jumpToPosition.go
+   • reader.overflowMenu.active.trigger
+   • reader.overflowMenu.active.tooltip
+   • reader.toc.entries
+   • reader.app.docker.fullscreen.trigger
+   • reader.app.docker.fullscreen.tooltip
+   • reader.app.docker.popover.trigger
+   • reader.app.docker.popover.tooltip
+   • reader.app.docker.wrapper
+   • reader.app.docking.dockingRight
+   • reader.app.docking.dockingLeft
+   • reader.app.docking.dockingClosed
+   • reader.app.docking.dockingCollapsed
+   • reader.app.docking.dockingEmpty
+   • reader.app.publicationWrapper
+   • reader.app.loading
+   • reader.settings.spacing.advanced.trigger
+   • reader.settings.spacing.advanced.tooltip
+   • reader.settings.text.advanced.trigger
+   • reader.settings.text.advanced.tooltip
+   • reader.app.back.trigger
+   • reader.app.header.backLink.tooltip
+   • reader.app.header.backLink.trigger
+   • reader.app.footer.label
+   • reader.navigation.scroll.wrapper
+   • reader.app.header.label
+   • reader.app.header.actions
+   • reader.app.progression.referenceFallback
+   • reader.app.progression.wrapper
+   • reader.app.header.runningHead
+
+   SHARED (52 keys):
+   • reader.actions.goToPosition.descriptive
+   • reader.actions.goToPosition.compact
+   • reader.preferences.text
+   • reader.preferences.spacing.title
+   • reader.preferences.title
+   • reader.tableOfContents.title
+   • common.actions.search
+   • common.actions.clear
+   • reader.tableOfContents.emptyState.description
+   • common.actions.close
+   • reader.preferences.columns.auto
+   • reader.preferences.columns.single.compact
+   • reader.preferences.columns.dual.compact
+   • reader.preferences.columns.title
+   • reader.preferences.layout.paginated
+   • reader.preferences.layout.scrolled
+   • reader.preferences.layout.title
+   • reader.preferences.themes.title
+   • reader.preferences.letterSpacing
+   • common.actions.decrease
+   • common.actions.increase
+   • reader.preferences.lineHeight.small
+   • reader.preferences.lineHeight.medium
+   • reader.preferences.lineHeight.large
+   • reader.preferences.lineHeight.default
+   • reader.preferences.lineHeight.title
+   • reader.preferences.paragraphIndent
+   • reader.preferences.paragraphSpacing
+   • reader.preferences.spacing.presets.title
+   • reader.preferences.wordSpacing
+   • common.actions.reset
+   • reader.preferences.publisherStyles.label
+   • reader.preferences.zoom
+   • reader.preferences.fontSize
+   • reader.preferences.fontFamily.publisher
+   • reader.preferences.fontFamily.title
+   • reader.preferences.fontWeight.normal
+   • reader.preferences.fontWeight.bold
+   • reader.preferences.fontWeight.title
+   • reader.preferences.hyphens.title
+   • reader.preferences.hyphens.label
+   • reader.preferences.textAlign.default
+   • reader.preferences.textAlign.right
+   • reader.preferences.textAlign.left
+   • reader.preferences.textAlign.justify
+   • reader.preferences.textAlign.title
+   • reader.preferences.textNormalization.title
+   • reader.preferences.textNormalization.label
+   • reader.actions.goForward
+   • reader.actions.goBackward
+   • reader.progression.xOfY.compact
+   • reader.progression.xOfY.descriptive
+
+
+
+==================================================
+DYNAMIC TEMPLATE LITERALS WARNING
+==================================================
+
+⚠️  Found 8 dynamic template literal(s) that need manual checking:
+   📄 components/Docking/StatefulDockEnd.tsx:34
+      t(`${ translationKey }.trigger`)
+   📄 components/Docking/StatefulDockEnd.tsx:35
+      t(`${ translationKey }.tooltip`)
+   📄 components/Docking/StatefulDockStart.tsx:34
+      t(`${ translationKey }.trigger`)
+   📄 components/Docking/StatefulDockStart.tsx:35
+      t(`${ translationKey }.tooltip`)
+   📄 components/Docking/StatefulDockingWrapper.tsx:106
+      t(`reader.${ actionKey }.heading`)
+   📄 components/Docking/StatefulDockingWrapper.tsx:108
+      t(`reader.${ actionKey }.heading`)
+   📄 components/Epub/Settings/StatefulTheme.tsx:161
+      t(`reader.preferences.themes.${ themeItem }`)
+   📄 components/Settings/Spacing/StatefulSpacingPresets.tsx:128
+      t(`reader.preferences.spacing.presets.${ key === ThSpacingPresetKeys.publisher ? "default" : key }`)
+
+   These patterns depend on runtime values and cannot be automatically validated.
+   Please verify the corresponding translation keys exist in all locale files.

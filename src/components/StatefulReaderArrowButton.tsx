@@ -47,8 +47,8 @@ export const StatefulReaderArrowButton = ({
     direction === "right" && !isRTL || 
     direction === "left" && isRTL
   ) 
-    ? t("reader.navigation.goForward") 
-    : t("reader.navigation.goBackward");
+    ? t("reader.actions.goForward") 
+    : t("reader.actions.goBackward");
 
   const handleClassNameFromState = () => {
     let className = "";

@@ -14,7 +14,7 @@ import {
   WebPubSettings,
   IWebPubDefaults,
   IWebPubPreferences,
-
+  IInjectablesConfig
 } from "@readium/navigator";
 
 type cbb = (ok: boolean) => void;
@@ -29,6 +29,7 @@ export interface WebPubNavigatorLoadProps {
   initialPosition?: Locator;
   preferences?: IWebPubPreferences;
   defaults?: IWebPubDefaults;
+  injectables?: IInjectablesConfig;
 }
 
 export const useWebPubNavigator = () => {
@@ -56,7 +57,11 @@ export const useWebPubNavigator = () => {
         config.publication, 
         config.listeners, 
         config.initialPosition, 
-        { preferences: config.preferences || {}, defaults: config.defaults || {} }
+        { 
+          preferences: config.preferences || {}, 
+          defaults: config.defaults || {}, 
+          injectables: config.injectables || undefined 
+        }
       );
 
       navigatorInstance.load().then(() => {

@@ -64,7 +64,7 @@ export const StatefulNumberField = ({
             tooltip: {
               className: readerSharedUI.tooltip
             },
-            label: resetLabel ?? t("reader.settings.reset")
+            label: resetLabel ?? t("common.actions.reset")
           }
         }
       }}

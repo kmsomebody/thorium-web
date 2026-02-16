@@ -47,7 +47,7 @@ export const StatefulParagraphIndent = ({ standalone = true }: StatefulSettingsI
     { paragraphIndentRangeConfig.variant === ThSettingsRangeVariant.numberField 
       ? <StatefulNumberField 
         standalone={ standalone }
-        label={ t("reader.settings.paraIndent.title") }
+        label={ t("reader.preferences.paragraphIndent") }
         placeholder={ placeholderText }
         defaultValue={ undefined } 
         value={ paragraphIndent ?? undefined } 
@@ -56,8 +56,8 @@ export const StatefulParagraphIndent = ({ standalone = true }: StatefulSettingsI
         range={ paragraphIndentRangeConfig.range }
         step={ paragraphIndentRangeConfig.step }
         steppers={{
-          decrementLabel: t("reader.settings.paraIndent.decrease"),
-          incrementLabel: t("reader.settings.paraIndent.increase")
+          decrementLabel: t("common.actions.decrease"),
+          incrementLabel: t("common.actions.increase")
         }}
         formatOptions={{
           signDisplay: "exceptZero",
@@ -70,7 +70,7 @@ export const StatefulParagraphIndent = ({ standalone = true }: StatefulSettingsI
       : <StatefulSlider
         standalone={ standalone }
         displayTicks={ paragraphIndentRangeConfig.variant === ThSettingsRangeVariant.incrementedSlider }
-        label={ t("reader.settings.paraIndent.title") }
+        label={ t("reader.preferences.paragraphIndent") }
         placeholder={ placeholderText }
         defaultValue={ undefined } 
         value={ paragraphIndent ?? undefined } 

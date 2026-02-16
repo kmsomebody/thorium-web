@@ -49,19 +49,19 @@ export const StatefulColumns = () => {
     {
       id: "auto",
       icon: AutoLayoutIcon,
-      label: t("reader.settings.column.auto"), 
+      label: t("reader.preferences.columns.auto"), 
       value: "auto" 
     },
     {
       id: "1",
       icon: OneColIcon,
-      label: t("reader.settings.column.one"), 
+      label: t("reader.preferences.columns.single.compact"), 
       value: "1" 
     },
     {
       id: "2",
       icon: TwoColsIcon,
-      label: t("reader.settings.column.two"), 
+      label: t("reader.preferences.columns.dual.compact"), 
       value: "2",
       // This is subpar when the columnCount is 1 though because
       // it won't be disabled, but it's the best we can do with
@@ -106,7 +106,7 @@ export const StatefulColumns = () => {
     <>
     <StatefulRadioGroup 
       standalone={ true }
-      label={ t("reader.settings.column.title") }
+      label={ t("reader.preferences.columns.title") }
       orientation="horizontal"
       value={ effectiveValue }
       onChange={ async (val: string) => await updatePreference(val) }

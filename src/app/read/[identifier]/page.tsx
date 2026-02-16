@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { StatefulReader } from "@/components/Epub";
+import dynamic from "next/dynamic";
 import { StatefulLoader } from "@/components/Misc/StatefulLoader";
 import { PUBLICATION_MANIFESTS } from "@/config/publications";
 import { usePublication } from "@/hooks/usePublication";
@@ -13,6 +13,10 @@ type Params = { identifier: string };
 type Props = {
   params: Promise<Params>;
 };
+
+const StatefulReader = dynamic(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })), {
+  ssr: false
+});
 
 export default function BookPage({ params }: Props) {
   const [domainError, setDomainError] = useState<string | null>(null);

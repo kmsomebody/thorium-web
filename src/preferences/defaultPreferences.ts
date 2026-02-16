@@ -20,18 +20,24 @@ import {
   ThDocumentTitleFormat,
   ThArrowVariant,
 } from "./models/enums";
-import { createPreferences, ThPreferences, DefaultKeys } from "./preferences";
+import { createPreferences, ThPreferences, DefaultKeys, ValidatedLanguageCollection } from "./preferences";
 
 import ReadiumCSSColors from "@readium/css/css/vars/colors.json";
 import { 
+  defaultFontCollection,
   defaultLetterSpacing, 
   defaultLineHeights, 
   defaultParagraphIndent, 
   defaultParagraphSpacing, 
   defaultSpacingPresets, 
   defaultSpacingPresetsOrder, 
+  defaultSpacingSettingsMain, 
+  defaultSpacingSettingsSubpanel, 
+  defaultTextSettingsMain, 
+  defaultTextSettingsSubpanel, 
   defaultWordSpacing, 
-  defaultZoom
+  defaultZoom,
+  tamilCollection
 } from "./models/const";
 
 export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<DefaultKeys>({
@@ -492,6 +498,13 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       ThSettingsKeys.spacingGroup
     ],
     keys: {
+      [ThSettingsKeys.fontFamily]: {
+        default: defaultFontCollection,
+        tamil: {
+          supportedLanguages: ["ta"],
+          fonts: tamilCollection
+        }
+      },
       [ThSettingsKeys.letterSpacing]: defaultLetterSpacing,
       [ThSettingsKeys.lineHeight]: {
         allowUnset: false,
@@ -503,10 +516,14 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       [ThSettingsKeys.zoom]: defaultZoom
     },
     text: {
-      header: ThSheetHeaderVariant.previous
+      header: ThSheetHeaderVariant.previous,
+      main: defaultTextSettingsMain,
+      subPanel: defaultTextSettingsSubpanel
     },
     spacing: {
       header: ThSheetHeaderVariant.previous,
+      main: defaultSpacingSettingsMain,
+      subPanel: defaultSpacingSettingsSubpanel,
       presets: {
         reflowOrder: defaultSpacingPresetsOrder,
         webPubOrder: defaultSpacingPresetsOrder,

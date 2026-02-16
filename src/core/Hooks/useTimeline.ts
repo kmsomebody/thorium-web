@@ -163,7 +163,7 @@ export const useTimeline = ({
     });
   }, []);
 
-  const handleTocEntryOnNav = useCallback((locator?: Locator) => {
+  const handleTocEntryOnNav = useCallback((locator?: Locator, currentPos?: number[]) => {
     if (!locator || !tocTree.length) return;
 
     const findMatch = (items: TocItem[], link?: Link): TocItem | undefined => {
@@ -187,9 +187,8 @@ export const useTimeline = ({
 
     // If we're in FXL and didn't find a match, try to find a match for the other position in the spread
     if (layout === Layout.fixed) {
-      const positions = currentPositions;
-      if (positions && positions.length === 2) {
-        const otherPosition = positions[0] === locator.locations.position ? positions[1] : positions[0];
+      if (currentPos && currentPos.length === 2) {
+        const otherPosition = currentPos[0] === locator.locations.position ? currentPos[1] : currentPos[0];
         const otherPositionInList = positionsList?.find((pos: Locator) => pos.locations.position === otherPosition);
         if (otherPositionInList) {
           const match = findMatch(tocTree, new Link(otherPositionInList));
@@ -202,7 +201,7 @@ export const useTimeline = ({
     }
 
     // If no match, try to find a match for other positions
-    const otherPositions = currentPositions?.filter(pos => pos !== locator.locations.position) || [];
+    const otherPositions = currentPos?.filter(pos => pos !== locator.locations.position) || [];
     for (const otherPosition of otherPositions) {
       const otherPositionInList = positionsList?.find((pos: Locator) => pos.locations.position === otherPosition);
       if (otherPositionInList) {
@@ -213,7 +212,7 @@ export const useTimeline = ({
         }
       }
     }
-  }, [tocTree, currentPositions, positionsList, layout]);
+  }, [tocTree, layout, positionsList]);
 
   const buildTimelineItems = useCallback(() => {
     const timelineItems: { [href: string]: TimelineItem } = {};
@@ -321,15 +320,15 @@ export const useTimeline = ({
     return timelineItems;
   }, [publication?.readingOrder?.items, publication?.toc?.items, positionsList]);
 
-  const updateTimelineItems = useCallback(() => {
-    if (!currentLocation || !timelineItems) {
+  const updateTimelineItems = useCallback((currentLoc?: Locator) => {
+    if (!currentLoc || !timelineItems) {
       setPreviousItem(null);
       setNextItem(null);
       setCurrentItem(null);
       return;
     }
 
-    const currentItem = timelineItems[currentLocation.href];
+    const currentItem = timelineItems[currentLoc.href];
     if (!currentItem) {
       setPreviousItem(null);
       setNextItem(null);
@@ -340,7 +339,7 @@ export const useTimeline = ({
     setCurrentItem(currentItem);
 
     const timelineItemsArray = Object.values(timelineItems);
-    const currentIndex = timelineItemsArray.findIndex(item => item.href === currentLocation.href);
+    const currentIndex = timelineItemsArray.findIndex(item => item.href === currentLoc.href);
 
     if (currentIndex === -1) {
       setPreviousItem(null);
@@ -349,7 +348,7 @@ export const useTimeline = ({
       setPreviousItem(currentIndex > 0 ? timelineItemsArray[currentIndex - 1] : null);
       setNextItem(currentIndex < timelineItemsArray.length - 1 ? timelineItemsArray[currentIndex + 1] : null);
     }
-  }, [currentLocation, timelineItems]);
+  }, [timelineItems]);
 
   useEffect(() => {
     if (!publication) return;
@@ -368,19 +367,19 @@ export const useTimeline = ({
 
     // If we have a current location, use it
     if (currentLocation) {
-      handleTocEntryOnNav(currentLocation);
+      handleTocEntryOnNav(currentLocation, currentPositions);
     }
     // Otherwise, use the first TOC entry
     else if (tocTree.length > 0) {
-      handleTocEntryOnNav(new Locator({ href: tocTree[0].href, type: "" }));
+      handleTocEntryOnNav(new Locator({ href: tocTree[0].href, type: "" }), currentPositions);
     }
 
-    updateTimelineItems();
+    updateTimelineItems(currentLocation);
 
     // Update progression state when location changes
     setRelativeProgression(currentLocation?.locations.progression);
     setTotalProgression(currentLocation?.locations.totalProgression);
-  }, [currentLocation, tocTree, timelineItems, handleTocEntryOnNav, updateTimelineItems]);
+  }, [currentLocation, currentPositions, tocTree, timelineItems, handleTocEntryOnNav, updateTimelineItems]);
 
   // Update the singleton and call onChange
   useEffect(() => {
