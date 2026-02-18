@@ -27,6 +27,7 @@ import {
 import { ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility, ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
+import { HTMLProps, SVGProps } from "react";
 
 export type I18nValue<T> = T | string | { key: string; fallback?: string };
 
@@ -126,7 +127,7 @@ export type ThBackLinkContent =
     }
   | {
       type: "svg";
-      content: string; // Raw SVG string
+      content: React.FC<SVGProps<SVGSVGElement>>;
     };
 
 export interface ThBackLinkPref {

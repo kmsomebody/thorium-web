@@ -97,26 +97,11 @@ export const StatefulBackLink = ({
           break;
           
         case "svg":
-          // Parse the SVG string
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(content.content, "image/svg+xml");
-          const svgElement = doc.documentElement;
-          
-          // Extract all attributes
-          const attributes: Record<string, string> = {};
-          for (const { name, value } of Array.from(svgElement.attributes)) {
-            attributes[name] = value;
-          }
-            
           // Create the SVG element with all its original attributes
-          contentNode = React.createElement("svg", {
-            ...attributes,
+          contentNode = React.createElement(content.content, {
             "aria-hidden": "true",
             focusable: "false",
             xmlns: "http://www.w3.org/2000/svg",
-            dangerouslySetInnerHTML: { 
-              __html: svgElement.innerHTML 
-            }
           });
           break;
       }
