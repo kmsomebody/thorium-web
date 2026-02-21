@@ -19,6 +19,7 @@ import {
   SelectProps 
 } from "react-aria-components";
 import { ThDropdownButton, ThDropdownButtonProps } from "./ThDropdownButton";
+import { usePreferences } from "@/preferences";
 
 export interface ThDropdownEntry {
   id: string;
@@ -64,6 +65,7 @@ export const ThDropdown = ({
   compounds,
   ...props
 }: ThDropdownProps) => {
+  const { preferences } = usePreferences();
   if (!items && !React.isValidElement(compounds?.listbox)) {
     return null;
   }
@@ -83,7 +85,13 @@ export const ThDropdown = ({
         : <ThDropdownButton { ...compounds?.button as ThDropdownButtonProps } />
       }
       <Popover
-        { ...compounds?.popover }
+        { ...compounds?.popover }        
+        className={(state) => {
+          const className = compounds?.popover?.className;
+          const pref = preferences.theming.classNames?.menu;
+          const cls = typeof className === "function" ? className(state) : className;
+          return [pref, cls].filter((v) => !!v).join(" ");
+        }}
       >
       { compounds?.listbox && React.isValidElement(compounds.listbox) 
         ? compounds.listbox 

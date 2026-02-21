@@ -391,6 +391,8 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     classNames?: {
       dockedPanel?: string;
       popover?: string;
+      menu?: string;
+      dropdown?: string;
     };
   };
   affordances: {

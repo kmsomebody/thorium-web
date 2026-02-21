@@ -9,6 +9,7 @@ import { Menu, MenuProps, MenuTrigger, MenuTriggerProps, Popover, PopoverProps }
 import { ThMenuButton } from "./ThMenuButton";
 import { ThActionButtonProps } from "../Buttons";
 import { ThActionEntry, ThActionsTriggerVariant } from "../Actions/ThActionsBar";
+import { usePreferences } from "@/preferences";
 
 export interface THMenuProps<T> extends MenuProps<ThActionEntry<T>> {
   ref?: React.ForwardedRef<HTMLDivElement>;
@@ -42,6 +43,7 @@ export const ThMenu = ({
   ...props
 }: THMenuProps<string>) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const { preferences } = usePreferences();
 
   if (items) {
     return (
@@ -56,7 +58,15 @@ export const ThMenu = ({
             { ...compounds?.button as ThActionButtonProps }
           />
         }
-        <Popover { ...compounds?.popover }>
+        <Popover 
+          { ...compounds?.popover } 
+          className={(state) => {
+            const className = compounds?.popover?.className;
+            const pref = preferences.theming.classNames?.menu;
+            const cls = typeof className === "function" ? className(state) : className;
+            return [pref, cls].filter((v) => !!v).join(" ");
+          }}
+        >
           <Menu 
             ref={ ref }
             id={ id }
