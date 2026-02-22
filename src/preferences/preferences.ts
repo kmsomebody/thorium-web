@@ -393,6 +393,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       popover?: string;
       menu?: string;
       dropdown?: string;
+      tooltip?: string;
     };
   };
   affordances: {
