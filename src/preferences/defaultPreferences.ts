@@ -218,7 +218,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       keys: {
         [ThThemeKeys.light]: {
           background: ReadiumCSSColors.RS__backgroundColor, // Color of background
-          accent: ReadiumCSSColors.RS__backgroundColor, // Accent color, defaults to background
           text: ReadiumCSSColors.RS__textColor,    // Color of text
           link: "#0000ee",                // Color of links
           visited: "#551a8b",             // Color of visited links
@@ -234,7 +233,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         },
         [ThThemeKeys.dark]: {
           background: "#000000",
-          accent: "#000000",
           text: "#FEFEFE",
           link: "#63caff",
           visited: "#0099E5",
@@ -250,7 +248,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         },
         [ThThemeKeys.paper]: {
           background: "#faf4e8",
-          accent: "#faf4e8",
           text: "#121212",
           link: "#0000EE",
           visited: "#551A8B",
@@ -266,7 +263,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         },
         [ThThemeKeys.sepia]: {
           background: "#e9ddc8",
-          accent: "#e9ddc8",
           text: "#000000",
           link: "#0000EE",
           visited: "#551A8B",
@@ -282,7 +278,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         },
         [ThThemeKeys.contrast1]: {
           background: "#000000",
-          accent: "#000000",
           text: "#ffff00",
           link: "#63caff",
           visited: "#0099E5",
@@ -298,7 +293,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         },
         [ThThemeKeys.contrast2]: {
           background: "#181842",
-          accent: "#181842",
           text: "#ffffff",
           link: "#adcfff",
           visited: "#7ab2ff",
@@ -314,7 +308,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         },
         [ThThemeKeys.contrast3]: {
           background: "#c5e7cd",
-          accent: "#c5e7cd",
           text: "#000000",
           link: "#0000EE",
           visited: "#551A8B",

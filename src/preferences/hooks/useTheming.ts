@@ -18,7 +18,6 @@ import { prefixString } from "@/core/Helpers/prefixString";
 
 export interface ThemeTokens {
   background: CSSColor;
-  accent: CSSColor;
   text: CSSColor;
   link: CSSColor;
   visited: CSSColor;
