@@ -155,6 +155,7 @@ export interface StatefulReaderProps {
   rawManifest: object;
   selfHref: string;
   plugins?: ThPlugin[];
+  httpFetcher?: HttpFetcher;
 }
 
 // We need to register plugins before hooks run
@@ -164,7 +165,8 @@ export interface StatefulReaderProps {
 export const StatefulReader = ({
   rawManifest,
   selfHref,
-  plugins
+  plugins,
+  httpFetcher
 }: StatefulReaderProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
@@ -186,13 +188,13 @@ export const StatefulReader = ({
   return (
     <>
       <ThPluginProvider>
-        <StatefulReaderInner rawManifest={ rawManifest } selfHref={ selfHref } />
+        <StatefulReaderInner rawManifest={ rawManifest } selfHref={ selfHref } httpFetcher={ httpFetcher } />
       </ThPluginProvider>
     </>
   );
 };
 
-const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; selfHref: string }) => {
+const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher }: { rawManifest: object; selfHref: string; httpFetcher?: HttpFetcher }) => {
   const { fxlActionKeys, fxlThemeKeys, reflowActionKeys, reflowThemeKeys } = usePreferenceKeys();
   const { preferences, resolveFontLanguage, getFontMetadata, getFontInjectables } = usePreferences();
   const { t } = useI18n();
@@ -742,7 +744,7 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
   }, [preferences.direction, dispatch]);
 
   useEffect(() => {
-    const fetcher: Fetcher = new HttpFetcher(undefined, selfHref);
+    const fetcher: Fetcher = httpFetcher ? httpFetcher : new HttpFetcher(undefined, selfHref);
     const manifest = Manifest.deserialize(rawManifest)!;
     manifest.setSelfLink(selfHref);
 
@@ -752,7 +754,7 @@ const StatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: object; s
     }));
 
     dispatch(setReaderProfile("epub"));
-  }, [rawManifest, selfHref, dispatch]);
+  }, [rawManifest, selfHref, httpFetcher, dispatch]);
 
   useEffect(() => {
     if (!publication) return;
