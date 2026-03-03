@@ -601,6 +601,9 @@ const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher }: { rawManife
       return false;
     },
     textSelected: function (_selection: BasicTextSelection): void {},
+    contentProtection: function (type: string, data: unknown) {/*TODO*/},
+    contextMenu: function (_data: unknown) {/*TODO*/},
+    peripheral: function (_data: unknown) {/*TODO*/}
   };
 
   const applyConstraint = useCallback(async (value: number) => {

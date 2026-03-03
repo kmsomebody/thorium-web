@@ -358,6 +358,9 @@ const WebPubStatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: obj
       return false;
     },
     textSelected: function (_selection: BasicTextSelection): void {},
+    contentProtection: function (type: string, data: unknown) {/*TODO*/},
+    contextMenu: function (_data: unknown) {/*TODO*/},
+    peripheral: function (_data: unknown) {/*TODO*/}
   };
 
   useEffect(() => {
