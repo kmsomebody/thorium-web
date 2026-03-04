@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 
 import { StatefulSettingsItemProps } from "../models/settings";
-import { ThTextAlignOptions } from "@/preferences/models/enums";
+import { ThTextAlignOptions } from "@/preferences/models";
 
 import { StatefulSwitch } from "../StatefulSwitch";
 

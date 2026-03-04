@@ -8,7 +8,7 @@ import MenuIcon from "./assets/icons/more_vert.svg";
 
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { ThMenu } from "@/core/Components/Menu/ThMenu";
-import { ThActionsKeys, ThDockingKeys } from "@/preferences/models/enums";
+import { ThActionsKeys, ThDockingKeys } from "@/preferences/models";
 import { StatefulActionIcon } from "./Triggers/StatefulActionIcon";
 import { ThActionEntry } from "@/core/Components/Actions/ThActionsBar";
 

@@ -5,7 +5,7 @@ import React, { useCallback } from "react";
 import dockingStyles from "./assets/styles/thorium-web.docking.module.css";
 import readerSharedUI from "../assets/styles/thorium-web.button.module.css";
 
-import { ThDockingKeys } from "@/preferences/models/enums";
+import { ThDockingKeys } from "@/preferences/models";
 
 import { Toolbar } from "react-aria-components";
 

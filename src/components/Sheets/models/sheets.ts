@@ -1,5 +1,5 @@
 import { ReactNode, RefObject } from "react";
-import { ThDockingKeys, ThSheetHeaderVariant } from "@/preferences/models/enums";
+import { ThDockingKeys, ThSheetHeaderVariant } from "@/preferences/models";
 import { ActionsStateKeys } from "@/lib/actionsReducer";
 
 export interface StatefulSheet {

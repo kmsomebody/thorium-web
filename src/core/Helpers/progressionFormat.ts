@@ -1,4 +1,4 @@
-import { ThProgressionFormat } from "@/preferences/models/enums";
+import { ThProgressionFormat } from "@/preferences/models";
 import { TimelineProgression } from "@/core/Hooks/useTimeline";
 
 export const getSupportedProgressionFormats = (timeline?: TimelineProgression): ThProgressionFormat[] => {

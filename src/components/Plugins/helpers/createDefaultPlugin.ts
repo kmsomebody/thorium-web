@@ -1,5 +1,5 @@
 import { ThPlugin } from "../PluginRegistry";
-import { ThActionsKeys, ThSettingsKeys } from "@/preferences/models/enums";
+import { ThActionsKeys, ThSettingsKeys } from "@/preferences/models";
 
 import { StatefulFullscreenTrigger } from "../../Actions/Fullscreen/StatefulFullscreenTrigger";
 import { StatefulJumpToPositionTrigger } from "../../Actions/JumpToPosition/StatefulJumpToPositionTrigger";
@@ -33,7 +33,7 @@ export const createDefaultPlugin = (): ThPlugin => {
     id: "core",
     name: "Core Components",
     description: "Default components for Thorium Web Epub StatefulReader",
-    version: "1.1.4",
+    version: "1.1.5",
     components: {
       actions: {
         [ThActionsKeys.fullscreen]: {

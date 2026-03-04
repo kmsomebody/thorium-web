@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ThLineHeightOptions, ThSettingsKeys } from "@/preferences/models/enums";
+import { ThLineHeightOptions, ThSettingsKeys } from "@/preferences/models";
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 
 /**

@@ -1,4 +1,4 @@
-import { FontCollection, GoogleFontSource, VariableFontRangeConfig, WeightConfig } from "@/preferences/preferences";
+import { FontCollection, GoogleFontSource, VariableFontRangeConfig, WeightConfig } from "@/preferences/models";
 
 
 const DEFAULT_FALLBACK = "sans-serif";

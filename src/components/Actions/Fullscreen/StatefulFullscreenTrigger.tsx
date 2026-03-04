@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
-import { ThActionsKeys } from "@/preferences/models/enums";
+import { ThActionsKeys } from "@/preferences/models";
 import { StatefulActionTriggerProps } from "../models/actions";
 import { ThActionsTriggerVariant } from "@/core/Components/Actions/ThActionsBar";
 

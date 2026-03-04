@@ -3,7 +3,7 @@
 import React, { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 import { Link } from "@readium/shared";
-import { ThActionsKeys, ThDockingKeys, ThSheetTypes, ThLayoutDirection } from "@/preferences/models/enums";
+import { ThActionsKeys, ThDockingKeys, ThSheetTypes, ThLayoutDirection } from "@/preferences/models";
 import { StatefulActionContainerProps } from "../models/actions";
 import { TocItem } from "@/core/Hooks/useTimeline";
 

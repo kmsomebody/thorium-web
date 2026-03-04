@@ -1,4 +1,4 @@
-import { ThDockingKeys } from "@/preferences/models/enums";
+import { ThDockingKeys } from "@/preferences/models";
 
 import { configureStore, Reducer } from "@reduxjs/toolkit";
 
@@ -9,7 +9,6 @@ import actionsReducer, { ActionsReducerState } from "@/lib/actionsReducer";
 import publicationReducer, { PublicationReducerState } from "./publicationReducer";
 import preferencesReducer, { PreferencesReducerState } from "./preferencesReducer";
 import webPubSettingsReducer, { WebPubSettingsReducerState } from "./webPubSettingsReducer";
-import { FontFamilyStateObject } from "./settingsReducer";
 
 import debounce from "debounce";
 

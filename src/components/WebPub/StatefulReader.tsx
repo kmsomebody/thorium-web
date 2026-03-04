@@ -18,7 +18,7 @@ import {
   ThTextAlignOptions,
   ThSpacingSettingsKeys,
   ThSettingsKeys
-} from "@/preferences/models/enums";
+} from "@/preferences/models";
 
 import { ThPluginRegistry } from "../Plugins/PluginRegistry";
 
@@ -47,7 +47,6 @@ import { StatefulReaderFooter } from "../StatefulReaderFooter";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
-import { defaultTextSettingsMain, defaultTextSettingsSubpanel } from "@/preferences/models/const";
 import { useWebPubNavigator } from "@/core/Hooks/WebPub";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { useI18n } from "@/i18n/useI18n";
@@ -95,6 +94,7 @@ import { getPlatformModifier } from "@/core/Helpers/keyboardUtilities";
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
 import { prefixString } from "@/core/Helpers/prefixString";
+import { resolveContentProtectionConfig } from "@/preferences/models/protection";
 
 export interface WebPubCSSSettings {
   fontFamily: FontFamilyStateObject;
@@ -474,7 +474,8 @@ const WebPubStatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: obj
       defaults: {
         experiments: preferences.experiments?.webPub || null
       },
-      injectables: injectables
+      injectables: injectables,
+      contentProtection: resolveContentProtectionConfig(preferences.contentProtection, t)
     }, () => {
       p.observe(window);
     });
@@ -485,7 +486,7 @@ const WebPubStatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: obj
       WebPubNavigatorDestroy(() => p.destroy());
       removeFontResources();
     };
-  }, [publication, preferences, isFontFamilyUsed, injectFontResources, removeFontResources]);
+  }, [publication, preferences, isFontFamilyUsed, injectFontResources, removeFontResources, dispatch, resolveFontLanguage, getLocalData, WebPubNavigatorLoad, listeners, t, getFontMetadata, lineHeightOptions, getFontInjectables, p, WebPubNavigatorDestroy]);
 
   return (
     <>

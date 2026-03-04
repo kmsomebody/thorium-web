@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
-import { ThDockingTypes, ThDockingKeys, ThSheetTypes } from "@/preferences/models/enums";
+import { ThDockingTypes, ThDockingKeys, ThSheetTypes } from "@/preferences/models";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { makeBreakpointsMap } from "@/core/Helpers/breakpointsMap";

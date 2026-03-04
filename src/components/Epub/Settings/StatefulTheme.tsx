@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { ThemeKeyType, usePreferenceKeys } from "@/preferences";
 
@@ -8,7 +8,7 @@ import settingsStyles from "../../Settings/assets/styles/thorium-web.reader.sett
 
 import CheckIcon from "./assets/icons/check.svg";
 
-import { ThActionsKeys, ThLayoutDirection } from "@/preferences/models/enums";
+import { ThActionsKeys, ThLayoutDirection } from "@/preferences/models";
 
 import { StatefulRadioGroup } from "../../Settings/StatefulRadioGroup";
 import { Radio } from "react-aria-components";

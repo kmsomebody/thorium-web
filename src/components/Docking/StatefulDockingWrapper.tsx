@@ -7,7 +7,7 @@ import dockingStyles from "./assets/styles/thorium-web.docking.module.css";
 
 import { ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
-import { ThDockingTypes, ThDockingKeys, ThLayoutDirection } from "@/preferences/models/enums";
+import { ThDockingTypes, ThDockingKeys, ThLayoutDirection } from "@/preferences/models";
 import { ActionsStateKeys } from "@/lib/actionsReducer";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";

@@ -1,6 +1,6 @@
 "use client";
 
-import { ThBreakpoints } from "@/preferences/models/enums";
+import { ThBreakpoints } from "@/preferences/models";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 
 export const makeBreakpointsMap = <T>({

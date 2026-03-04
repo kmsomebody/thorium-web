@@ -1,4 +1,4 @@
-import { FontCollection, FontDefinition } from "@/preferences/preferences";
+import { FontCollection, FontDefinition } from "@/preferences/models";
 
 interface BunnyFontDefinitionParams {
   cssUrl: string;

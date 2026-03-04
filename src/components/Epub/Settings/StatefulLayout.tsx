@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
-import { ThLayoutOptions } from "@/preferences/models/enums";
+import { ThLayoutOptions } from "@/preferences/models";
 
 import ScrollableIcon from "./assets/icons/contract.svg";
 import PaginatedIcon from "./assets/icons/docs.svg";

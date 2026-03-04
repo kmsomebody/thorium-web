@@ -1,7 +1,6 @@
 import { PreferencesReducerState } from "../preferencesReducer";
 import { ThPreferences, CustomizableKeys } from "@/preferences/preferences";
-import { ThProgressionFormat, ThRunningHeadFormat, ThBreakpoints } from "@/preferences/models/enums";
-import { ThPaginatedAffordancePrefValue } from "@/preferences/preferences";
+import { ThProgressionFormat, ThRunningHeadFormat, ThBreakpoints, ThPaginatedAffordancePrefValue } from "@/preferences/models";
 
 const mapRenditionFormat = <T>(
   format: { default?: { variants: T }, breakpoints?: { [key in ThBreakpoints]?: { variants: T } } } | undefined

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 
-import { ThActionsKeys } from "@/preferences/models/enums";
+import { ThActionsKeys } from "@/preferences/models";
 import { StatefulActionContainerProps } from "../models/actions";
 
 import jumpToPositionStyles from "./assets/styles/thorium-web.jumpToPosition.module.css";

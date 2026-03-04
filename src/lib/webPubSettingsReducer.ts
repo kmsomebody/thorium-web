@@ -5,7 +5,7 @@ import {
   ThSpacingPresetKeys, 
   ThSpacingSettingsKeys, 
   ThTextAlignOptions 
-} from "@/preferences/models/enums";
+} from "@/preferences/models";
 import { FontFamilyStateObject, SetFontFamilyPayload, handleSpacingSetting, SetSpacingPresetPayload, SpacingStateObject } from "./settingsReducer";
 
 export interface WebPubSettingsReducerState {
@@ -13,7 +13,7 @@ export interface WebPubSettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
-  lineHeight: ThLineHeightOptions;
+  lineHeight: ThLineHeightOptions | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;

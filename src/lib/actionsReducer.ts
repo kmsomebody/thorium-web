@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { ThDockingKeys } from "../preferences/models/enums";
+import { ThDockingKeys } from "../preferences/models";
 
 export type ActionsStateKeys = string;
 export type OverflowStateKeys = string; 

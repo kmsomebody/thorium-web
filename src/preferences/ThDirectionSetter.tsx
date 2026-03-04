@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { ThLayoutDirection } from "./models/enums";
+import { ThLayoutDirection } from "./models";
 
 export const ThDirectionSetter = ({ 
   direction, 

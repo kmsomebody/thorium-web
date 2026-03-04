@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
-import { ThTextAlignOptions } from "@/preferences/models/enums";
+import { ThTextAlignOptions } from "@/preferences/models";
 import { StatefulSettingsItemProps } from "../models/settings";
 import { TextAlignment } from "@readium/navigator";
 

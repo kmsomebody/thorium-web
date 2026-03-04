@@ -301,3 +301,15 @@ See the [dedicated Docking doc](./Docking.md) for more details.
 Settings can be set and or nested in a specific order for both reflowable and Fixed-Layout EPUB. Some settings’ values can also be customized.
 
 See [Settings doc](./Settings.md) for more details.
+
+## Content Protection
+
+Contents can be protected in several ways, including:
+
+- disabling drag and drop
+- disabling right click
+- disabling save
+- disabling print
+- etc. 
+
+See [Protection doc](./Protection.md) for more details.

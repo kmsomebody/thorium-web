@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from "react";
 
 import { StatefulSheet } from "./models/sheets";
-import { ThSheetHeaderVariant } from "@/preferences/models/enums";
+import { ThSheetHeaderVariant } from "@/preferences/models";
 
 import sheetStyles from "./assets/styles/thorium-web.sheets.module.css";
 import readerSharedUI from "../assets/styles/thorium-web.button.module.css";

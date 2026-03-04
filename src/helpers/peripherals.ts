@@ -1,7 +1,7 @@
 // Peripherals based on XBReader
 import { ThActionsPref, DefaultKeys } from "@/preferences";
 
-import { ThActionsKeys } from "@/preferences/models/enums";
+import { ThActionsKeys } from "@/preferences/models";
 
 import { buildShortcut, UnstablePShortcut } from "@/core/Helpers/keyboardUtilities";
 import { isInteractiveElement } from "@/core/Helpers/focusUtilities";

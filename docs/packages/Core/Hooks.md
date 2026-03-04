@@ -17,6 +17,19 @@ It is the most important hook of the Core package, as it provides the foundation
 > [!IMPORTANT]
 > When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/epub` package so that they all use the same one, not from `@edrlab/thorium-web/core`.
 
+## WebPub Support Hook
+
+```tsx
+import {
+  useWebPubNavigator
+} from "@edrlab/thorium-web/core/hooks";
+```
+
+Similar to the EPUB navigator hook, this hook provides navigation functionality for Web Publications using the Readium TS-Toolkit `Navigator` object.
+
+> [!IMPORTANT]
+> When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/webpub` package so that they all use the same one, not from `@edrlab/thorium-web/core`.
+
 ## Responsive Design Hooks
 
 ```tsx
@@ -73,7 +86,7 @@ import { useState } from "react";
 import { 
   useIsClient, 
   usePrevious, 
-  useFullscreen 
+  useFullscreen
 } from "@edrlab/thorium-web/core/hooks";
 
 const MyIncrementButton = () => {

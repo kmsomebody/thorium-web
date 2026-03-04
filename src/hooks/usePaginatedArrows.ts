@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from "react";
 
-import { ThArrowVariant } from "@/preferences/models/enums";
-import { ThPaginatedAffordancePrefValue } from "@/preferences/preferences";
+import { ThArrowVariant, ThPaginatedAffordancePrefValue } from "@/preferences/models";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useReaderTransitions } from "./useReaderTransitions";
