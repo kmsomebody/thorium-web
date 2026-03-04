@@ -74,24 +74,26 @@ Manages state for EPUB publication data.
 **State Interface:**
 ```typescript
 interface PublicationReducerState {
+  fontLanguage: string;
   isFXL: boolean;
   isRTL: boolean;
-  progression: UnstableProgressionObject;
+  hasDisplayTransformability: boolean;
   positionsList: Locator[];
   atPublicationStart: boolean;
   atPublicationEnd: boolean;
-  tocTree?: TocItem[];
-  tocEntry?: string;
+  unstableTimeline?: UnstableTimeline;
 }
 ```
 
 **Actions:**
+- `setFontLanguage`: Set font language
 - `setFXL`: Set publication as fixed layout
 - `setRTL`: Set publication as right-to-left
-- `setProgression`: Update progression state
+- `setHasDisplayTransformability`: Set display transformability flag
 - `setPositionsList`: Update positions list
 - `setPublicationStart`: Set at publication start state
 - `setPublicationEnd`: Set at publication end state
+- `setTimeline`: Set timeline data
 - `setTocTree`: Set table of contents tree
 - `setTocEntry`: Set current TOC entry
 
@@ -102,11 +104,14 @@ Manages state for reader functionality.
 **State Interface:**
 ```typescript
 interface ReaderReducerState {
+  profile: "epub" | "webPub" | undefined;
   direction: ThLayoutDirection;
   isLoading: boolean;
   isImmersive: boolean;
   isHovering: boolean;
+  hasScrollAffordance: boolean;
   hasArrows: boolean;
+  hasUserNavigated: boolean;
   isFullscreen: boolean;
   settingsContainer: ThSettingsContainerKeys;
   platformModifier: UnstablePlatformModifier;
@@ -114,13 +119,16 @@ interface ReaderReducerState {
 ```
 
 **Actions:**
+- `setReaderProfile`: Set reader profile (epub or webPub)
 - `setDirection`: Set layout direction
 - `setLoading`: Set loading state
 - `setPlatformModifier`: Set platform modifier
 - `setImmersive`: Set immersive mode
 - `toggleImmersive`: Toggle immersive mode
 - `setHovering`: Set hovering state
-- `setArrows`: Set arrows visibility
+- `setScrollAffordance`: Set scroll affordance visibility
+- `setHasArrows`: Set arrows visibility
+- `setUserNavigated`: Set user navigation flag
 - `setFullscreen`: Set fullscreen mode
 - `setSettingsContainer`: Set type of settings container (main, or subpanel)
 
@@ -132,17 +140,18 @@ Manages state for reader settings.
 ```typescript
 interface SettingsReducerState {
   columnCount: string;
-  fontFamily: keyof typeof defaultFontFamilyOptions;
+  fontFamily: FontFamilyStateObject;
   fontSize: number;
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
   lineHeight: ThLineHeightOptions;
-  lineLength: LineLengthStateObject;
+  lineLength: LineLengthStateObject | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
   scroll: boolean;
+  spacing: SpacingStateObject;
   textAlign: ThTextAlignOptions;
   textNormalization: boolean;
   wordSpacing: number | null;
@@ -158,11 +167,11 @@ interface SettingsReducerState {
 - `setLetterSpacing`: Set letter spacing
 - `setLineHeight`: Set line height
 - `setLineLength`: Set one or several line lengths (optimal, min, max)
-- `setLineLengthMultiplier`: Set line length multiplier
 - `setParagraphIndent`: Set paragraph indent
 - `setParagraphSpacing`: Set paragraph spacing
 - `setPublisherStyles`: Set publisher styles
 - `setScroll`: Set scroll mode
+- `setSpacingPreset`: Set spacing preset configuration
 - `setTextAlign`: Set text alignment
 - `setTextNormalization`: Set text normalization
 - `setWordSpacing`: Set word spacing
@@ -176,7 +185,7 @@ Manages state for theme settings.
 interface ThemeReducerState {
   monochrome: boolean;
   colorScheme: ThColorScheme;
-  theme: string;
+  theme: ThemeStateObject;
   prefersReducedMotion: boolean;
   prefersReducedTransparency: boolean;
   prefersContrast: ThContrast;
@@ -208,7 +217,12 @@ interface PreferencesReducerState {
   };
   progressionFormat?: RenditionObject<ThProgressionFormat | Array<ThProgressionFormat>>;
   runningHeadFormat?: RenditionObject<ThRunningHeadFormat>;
-  ui?: RenditionObject<ThLayoutUI>;
+  paginatedAffordances?: PaginatedAffordanceObject;
+  ui?: {
+    reflow?: ThLayoutUI;
+    fxl?: ThLayoutUI;
+    webPub?: ThLayoutUI;
+  };
   scrollAffordances?: {
     hintInImmersive?: boolean;
     toggleOnMiddlePointer?: Array<"tap" | "click">;
@@ -224,4 +238,43 @@ interface PreferencesReducerState {
 - `setRunningHeadFormat`: Update running head format
 - `setUI`: Update UI settings
 - `setScrollAffordances`: Configure scroll behavior
+- `setPaginatedAffordance`: Update paginated affordance settings
 - `updateFromPreferences`: Bulk update from a preferences object
+
+### WebPubSettings Reducer
+
+Manages state for WebPub-specific reader settings.
+
+**State Interface:**
+```typescript
+interface WebPubSettingsReducerState {
+  fontFamily: FontFamilyStateObject;
+  fontWeight: number;
+  hyphens: boolean | null;
+  letterSpacing: number | null;
+  lineHeight: ThLineHeightOptions;
+  paragraphIndent: number | null;
+  paragraphSpacing: number | null;
+  publisherStyles: boolean;
+  spacing: SpacingStateObject;
+  textAlign: ThTextAlignOptions;
+  textNormalization: boolean;
+  wordSpacing: number | null;
+  zoom: number;
+}
+```
+
+**Actions:**
+- `setWebPubFontFamily`: Set font family for WebPub
+- `setWebPubFontWeight`: Set font weight for WebPub
+- `setWebPubHyphens`: Set hyphenation for WebPub
+- `setWebPubLetterSpacing`: Set letter spacing for WebPub
+- `setWebPubLineHeight`: Set line height for WebPub
+- `setWebPubParagraphIndent`: Set paragraph indent for WebPub
+- `setWebPubParagraphSpacing`: Set paragraph spacing for WebPub
+- `setWebPubPublisherStyles`: Set publisher styles for WebPub
+- `setWebPubSpacingPreset`: Set spacing preset for WebPub
+- `setWebPubTextAlign`: Set text alignment for WebPub
+- `setWebPubTextNormalization`: Set text normalization for WebPub
+- `setWebPubWordSpacing`: Set word spacing for WebPub
+- `setWebPubZoom`: Set zoom level for WebPub

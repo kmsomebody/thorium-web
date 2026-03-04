@@ -3,7 +3,7 @@
 import React, { useCallback, useRef, useEffect } from "react";
 
 import { StatefulSheet } from "./models/sheets";
-import { ThDockingKeys, ThSheetHeaderVariant, ThLayoutDirection } from "@/preferences/models/enums";
+import { ThDockingKeys, ThSheetHeaderVariant, ThLayoutDirection } from "@/preferences/models";
 
 import sheetStyles from "./assets/styles/thorium-web.sheets.module.css";
 import readerSharedUI from "../assets/styles/thorium-web.button.module.css";

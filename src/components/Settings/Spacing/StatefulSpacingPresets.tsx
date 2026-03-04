@@ -4,7 +4,7 @@ import {
   ThSpacingPresetKeys,
   ThLineHeightOptions,
   ThSpacingSettingsKeys,
-} from "@/preferences/models/enums";
+} from "@/preferences/models";
 
 import BookIcon from "../assets/icons/book.svg";
 import SmallIcon from "./assets/icons/density_small.svg";

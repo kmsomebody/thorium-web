@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { usePlugins } from "@/components/Plugins/PluginProvider";
 import { usePreferences } from "@/preferences/hooks/usePreferences";
-import { ThSettingsKeys, ThTextSettingsKeys, ThSpacingSettingsKeys } from "@/preferences/models/enums";
+import { ThSettingsKeys, ThTextSettingsKeys, ThSpacingSettingsKeys } from "@/preferences/models";
 
 interface UseSettingsComponentStatusOptions {
   /** The settings key to check (e.g., ThSettingsKeys.spacingPresets) */

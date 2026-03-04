@@ -1,4 +1,4 @@
-import { FontDefinition, VariableFontRangeConfig, WeightConfig, ThFontFamilyPref, FontCollection, ValidatedLanguageCollection } from "../preferences";
+import { FontDefinition, VariableFontRangeConfig, WeightConfig, ThFontFamilyPref, FontCollection, ValidatedLanguageCollection } from "../models";
 
 import { ILinkInjectable, IUrlInjectable, IBlobInjectable } from "@readium/navigator";
 

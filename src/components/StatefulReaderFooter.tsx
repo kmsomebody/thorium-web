@@ -5,9 +5,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import readerStyles from "./assets/styles/thorium-web.reader.app.module.css";
 import readerPaginationStyles from "./assets/styles/thorium-web.reader.pagination.module.css";
 
-import { ThBreakpoints, ThLayoutUI } from "@/preferences/models/enums";
-import { ThFormatPref } from "@/preferences";
-import { ThProgressionFormat } from "@/preferences/models/enums";
+import { ThBreakpoints, ThLayoutUI, ThFormatPref, ThProgressionFormat } from "@/preferences/models";
 
 import { ThFooter } from "@/core/Components/Reader/ThFooter";
 import { StatefulReaderProgression } from "./StatefulReaderProgression";

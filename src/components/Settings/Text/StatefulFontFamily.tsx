@@ -12,7 +12,7 @@ import { ListBox, ListBoxItem } from "react-aria-components";
 import { useNavigator } from "@/core/Navigator";
 import { useI18n } from "@/i18n/useI18n";
 import { usePreferences } from "@/preferences/hooks/usePreferences";
-import { FontDefinition } from "@/preferences/preferences";
+import { FontDefinition } from "@/preferences/models";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setFontFamily } from "@/lib/settingsReducer";

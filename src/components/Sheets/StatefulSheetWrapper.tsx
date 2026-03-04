@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 
-import { ThDockingKeys, ThSheetTypes } from "@/preferences/models/enums";
+import { ThDockingKeys, ThSheetTypes } from "@/preferences/models";
 
 import { ThTypedComponentRenderer } from "@/core/Components/Containers/ThTypedComponentRenderer";
 import { StatefulPopoverSheet, StatefulPopoverSheetProps } from "./StatefulPopoverSheet";

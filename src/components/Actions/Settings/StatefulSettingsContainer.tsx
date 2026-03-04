@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import { 
   defaultSpacingSettingsMain, 
@@ -17,7 +17,7 @@ import {
   ThTextSettingsKeys,
   ThSpacingSettingsKeys,
   ThSettingsKeys
-} from "@/preferences/models/enums";
+} from "@/preferences/models";
 import { StatefulActionContainerProps } from "../models/actions";
 
 import settingsStyles from "../../Settings/assets/styles/thorium-web.reader.settings.module.css";

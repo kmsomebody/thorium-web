@@ -68,7 +68,8 @@ The `<ThPreferencesProvider>` is a context provider used to configure all the re
 It accepts two optional props:
 
 - `adapter`: your own adapter if you need to modify or extend the default one.
-- `initialPreferences`: your own preferences if you need to modify or extend the default ones.
+- `devMode`: boolean to enable dev mode – this will turn every content protection setting to `false`.
+- `initialPreferences`: your own preferences if you need to modify or extend the default ones – note this will override the default preferences and the dev mode
 
 ### StatefulPreferencesProvider
 

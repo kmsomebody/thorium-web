@@ -1,4 +1,4 @@
-import { FontDefinition } from "../preferences";
+import { FontDefinition } from "../models";
 import { FontResource } from "./fonts";
 
 /**

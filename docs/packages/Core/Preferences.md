@@ -15,6 +15,7 @@ const App = () => {
     <ThStoreProvider>
       <ThPreferencesProvider 
         adapter={ yourAdapter }  // Optional: custom adapter for persistence
+        devMode={ process.env.NODE_ENV === "development" }  // Optional: enable dev mode
         initialPreferences={ yourInitialPrefs }  // Optional: initial preferences
       >
         {/* Your application */}
@@ -27,7 +28,8 @@ const App = () => {
 ### Provider Props
 
 - `adapter?`: Optional custom adapter for persisting preferences
-- `initialPreferences?`: Optional initial preferences object
+- `devMode?`: Optional boolean to enable dev mode – this will turn every content protection setting to `false`
+- `initialPreferences?`: Optional initial preferences object – note this will override the default preferences and the dev mode
 - `children`: Your application components
 
 > [!IMPORTANT]

@@ -3,190 +3,36 @@ import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThemeTokens } from "@/preferences/hooks/useTheming";
 import { 
   ThActionsKeys,
+  ThDocumentTitleFormat,
+  ThLayoutUI,
+  ThProgressionFormat,
+  ThRunningHeadFormat,
   ThDockingKeys,
-  ThDockingTypes,
   ThLineHeightOptions, 
   ThSettingsKeys, 
-  ThSettingsRangeVariant, 
-  ThSheetHeaderVariant, 
   ThSheetTypes, 
   ThSpacingSettingsKeys, 
   ThTextSettingsKeys, 
   ThThemeKeys, 
   ThLayoutDirection, 
-  ThLayoutUI,
-  ThBackLinkVariant,
-  ThProgressionFormat,
-  ThRunningHeadFormat,
-  ThBreakpoints,
-  ThDocumentTitleFormat,
   ThSpacingPresetKeys,
-  ThSettingsRangePlaceholder,
-  ThArrowVariant
-} from "./models/enums";
+  ThActionsTokens,
+  ThFontFamilyPref,
+  ThSettingsRangePref,
+  ThSettingsRadioPref,
+  I18nValue,
+  ThBackLinkPref,
+  ThFormatPref,
+  ThPaginatedAffordancePref,
+  ThDockingPref,
+  ThSettingsGroupPref,
+  ValidatedLanguageCollection
+} from "./models";
 import { ExperimentKey } from "@readium/navigator";
-import { ThCollapsibility, ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
+import { ThCollapsibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
+import { ContentProtectionConfig } from "./models/protection";
 import { HTMLProps, SVGProps } from "react";
-
-export type I18nValue<T> = T | string | { key: string; fallback?: string };
-
-export interface SystemFontSource {
-  type: "system";
-}
-
-export interface BunnyFontSource {
-  type: "custom";
-  provider: "bunny";
-}
-
-export interface GoogleFontSource {
-  type: "custom";
-  provider: "google";
-}
-
-export interface LocalStaticFontFile {
-  path: string;
-  weight: number;
-  style: "normal" | "italic";
-}
-
-export interface LocalVariableFontFile {
-  path: string;
-  style?: "normal" | "italic";
-}
-
-export interface LocalStaticFontSource {
-  type: "custom";
-  provider: "local";
-  variant: "static";
-  files: LocalStaticFontFile[];
-}
-
-export interface LocalVariableFontSource {
-  type: "custom";
-  provider: "local";
-  variant: "variable";
-  files: LocalVariableFontFile[];
-}
-
-export type LocalFontSource = LocalStaticFontSource | LocalVariableFontSource;
-
-export type FontSource = SystemFontSource | BunnyFontSource | GoogleFontSource | LocalFontSource;
-
-export type VariableFontRangeConfig = {
-  min: number;
-  max: number;
-  step?: number;
-};
-
-export type WeightConfig =
-  | {
-      type: "static";
-      values: number[];
-    }
-  | {
-      type: "variable";
-    } & VariableFontRangeConfig;
-
-export interface FontSpec {
-  family: string;
-  fallbacks: string[];
-  weights: WeightConfig;
-  styles?: ("normal" | "italic")[];
-  widths?: VariableFontRangeConfig;
-  display?: "swap" | "block" | "fallback" | "optional";
-}
-
-export interface FontDefinition {
-  id: string;
-  name: string;
-  label?: I18nValue<string>;
-  source: FontSource;
-  spec: FontSpec;
-}
-
-export type FontCollection = Record<string, FontDefinition>;
-
-export type ValidatedLanguageCollection = {
-  fonts: FontCollection; 
-  supportedLanguages: string[] 
-};
-
-export type ThFontFamilyPref = {
-  default: FontCollection;
-} | {
-  [K in Exclude<string, "default">]: ValidatedLanguageCollection;
-};
-
-export type ThBackLinkContent = 
-  | { 
-      type: "img";
-      src: string;
-      alt?: string;
-    }
-  | {
-      type: "svg";
-      content: React.FC<SVGProps<SVGSVGElement>>;
-    };
-
-export interface ThBackLinkPref {
-  href: string;
-  variant?: ThBackLinkVariant;
-  visibility?: "always" | "partially";
-  content?: ThBackLinkContent;
-}
-
-export type ThBottomSheetDetent = "content-height" | "full-height";
-
-export interface ThActionsSnappedPref {
-  scrim?: boolean | string;
-  maxWidth?: number | null;
-  maxHeight?: number | ThBottomSheetDetent;
-  peekHeight?: number | ThBottomSheetDetent;
-  minHeight?: number | ThBottomSheetDetent;
-}
-
-export interface ThActionsDockedPref {
-  dockable: ThDockingTypes,
-  dragIndicator?: boolean,
-  width?: number,
-  minWidth?: number,
-  maxWidth?: number
-}
-
-export interface ThActionsTokens {
-  visibility: ThCollapsibilityVisibility;
-  shortcut: string | null;
-  sheet?: {
-    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd>;
-    breakpoints: BreakpointsMap<ThSheetTypes>;
-  };
-  docked?: ThActionsDockedPref;
-  snapped?: ThActionsSnappedPref;
-};
-
-export interface ThSettingsSpacingPresets<K extends CustomizableKeys = DefaultKeys> {
-  reflowOrder: Array<ThSpacingPresetKeys>;
-  webPubOrder: Array<ThSpacingPresetKeys>;
-  // Not customizable as the component is static radiogroup (icons), unlike themes
-  // Publisher and custom are not included as they are special cases
-  keys: {
-    [key in Exclude<ThSpacingPresetKeys, "publisher" | "custom">]?: ThSpacingPreset<K>;
-  };
-}
-
-export type ThSpacingPreset<K extends CustomizableKeys = DefaultKeys> = {
-  [ThSpacingSettingsKeys.letterSpacing]?: number;
-  [ThSpacingSettingsKeys.lineHeight]?: ThLineHeightOptions;
-  [ThSpacingSettingsKeys.paragraphIndent]?: number;
-  [ThSpacingSettingsKeys.paragraphSpacing]?: number;
-  [ThSpacingSettingsKeys.wordSpacing]?: number;
-} & (K extends { spacing: infer S } 
-  ? S extends string 
-      ? { [key in S]?: number | ThLineHeightOptions }
-    : {}
-  : {});
 
 export type CustomizableKeys = {
   action?: string;
@@ -194,6 +40,15 @@ export type CustomizableKeys = {
   settings?: string;
   text?: string;
   spacing?: string;
+};
+
+// Default internal keys alias for convenience
+export type DefaultKeys = {
+  action: ThActionsKeys;
+  theme: ThThemeKeys;
+  settings: ThSettingsKeys;
+  text: ThTextSettingsKeys;
+  spacing: ThSpacingSettingsKeys;
 };
 
 // Key types to better handle custom keys for external consumers
@@ -232,6 +87,28 @@ export type SpacingSettingsKey<K extends CustomizableKeys> =
       : ThSpacingSettingsKeys
     : ThSpacingSettingsKeys;
 
+export interface ThSettingsSpacingPresets<K extends CustomizableKeys = DefaultKeys> {
+  reflowOrder: Array<ThSpacingPresetKeys>;
+  webPubOrder: Array<ThSpacingPresetKeys>;
+  // Not customizable as the component is static radiogroup (icons), unlike themes
+  // Publisher and custom are not included as they are special cases
+  keys: {
+    [key in Exclude<ThSpacingPresetKeys, "publisher" | "custom">]?: ThSpacingPreset<K>;
+  };
+}
+
+export type ThSpacingPreset<K extends CustomizableKeys = DefaultKeys> = {
+  [ThSpacingSettingsKeys.letterSpacing]?: number;
+  [ThSpacingSettingsKeys.lineHeight]?: ThLineHeightOptions;
+  [ThSpacingSettingsKeys.paragraphIndent]?: number;
+  [ThSpacingSettingsKeys.paragraphSpacing]?: number;
+  [ThSpacingSettingsKeys.wordSpacing]?: number;
+} & (K extends { spacing: infer S } 
+  ? S extends string 
+      ? { [key in S]?: number | ThLineHeightOptions }
+    : {}
+  : {});
+
 export interface ThActionsPref<K extends CustomizableKeys> {
   reflowOrder: Array<ActionKey<K>>;
   fxlOrder: Array<ActionKey<K>>;
@@ -239,35 +116,6 @@ export interface ThActionsPref<K extends CustomizableKeys> {
   collapse: ThCollapsibility;
   keys: Record<ActionKey<K>, ThActionsTokens>;
 };
-
-export interface ThDockingPref<T extends string> {
-  displayOrder: T[];
-  collapse: ThCollapsibility;
-  dock: BreakpointsMap<ThDockingTypes> | boolean; 
-  keys: {
-    [key in T]: Pick<ThActionsTokens, "visibility" | "shortcut">;
-  }
-};
-
-export interface ThSettingsGroupPref<T> {
-  main: T[];
-  subPanel: T[] | null;
-  header?: ThSheetHeaderVariant;
-}
-
-export interface ThSettingsRangePref {
-  variant?: ThSettingsRangeVariant;
-  placeholder?: I18nValue<ThSettingsRangePlaceholder>;
-  range?: [number, number];
-  step?: number;
-}
-
-export interface ThSettingsRadioPref<T extends string> {
-  allowUnset?: boolean;
-  keys: {
-    [key in T]: number;
-  };
-}
 
 export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
   [ThSettingsKeys.fontFamily]: ThFontFamilyPref;
@@ -286,32 +134,6 @@ export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
 );
 
 export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover> | "pagination";
-
-export interface ThFormatPrefValue<T extends string | Array<string>> {
-  variants: T;
-  displayInImmersive?: boolean;
-  displayInFullscreen?: boolean;
-}
-
-export interface ThFormatPref<T extends string | Array<string>> {
-  default: ThFormatPrefValue<T>;
-  breakpoints?: { 
-    [key in ThBreakpoints]?: ThFormatPrefValue<T>;
-  };
-}
-
-export interface ThPaginatedAffordancePrefValue {
-  variant: ThArrowVariant;
-  discard?: Array<"navigation" | "immersive" | "fullscreen"> | "none";
-  hint?: Array<"immersiveChange" | "fullscreenChange" | "layoutChange"> | "none";
-}
-
-export interface ThPaginatedAffordancePref {
-  default: Required<ThPaginatedAffordancePrefValue>;
-  breakpoints?: {
-    [key in ThBreakpoints]?: ThPaginatedAffordancePrefValue;
-  };
-}
 
 // Main preferences interface with simplified generics
 export interface ThPreferences<K extends CustomizableKeys = {}> {
@@ -398,6 +220,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       sheet?: string;
     };
   };
+  contentProtection?: ContentProtectionConfig;
   affordances: {
     scroll: {
       hintInImmersive: boolean;
@@ -636,15 +459,6 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
   }
 
   return params;
-};
-
-// Default internal keys alias for convenience
-export type DefaultKeys = {
-  action: ThActionsKeys;
-  theme: ThThemeKeys;
-  settings: ThSettingsKeys;
-  text: ThTextSettingsKeys;
-  spacing: ThSpacingSettingsKeys;
 };
 
 // Type helpers that support both custom and default keys

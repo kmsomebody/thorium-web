@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { ThRunningHeadFormat } from "@/preferences/models/enums";
+import { ThRunningHeadFormat } from "@/preferences/models";
 import { ThFormatPref, ThFormatPrefValue } from "@/preferences";
 
 import { ThRunningHead } from "@/core/Components";

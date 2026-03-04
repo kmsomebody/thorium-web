@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { defaultPlatformModifier, UnstablePlatformModifier } from "@/core/Helpers/keyboardUtilities";
-import { ThSettingsContainerKeys, ThLayoutDirection } from "@/preferences/models/enums";
+import { ThSettingsContainerKeys, ThLayoutDirection } from "@/preferences/models";
 
 export interface ReaderReducerState {
   profile: "epub" | "webPub" | undefined;

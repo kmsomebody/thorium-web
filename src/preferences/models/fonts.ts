@@ -1,55 +1,95 @@
-"use client";
-
 import fontStacks from "@readium/css/css/vars/fontStacks.json";
 
-import {
-  ThLineHeightOptions,
-  ThSettingsRangePlaceholder,
-  ThSettingsRangeVariant,
-  ThSpacingPresetKeys,
-  ThSpacingSettingsKeys,
-  ThTextSettingsKeys
-} from "./enums";
-import { ThActionsTokens, ThSettingsRangePref, FontCollection } from "../preferences";
 import { createDefinitionFromStaticFonts, createDefinitionsFromGoogleFonts } from "../helpers";
-import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
+import { I18nValue } from "./i18n";
 
-export const defaultActionKeysObject: ThActionsTokens = {
-  visibility: ThCollapsibilityVisibility.partially,
-  shortcut: null
+export interface SystemFontSource {
+  type: "system";
+}
+
+export interface BunnyFontSource {
+  type: "custom";
+  provider: "bunny";
+}
+
+export interface GoogleFontSource {
+  type: "custom";
+  provider: "google";
+}
+
+export interface LocalStaticFontFile {
+  path: string;
+  weight: number;
+  style: "normal" | "italic";
+}
+
+export interface LocalVariableFontFile {
+  path: string;
+  style?: "normal" | "italic";
+}
+
+export interface LocalStaticFontSource {
+  type: "custom";
+  provider: "local";
+  variant: "static";
+  files: LocalStaticFontFile[];
+}
+
+export interface LocalVariableFontSource {
+  type: "custom";
+  provider: "local";
+  variant: "variable";
+  files: LocalVariableFontFile[];
+}
+
+export type LocalFontSource = LocalStaticFontSource | LocalVariableFontSource;
+
+export type FontSource = SystemFontSource | BunnyFontSource | GoogleFontSource | LocalFontSource;
+
+export type VariableFontRangeConfig = {
+  min: number;
+  max: number;
+  step?: number;
 };
 
-export const defaultTextSettingsMain = [ThTextSettingsKeys.fontFamily];
+export type WeightConfig =
+  | {
+      type: "static";
+      values: number[];
+    }
+  | {
+      type: "variable";
+    } & VariableFontRangeConfig;
 
-export const defaultTextSettingsSubpanel = [
-  ThTextSettingsKeys.fontFamily,
-  ThTextSettingsKeys.textAlign,
-  ThTextSettingsKeys.hyphens,
-  ThTextSettingsKeys.fontWeight,
-  ThTextSettingsKeys.textNormalize
-]
+export interface FontSpec {
+  family: string;
+  fallbacks: string[];
+  weights: WeightConfig;
+  styles?: ("normal" | "italic")[];
+  widths?: VariableFontRangeConfig;
+  display?: "swap" | "block" | "fallback" | "optional";
+}
 
-export const defaultSpacingSettingsMain = [
-  ThSpacingSettingsKeys.spacingPresets
-];
+export interface FontDefinition {
+  id: string;
+  name: string;
+  label?: I18nValue<string>;
+  source: FontSource;
+  spec: FontSpec;
+}
 
-export const defaultSpacingSettingsSubpanel = [
-  ThSpacingSettingsKeys.spacingPresets,
-  ThSpacingSettingsKeys.lineHeight,
-  ThSpacingSettingsKeys.paragraphSpacing,
-  ThSpacingSettingsKeys.paragraphIndent,
-  ThSpacingSettingsKeys.wordSpacing,
-  ThSpacingSettingsKeys.letterSpacing
-];
+export type FontCollection = Record<string, FontDefinition>;
 
-export const defaultSpacingPresetsOrder = [
-  ThSpacingPresetKeys.publisher,
-  ThSpacingPresetKeys.accessible,
-  ThSpacingPresetKeys.custom,
-  ThSpacingPresetKeys.tight,
-  ThSpacingPresetKeys.balanced,
-  ThSpacingPresetKeys.loose
-]
+export type ValidatedLanguageCollection = {
+  fonts: FontCollection; 
+  supportedLanguages: string[] 
+};
+
+export type ThFontFamilyPref = {
+  default: FontCollection;
+} | {
+  [K in Exclude<string, "default">]: ValidatedLanguageCollection;
+};
 
 export const readiumCSSFontCollection: FontCollection = {
   oldStyle: {
@@ -181,70 +221,4 @@ export const tamilCollection = {
       }
     }
   })
-}
-
-export const defaultParagraphSpacing: Required<ThSettingsRangePref> = {
-  variant: ThSettingsRangeVariant.numberField,
-  placeholder: ThSettingsRangePlaceholder.range,
-  range: [0, 3],
-  step: 0.25
-}
-
-export const defaultParagraphIndent: Required<ThSettingsRangePref> = {
-  variant: ThSettingsRangeVariant.numberField,
-  placeholder: ThSettingsRangePlaceholder.range,
-  range: [0, 2],
-  step: 0.25
-}
-
-export const defaultWordSpacing: Required<ThSettingsRangePref> = {
-  variant: ThSettingsRangeVariant.numberField,
-  placeholder: ThSettingsRangePlaceholder.range,
-  range: [0, 1],
-  step: 0.1
-}
-
-export const defaultLetterSpacing: Required<ThSettingsRangePref> = {
-  variant: ThSettingsRangeVariant.numberField,
-  placeholder: ThSettingsRangePlaceholder.range,
-  range: [0, 0.5],
-  step: 0.05
-}
-
-export const defaultLineHeights = {
-  [ThLineHeightOptions.small]: 1.3,
-  [ThLineHeightOptions.medium]: 1.5,
-  [ThLineHeightOptions.large]: 1.75
-}
-
-export const defaultZoom: Required<ThSettingsRangePref> = {
-  variant: ThSettingsRangeVariant.numberField,
-  placeholder: ThSettingsRangePlaceholder.range,
-  range: [0.7, 4],
-  step: 0.05
-}
-
-export const defaultSpacingPresets = {
-  [ThSpacingPresetKeys.tight]: {
-    [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.small,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 0,
-    [ThSpacingSettingsKeys.paragraphIndent]: 1
-  },
-  [ThSpacingPresetKeys.balanced]: {
-    [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.medium,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 0.75,
-    [ThSpacingSettingsKeys.paragraphIndent]: 0
-  },
-  [ThSpacingPresetKeys.loose]: {
-    [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.large,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 1.75,
-    [ThSpacingSettingsKeys.paragraphIndent]: 0
-  },
-  [ThSpacingPresetKeys.accessible]: {
-    [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.large,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 2.5,
-    [ThSpacingSettingsKeys.paragraphIndent]: 0,
-    [ThSpacingSettingsKeys.letterSpacing]: 0.1,
-    [ThSpacingSettingsKeys.wordSpacing]: 0.3
-  }
 }

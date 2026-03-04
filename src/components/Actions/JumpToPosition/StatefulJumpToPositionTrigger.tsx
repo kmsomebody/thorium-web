@@ -1,8 +1,6 @@
 "use client";
 
-import React from "react";
-
-import { ThActionsKeys } from "@/preferences/models/enums";
+import { ThActionsKeys } from "@/preferences/models";
 import { StatefulActionTriggerProps } from "../models/actions";
 import { ThActionsTriggerVariant } from "@/core/Components/Actions/ThActionsBar";
 

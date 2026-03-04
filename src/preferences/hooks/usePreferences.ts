@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { ThPreferencesContext } from "../ThPreferencesContext";
-import { CustomizableKeys, DefaultKeys, ThPreferences, ThFontFamilyPref, FontCollection } from "../preferences";
+import { CustomizableKeys, DefaultKeys, ThPreferences } from "../preferences";
 import { createFontService } from "../services/fonts";
 
 export function usePreferences<K extends CustomizableKeys = DefaultKeys>() {

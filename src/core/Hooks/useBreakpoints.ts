@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { ThBreakpoints } from "@/preferences/models/enums";
+import { ThBreakpoints } from "@/preferences/models";
 
 import { useMediaQuery } from "./useMediaQuery";
 

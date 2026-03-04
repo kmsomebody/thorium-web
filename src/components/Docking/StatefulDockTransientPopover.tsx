@@ -6,7 +6,7 @@ import readerSharedUI from "../assets/styles/thorium-web.button.module.css";
 
 import { StatefulActionTriggerProps } from "@/components/Actions/models/actions";
 import { ThActionsTriggerVariant } from "@/core/Components/Actions/ThActionsBar";
-import { ThDockingKeys } from "@/preferences/models/enums";
+import { ThDockingKeys } from "@/preferences/models";
 
 import Stack from "./assets/icons/stack.svg";
 

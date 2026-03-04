@@ -1,13 +1,13 @@
 "use client";
 
-import { ThSpacingPresetKeys } from "@/preferences/models/enums";
 import { 
+  ThSpacingPresetKeys,
   defaultSpacingSettingsSubpanel,
   defaultTextSettingsMain,
   defaultTextSettingsSubpanel,
   defaultSpacingSettingsMain,
   defaultSpacingPresetsOrder
-} from "@/preferences/models/const";
+} from "@/preferences/models";
 
 import { usePreferences } from "./usePreferences";
 

@@ -3,10 +3,8 @@
 import React, { useCallback, useEffect, useRef } from "react";
 
 import { ActionKeyType } from "@/preferences";
-import { ThRunningHeadFormat } from "@/preferences/models/enums";
+import { ThLayoutUI, ThRunningHeadFormat } from "@/preferences/models";
 import { ThFormatPref } from "@/preferences";
-
-import { ThLayoutUI } from "@/preferences/models/enums";
 
 import readerStyles from "./assets/styles/thorium-web.reader.app.module.css";
 import readerHeaderStyles from "./assets/styles/thorium-web.reader.header.module.css";

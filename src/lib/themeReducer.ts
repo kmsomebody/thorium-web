@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 import { ThContrast } from "@/core/Hooks/useContrast";
-import { ThBreakpoints } from "@/preferences/models/enums";
+import { ThBreakpoints } from "@/preferences/models";
 
 export interface ThemeStateObject {
   reflow?: string;

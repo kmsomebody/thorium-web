@@ -13,6 +13,7 @@ interface EpubNavigatorLoadProps {
   initialPosition?: Locator;
   preferences?: IEpubPreferences;
   defaults?: IEpubDefaults;
+  injectables?: IInjectablesConfig;
 }
 
 function useEpubNavigator(): {
@@ -26,13 +27,19 @@ function useEpubNavigator(): {
   go: (locator: Locator, animated: boolean, callback: (ok: boolean) => void) => void;
   navLayout: () => EPUBLayout | undefined;
   currentLocator: () => Locator | undefined;
+  previousLocator: () => Locator | null;
+  nextLocator: () => Locator | null;
   currentPositions: () => number[] | undefined;
+  canGoBackward: () => boolean | undefined;
+  canGoForward: () => boolean | undefined;
+  isScrollStart: () => boolean | undefined;
+  isScrollEnd: () => boolean | undefined;
   preferencesEditor: PreferencesEditor | undefined;
   getSetting: <K extends keyof EpubSettings>(settingKey: K) => EpubSettings[K];
   submitPreferences: (preferences: IEpubPreferences) => Promise<void>;
   getCframes: () => (FrameManager | FXLFrameManager | undefined)[] | undefined;
   onFXLPositionChange: (cb: (locator: Locator) => void) => void;
-}
+};
 ```
 
 **Features:**
@@ -72,6 +79,51 @@ const MyEpubReader = (rawManifest, selfHref) => {
   );
 };
 ```
+
+## WebPub Navigator Hook
+
+Manages WebPub navigation and rendering.
+
+```typescript
+interface WebPubNavigatorLoadProps {
+  container: HTMLDivElement | null;
+  publication: Publication;
+  listeners: WebPubNavigatorListeners;
+  initialPosition?: Locator;
+  preferences?: IWebPubPreferences;
+  defaults?: IWebPubDefaults;
+  injectables?: IInjectablesConfig;
+}
+
+function useWebPubNavigator(): {
+  WebPubNavigatorLoad: (config: WebPubNavigatorLoadProps, cb: Function) => void;
+  WebPubNavigatorDestroy: (cb: Function) => void;
+  goRight: (animated: boolean, callback: (ok: boolean) => void) => void;
+  goLeft: (animated: boolean, callback: (ok: boolean) => void) => void;
+  goBackward: (animated: boolean, callback: (ok: boolean) => void) => void;
+  goForward: (animated: boolean, callback: (ok: boolean) => void) => void;
+  goLink: (link: Link, animated: boolean, callback: (ok: boolean) => void) => void;
+  go: (locator: Locator, animated: boolean, callback: (ok: boolean) => void) => void;
+  currentLocator: () => Locator | undefined;
+  previousLocator: () => Locator | null;
+  nextLocator: () => Locator | null;
+  currentPositions: () => number[] | undefined;
+  canGoBackward: () => boolean | undefined;
+  canGoForward: () => boolean | undefined;
+  isScrollStart: () => boolean | undefined;
+  isScrollEnd: () => boolean | undefined;
+  preferencesEditor: PreferencesEditor | undefined;
+  getSetting: <K extends keyof WebPubSettings>(settingKey: K) => WebPubSettings[K];
+  submitPreferences: (preferences: IWebPubPreferences) => Promise<void>;
+  getCframes: () => (FrameManager | FXLFrameManager | undefined)[] | undefined;
+}
+```
+
+**Features:**
+- WebPub navigation (forward, backward, by link, by locator, etc.)
+- Layout detection and preferences
+- Position tracking and locator management
+- Frame management for fixed and reflowable layouts
 
 ## Media Query Hooks
 
@@ -287,11 +339,30 @@ function useTimeline(
   currentLocation?: Locator, 
   currentPositions: number[],
   positionsList: Locator[],
-  onChange?: (timeline: Timeline) => void
-): Timeline
+  onChange?: (timeline: UnstableTimeline) => void
+): UnstableTimeline
 ```
 
 **Features:**
 - Creates timeline data to contextualize navigation (toc, items, positions)
 - Provides current timeline state (current toc entry, current item, previous item, next item)
 - Handles timeline updates
+
+### useFonts
+
+Manages font injection and resource management for EPUB/WebPub readers.
+
+```typescript
+function useFonts(fontResources?: InjectableFontResources | null): {
+  injectFontResources: (resources: InjectableFontResources | null) => void;
+  removeFontResources: () => void;
+  getAndroidFXLPatch: () => (ILinkInjectable & IBlobInjectable) | null;
+}
+```
+
+**Features:**
+- Injects font resources into the document head
+- Manages font resource lifecycle (injection and removal)
+- Provides Android FXL-specific font patches
+- Handles different font resource types (URL, blob, link)
+- Automatic cleanup on unmount or resource changes

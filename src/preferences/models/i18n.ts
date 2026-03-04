@@ -1,0 +1,1 @@
+export type I18nValue<T> = T | string | { key: string; fallback?: string };

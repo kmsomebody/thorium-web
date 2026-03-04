@@ -1,4 +1,4 @@
-import { FontDefinition, WeightConfig, VariableFontRangeConfig, FontSpec } from "../preferences";
+import { FontDefinition, WeightConfig, VariableFontRangeConfig, FontSpec } from "../models";
 import { FontResource } from "./fonts";
 
 /**

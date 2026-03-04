@@ -13,6 +13,7 @@ import {
   EpubNavigatorListeners, 
   EpubPreferences, 
   EpubSettings, 
+  IContentProtectionConfig, 
   IEpubDefaults, 
   IEpubPreferences,
   IInjectablesConfig
@@ -32,6 +33,7 @@ export interface EpubNavigatorLoadProps {
   preferences?: IEpubPreferences;
   defaults?: IEpubDefaults;
   injectables?: IInjectablesConfig;
+  contentProtection?: IContentProtectionConfig;
 }
 
 export const useEpubNavigator = () => {
@@ -87,7 +89,8 @@ export const useEpubNavigator = () => {
         { 
           preferences: config.preferences || {}, 
           defaults: config.defaults || {}, 
-          injectables: config.injectables || undefined 
+          injectables: config.injectables || undefined,
+          contentProtection: config.contentProtection || undefined
         }
       );
 

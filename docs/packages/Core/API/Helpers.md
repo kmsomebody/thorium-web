@@ -36,7 +36,103 @@ function isInteractiveElement(element: Element | null): boolean
 
 ## Keyboard Utilities
 
-TBD. Work in progress with disruptive changes coming.
+Utilities for handling keyboard shortcuts, modifiers, and platform-specific key mappings.
+
+```typescript
+import { 
+  metaKeys,
+  defaultPlatformModifier,
+  getPlatformModifier,
+  buildShortcut,
+  UnstableShortcutMetaKeywords,
+  UnstableShortcutRepresentation
+} from "@edrlab/thorium-web/core/helpers";
+```
+
+### `metaKeys`
+
+Object containing platform-specific modifier key definitions.
+
+```typescript
+const metaKeys: UnstableMetaKeys = {
+  altKey: UnstableMetaKey,
+  ctrlKey: UnstableMetaKey & UnstablePlatformModifier,
+  metaKey: UnstableMetaKey & UnstablePlatformModifier, // Command on Mac, Windows on PC
+  shiftKey: UnstableMetaKey
+}
+```
+
+Each modifier key contains:
+- `longform`: Full name (e.g., "Command", "Control")
+- `shortform`: Short name (e.g., "Cmd", "Ctrl") 
+- `modifier`: Event property name (e.g., "metaKey", "ctrlKey")
+- `symbol`: Unicode symbol (e.g., "⌘", "^")
+
+### `getPlatformModifier`
+
+Returns the appropriate platform modifier key for the current operating system.
+
+```typescript
+function getPlatformModifier(): UnstablePlatformModifier
+```
+
+**Returns:** Platform modifier key object (Command on Mac, Control on Windows/Linux).
+
+### `defaultPlatformModifier`
+
+Default platform modifier key (Control key).
+
+```typescript
+const defaultPlatformModifier: UnstablePlatformModifier
+```
+
+### `buildShortcut`
+
+Parses a string representation of a keyboard shortcut into a structured object.
+
+```typescript
+function buildShortcut(str: string): UnstablePShortcut | null
+```
+
+**Parameters:**
+- `str` - Shortcut string (e.g., "Ctrl+C", "Cmd+Shift+A")
+
+**Returns:** Parsed shortcut object with key, character, and modifier states, or `null` if invalid.
+
+**Example:**
+```typescript
+const shortcut = buildShortcut("Ctrl+C");
+// Result:
+// {
+//   key: "KeyC",
+//   char: "C",
+//   modifiers: {
+//     altKey: false,
+//     ctrlKey: true,
+//     metaKey: false,
+//     platformKey: false,
+//     shiftKey: false
+//   }
+// }
+```
+
+### Enums
+
+```typescript
+enum UnstableShortcutMetaKeywords {
+  alt = "altKey",
+  ctrl = "ctrlKey", 
+  meta = "metaKey",
+  platform = "platformKey",
+  shift = "shiftKey"
+}
+
+enum UnstableShortcutRepresentation {
+  symbol = "symbol",
+  short = "shortform", 
+  long = "longform"
+}
+```
 
 ## Platform Detection
 
@@ -165,3 +261,72 @@ const cssVars = propsToCSSVars({
 //   "--app-spacing-bottom": "16px"
 // }
 ```
+
+## Progression Format Utilities
+
+Utilities for determining supported progression formats based on timeline data.
+
+```typescript
+import { 
+  getSupportedProgressionFormats, 
+  canRenderProgressionFormat,
+  getBestMatchingProgressionFormat 
+} from "@edrlab/thorium-web/core/helpers";
+```
+
+### `getSupportedProgressionFormats`
+
+Returns an array of progression formats that can be rendered given the current timeline state.
+
+```typescript
+function getSupportedProgressionFormats(timeline?: TimelineProgression): ThProgressionFormat[]
+```
+
+**Returns:** Array of supported `ThProgressionFormat` values. Always includes `ThProgressionFormat.none` at minimum.
+
+**Parameters:**
+- `timeline` - Optional timeline progression data containing position and progression information
+
+### `canRenderProgressionFormat`
+
+Checks if a specific progression format is supported given the supported formats array.
+
+```typescript
+function canRenderProgressionFormat(
+  format: ThProgressionFormat,
+  supportedFormats: ThProgressionFormat[]
+): boolean
+```
+
+**Returns:** `true` if the format is supported, `false` otherwise.
+
+### `getBestMatchingProgressionFormat`
+
+Finds the first supported progression format from a list of preferred formats.
+
+```typescript
+function getBestMatchingProgressionFormat(
+  preferredFormats: ThProgressionFormat[],
+  timeline?: TimelineProgression
+): ThProgressionFormat | null
+```
+
+**Returns:** The first preferred format that is supported, or `null` if none are supported.
+
+**Parameters:**
+- `preferredFormats` - Array of progression formats in order of preference
+- `timeline` - Optional timeline progression data
+
+**Example:**
+```typescript
+const supported = getSupportedProgressionFormats(timeline);
+// Result: [ThProgressionFormat.none, ThProgressionFormat.positions, ThProgressionFormat.positionsOfTotal, ...]
+
+const canRender = canRenderProgressionFormat(ThProgressionFormat.overallProgression, supported);
+// Result: true or false
+
+const bestFormat = getBestMatchingProgressionFormat(
+  [ThProgressionFormat.overallProgression, ThProgressionFormat.positionsOfTotal],
+  timeline
+);
+// Result: ThProgressionFormat.overallProgression (if supported) or ThProgressionFormat.positionsOfTotal (if preferred and supported)

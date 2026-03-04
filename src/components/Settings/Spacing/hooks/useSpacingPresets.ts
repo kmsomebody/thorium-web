@@ -5,9 +5,7 @@ import {
   ThSpacingSettingsKeys, 
   ThSpacingPresetKeys, 
   ThLineHeightOptions, 
-} from "@/preferences/models/enums";
-
-import { defaultSpacingSettingsMain, defaultSpacingSettingsSubpanel } from "@/preferences/models/const";
+} from "@/preferences/models";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";

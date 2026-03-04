@@ -1,7 +1,7 @@
 "use client";
 
 import { ActionStateObject } from "@/lib/actionsReducer";
-import { ThDockingKeys } from "@/preferences/models/enums";
+import { ThDockingKeys } from "@/preferences/models";
 
 export interface ThActionMap {
   [key: string | number | symbol]: ActionStateObject | undefined;

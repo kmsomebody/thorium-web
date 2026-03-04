@@ -4,7 +4,7 @@ import { useCallback, useRef } from "react";
 
 import settingsStyles from "./assets/styles/thorium-web.reader.settings.module.css";
 
-import { ThActionsKeys, ThLayoutDirection, ThSettingsContainerKeys } from "@/preferences/models/enums";
+import { ThActionsKeys, ThLayoutDirection, ThSettingsContainerKeys } from "@/preferences/models";
 
 import { ThRadioGroup, ThRadioGroupProps } from "@/core/Components/Settings/ThRadioGroup";
 

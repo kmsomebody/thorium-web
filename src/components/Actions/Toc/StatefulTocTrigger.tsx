@@ -1,6 +1,6 @@
 "use client";
 
-import { ThActionsKeys } from "@/preferences/models/enums";
+import { ThActionsKeys } from "@/preferences/models";
 
 import TocIcon from "./assets/icons/toc.svg";
 

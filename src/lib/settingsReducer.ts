@@ -5,7 +5,7 @@ import {
   ThSpacingPresetKeys, 
   ThSpacingSettingsKeys, 
   ThTextAlignOptions 
-} from "@/preferences/models/enums";
+} from "@/preferences/models";
 
 export interface FontFamilyStateObject {
   default: string;
@@ -72,7 +72,7 @@ export interface SettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
-  lineHeight: ThLineHeightOptions;
+  lineHeight: ThLineHeightOptions | null;
   lineLength: LineLengthStateObject | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;

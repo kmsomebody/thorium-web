@@ -1,4 +1,4 @@
-import { ThSpacingSettingsKeys } from "@/preferences/models/enums";
+import { ThSpacingSettingsKeys } from "@/preferences/models";
 
 /**
  * Check if spacing settings are available for customization

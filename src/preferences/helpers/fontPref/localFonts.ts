@@ -1,4 +1,4 @@
-import { FontDefinition, FontSpec, LocalStaticFontFile, LocalStaticFontSource } from "@/preferences/preferences";
+import { FontDefinition, FontSpec, LocalStaticFontFile, LocalStaticFontSource } from "@/preferences/models";
 
 interface CreateFontDefinitionParams {
   id: string;
