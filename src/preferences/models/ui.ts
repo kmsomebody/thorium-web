@@ -1,3 +1,5 @@
+import { SVGProps } from "react";
+
 export type ThBackLinkContent = 
   | { 
       type: "img";
@@ -6,7 +8,7 @@ export type ThBackLinkContent =
     }
   | {
       type: "svg";
-      content: string; // Raw SVG string
+      content: React.FC<SVGProps<SVGSVGElement>>;
     };
 
 export interface ThBackLinkPref {

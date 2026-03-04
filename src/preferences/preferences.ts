@@ -32,7 +32,6 @@ import { ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
 import { ContentProtectionConfig } from "./models/protection";
-import { HTMLProps, SVGProps } from "react";
 
 export type CustomizableKeys = {
   action?: string;
