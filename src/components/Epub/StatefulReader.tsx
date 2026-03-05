@@ -156,6 +156,7 @@ export interface StatefulReaderProps {
   selfHref: string;
   plugins?: ThPlugin[];
   httpFetcher?: HttpFetcher;
+  initialPosition?: Locator | null;
 }
 
 // We need to register plugins before hooks run
@@ -166,7 +167,8 @@ export const StatefulReader = ({
   rawManifest,
   selfHref,
   plugins,
-  httpFetcher
+  httpFetcher,
+  initialPosition
 }: StatefulReaderProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
@@ -188,13 +190,13 @@ export const StatefulReader = ({
   return (
     <>
       <ThPluginProvider>
-        <StatefulReaderInner rawManifest={ rawManifest } selfHref={ selfHref } httpFetcher={ httpFetcher } />
+        <StatefulReaderInner rawManifest={ rawManifest } selfHref={ selfHref } httpFetcher={ httpFetcher } initialPosition={ initialPosition } />
       </ThPluginProvider>
     </>
   );
 };
 
-const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher }: { rawManifest: object; selfHref: string; httpFetcher?: HttpFetcher }) => {
+const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher, initialPosition }: { rawManifest: object; selfHref: string; httpFetcher?: HttpFetcher; initialPosition?: Locator | null }) => {
   const { fxlActionKeys, fxlThemeKeys, reflowActionKeys, reflowThemeKeys } = usePreferenceKeys();
   const { preferences, resolveFontLanguage, getFontMetadata, getFontInjectables } = usePreferences();
   const { t } = useI18n();
@@ -784,7 +786,7 @@ const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher }: { rawManife
     fetchPositions()
       .catch(console.error)
       .then(() => {
-        const initialPosition: Locator | null = getLocalData();
+        // const initialPosition: Locator | null = getLocalData();
 
         const initialConstraint = cache.current.arrowsOccupySpace ? arrowsWidth.current : 0;
         
