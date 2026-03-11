@@ -15,7 +15,7 @@ export const ThI18nProvider = ({
   ...options
 }: ThI18nProviderProps) => {
   const { preferences } = usePreferences();
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(i18n.isInitialized);
   
   useEffect(() => {
     if (!i18n.isInitialized) {      
