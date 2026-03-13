@@ -60,7 +60,7 @@
   },
   "peerDependencies": {
     "@readium/css": "^2.0.0",
-    "@readium/navigator": "2.4.0-alpha.12",
+    "@readium/navigator": "2.4.0-alpha.13",
     "@readium/navigator-html-injectables": "2.3.1-alpha.2",
     "@readium/shared": "2.2.0-alpha.2",
     "@reduxjs/toolkit": "^2.11.2",
@@ -81,7 +81,7 @@
   "dependencies": {
     "@edrlab/thorium-locales": "github:edrlab/thorium-locales",
     "@readium/css": "^2.0.0",
-    "@readium/navigator": "2.4.0-alpha.12",
+    "@readium/navigator": "2.4.0-alpha.13",
     "@readium/navigator-html-injectables": "2.3.1-alpha.2",
     "@readium/shared": "2.2.0-alpha.2",
     "@reduxjs/toolkit": "^2.11.2",
