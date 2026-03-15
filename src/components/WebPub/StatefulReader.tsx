@@ -268,7 +268,7 @@ const WebPubStatefulReaderInner = ({ rawManifest, selfHref }: { rawManifest: obj
     }
   }
 
-  useDocumentTitle(documentTitle);
+  //useDocumentTitle(documentTitle);
 
   const cache = useRef<WebPubStatelessCache>({
     settings: {

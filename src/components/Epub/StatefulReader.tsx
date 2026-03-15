@@ -353,7 +353,7 @@ const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher, initialPositi
     }
   }
 
-  useDocumentTitle(documentTitle);
+  //useDocumentTitle(documentTitle);
 
   // We need to use a cache so that we can use updated values
   // without re-rendering the component, and reloading EpubNavigator
