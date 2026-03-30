@@ -36,6 +36,31 @@ export interface EpubNavigatorLoadProps {
   contentProtection?: IContentProtectionConfig;
 }
 
+// Only allow 1 navigation per x milliseconds
+const throttle = 750;
+let navigationBlocked = false;
+let nextNavigation: null | (() => void) = null;
+const throttleNavigation = (navigate: () => void) => {
+  // If navigation is on cooldown, run it when the cooldown ends
+  if (navigationBlocked) {
+    nextNavigation = navigate;
+    return;
+  }
+
+  // Navigate and block subsequent calls 
+  navigationBlocked = true;
+  nextNavigation = null;
+  navigate();
+
+  // Unblock after cooldown, and optionally run next navigate callback
+  setTimeout(() => {
+    navigationBlocked = false;
+    if (nextNavigation) {
+      throttleNavigation(nextNavigation);
+    }
+  }, throttle);
+}
+
 export const useEpubNavigator = () => {
   const container = useRef<HTMLDivElement | null>(null);
   const containerParent = useRef<HTMLElement | null>(null);
@@ -120,27 +145,39 @@ export const useEpubNavigator = () => {
   }, [FXLPositionChanged]);
 
   const goRight = useCallback((animated: boolean, callback: cbb) => {
-    navigatorInstance?.goRight(animated, callback);
+    throttleNavigation(() => {
+      navigatorInstance?.goRight(animated, callback);
+    });    
   }, []);
 
   const goLeft = useCallback((animated: boolean, callback: cbb) => {
-    navigatorInstance?.goLeft(animated, callback)
+    throttleNavigation(() => {
+      navigatorInstance?.goLeft(animated, callback);
+    });
   }, []);
 
   const goBackward = useCallback((animated: boolean, callback: cbb) => {
-    navigatorInstance?.goBackward(animated, callback);
+    throttleNavigation(() => {      
+      navigatorInstance?.goBackward(animated, callback);
+    });
   }, []);
 
   const goForward = useCallback((animated: boolean, callback: cbb) => {
-    navigatorInstance?.goForward(animated, callback);
+    throttleNavigation(() => {
+      navigatorInstance?.goForward(animated, callback);
+    })
   }, []);
 
   const goLink = useCallback((link: Link, animated: boolean, callback: cbb) => {
-    navigatorInstance?.goLink(link, animated, callback);
+    throttleNavigation(() => {
+      navigatorInstance?.goLink(link, animated, callback);
+    });
   }, []);
 
   const go = useCallback((locator: Locator, animated: boolean, callback: cbb) => {
-    navigatorInstance?.go(locator, animated, callback);
+    throttleNavigation(() =>{
+      navigatorInstance?.go(locator, animated, callback);
+    });
   }, []);
 
   const navLayout = useCallback(() => {
