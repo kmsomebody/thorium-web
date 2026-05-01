@@ -3,6 +3,8 @@
 import { WithRef } from "../../customTypes";
 
 import { 
+  FieldError, 
+  FieldErrorProps, 
   Input, 
   InputProps, 
   Label, 
@@ -19,7 +21,9 @@ export interface ThFormNumberFieldProps extends NumberFieldProps {
     label?: WithRef<LabelProps, HTMLLabelElement>;
     input?: WithRef<InputProps, HTMLInputElement>;
     description?: string;
-  }
+    fieldError?: WithRef<FieldErrorProps, HTMLDivElement>;
+  },
+  errorMessage?: string;
 }
 
 export const ThFormNumberField = ({
@@ -27,6 +31,7 @@ export const ThFormNumberField = ({
   label,
   compounds,
   children,
+  errorMessage,
   ...props
 }: ThFormNumberFieldProps) => {
   return(
@@ -42,7 +47,12 @@ export const ThFormNumberField = ({
               { label }
             </Label>
           }
-
+          
+          { errorMessage && <FieldError { ...compounds?.fieldError }>
+              { errorMessage }
+            </FieldError> 
+          }
+          
           <Input {...compounds?.input } />
           
           { compounds?.description && <Text slot="description"> 

@@ -13,6 +13,7 @@ import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useI18n } from "@/i18n/useI18n";
 
 import { setActionOpen, useAppDispatch, useAppSelector } from "@/lib";
+import { isPositionsListValid } from "./helpers/utils";
 
 export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTriggerProps) => {
   const { preferences } = usePreferences();
@@ -28,8 +29,8 @@ export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTrigger
     }));
   }
 
-  // In case there is no positions list we return
-  if (!positionsList) return null;
+  // In case there is no positions list or no valid positions we return
+  if (!isPositionsListValid(positionsList)) return null;
 
   return(
     <>

@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef } from "react";
 
 import { ActionKeyType } from "@/preferences";
-import { ThLayoutUI, ThRunningHeadFormat } from "@/preferences/models";
+import { ThLayoutUI, ThRunningHeadFormat, ThActionsKeys } from "@/preferences/models";
 import { ThFormatPref } from "@/preferences";
 
 import readerStyles from "./assets/styles/thorium-web.reader.app.module.css";
@@ -27,6 +27,8 @@ import { setHovering } from "@/lib/readerReducer";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 import classNames from "classnames";
+import { isPositionsListValid } from "./Actions/JumpToPosition/helpers/utils";
+import { isIOSish } from "@/core/Helpers/getPlatform";
 
 export const StatefulReaderHeader = ({
   actionKeys,
@@ -50,6 +52,7 @@ export const StatefulReaderHeader = ({
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isHovering = useAppSelector(state => state.reader.isHovering);
   const hasScrollAffordance = useAppSelector(state => state.reader.hasScrollAffordance);
+  const positionsList = useAppSelector(state => state.publication.positionsList);
 
   const actions = useActions({ ...actionsMap, ...overflowMap });
   const dispatch = useAppDispatch();
@@ -94,8 +97,16 @@ export const StatefulReaderHeader = ({
       });
     }
     
-    return actionsItems;
-  }, [actionKeys, actionsComponentsMap]);
+    return actionsItems.filter(item => {
+      if (item.key === ThActionsKeys.jumpToPosition) {
+        return isPositionsListValid(positionsList);
+      }
+      if (item.key === ThActionsKeys.fullscreen) {
+        return document.fullscreenEnabled && !isIOSish();
+      }
+      return true;
+    });
+  }, [actionKeys, actionsComponentsMap, positionsList]);
 
   useEffect(() => {
     // Blur any focused element when entering immersive mode
