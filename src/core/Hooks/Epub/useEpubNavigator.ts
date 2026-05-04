@@ -81,7 +81,7 @@ export const useEpubNavigator = () => {
   // observing iframes instead of the style attribute on the spine element
   // but there’s additional complexity to handle as a spread = 2 iframes
   // And keeping in sync while the FramePool is re-aligning on resize can be suboptimal
-  let FXLPositionChangedCallback: ((locator: Locator) => void) | undefined;
+  const FXLPositionChangedCallbackRef = useRef<((locator: Locator) => void) | undefined>(undefined);
   const FXLPositionChanged = useMemo(() => {  
     return new MutationObserver((mutationsList: MutationRecord[]) => {
       for (const mutation of mutationsList) {
@@ -90,20 +90,25 @@ export const useEpubNavigator = () => {
         const oldVal = mutation.oldValue;
         if (newVal?.split(re)[1] !== oldVal?.split(re)[1]) {
           const locator = navigatorInstance?.currentLocator;
-          if (locator) {
-            FXLPositionChangedCallback?.(locator);
+          if (locator && FXLPositionChangedCallbackRef.current) {
+            FXLPositionChangedCallbackRef.current(locator);
           }
         }
       }
     });
-  }, [FXLPositionChangedCallback]);
+  }, []);
 
-  const EpubNavigatorLoad = useCallback((config: EpubNavigatorLoadProps, cb: Function) => {
+  const EpubNavigatorLoad = useCallback((config: EpubNavigatorLoadProps, cb: Function, fxlCallback?: (locator: Locator) => void) => {
     if (config.container) {
       container.current = config.container;
       containerParent.current = container.current? container.current.parentElement : null;
       
       publication.current = config.publication;
+
+      // Register FXL callback immediately if provided
+      if (fxlCallback) {
+        FXLPositionChangedCallbackRef.current = fxlCallback;
+      }
 
       navigatorInstance = new EpubNavigator(
         config.container, 
@@ -263,7 +268,7 @@ export const useEpubNavigator = () => {
     submitPreferences,
     getCframes,
     onFXLPositionChange: (cb: (locator: Locator) => void) => {
-      FXLPositionChangedCallback = cb;
+      FXLPositionChangedCallbackRef.current = cb;
     }
   }
 }

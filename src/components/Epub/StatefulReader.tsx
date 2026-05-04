@@ -246,7 +246,6 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     isScrollStart,
     isScrollEnd,
     getCframes,
-    onFXLPositionChange,
     submitPreferences
   } = epubNavigator;
 
@@ -348,14 +347,29 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
       }
   }, [cache, preferences.affordances.scroll, toggleIsImmersive]);
 
+  // We could use canGoBackward() and canGoForward() directly on arrows
+  // but maybe we will need to sync the state for other features in the future
+  const updatePublicationNavigationState = useCallback(() => {
+    if (canGoBackward()) {
+      dispatch(setPublicationStart(false));
+    } else {
+      dispatch(setPublicationStart(true));
+    }
+    
+    if (canGoForward()) {
+      dispatch(setPublicationEnd(false));
+    } else {
+      dispatch(setPublicationEnd(true));
+    }
+  }, [canGoBackward, canGoForward, dispatch]);
+
   // We need this as a workaround due to positionChanged being unreliable
   // in FXL – if the frame is in the pool hidden and is shown again,
   // positionChanged won’t fire.
   const handleFXLProgression = useCallback((locator: Locator) => {
     setLocalData(locator);
-  }, [setLocalData]);
-
-  onFXLPositionChange(handleFXLProgression);
+    updatePublicationNavigationState();
+  }, [setLocalData, updatePublicationNavigationState]);
 
   const initReadingEnv = useCallback(async () => {
     if (navLayout() === Layout.fixed) {
@@ -447,22 +461,9 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
         const debouncedHandleProgression = debounce(
           async () => {
             setLocalData(locator);
+            updatePublicationNavigationState();
           }, 250);
         debouncedHandleProgression();
-      }
-
-      // We could use canGoBackward() and canGoForward() directly on arrows
-      // but maybe we will need to sync the state for other features in the future
-      if (canGoBackward()) {
-        dispatch(setPublicationStart(false));
-      } else {
-        dispatch(setPublicationStart(true));
-      }
-      
-      if (canGoForward()) {
-        dispatch(setPublicationEnd(false));
-      } else {
-        dispatch(setPublicationEnd(true));
       }
     },
     tap: function (_e: FrameClickEvent): boolean {
@@ -522,7 +523,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     contentProtection: function (type: string, data: unknown) {/*TODO*/},
     contextMenu: function (_data: unknown) {/*TODO*/},
     peripheral: function (_data: unknown) {/*TODO*/}
-  }), [p, initReadingEnv, getCframes, navLayout, setLocalData, canGoBackward, canGoForward, dispatch, handleTap, handleClick, cache, preferences.affordances.scroll, isScrollStart, isScrollEnd]);
+  }), [p, initReadingEnv, getCframes, navLayout, setLocalData, dispatch, handleTap, handleClick, cache, preferences.affordances.scroll, isScrollStart, isScrollEnd, updatePublicationNavigationState]);
   
   const initialPosition = useMemo(() => initialPositionOverride ?? getLocalData(), [initialPositionOverride, getLocalData]);
 
@@ -556,6 +557,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     onCleanup: () => {
       // Additional cleanup if needed
     },
+    fxlProgressionCallback: handleFXLProgression
   });
 
   const applyConstraint = useCallback(async (value: number) => {
