@@ -50,24 +50,24 @@ export default function ManifestPage({ params }: Props) {
     );
   }
 
-  if (error) {
-    return (
-      <div className="container">
-        <h1>Error</h1>
-        <p>{ error }</p>
-      </div>
-    );
-  }
-
   return (
-    <StatefulLoader isLoading={ isLoading || publicationLoading }>
-      { publication && (
-        <ReaderComponent 
-          profile={ profile } 
-          publication={ publication }
-          localDataKey={ localDataKey }
-        />
+    <>
+      { error ? (
+        <div className="container">
+          <h1>Error</h1>
+          <p>{ error }</p>
+        </div>
+      ) : (
+        <StatefulLoader isLoading={ isLoading || publicationLoading }>
+          { publication && (
+            <ReaderComponent 
+              profile={ profile } 
+              publication={ publication } 
+              localDataKey={ localDataKey }
+            />
+          )}
+        </StatefulLoader>
       )}
-    </StatefulLoader>
+    </>
   );
 }

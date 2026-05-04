@@ -39,8 +39,8 @@ export default function BookPage({ params }: Props) {
     isLoading: publicationLoading, 
     error, 
     publication, 
-    localDataKey,
-    profile 
+    profile,
+    localDataKey
   } = usePublication({
     url: manifestUrl,
     onError: (error) => {
