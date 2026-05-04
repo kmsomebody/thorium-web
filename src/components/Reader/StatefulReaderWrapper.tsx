@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 
 import { Publication, Locator } from "@readium/shared";
 import { ThThemeKeys, ThemeKeyType, useTheming } from "@/preferences";
@@ -36,14 +36,40 @@ export interface StatefulReaderProps {
   positionStorage?: PositionStorage;
 }
 
+export type ThPluginFactory = () => ThPlugin[] | Promise<ThPlugin[]>;
+
+export interface ReaderPlugins {
+  epub?: ThPluginFactory;
+  webPub?: ThPluginFactory;
+  audio?: ThPluginFactory;
+}
+
 export interface ReaderComponentProps {
   profile: "epub" | "webPub" | "audio" | undefined | null;
   publication: Publication;
   localDataKey: string | null;
   positionStorage?: PositionStorage;
+  plugins?: ReaderPlugins;
 }
 
-export const StatefulReaderWrapper = ({ profile, ...props }: ReaderComponentProps) => {
+export const StatefulReaderWrapper = ({ profile, plugins, ...props }: ReaderComponentProps) => {
+  const [resolvedPlugins, setResolvedPlugins] = useState<ThPlugin[] | undefined>(undefined);
+
+  const pendingFactory = profile === "epub" ? plugins?.epub
+    : profile === "webPub" ? plugins?.webPub
+    : profile === "audio" ? plugins?.audio
+    : undefined;
+
+  useEffect(() => {
+    if (!pendingFactory) return;
+    const result = pendingFactory();
+    if (result instanceof Promise) {
+      result.then(setResolvedPlugins);
+    } else {
+      setResolvedPlugins(result);
+    }
+  }, [pendingFactory]);
+
   const { preferences } = usePreferences();
   const themeObject = useAppSelector(state => state.theming.theme);
   const isFXL = useAppSelector(state => state.publication.isFXL);
@@ -74,14 +100,16 @@ export const StatefulReaderWrapper = ({ profile, ...props }: ReaderComponentProp
     onReducedTransparencyChange: (reducedTransparency) => dispatch(setReducedTransparency(reducedTransparency))
   });
 
+  if (pendingFactory && resolvedPlugins === undefined) return null;
+
   switch (profile) {
     case "epub":
-      return <Suspense><StatefulEpubReader { ...props } /></Suspense>;
+      return <Suspense><StatefulEpubReader { ...props } plugins={ resolvedPlugins } /></Suspense>;
     case "audio":
       // TODO: Implement audio reader when available
       return <div className="container"><h1>Audio Reader Coming Soon</h1></div>;
     case "webPub":
     default:
-      return <Suspense><StatefulWebPubReader { ...props } /></Suspense>;
+      return <Suspense><StatefulWebPubReader { ...props } plugins={ resolvedPlugins } /></Suspense>;
   }
 };

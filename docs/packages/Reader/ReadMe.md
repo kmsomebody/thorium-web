@@ -59,6 +59,7 @@ The Reader expects the following props:
 - `publication`: `Publication` - The Readium Publication object containing the publication data
 - `localDataKey`: `string | null` - A unique key for storing local reading data (bookmarks, positions, etc.) – can be overridden through positionStorage
 - `positionStorage`: `PositionStorage` (optional) - An interface for persisting reading positions
+- `plugins`: `ReaderPlugins` (optional) - Per-profile plugin factories (see [Plugins](#plugins))
 
 > [!IMPORTANT]
 > Due to the complexity the reader has to handle, it does not currently accept `children`. This also explains why it requires dependencies (Redux, Preferences) and is not directly stylable. We are hopeful these limitations may be removed in the future but it will require some additional effort. If you have any ideas, please let us know. In the meantime, you can build your own reader component if you want to use the other components exported from this package.
@@ -68,6 +69,58 @@ It is critical you wrap this component in a `<ThStoreProvider>`, a `<ThPreferenc
 > [!CAUTION]
 > When using this `<StatefulReaderWrapper>` and all other components from `@edrlab/thorium-web/reader`, you must use the `<ThStoreProvider>`, `<ThPreferencesProvider>`, and `<ThI18nProvider>` from this same path, and not their specific ones.
 > If you do not, they will not work as expected as your app will use specific providers that are not shared with the Stateful Components.
+
+### Plugins
+
+Plugins let you extend the reader UI with custom actions and settings components. Each profile has its own factory so only the relevant code is loaded.
+
+Factories can be async, which allows you to use dynamic imports and avoid loading plugin components until the reader actually mounts.
+
+```tsx
+const epubPlugins = async (): Promise<ThPlugin[]> => {
+  const { createDefaultPlugin } = await import("@edrlab/thorium-web/reader");
+  const { MyActionTrigger } = await import("./actions/MyActionTrigger");
+  const { MyActionContainer } = await import("./actions/MyActionContainer");
+
+  return [
+    createDefaultPlugin(),
+    {
+      id: "my-plugin",
+      name: "My Plugin",
+      version: "1.0.0",
+      components: {
+        actions: {
+          myAction: {
+            Trigger: MyActionTrigger,
+            Target: MyActionContainer
+          }
+        }
+      }
+    }
+  ];
+};
+
+<StatefulReaderWrapper
+  profile="epub"
+  publication={ publication }
+  localDataKey={ localDataKey }
+  plugins={{ epub: epubPlugins }}
+/>
+```
+
+The wrapper will not mount the reader until the factory has resolved, ensuring the plugin registry is initialised with the correct plugins from the start.
+
+### ReaderPlugins Interface
+
+```typescript
+type ThPluginFactory = () => ThPlugin[] | Promise<ThPlugin[]>;
+
+interface ReaderPlugins {
+  epub?: ThPluginFactory;
+  webPub?: ThPluginFactory;
+  audio?: ThPluginFactory;
+}
+```
 
 ### PositionStorage Interface
 
