@@ -120,6 +120,7 @@
 /* [data-hover] is only updated on tree items that can be expanded ATM… */
 .treeItem:hover {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .treeItem[data-focus-visible] {

@@ -1,25 +1,25 @@
 Locale Completion Status
 Reference language: en
-Generated: 2026-03-20T08:59:18.751Z
+Generated: 2026-03-20T10:18:49.591Z
 
 
 Locale Completion Summary:
 ----------------------------------------
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
-FI     [■■■■■■■■■■■■■■■■■■■□]  95%
+FI     [■■■■■■■■■■■■■■■■■■■□]  96%
+LT     [■■■■■■■■■■■■■■■■■■■□]  96%
+SV     [■■■■■■■■■■■■■■■■■■■□]  96%
 FR     [■■■■■■■■■■■■■■■■■■■□]  95%
 IT     [■■■■■■■■■■■■■■■■■■■□]  95%
-LT     [■■■■■■■■■■■■■■■■■■■□]  95%
-SV     [■■■■■■■■■■■■■■■■■■■□]  95%
-PT-PT  [■■■■■■■■■■■■■■■■■■□□]  94%
+PT-PT  [■■■■■■■■■■■■■■■■■■■□]  95%
 AR     [■■■■■■■■■■■■■■■■■□□□]  88%
 PT-BR  [■■■■■■■■■■■■■■■■□□□□]  81%
 DA     [■■■■■■■■■■■■□□□□□□□□]  63%
-ET     [■■■■■■■■■■■□□□□□□□□□]  56%
+ET     [■■■■■■■■■■■□□□□□□□□□]  57%
 PL     [■■■■■■■■■■■□□□□□□□□□]  56%
 TA     [■■■■■■■■■■■□□□□□□□□□]  55%
+EL     [■■■■□□□□□□□□□□□□□□□□]  21%
 TR     [■■■■□□□□□□□□□□□□□□□□]  20%
-EL     [■■■□□□□□□□□□□□□□□□□□]  15%
 UK     [□□□□□□□□□□□□□□□□□□□□]   0%
 
 
@@ -27,18 +27,18 @@ Inferred Usage Summary:
 ----------------------------------------
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
 FI     [■■■■■■■■■■■■■■■■■■□□]  91%
-FR     [■■■■■■■■■■■■■■■■■■□□]  91%
-IT     [■■■■■■■■■■■■■■■■■■□□]  91%
 LT     [■■■■■■■■■■■■■■■■■■□□]  91%
 SV     [■■■■■■■■■■■■■■■■■■□□]  91%
+FR     [■■■■■■■■■■■■■■■■■■□□]  91%
+IT     [■■■■■■■■■■■■■■■■■■□□]  91%
 PT-PT  [■■■■■■■■■■■■■■■■■■□□]  91%
 PT-BR  [■■■■■■■■■■■■■■■■■■□□]  91%
 DA     [■■■■■■■■■■■■■■■■■□□□]  89%
 PL     [■■■■■■■■■■■■■■■■■□□□]  89%
 TA     [■■■■■■■■■■■■■■■■■□□□]  85%
 AR     [■■■■■■■■■■■■■■■■□□□□]  84%
-ET     [■■■■■■■■■■□□□□□□□□□□]  52%
-EL     [■■■■■□□□□□□□□□□□□□□□]  27%
+ET     [■■■■■■■■■■□□□□□□□□□□]  53%
+EL     [■■■■■■■□□□□□□□□□□□□□]  36%
 TR     [■■■□□□□□□□□□□□□□□□□□]  15%
 UK     [□□□□□□□□□□□□□□□□□□□□]   0%
 
@@ -51,10 +51,50 @@ EN (100% complete, 100% of inferred usage)
    TOTAL                 ■■■■■■■■■■ 100%  (194/194)
    USED                  ■■■■■■■■■■ 100%  (94/94)
 
-FI (95% complete, 91% of inferred usage)
+FI (96% complete, 91% of inferred usage)
    thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
-   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
-   TOTAL                 ■■■■■■■■■□  95%  (185/194)
+   thorium-web.json      ■■■■■■■■□□  84%  (42/50)
+   TOTAL                 ■■■■■■■■■□  96%  (186/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+LT (96% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  84%  (42/50)
+   TOTAL                 ■■■■■■■■■□  96%  (186/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+SV (96% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  84%  (42/50)
+   TOTAL                 ■■■■■■■■■□  96%  (186/194)
    USED                  ■■■■■■■■■□  91%  (86/94)
 
    ----------------------------------------
@@ -111,50 +151,10 @@ IT (95% complete, 91% of inferred usage)
    • reader.app.errors.title
 
 
-LT (95% complete, 91% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
-   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
-   TOTAL                 ■■■■■■■■■□  95%  (185/194)
-   USED                  ■■■■■■■■■□  91%  (86/94)
-
-   ----------------------------------------
-   Missing Keys:
-
-   WEB (8 keys):
-   • reader.jumpToPosition.error.notFound
-   • reader.app.errors.notFound
-   • reader.app.errors.accessDenied
-   • reader.app.errors.network
-   • reader.app.errors.serverError
-   • reader.app.errors.clientError
-   • reader.app.errors.generic
-   • reader.app.errors.title
-
-
-SV (95% complete, 91% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
-   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
-   TOTAL                 ■■■■■■■■■□  95%  (185/194)
-   USED                  ■■■■■■■■■□  91%  (86/94)
-
-   ----------------------------------------
-   Missing Keys:
-
-   WEB (8 keys):
-   • reader.jumpToPosition.error.notFound
-   • reader.app.errors.notFound
-   • reader.app.errors.accessDenied
-   • reader.app.errors.network
-   • reader.app.errors.serverError
-   • reader.app.errors.clientError
-   • reader.app.errors.generic
-   • reader.app.errors.title
-
-
-PT-PT (94% complete, 91% of inferred usage)
+PT-PT (95% complete, 91% of inferred usage)
    thorium-shared.json   ■■■■■■■■■□  99%  (142/144)
-   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
-   TOTAL                 ■■■■■■■■■□  94%  (183/194)
+   thorium-web.json      ■■■■■■■■□□  84%  (42/50)
+   TOTAL                 ■■■■■■■■■□  95%  (184/194)
    USED                  ■■■■■■■■■□  91%  (86/94)
 
    ----------------------------------------
@@ -242,17 +242,16 @@ DA (63% complete, 89% of inferred usage)
    • reader.preferences.columns.dual.compact
 
 
-ET (56% complete, 52% of inferred usage)
+ET (57% complete, 53% of inferred usage)
    thorium-shared.json   ■■■■□□□□□□  47%  (68/144)
-   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
-   TOTAL                 ■■■■■□□□□□  56%  (109/194)
-   USED                  ■■■■■□□□□□  52%  (49/94)
+   thorium-web.json      ■■■■■■■■□□  86%  (43/50)
+   TOTAL                 ■■■■■□□□□□  57%  (111/194)
+   USED                  ■■■■■□□□□□  53%  (50/94)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (8 keys):
-   • reader.jumpToPosition.error.notFound
+   WEB (7 keys):
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -353,6 +352,80 @@ TA (55% complete, 85% of inferred usage)
    • reader.preferences.fontWeight.bold
 
 
+EL (21% complete, 36% of inferred usage)
+   thorium-shared.json   □□□□□□□□□□   0%  (0/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■□□□□□□□□  21%  (41/194)
+   USED                  ■■■□□□□□□□  36%  (34/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+   SHARED (52 keys):
+   • reader.actions.goToPosition.descriptive
+   • reader.actions.goToPosition.compact
+   • reader.preferences.text
+   • reader.preferences.spacing.title
+   • reader.preferences.title
+   • reader.tableOfContents.title
+   • common.actions.search
+   • common.actions.clear
+   • reader.tableOfContents.emptyState.description
+   • common.actions.close
+   • reader.preferences.columns.auto
+   • reader.preferences.columns.single.compact
+   • reader.preferences.columns.dual.compact
+   • reader.preferences.columns.title
+   • reader.preferences.layout.paginated
+   • reader.preferences.layout.scrolled
+   • reader.preferences.layout.title
+   • reader.preferences.themes.title
+   • reader.preferences.letterSpacing
+   • common.actions.decrease
+   • common.actions.increase
+   • reader.preferences.lineHeight.small
+   • reader.preferences.lineHeight.medium
+   • reader.preferences.lineHeight.large
+   • reader.preferences.lineHeight.default
+   • reader.preferences.lineHeight.title
+   • reader.preferences.paragraphIndent
+   • reader.preferences.paragraphSpacing
+   • reader.preferences.spacing.presets.title
+   • reader.preferences.wordSpacing
+   • common.actions.reset
+   • reader.preferences.publisherStyles.label
+   • reader.preferences.zoom
+   • reader.preferences.fontSize
+   • reader.preferences.fontFamily.publisher
+   • reader.preferences.fontFamily.title
+   • reader.preferences.fontWeight.normal
+   • reader.preferences.fontWeight.bold
+   • reader.preferences.fontWeight.title
+   • reader.preferences.hyphens.title
+   • reader.preferences.hyphens.label
+   • reader.preferences.textAlign.default
+   • reader.preferences.textAlign.right
+   • reader.preferences.textAlign.left
+   • reader.preferences.textAlign.justify
+   • reader.preferences.textAlign.title
+   • reader.preferences.textNormalization.title
+   • reader.preferences.textNormalization.label
+   • reader.actions.goForward
+   • reader.actions.goBackward
+   • reader.progression.xOfY.compact
+   • reader.progression.xOfY.descriptive
+
+
 TR (20% complete, 15% of inferred usage)
    thorium-shared.json   ■■□□□□□□□□  27%  (39/144)
    thorium-web.json      □□□□□□□□□□   0%  (0/50)
@@ -445,89 +518,6 @@ TR (20% complete, 15% of inferred usage)
    • reader.preferences.textAlign.title
    • reader.preferences.textNormalization.title
    • reader.preferences.textNormalization.label
-
-
-EL (15% complete, 27% of inferred usage)
-   thorium-shared.json   □□□□□□□□□□   0%  (0/144)
-   thorium-web.json      ■■■■■■□□□□  60%  (30/50)
-   TOTAL                 ■□□□□□□□□□  15%  (30/194)
-   USED                  ■■□□□□□□□□  27%  (25/94)
-
-   ----------------------------------------
-   Missing Keys:
-
-   WEB (17 keys):
-   • reader.jumpToPosition.label
-   • reader.jumpToPosition.error.notFound
-   • reader.jumpToPosition.go
-   • reader.overflowMenu.active.trigger
-   • reader.overflowMenu.active.tooltip
-   • reader.toc.entries
-   • reader.app.errors.notFound
-   • reader.app.errors.accessDenied
-   • reader.app.errors.network
-   • reader.app.errors.serverError
-   • reader.app.errors.clientError
-   • reader.app.errors.generic
-   • reader.app.errors.title
-   • reader.settings.spacing.advanced.trigger
-   • reader.settings.spacing.advanced.tooltip
-   • reader.settings.text.advanced.trigger
-   • reader.settings.text.advanced.tooltip
-
-   SHARED (52 keys):
-   • reader.actions.goToPosition.descriptive
-   • reader.actions.goToPosition.compact
-   • reader.preferences.text
-   • reader.preferences.spacing.title
-   • reader.preferences.title
-   • reader.tableOfContents.title
-   • common.actions.search
-   • common.actions.clear
-   • reader.tableOfContents.emptyState.description
-   • common.actions.close
-   • reader.preferences.columns.auto
-   • reader.preferences.columns.single.compact
-   • reader.preferences.columns.dual.compact
-   • reader.preferences.columns.title
-   • reader.preferences.layout.paginated
-   • reader.preferences.layout.scrolled
-   • reader.preferences.layout.title
-   • reader.preferences.themes.title
-   • reader.preferences.letterSpacing
-   • common.actions.decrease
-   • common.actions.increase
-   • reader.preferences.lineHeight.small
-   • reader.preferences.lineHeight.medium
-   • reader.preferences.lineHeight.large
-   • reader.preferences.lineHeight.default
-   • reader.preferences.lineHeight.title
-   • reader.preferences.paragraphIndent
-   • reader.preferences.paragraphSpacing
-   • reader.preferences.spacing.presets.title
-   • reader.preferences.wordSpacing
-   • common.actions.reset
-   • reader.preferences.publisherStyles.label
-   • reader.preferences.zoom
-   • reader.preferences.fontSize
-   • reader.preferences.fontFamily.publisher
-   • reader.preferences.fontFamily.title
-   • reader.preferences.fontWeight.normal
-   • reader.preferences.fontWeight.bold
-   • reader.preferences.fontWeight.title
-   • reader.preferences.hyphens.title
-   • reader.preferences.hyphens.label
-   • reader.preferences.textAlign.default
-   • reader.preferences.textAlign.right
-   • reader.preferences.textAlign.left
-   • reader.preferences.textAlign.justify
-   • reader.preferences.textAlign.title
-   • reader.preferences.textNormalization.title
-   • reader.preferences.textNormalization.label
-   • reader.actions.goForward
-   • reader.actions.goBackward
-   • reader.progression.xOfY.compact
-   • reader.progression.xOfY.descriptive
 
 
 UK (0% complete, 0% of inferred usage)

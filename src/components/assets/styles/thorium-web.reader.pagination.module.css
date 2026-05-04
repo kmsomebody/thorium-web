@@ -49,6 +49,7 @@
 
 .listItem button[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .listItem button[data-focus-visible] {

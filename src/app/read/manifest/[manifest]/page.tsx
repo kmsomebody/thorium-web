@@ -50,7 +50,6 @@ export default function ManifestPage({ params }: Props) {
     return (
       <ErrorDisplay 
         error={ domainError }
-        title="reader.app.errors.accessDeniedTitle"
       />
     );
   }

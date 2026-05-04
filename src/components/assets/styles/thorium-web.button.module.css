@@ -36,6 +36,7 @@
 .closeButton[data-hovered],
 .backButton[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .icon[data-focus-visible],

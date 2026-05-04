@@ -57,7 +57,6 @@ export default function BookPage({ params }: Props) {
     return (
       <ErrorDisplay 
         error={ domainError }
-        title="reader.app.errors.accessDeniedTitle"
       />
     );
   }

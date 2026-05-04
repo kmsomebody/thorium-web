@@ -143,6 +143,7 @@
 
 .radio[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .radio[data-focus-visible] {

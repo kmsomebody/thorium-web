@@ -21,6 +21,7 @@
 
 .link[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .link[data-focus-visible] {
