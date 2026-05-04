@@ -95,7 +95,7 @@ export const ExperimentalWebPubStatefulReader = ({
   return (
     <>
       <ThPluginProvider>
-        <StatefulReaderInner publication={publication} localDataKey={localDataKey} initialPosition={initialPosition} />
+        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } initialPosition={ initialPosition } />
       </ThPluginProvider>
     </>
   );
