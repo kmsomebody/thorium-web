@@ -34,6 +34,7 @@ import {
 import { StatefulDockingWrapper } from "../Docking/StatefulDockingWrapper";
 import { StatefulReaderHeader } from "../StatefulReaderHeader";
 import { StatefulReaderFooter } from "../StatefulReaderFooter";
+import { PositionStorage } from "../Reader/StatefulReaderWrapper";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
@@ -73,7 +74,7 @@ export const ExperimentalWebPubStatefulReader = ({
   publication,
   localDataKey,
   plugins,
-  initialPosition
+  positionStorage
 }: StatefulReaderProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
@@ -95,13 +96,13 @@ export const ExperimentalWebPubStatefulReader = ({
   return (
     <>
       <ThPluginProvider>
-        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } initialPosition={ initialPosition } />
+        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } />
       </ThPluginProvider>
     </>
   );
 };
 
-const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initialPositionOverride }: { publication: Publication; localDataKey: string | null, initialPosition?: Locator | null }) => {
+const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage }) => {
   const { preferences, getFontMetadata, getFontInjectables } = usePreferences();
   const { t } = useI18n();
   const { getEffectiveSpacingValue } = useSpacingPresets();
@@ -164,7 +165,14 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     canGoForward,
   } = webPubNavigator;
 
-  const { setLocalData, getLocalData, localData } = useLocalStorage(localDataKey);
+  const localStorageData = useLocalStorage(localDataKey);
+  const { setLocalData, getLocalData, localData } = positionStorage 
+    ? {
+        setLocalData: positionStorage.set,
+        getLocalData: positionStorage.get,
+        localData: positionStorage.get()
+      }
+    : localStorageData;
 
   const timeline = useTimeline({
     publication: publication,
@@ -291,7 +299,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     peripheral: function (_data: unknown) {/*TODO*/}
   }), [p, setLocalData, canGoBackward, canGoForward, dispatch, toggleIsImmersive]);
 
-  const initialPosition = useMemo(() => initialPositionOverride ?? getLocalData(), [initialPositionOverride, getLocalData]);
+  const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
   // Initialize reader using the new composite hook
   const { navigatorReady } = useWebPubReaderInit({

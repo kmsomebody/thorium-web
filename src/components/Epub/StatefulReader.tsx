@@ -44,6 +44,7 @@ import { StatefulDockingWrapper } from "../Docking/StatefulDockingWrapper";
 import { StatefulReaderHeader } from "../StatefulReaderHeader";
 import { StatefulReaderArrowButton } from "../StatefulReaderArrowButton";
 import { StatefulReaderFooter } from "../StatefulReaderFooter";
+import { PositionStorage } from "../Reader/StatefulReaderWrapper";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
@@ -97,7 +98,7 @@ export interface StatefulReaderProps {
   publication: Publication;
   localDataKey: string | null;
   plugins?: ThPlugin[];
-  initialPosition?: Locator | null;
+  positionStorage?: PositionStorage;
 }
 
 // We need to register plugins before hooks run
@@ -108,7 +109,7 @@ export const StatefulReader = ({
   publication,
   localDataKey,
   plugins,
-  initialPosition
+  positionStorage
 }: StatefulReaderProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
@@ -130,13 +131,13 @@ export const StatefulReader = ({
   return (
     <>
       <ThPluginProvider>
-        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } initialPosition={ initialPosition } />
+        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } />
       </ThPluginProvider>
     </>
   );
 };
 
-const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initialPositionOverride }: { publication: Publication; localDataKey: string | null; initialPosition?: Locator | null; }) => {
+const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage }) => {
   const { fxlActionKeys, fxlThemeKeys, reflowActionKeys, reflowThemeKeys } = usePreferenceKeys();
   const { preferences, getFontMetadata, getFontInjectables } = usePreferences();
   const { t } = useI18n();
@@ -249,7 +250,14 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     submitPreferences
   } = epubNavigator;
 
-  const { setLocalData, getLocalData, localData } = useLocalStorage(localDataKey);
+  const localStorageData = useLocalStorage(localDataKey);
+  const { setLocalData, getLocalData, localData } = positionStorage 
+    ? {
+        setLocalData: positionStorage.set,
+        getLocalData: positionStorage.get,
+        localData: positionStorage.get()
+      }
+    : localStorageData;
 
   const timeline = useTimeline({
     publication: publication,
@@ -525,7 +533,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     peripheral: function (_data: unknown) {/*TODO*/}
   }), [p, initReadingEnv, getCframes, navLayout, setLocalData, dispatch, handleTap, handleClick, cache, preferences.affordances.scroll, isScrollStart, isScrollEnd, updatePublicationNavigationState]);
   
-  const initialPosition = useMemo(() => initialPositionOverride ?? getLocalData(), [initialPositionOverride, getLocalData]);
+  const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
   // Initialize reader using the new composite hook
   const { navigatorReady } = useEpubReaderInit({
