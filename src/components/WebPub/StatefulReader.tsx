@@ -291,11 +291,13 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     peripheral: function (_data: unknown) {/*TODO*/}
   }), [p, setLocalData, canGoBackward, canGoForward, dispatch, toggleIsImmersive]);
 
+  const initialPosition = useMemo(() => initialPositionOverride ?? getLocalData(), [initialPositionOverride, getLocalData]);
+
   // Initialize reader using the new composite hook
   const { navigatorReady } = useWebPubReaderInit({
     container,
     publication,
-    initialPosition: initialPositionOverride ?? getLocalData(),
+    initialPosition,
     listeners,
     preferences,
     cache,
