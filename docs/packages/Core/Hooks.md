@@ -6,13 +6,16 @@ The Core package provides various hooks, including a custom hook for handling EP
 
 ```tsx
 import {
-  useEpubNavigator
+  useEpubNavigator,
+  useEpubSettingsCache
 } from "@edrlab/thorium-web/core/hooks";
 ```
 
 This hook exposes Readium TS-Toolkit `Navigator` object and provides methods to navigate through the publication, apply preferences, etc.
 
 It is the most important hook of the Core package, as it provides the foundation for building an Epub Reader.
+
+The `useEpubSettingsCache` hook provides a stateless cache for EPUB settings that maps React state to mutable refs. It's useful for storing settings that need to persist across component re-renders without causing navigator re-initialization, and the cached values never go stale.
 
 > [!IMPORTANT]
 > When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/epub` package so that they all use the same one, not from `@edrlab/thorium-web/core`.
@@ -21,11 +24,14 @@ It is the most important hook of the Core package, as it provides the foundation
 
 ```tsx
 import {
-  useWebPubNavigator
+  useWebPubNavigator,
+  useWebPubSettingsCache
 } from "@edrlab/thorium-web/core/hooks";
 ```
 
 Similar to the EPUB navigator hook, this hook provides navigation functionality for Web Publications using the Readium TS-Toolkit `Navigator` object.
+
+The `useWebPubSettingsCache` hook provides a stateless cache for WebPub settings that maps React state to mutable refs. It's useful for storing settings that need to persist across component re-renders without causing navigator re-initialization, and the cached values never go stale.
 
 > [!IMPORTANT]
 > When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/webpub` package so that they all use the same one, not from `@edrlab/thorium-web/core`.

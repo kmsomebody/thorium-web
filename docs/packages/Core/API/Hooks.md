@@ -50,8 +50,8 @@ function useEpubNavigator(): {
 
 **Example:**
 ```typescript
-const MyEpubReader = (rawManifest, selfHref) => {
-  const { 
+const MyEpubReader = ({ publication }) => {
+  const {
     EpubNavigatorLoad,
     EpubNavigatorDestroy,
     goLeft,
@@ -60,13 +60,17 @@ const MyEpubReader = (rawManifest, selfHref) => {
 
   useEffect(() => {
     EpubNavigatorLoad({
-      ...props
+      container: containerRef.current,
+      publication: publication,
+      listeners: {
+        // Your listeners here
+      }
     }, () => console.log("Navigator loaded"));
 
     return () => {
       EpubNavigatorDestroy(() => console.log("Navigator destroyed"));
     };
-  }, [rawManifest, selfHref]);
+  }, [publication]);
 
   return (
     <button onClick={() => goLeft(true, () => {})}>

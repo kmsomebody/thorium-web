@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/edrlab/thorium-web/issues"
   },
-  "version": "1.1.7",
+  "version": "1.2.0",
   "private": false,
   "files": [
     "./dist"
@@ -40,6 +40,8 @@
     "./misc": "./dist/components/Misc/index.mjs",
     "./misc/styles": "./dist/components/Misc/index.css",
     "./next": "./dist/next-lib/index.mjs",
+    "./reader": "./dist/components/Reader/index.mjs",
+    "./reader/styles": "./dist/components/Reader/index.css",
     "./webpub": "./dist/components/WebPub/index.mjs",
     "./webpub/styles": "./dist/components/WebPub/index.css"
   },

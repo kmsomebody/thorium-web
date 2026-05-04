@@ -18,6 +18,24 @@ Features:
 - Localized loading message
 - Accessible loading indicators
 
+## ErrorDisplay
+
+Error display component for showing user-friendly error messages.
+
+```typescript
+interface ErrorDisplayProps {
+  message: string;        // Error message to display
+  title?: string;         // Optional title (defaults to "Error")
+  children?: ReactNode;   // Optional additional content
+}
+```
+
+Features:
+- User-friendly error message display
+- Localized error titles
+- Consistent styling with the app's design system
+- Support for additional content/actions
+
 ## PublicationGrid
 
 Publication grid component for displaying a list of publications in a responsive grid layout.

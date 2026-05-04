@@ -19,17 +19,82 @@ npm install @edrlab/thorium-web @readium/css @readium/navigator @readium/navigat
 
 The Reader Component is the main component of this package. It is a React component that can be used to render an EPUB file, has state management built-in through Redux, and prefixed `thorium_web` classNames that you can target to style it.
 
+> [!IMPORTANT]
+> Theming initialization (breakpoints, theme, media queries) has been moved out of the Reader component. You must now initialize theming manually using the `useTheming` hook as shown in the example below.
+
 You can use it like this:
 
 ```jsx
-import { StatefulReader, ThStoreProvider, ThPreferencesProvider, ThI18nProvider } from "@edrlab/thorium-web/epub";
+import { 
+  usePublication, 
+  StatefulReader, 
+  ThStoreProvider, 
+  ThPreferencesProvider, 
+  ThI18nProvider, 
+  useAppSelector, 
+  useAppDispatch,
+  setBreakpoint, 
+  setColorScheme, 
+  setContrast, 
+  setForcedColors, 
+  setMonochrome, 
+  setReducedMotion, 
+  setReducedTransparency 
+} from "@edrlab/thorium-web/epub";
+import { useTheming } from "@edrlab/thorium-web/preferences";
+import { propsToCSSVars } from "@edrlab/thorium-web/core";
+import { prefixString } from "@edrlab/thorium-web/core";
 
-const App = () => {
+const ReaderWithTheming = ({ publication, localDataKey }) => {
+  const { preferences } = usePreferences();
+  const themeObject = useAppSelector(state => state.theming.theme);
+  const isFXL = useAppSelector(state => state.publication.isFXL);
+  const theme = isFXL ? themeObject.fxl : themeObject.reflow;
+  const dispatch = useAppDispatch();
+
+  // Init theming (breakpoints, theme, media queries…)
+  useTheming({ 
+    theme: theme,
+    themeKeys: preferences.theming.themes.keys,
+    systemKeys: preferences.theming.themes.systemThemes,
+    breakpointsMap: preferences.theming.breakpoints,
+    initProps: {
+      ...propsToCSSVars(preferences.theming.arrow, { prefix: prefixString("arrow") }), 
+      ...propsToCSSVars(preferences.theming.icon, { prefix: prefixString("icon") }),
+      ...propsToCSSVars(preferences.theming.layout, { 
+        prefix: prefixString("layout"),
+        exclude: ["ui"]
+      })
+    },
+    onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
+    onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
+    onContrastChange: (contrast) => dispatch(setContrast(contrast)),
+    onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
+    onMonochromeChange: (isMonochrome) => dispatch(setMonochrome(isMonochrome)),
+    onReducedMotionChange: (reducedMotion) => dispatch(setReducedMotion(reducedMotion)),
+    onReducedTransparencyChange: (reducedTransparency) => dispatch(setReducedTransparency(reducedTransparency))
+  });
+
+  return <StatefulReader publication={ publication } localDataKey={ localDataKey } />;
+};
+
+const App = ({ manifestUrl }) => {
+  const { publication, localDataKey, isLoading, error } = usePublication({
+    url: manifestUrl,
+    onError: (error) => console.error("Publication loading error:", error)
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <ThStoreProvider>
       <ThPreferencesProvider>
         <ThI18nProvider>
-          <StatefulReader rawManifest={ manifestObject } selfHref={ manifestSelfLink } />
+          <ReaderWithTheming 
+            publication={ publication } 
+            localDataKey={ localDataKey } 
+          />
         </ThI18nProvider>
       </ThPreferencesProvider>
     </ThStoreProvider>
@@ -37,13 +102,14 @@ const App = () => {
 };
 ```
 
-The Reader expects two props:
+The Reader expects the following props:
 
-- `rawManifest`: the raw Readium Web Publication Manifest for the EPUB file.
-- `selfHref`: the `self` href to be found in this manifest.
+- `publication`: the Publication object representing the EPUB file.
+- `localDataKey`: a key for storing reader position and settings locally.
 - `plugins` (optional): the components (actions, settings) to use in the reader. More below.
+- `positionStorage` (optional): custom storage interface for position data.
 
-You can take a look how the NextJS app is currently doing in [the Read Page](../../src/app/read/page.tsx).
+You can take a look how the NextJS app is currently doing in [the Read Page](../../src/app/read/[identifier]/page.tsx).
 
 > [!IMPORTANT]
 > Due to the complexity the reader has to handle, it does not currently accept `children`. This also explains why it requires dependencies (Redux, Preferences) and is not directly stylable. We are hopeful these limitations may be removed in the future but it will require some additional effort. If you have any ideas, please let us know. In the meantime, you can build your own reader component if you want to use the other components exported from this package.
@@ -178,14 +244,75 @@ A setting is an object that contains the following properties:
 Let’s imagine you want to extend the default plugins:
 
 ```tsx
-import { ThPlugin, createDefaultPlugin, StatefulReader, StatefulReaderProps } from "@edrlab/thorium-web/epub";
+import { 
+  ThPlugin, 
+  createDefaultPlugin, 
+  StatefulReader, 
+  StatefulReaderProps, 
+  useAppSelector, 
+  useAppDispatch,
+  setBreakpoint, 
+  setColorScheme, 
+  setContrast, 
+  setForcedColors, 
+  setMonochrome, 
+  setReducedMotion, 
+  setReducedTransparency 
+} from "@edrlab/thorium-web/epub";
+import { useTheming } from "@edrlab/thorium-web/preferences";
+import { propsToCSSVars } from "@edrlab/thorium-web/core";
+import { prefixString } from "@edrlab/thorium-web/core";
 import { MyActionTrigger } from "./Actions/MyActionTrigger";
 import { MyActionContainer } from "./Actions/MyActionContainer";
 import { MyScrollSwitch } from "./Settings/MyScrollSwitch";
 
+const ReaderWithCustomPlugins = ({
+  publication,
+  localDataKey,
+  plugins
+}: StatefulReaderProps) => {
+  
+  const { preferences } = usePreferences();
+  const themeObject = useAppSelector(state => state.theming.theme);
+  const isFXL = useAppSelector(state => state.publication.isFXL);
+  const theme = isFXL ? themeObject.fxl : themeObject.reflow;
+  const dispatch = useAppDispatch();
+
+  // Init theming (breakpoints, theme, media queries…)
+  useTheming({ 
+    theme: theme,
+    themeKeys: preferences.theming.themes.keys,
+    systemKeys: preferences.theming.themes.systemThemes,
+    breakpointsMap: preferences.theming.breakpoints,
+    initProps: {
+      ...propsToCSSVars(preferences.theming.arrow, { prefix: prefixString("arrow") }), 
+      ...propsToCSSVars(preferences.theming.icon, { prefix: prefixString("icon") }),
+      ...propsToCSSVars(preferences.theming.layout, { 
+        prefix: prefixString("layout"),
+        exclude: ["ui"]
+      })
+    },
+    onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
+    onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
+    onContrastChange: (contrast) => dispatch(setContrast(contrast)),
+    onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
+    onMonochromeChange: (isMonochrome) => dispatch(setMonochrome(isMonochrome)),
+    onReducedMotionChange: (reducedMotion) => dispatch(setReducedMotion(reducedMotion)),
+    onReducedTransparencyChange: (reducedTransparency) => dispatch(setReducedTransparency(reducedTransparency))
+  });
+    
+  return (
+    <StatefulReader 
+      publication={ publication } 
+      localDataKey={ localDataKey } 
+      plugins={ plugins }
+    />
+  )
+}
+
 export const MyCustomReader = ({
-  rawManifest,
-  selfHref
+  publication,
+  localDataKey
 }: Omit<StatefulReaderProps, "plugins"> ) => {
     
   // Instantiate the default plugin
@@ -213,13 +340,11 @@ export const MyCustomReader = ({
   }];
     
   return (
-    <>
-      <StatefulReader 
-        rawManifest={ manifestObject } 
-        selfHref={ manifestSelfLink } 
-        plugins={ customPlugins }
-      />
-    </>
+    <ReaderWithCustomPlugins 
+      publication={ publication } 
+      localDataKey={ localDataKey } 
+      plugins={ customPlugins }
+    />
   )
 }
 ```
@@ -228,9 +353,23 @@ Then in your app:
 
 ```tsx
 import { MyCustomReader } from "./MyCustomReader";
-const App = () => {
+import { usePublication } from "@edrlab/thorium-web/hooks";
+
+const App = ({ manifestUrl }) => {
+  const { publication, localDataKey, isLoading, error } = usePublication({
+    url: manifestUrl,
+    onError: (error) => console.error("Publication loading error:", error)
+  });
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <MyCustomReader rawManifest={ manifestObject } selfHref={ manifestSelfLink } />
+    <MyCustomReader 
+      publication={ publication } 
+      localDataKey={ localDataKey }
+      plugins={ customPlugins }
+    />
   );
 };
 ```

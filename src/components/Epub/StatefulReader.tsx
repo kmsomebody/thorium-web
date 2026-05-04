@@ -55,7 +55,7 @@ import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { usePrevious } from "@/core/Hooks/usePrevious";
 import { useI18n } from "@/i18n/useI18n";
 import { useTimeline } from "@/core/Hooks/useTimeline";
-import { useLocalStorage } from "@/core/Hooks/useLocalStorage";
+import { usePositionStorage } from "@/hooks/usePositionStorage";
 import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useSpacingPresets } from "../Settings/Spacing/hooks/useSpacingPresets";
 import { useLineHeight } from "../Settings/Spacing/hooks/useLineHeight";
@@ -250,14 +250,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
     submitPreferences
   } = epubNavigator;
 
-  const localStorageData = useLocalStorage(localDataKey);
-  const { setLocalData, getLocalData, localData } = positionStorage 
-    ? {
-        setLocalData: positionStorage.set,
-        getLocalData: positionStorage.get,
-        localData: positionStorage.get()
-      }
-    : localStorageData;
+  const { setLocalData, getLocalData, localData } = usePositionStorage(localDataKey, positionStorage);
 
   const timeline = useTimeline({
     publication: publication,
