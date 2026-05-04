@@ -25,7 +25,7 @@ export interface ReadiumCSSSettings {
   wordSpacing: number | null;
 }
 
-export interface StatelessCache {
+export interface EPubStatelessCache {
   layoutUI: ThLayoutUI;
   isImmersive: boolean;
   isHovering: boolean;
@@ -49,7 +49,7 @@ export const useEpubSettingsCache = (
   paragraphIndent: number | null,
   paragraphSpacing: number | null,
   publisherStyles: boolean,
-  isScroll: boolean,
+  scroll: boolean,
   textNormalization: boolean,
   wordSpacing: number | null,
   theme: string | undefined,
@@ -61,7 +61,7 @@ export const useEpubSettingsCache = (
   isHovering: boolean,
   arrowsOccupySpace: boolean
 ) => {
-  const cache = useRef<StatelessCache>({
+  const cache = useRef<EPubStatelessCache>({
     layoutUI,
     isImmersive,
     isHovering,
@@ -78,7 +78,7 @@ export const useEpubSettingsCache = (
       paragraphIndent,
       paragraphSpacing,
       publisherStyles,
-      scroll: isScroll,
+      scroll: scroll,
       textAlign,
       textNormalization,
       theme,
@@ -106,7 +106,7 @@ export const useEpubSettingsCache = (
       paragraphIndent,
       paragraphSpacing,
       publisherStyles,
-      scroll: isScroll,
+      scroll: scroll,
       textAlign,
       textNormalization,
       theme,
@@ -131,7 +131,7 @@ export const useEpubSettingsCache = (
     paragraphIndent,
     paragraphSpacing,
     publisherStyles,
-    isScroll,
+    scroll,
     textAlign,
     textNormalization,
     theme,

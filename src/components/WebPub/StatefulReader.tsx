@@ -42,7 +42,7 @@ import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
 import { useWebPubNavigator } from "@/core/Hooks/WebPub";
 import { useWebPubSettingsCache } from "@/core/Hooks/WebPub/useWebPubSettingsCache";
-import { useWebPubReaderInit } from "@/core/Hooks/useReaderInit";
+import { useWebPubReaderInit } from "./Hooks/useReaderInit";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { useI18n } from "@/i18n/useI18n";
 import { useTimeline } from "@/core/Hooks/useTimeline";

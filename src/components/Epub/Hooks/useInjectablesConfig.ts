@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+
 import { IInjectablesConfig, ILinkInjectable, IBlobInjectable } from "@readium/navigator";
 import { InjectableFontResources } from "@/preferences/services/fonts";
 
@@ -10,12 +11,6 @@ interface UseEpubInjectablesConfigProps {
   fontLanguage: string;
   getFontInjectables: (options?: { language?: string } | { key?: string }, optimize?: boolean) => InjectableFontResources | null;
   getAndroidFXLPatch: () => (ILinkInjectable & IBlobInjectable) | null;
-}
-
-interface UseWebPubInjectablesConfigProps {
-  isFontFamilyUsed: boolean;
-  fontLanguage: string;
-  getFontInjectables: (options?: { language?: string } | { key?: string }, optimize?: boolean) => InjectableFontResources | null;
 }
 
 export const useEpubInjectablesConfig = ({
@@ -40,7 +35,7 @@ export const useEpubInjectablesConfig = ({
         };
       }
     }
-    
+
     if (!isFXL && isFontFamilyUsed) {
       const fontResources = getFontInjectables({ language: fontLanguage });
       if (fontResources) {
@@ -57,34 +52,6 @@ export const useEpubInjectablesConfig = ({
 
     return injectablesConfig;
   }, [isFXL, isFontFamilyUsed, fontLanguage, getFontInjectables, getAndroidFXLPatch]);
-
-  return { injectables };
-};
-
-export const useWebPubInjectablesConfig = ({
-  isFontFamilyUsed,
-  fontLanguage,
-  getFontInjectables,
-}: UseWebPubInjectablesConfigProps) => {
-  const injectables = useMemo(() => {
-    let injectablesConfig: IInjectablesConfig | undefined;
-
-    if (isFontFamilyUsed) {
-      const fontResources = getFontInjectables({ language: fontLanguage });
-      if (fontResources) {
-        injectablesConfig = {
-          allowedDomains: fontResources.allowedDomains,
-          rules: [{
-            resources: [/\.xhtml$/, /\.html$/],
-            prepend: fontResources.prepend,
-            append: fontResources.append
-          }]
-        };
-      }
-    }
-
-    return injectablesConfig;
-  }, [isFontFamilyUsed, fontLanguage, getFontInjectables]);
 
   return { injectables };
 };

@@ -1,24 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { 
-  IEpubPreferences, 
-  IWebPubPreferences,
-  TextAlignment 
-} from "@readium/navigator";
 
+import { IEpubPreferences, TextAlignment } from "@readium/navigator";
 import { ThPreferences } from "@/preferences";
-import { 
-  ThLineHeightOptions, 
-  ThLayoutUI
-} from "../../preferences/models";
+import { ThLineHeightOptions, ThLayoutUI } from "@/preferences/models";
 import { FontMetadata } from "@/preferences/services/fonts";
-import { ThColorScheme } from "./useColorScheme";
+import { ThColorScheme } from "@/core/Hooks/useColorScheme";
+import { ReadiumCSSSettings } from "@/core/Hooks/Epub/useEpubSettingsCache";
 
-import { ReadiumCSSSettings } from "./Epub/useEpubSettingsCache";
-import { WebPubCSSSettings } from "./WebPub/useWebPubSettingsCache";
-
-import { buildThemeObject } from "../../preferences/helpers/buildThemeObject";
+import { buildThemeObject } from "@/preferences/helpers/buildThemeObject";
 
 interface UseEpubPreferencesConfigProps {
   isFXL: boolean;
@@ -32,14 +23,6 @@ interface UseEpubPreferencesConfigProps {
   lineHeightOptions: Record<ThLineHeightOptions, number | null>;
   fxlThemeKeys: string[];
   reflowThemeKeys: string[];
-}
-
-interface UseWebPubPreferencesConfigProps {
-  settings: WebPubCSSSettings;
-  fontLanguage: string;
-  hasDisplayTransformability: boolean;
-  getFontMetadata: (fontFamily: string) => FontMetadata;
-  lineHeightOptions: Record<ThLineHeightOptions, number | null>;
 }
 
 export const useEpubPreferencesConfig = ({
@@ -138,43 +121,4 @@ export const useEpubPreferencesConfig = ({
   }, [isFXL, preferences]);
 
   return { epubPreferences, epubDefaults };
-};
-
-export const useWebPubPreferencesConfig = ({
-  settings,
-  fontLanguage,
-  hasDisplayTransformability,
-  getFontMetadata,
-  lineHeightOptions,
-}: UseWebPubPreferencesConfigProps) => {
-  const webPubPreferences = useMemo(() => {
-    const preferences: IWebPubPreferences = {
-      zoom: settings.zoom
-    };
-
-    if (hasDisplayTransformability) {
-      preferences.fontFamily = getFontMetadata(settings.fontFamily[fontLanguage] ?? "")?.fontStack || null;
-      preferences.fontWeight = settings.fontWeight;
-      preferences.hyphens = settings.hyphens;
-      preferences.letterSpacing = settings.letterSpacing;
-      preferences.lineHeight = settings.lineHeight === null 
-        ? null 
-        : lineHeightOptions[settings.lineHeight];
-      preferences.paragraphIndent = settings.paragraphIndent;
-      preferences.paragraphSpacing = settings.paragraphSpacing;
-      preferences.textAlign = settings.textAlign as TextAlignment | null | undefined;
-      preferences.textNormalization = settings.textNormalization;
-      preferences.wordSpacing = settings.wordSpacing;
-    }
-
-    return preferences;
-  }, [
-    settings,
-    fontLanguage,
-    hasDisplayTransformability,
-    getFontMetadata,
-    lineHeightOptions,
-  ]);
-
-  return { webPubPreferences };
 };
