@@ -30,6 +30,7 @@ interface UseWebPubReaderInitProps {
   lineHeightOptions: Record<ThLineHeightOptions, number | null>;
   contentProtectionConfig?: IContentProtectionConfig;
   onNavigatorReady?: () => void;
+  onNavigatorLoaded?: () => void;
   onCleanup?: () => void;
 }
 
@@ -50,6 +51,7 @@ export const useWebPubReaderInit = ({
   lineHeightOptions,
   contentProtectionConfig,
   onNavigatorReady,
+  onNavigatorLoaded,
   onCleanup,
 }: UseWebPubReaderInitProps) => {
   const [navigatorReady, setNavigatorReady] = useState(false);
@@ -67,11 +69,6 @@ export const useWebPubReaderInit = ({
     fontLanguage,
     getFontInjectables,
   });
-
-  const handleNavigatorReady = useCallback(() => {
-    onNavigatorReady?.();
-    setNavigatorReady(true);
-  }, [onNavigatorReady]);
 
   const handleCleanup = useCallback(() => {
     removeFontResources();
@@ -100,8 +97,14 @@ export const useWebPubReaderInit = ({
 
     isNavigatorLoadedWebPub.current = true;
     
+    // Call onNavigatorReady outside of navigator load
+    onNavigatorReady?.();
+    
+    // Pass onNavigatorLoaded as the callback to WebPubNavigatorLoad
     WebPubNavigatorLoad(config, () => {
-      handleNavigatorReady();
+      // Set navigatorReady to true only after navigator actually loads
+      setNavigatorReady(true);
+      onNavigatorLoaded?.();
     });
 
     return () => {

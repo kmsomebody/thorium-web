@@ -321,8 +321,11 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
     onNavigatorReady: () => {
       dispatch(setLoading(false));
     },
+    onNavigatorLoaded: () => {
+      p.observe(window);
+    },
     onCleanup: () => {
-      // Additional cleanup if needed
+      p.destroy();
     },
   });
 

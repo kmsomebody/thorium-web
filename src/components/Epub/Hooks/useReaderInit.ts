@@ -37,6 +37,7 @@ interface UseEpubReaderInitProps {
   isFXL: boolean;
   contentProtectionConfig?: IContentProtectionConfig;
   onNavigatorReady?: () => void;
+  onNavigatorLoaded?: () => void;
   onCleanup?: () => void;
   fxlProgressionCallback?: (locator: Locator) => void;
 }
@@ -65,6 +66,7 @@ export const useEpubReaderInit = ({
   isFXL,
   contentProtectionConfig,
   onNavigatorReady,
+  onNavigatorLoaded,
   onCleanup,
   fxlProgressionCallback,
 }: UseEpubReaderInitProps) => {
@@ -91,11 +93,6 @@ export const useEpubReaderInit = ({
     getFontInjectables,
     getAndroidFXLPatch,
   });
-
-  const handleNavigatorReady = useCallback(() => {
-    onNavigatorReady?.();
-    setNavigatorReady(true);
-  }, [onNavigatorReady]);
 
   const handleCleanup = useCallback(() => {
     if (!isFXL) removeFontResources();
@@ -124,7 +121,15 @@ export const useEpubReaderInit = ({
 
     isNavigatorLoadedEpub.current = true;
     
-    EpubNavigatorLoad(config, handleNavigatorReady, fxlProgressionCallback);
+    // Call onNavigatorReady outside of navigator load
+    onNavigatorReady?.();
+    
+    // Pass onNavigatorLoaded as the callback to EpubNavigatorLoad
+    EpubNavigatorLoad(config, () => {
+      // Set navigatorReady to true only after navigator actually loads
+      setNavigatorReady(true);
+      onNavigatorLoaded?.();
+    }, fxlProgressionCallback);
 
     return () => {
       if (isNavigatorLoadedEpub.current) {
