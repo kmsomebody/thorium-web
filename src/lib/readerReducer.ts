@@ -3,8 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { defaultPlatformModifier, UnstablePlatformModifier } from "@/core/Helpers/keyboardUtilities";
 import { ThSettingsContainerKeys, ThLayoutDirection } from "@/preferences/models";
 
+// Export the profile type for use in other components
+export type ReaderProfile = "epub" | "webPub" | "audio" | undefined;
+
 export interface ReaderReducerState {
-  profile: "epub" | "webPub" | undefined;
+  profile: ReaderProfile;
   direction: ThLayoutDirection;
   isLoading: boolean;
   isImmersive: boolean;

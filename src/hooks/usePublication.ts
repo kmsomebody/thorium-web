@@ -2,54 +2,230 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "@readium/shared";
-import { HttpFetcher } from "@readium/shared";
+import {   
+  Manifest, 
+  Publication, 
+  Fetcher, 
+  HttpFetcher, 
+  Layout, 
+  ReadingProgression,
+  Feature,
+  Profile
+} from "@readium/shared";
+import { useAppDispatch } from "@/lib/hooks";
+import { 
+  setRTL, 
+  setFXL, 
+  setPositionsList,
+  setHasDisplayTransformability,
+  setFontLanguage
+} from "@/lib/publicationReducer";
+import { setReaderProfile, ReaderProfile } from "@/lib/readerReducer";
+import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { deserializePositions } from "@/helpers/deserializePositions";
 
 export interface UsePublicationOptions {
   url: string;
   onError?: (error: string) => void;
+  fetcher?: Fetcher;
 }
+
+export interface UsePublicationReturn {
+  // Loading states
+  isLoading: boolean;
+  error: string;
+  
+  // Publication data
+  publication: Publication | null;
+  manifest: object | null;
+  selfLink: string | null;
+  localDataKey: string | null;
+  
+  // Profile detection
+  profile: ReaderProfile | null;
+  
+  // Publication metadata
+  isRTL: boolean;
+  isFXL: boolean;
+  fontLanguage: string;
+  hasDisplayTransformability: boolean;
+}
+
+const detectProfile = (manifest: object): ReaderProfile => {
+  // Check conformsTo in manifest metadata to determine profile
+  const metadata = (manifest as any).metadata;
+  if (!metadata) return "webPub"; // Default to webPub when no metadata
+  
+  const conformsTo = metadata.conformsTo;
+  if (!conformsTo) return "webPub"; // Default to webPub when no conformsTo
+  
+  // Handle both string and array formats
+  const profiles = Array.isArray(conformsTo) ? conformsTo : [conformsTo];
+  
+  // Check for audiobook profile first
+  if (profiles.some((profile: any) => 
+    typeof profile === 'string' && profile === Profile.AUDIOBOOK
+  )) {
+    return "audio";
+  }
+  
+  // Check for epub profile
+  if (profiles.some((profile: any) => 
+    typeof profile === 'string' && profile === Profile.EPUB
+  )) {
+    return "epub";
+  }
+  
+  // Default to webPub for any other profile or no specific profile
+  return "webPub";
+};
 
 export const usePublication = ({ 
   url, 
-  onError = () => {} 
-}: UsePublicationOptions) => {
+  onError = () => {},
+  fetcher: customFetcher
+}: UsePublicationOptions): UsePublicationReturn => {
+  const dispatch = useAppDispatch();
+  const { resolveFontLanguage } = usePreferences();
+  
+  // Basic states
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
-  const [manifest, setManifest] = useState<object | undefined>(undefined);
-  const [selfLink, setSelfLink] = useState<string | undefined>(undefined);
+  const [manifest, setManifest] = useState<object | null>(null);
+  const [selfLink, setSelfLink] = useState<string | null>(null);
+  const [localDataKey, setLocalDataKey] = useState<string | null>(null);
+  
+  // Publication states
+  const [publication, setPublication] = useState<Publication | null>(null);
+  const [profile, setProfile] = useState<ReaderProfile | null>(null);
+  
+  // Metadata states
+  const [isRTL, setIsRTL] = useState(false);
+  const [isFXL, setIsFXL] = useState(false);
+  const [fontLanguage, setFontLanguageState] = useState("");
+  const [hasDisplayTransformability, setHasDisplayTransformabilityState] = useState(false);
 
   // Basic URL validation and loading
   useEffect(() => {
     if (!url) {
       setError("Manifest URL is required");
+      setIsLoading(false);
       return;
     }
 
+    setIsLoading(true);
+    setError("");
+    
     // Decode URL if needed
     const decodedUrl = decodeURIComponent(url);
     
     const manifestLink = new Link({ href: decodedUrl });
-    const fetcher = new HttpFetcher(undefined);
+    const fetcher = customFetcher || new HttpFetcher(undefined);
 
     try {
       const fetched = fetcher.get(manifestLink);
       
       // Get self-link first
-      fetched.link().then((link) => {
-        setSelfLink(link.toURL(decodedUrl));
-      });
+      fetched.link().then(async (link) => {
+        const selfHref = link.toURL(decodedUrl);
+        setSelfLink(selfHref || null);
+        if (selfHref) {
+          setLocalDataKey(`${selfHref}-current-location`);
+          
+          // Create fetcher with selfHref for proper URL resolution
+          const manifestFetcher = customFetcher || new HttpFetcher(undefined, selfHref);
+          
+          // Fetch manifest with proper fetcher
+          const manifestFetched = manifestFetcher.get(manifestLink);
+          const manifestData = await manifestFetched.readAsJSON();
+          
+          setManifest(manifestData as object);
+          
+          // Detect profile from manifest
+          const detectedProfile = detectProfile(manifestData || {});
+          setProfile(detectedProfile);
+          dispatch(setReaderProfile(detectedProfile));
+          
+          // Create publication
+          const manifestObj = Manifest.deserialize(manifestData)!;
+          manifestObj.setSelfLink(selfHref);
 
-      // Then get manifest data
-      fetched.readAsJSON().then((manifestData) => {
-        setManifest(manifestData as object);
-      }).catch((error) => {
-        console.error("Error loading manifest:", error);
-        setError(`Failed loading manifest ${ decodedUrl }: ${ error instanceof Error ? error.message : "Unknown error" }`);
+          const pub = new Publication({
+            manifest: manifestObj,
+            fetcher: manifestFetcher
+          });
+          
+          // For EPUB, fetch positions before mounting reader
+          if (detectedProfile === "epub") {
+            try {
+              const rawPositions = await pub.positionsFromManifest();
+              const positionsList = deserializePositions(rawPositions);
+              dispatch(setPositionsList(positionsList));
+            } catch (error) {
+              console.error("Failed to fetch positions:", error);
+              dispatch(setPositionsList([]));
+            }
+          }
+          
+          setPublication(pub);
+          setIsLoading(false);
+        }
       });
     } catch (error: unknown) {
       console.error("Error loading manifest:", error);
-      setError(`Failed loading manifest ${ decodedUrl }: ${ error instanceof Error ? error.message : "Unknown error" }`);
+      const errorMsg = `Failed loading manifest ${decodedUrl}: ${error instanceof Error ? error.message : "Unknown error"}`;
+      setError(errorMsg);
+      setIsLoading(false);
     }
-  }, [url]);
+  }, [url, customFetcher, dispatch]);
+
+  // Process publication metadata when publication is ready
+  useEffect(() => {
+    if (!publication) return;
+
+    // RTL detection
+    const rtl = publication.metadata.effectiveReadingProgression === ReadingProgression.rtl;
+    setIsRTL(rtl);
+    dispatch(setRTL(rtl));
+
+    // FXL detection (only relevant for epub)
+    if (profile === "epub") {
+      const fxl = publication.metadata.effectiveLayout === Layout.fixed;
+      setIsFXL(fxl);
+      dispatch(setFXL(fxl));
+    }
+
+    // Font language resolution
+    const resolvedLang = resolveFontLanguage(
+      publication.metadata.languages?.[0], 
+      publication.metadata.effectiveReadingProgression
+    );
+    setFontLanguageState(resolvedLang);
+    dispatch(setFontLanguage(resolvedLang));
+    
+    // Display transformability
+    const displayTransformability = publication.metadata.accessibility?.feature?.some(
+      feature => feature && feature.value === Feature.DISPLAY_TRANSFORMABILITY.value
+    ) || false;
+    setHasDisplayTransformabilityState(displayTransformability);
+    dispatch(setHasDisplayTransformability(displayTransformability));
+
+    // Positions list (only for epub)
+    if (profile === "epub" && publication) {
+      const fetchPositions = async () => {
+        try {
+          const positionsList = await publication.positionsFromManifest();
+          const deserializedPositionsList = deserializePositions(positionsList);
+          dispatch(setPositionsList(deserializedPositionsList));
+        } catch (error) {
+          console.error("Failed to fetch positions:", error);
+          dispatch(setPositionsList([]));
+        }
+      };
+
+      fetchPositions();
+    }
+  }, [publication, profile, resolveFontLanguage, dispatch]);
 
   // Call onError callback when error changes
   useEffect(() => {
@@ -59,8 +235,16 @@ export const usePublication = ({
   }, [error, onError]);
 
   return {
+    isLoading,
     error,
+    publication,
     manifest,
-    selfLink
+    selfLink,
+    localDataKey,
+    profile,
+    isRTL,
+    isFXL,
+    fontLanguage,
+    hasDisplayTransformability
   };
-}
+};

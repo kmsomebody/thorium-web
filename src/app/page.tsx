@@ -62,7 +62,7 @@ const webPublications = [
     title: "Readium CSS Implementers’ Documentation",
     author: "Jiminy Panoz",
     cover: "/images/readium-css.jpg",
-    url: "/read/experimental/readium-css",
+    url: "/read/readium-css",
     rendition: "Web Publication"
   }
 ];

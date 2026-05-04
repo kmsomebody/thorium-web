@@ -1,12 +1,12 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { StatefulLoader } from "@/components/Misc/StatefulLoader";
 import { PUBLICATION_MANIFESTS } from "@/config/publications";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
 import { verifyManifestUrl } from "@/app/api/verify-manifest/verifyDomain";
+import { ReaderComponent } from "@/components/Reader/ReaderComponent";
 
 type Params = { identifier: string };
 
@@ -14,15 +14,16 @@ type Props = {
   params: Promise<Params>;
 };
 
-const StatefulReader = dynamic(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })), {
-  ssr: false
-});
-
 export default function BookPage({ params }: Props) {
   const [domainError, setDomainError] = useState<string | null>(null);
   const identifier = use(params).identifier;
   const isLoading = useAppSelector(state => state.reader.isLoading);
-  const manifestUrl = identifier ? PUBLICATION_MANIFESTS[identifier as keyof typeof PUBLICATION_MANIFESTS] : "";
+  
+  // Check predefined publications, fallback to direct URL
+  const manifestUrl = identifier 
+    ? PUBLICATION_MANIFESTS[identifier as keyof typeof PUBLICATION_MANIFESTS] || 
+      identifier
+    : "";
 
   useEffect(() => {
     if (manifestUrl) {
@@ -34,7 +35,13 @@ export default function BookPage({ params }: Props) {
     }
   }, [manifestUrl]);
 
-  const { error, manifest, selfLink } = usePublication({
+  const { 
+    isLoading: publicationLoading, 
+    error, 
+    publication, 
+    localDataKey,
+    profile 
+  } = usePublication({
     url: manifestUrl,
     onError: (error) => {
       console.error("Publication loading error:", error);
@@ -58,8 +65,14 @@ export default function BookPage({ params }: Props) {
           <p>{ error }</p>
         </div>
       ) : (
-        <StatefulLoader isLoading={ isLoading }>
-          { manifest && selfLink && <StatefulReader rawManifest={ manifest } selfHref={ selfLink } /> }
+        <StatefulLoader isLoading={ isLoading || publicationLoading }>
+          { publication && (
+            <ReaderComponent 
+              profile={ profile } 
+              publication={ publication } 
+              localDataKey={ localDataKey }
+            />
+          )}
         </StatefulLoader>
       )}
     </>

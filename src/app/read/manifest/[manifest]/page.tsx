@@ -1,21 +1,17 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { StatefulLoader } from "@/components/Misc/StatefulLoader";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
 import { verifyManifestUrl } from "@/app/api/verify-manifest/verifyDomain";
+import { ReaderComponent } from "@/components/Reader/ReaderComponent";
 
 type Params = { manifest: string };
 
 type Props = {
   params: Promise<Params>;
 };
-
-const StatefulReader = dynamic(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })), {
-  ssr: false
-});
 
 export default function ManifestPage({ params }: Props) {
   const [domainError, setDomainError] = useState<string | null>(null);
@@ -32,7 +28,13 @@ export default function ManifestPage({ params }: Props) {
     }
   }, [manifestUrl]);
 
-  const { error, manifest, selfLink } = usePublication({
+  const { 
+    isLoading: publicationLoading, 
+    error, 
+    publication, 
+    profile,
+    localDataKey
+  } = usePublication({
     url: manifestUrl,
     onError: (error) => {
       console.error("Manifest loading error:", error);
@@ -58,8 +60,14 @@ export default function ManifestPage({ params }: Props) {
   }
 
   return (
-    <StatefulLoader isLoading={ isLoading }>
-      { manifest && selfLink && <StatefulReader rawManifest={ manifest } selfHref={ selfLink } /> }
+    <StatefulLoader isLoading={ isLoading || publicationLoading }>
+      { publication && (
+        <ReaderComponent 
+          profile={ profile } 
+          publication={ publication }
+          localDataKey={ localDataKey }
+        />
+      )}
     </StatefulLoader>
   );
 }
