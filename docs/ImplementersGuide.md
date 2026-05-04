@@ -110,6 +110,14 @@ Thorium Web exposes a `StatefulReader` component with EPUB Support that is worki
 > [!NOTE]
 > Given the massive shift required to package the original Next.js app’s components, packaged Components are initially shipping with dependencies and restrictions. These will eventually be removed but any help will be greatly appreciated.
 
+## Migration Guides
+
+When upgrading between major or breaking versions, refer to the migration guide for that release in [docs/migrations/](./migrations/). Each guide covers breaking API changes, required code updates, and before/after examples.
+
+| Version | Guide |
+|---|---|
+| 1.2.0 | [Migration Guide 1.2.0](./migrations/1.2.0.md) |
+
 ## Prerequisites for implementation
 
 > [!Important]

@@ -1,45 +1,45 @@
 Locale Completion Status
 Reference language: en
-Generated: 2026-02-10T09:57:57.015Z
+Generated: 2026-03-20T08:59:18.751Z
 
 
 Locale Completion Summary:
 ----------------------------------------
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
-FI     [■■■■■■■■■■■■■■■■■■■□]  97%
-IT     [■■■■■■■■■■■■■■■■■■■□]  97%
-LT     [■■■■■■■■■■■■■■■■■■■□]  96%
-AR     [■■■■■■■■■■■■■■■■■■□□]  92%
-PT-BR  [■■■■■■■■■■■■■■■■■□□□]  85%
-PT-PT  [■■■■■■■■■■■■■■■■■□□□]  85%
-SV     [■■■■■■■■■■■■■■■■□□□□]  84%
-FR     [■■■■■■■■■■■■■■□□□□□□]  74%
-DA     [■■■■■■■■■■■■■□□□□□□□]  66%
-ET     [■■■■■■■■■■■□□□□□□□□□]  59%
-PL     [■■■■■■■■■■■□□□□□□□□□]  59%
-TA     [■■■■■■■■■■■□□□□□□□□□]  58%
-TR     [■■■■□□□□□□□□□□□□□□□□]  21%
-EL     [■■■□□□□□□□□□□□□□□□□□]  16%
+FI     [■■■■■■■■■■■■■■■■■■■□]  95%
+FR     [■■■■■■■■■■■■■■■■■■■□]  95%
+IT     [■■■■■■■■■■■■■■■■■■■□]  95%
+LT     [■■■■■■■■■■■■■■■■■■■□]  95%
+SV     [■■■■■■■■■■■■■■■■■■■□]  95%
+PT-PT  [■■■■■■■■■■■■■■■■■■□□]  94%
+AR     [■■■■■■■■■■■■■■■■■□□□]  88%
+PT-BR  [■■■■■■■■■■■■■■■■□□□□]  81%
+DA     [■■■■■■■■■■■■□□□□□□□□]  63%
+ET     [■■■■■■■■■■■□□□□□□□□□]  56%
+PL     [■■■■■■■■■■■□□□□□□□□□]  56%
+TA     [■■■■■■■■■■■□□□□□□□□□]  55%
+TR     [■■■■□□□□□□□□□□□□□□□□]  20%
+EL     [■■■□□□□□□□□□□□□□□□□□]  15%
 UK     [□□□□□□□□□□□□□□□□□□□□]   0%
 
 
 Inferred Usage Summary:
 ----------------------------------------
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
-FI     [■■■■■■■■■■■■■■■■■■■■] 100%
-IT     [■■■■■■■■■■■■■■■■■■■■] 100%
-LT     [■■■■■■■■■■■■■■■■■■■■] 100%
-PT-BR  [■■■■■■■■■■■■■■■■■■■■] 100%
-PT-PT  [■■■■■■■■■■■■■■■■■■■■] 100%
-SV     [■■■■■■■■■■■■■■■■■■■■] 100%
-FR     [■■■■■■■■■■■■■■■■■■■■] 100%
-DA     [■■■■■■■■■■■■■■■■■■■□]  98%
-PL     [■■■■■■■■■■■■■■■■■■■□]  98%
-TA     [■■■■■■■■■■■■■■■■■■□□]  93%
-AR     [■■■■■■■■■■■■■■■■■■□□]  92%
-ET     [■■■■■■■■■■■□□□□□□□□□]  57%
-EL     [■■■■■□□□□□□□□□□□□□□□]  29%
-TR     [■■■□□□□□□□□□□□□□□□□□]  16%
+FI     [■■■■■■■■■■■■■■■■■■□□]  91%
+FR     [■■■■■■■■■■■■■■■■■■□□]  91%
+IT     [■■■■■■■■■■■■■■■■■■□□]  91%
+LT     [■■■■■■■■■■■■■■■■■■□□]  91%
+SV     [■■■■■■■■■■■■■■■■■■□□]  91%
+PT-PT  [■■■■■■■■■■■■■■■■■■□□]  91%
+PT-BR  [■■■■■■■■■■■■■■■■■■□□]  91%
+DA     [■■■■■■■■■■■■■■■■■□□□]  89%
+PL     [■■■■■■■■■■■■■■■■■□□□]  89%
+TA     [■■■■■■■■■■■■■■■■■□□□]  85%
+AR     [■■■■■■■■■■■■■■■■□□□□]  84%
+ET     [■■■■■■■■■■□□□□□□□□□□]  52%
+EL     [■■■■■□□□□□□□□□□□□□□□]  27%
+TR     [■■■□□□□□□□□□□□□□□□□□]  15%
 UK     [□□□□□□□□□□□□□□□□□□□□]   0%
 
 Locale Breakdown:
@@ -47,95 +47,219 @@ Locale Breakdown:
 
 EN (100% complete, 100% of inferred usage)
    thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■■■ 100%  (185/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
+   thorium-web.json      ■■■■■■■■■■ 100%  (50/50)
+   TOTAL                 ■■■■■■■■■■ 100%  (194/194)
+   USED                  ■■■■■■■■■■ 100%  (94/94)
 
-FI (97% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■■□  97%  (179/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-IT (97% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■■□  97%  (179/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-LT (96% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■□  95%  (137/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■■□  96%  (178/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-AR (92% complete, 92% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
-   thorium-web.json      ■■■■■■■□□□  78%  (32/41)
-   TOTAL                 ■■■■■■■■■□  92%  (170/185)
-   USED                  ■■■■■■■■■□  92%  (79/86)
+FI (95% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■■□  95%  (185/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (7 keys):
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+FR (95% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■■□  95%  (185/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+IT (95% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■■□  95%  (185/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+LT (95% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■■□  95%  (185/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+SV (95% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (144/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■■□  95%  (185/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+PT-PT (94% complete, 91% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  99%  (142/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■■□  94%  (183/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+AR (88% complete, 84% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  96%  (138/144)
+   thorium-web.json      ■■■■■■□□□□  64%  (32/50)
+   TOTAL                 ■■■■■■■■□□  88%  (170/194)
+   USED                  ■■■■■■■■□□  84%  (79/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (15 keys):
    • reader.jumpToPosition.label
+   • reader.jumpToPosition.error.notFound
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
    • reader.settings.spacing.advanced.trigger
    • reader.settings.spacing.advanced.tooltip
    • reader.settings.text.advanced.trigger
    • reader.settings.text.advanced.tooltip
 
 
-PT-BR (85% complete, 100% of inferred usage)
+PT-BR (81% complete, 91% of inferred usage)
    thorium-shared.json   ■■■■■■■■□□  81%  (116/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■□□  85%  (157/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-PT-PT (85% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  81%  (116/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■□□  85%  (157/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-SV (84% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■■□□□  79%  (114/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■■□□  84%  (155/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-FR (74% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■□□□□  66%  (95/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■■□□□  74%  (136/185)
-   USED                  ■■■■■■■■■■ 100%  (86/86)
-
-DA (66% complete, 98% of inferred usage)
-   thorium-shared.json   ■■■■■□□□□□  57%  (82/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■■□□□□  66%  (123/185)
-   USED                  ■■■■■■■■■□  98%  (84/86)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■■■□□  81%  (157/194)
+   USED                  ■■■■■■■■■□  91%  (86/94)
 
    ----------------------------------------
    Missing Keys:
 
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+
+DA (63% complete, 89% of inferred usage)
+   thorium-shared.json   ■■■■■□□□□□  57%  (82/144)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■■□□□□  63%  (123/194)
+   USED                  ■■■■■■■■□□  89%  (84/94)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
 
    SHARED (2 keys):
    • reader.preferences.columns.single.compact
    • reader.preferences.columns.dual.compact
 
 
-ET (59% complete, 57% of inferred usage)
+ET (56% complete, 52% of inferred usage)
    thorium-shared.json   ■■■■□□□□□□  47%  (68/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■□□□□□  59%  (109/185)
-   USED                  ■■■■■□□□□□  57%  (49/86)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■□□□□□  56%  (109/194)
+   USED                  ■■■■■□□□□□  52%  (49/94)
 
    ----------------------------------------
    Missing Keys:
 
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
 
    SHARED (37 keys):
    • reader.preferences.text
@@ -177,30 +301,48 @@ ET (59% complete, 57% of inferred usage)
    • reader.progression.xOfY.descriptive
 
 
-PL (59% complete, 98% of inferred usage)
+PL (56% complete, 89% of inferred usage)
    thorium-shared.json   ■■■■□□□□□□  47%  (68/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■□□□□□  59%  (109/185)
-   USED                  ■■■■■■■■■□  98%  (84/86)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■□□□□□  56%  (109/194)
+   USED                  ■■■■■■■■□□  89%  (84/94)
 
    ----------------------------------------
    Missing Keys:
 
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
 
    SHARED (2 keys):
    • reader.preferences.spacing.presets.title
    • common.actions.reset
 
 
-TA (58% complete, 93% of inferred usage)
+TA (55% complete, 85% of inferred usage)
    thorium-shared.json   ■■■■□□□□□□  46%  (66/144)
-   thorium-web.json      ■■■■■■■■■■ 100%  (41/41)
-   TOTAL                 ■■■■■□□□□□  58%  (107/185)
-   USED                  ■■■■■■■■■□  93%  (80/86)
+   thorium-web.json      ■■■■■■■■□□  82%  (41/50)
+   TOTAL                 ■■■■■□□□□□  55%  (107/194)
+   USED                  ■■■■■■■■□□  85%  (80/94)
 
    ----------------------------------------
    Missing Keys:
 
+   WEB (8 keys):
+   • reader.jumpToPosition.error.notFound
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
 
    SHARED (6 keys):
    • reader.preferences.columns.single.compact
@@ -211,20 +353,21 @@ TA (58% complete, 93% of inferred usage)
    • reader.preferences.fontWeight.bold
 
 
-TR (21% complete, 16% of inferred usage)
+TR (20% complete, 15% of inferred usage)
    thorium-shared.json   ■■□□□□□□□□  27%  (39/144)
-   thorium-web.json      □□□□□□□□□□   0%  (0/41)
-   TOTAL                 ■■□□□□□□□□  21%  (39/185)
-   USED                  ■□□□□□□□□□  16%  (14/86)
+   thorium-web.json      □□□□□□□□□□   0%  (0/50)
+   TOTAL                 ■■□□□□□□□□  20%  (39/194)
+   USED                  ■□□□□□□□□□  15%  (14/94)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (34 keys):
+   WEB (42 keys):
    • reader.fullscreen.close
    • reader.fullscreen.trigger
    • reader.fullscreen.tooltip
    • reader.jumpToPosition.label
+   • reader.jumpToPosition.error.notFound
    • reader.jumpToPosition.go
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
@@ -240,6 +383,13 @@ TR (21% complete, 16% of inferred usage)
    • reader.app.docking.dockingCollapsed
    • reader.app.docking.dockingEmpty
    • reader.app.publicationWrapper
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
    • reader.app.loading
    • reader.settings.spacing.advanced.trigger
    • reader.settings.spacing.advanced.tooltip
@@ -297,21 +447,29 @@ TR (21% complete, 16% of inferred usage)
    • reader.preferences.textNormalization.label
 
 
-EL (16% complete, 29% of inferred usage)
+EL (15% complete, 27% of inferred usage)
    thorium-shared.json   □□□□□□□□□□   0%  (0/144)
-   thorium-web.json      ■■■■■■■□□□  73%  (30/41)
-   TOTAL                 ■□□□□□□□□□  16%  (30/185)
-   USED                  ■■□□□□□□□□  29%  (25/86)
+   thorium-web.json      ■■■■■■□□□□  60%  (30/50)
+   TOTAL                 ■□□□□□□□□□  15%  (30/194)
+   USED                  ■■□□□□□□□□  27%  (25/94)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (9 keys):
+   WEB (17 keys):
    • reader.jumpToPosition.label
+   • reader.jumpToPosition.error.notFound
    • reader.jumpToPosition.go
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
    • reader.toc.entries
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
    • reader.settings.spacing.advanced.trigger
    • reader.settings.spacing.advanced.tooltip
    • reader.settings.text.advanced.trigger
@@ -374,18 +532,19 @@ EL (16% complete, 29% of inferred usage)
 
 UK (0% complete, 0% of inferred usage)
    thorium-shared.json   □□□□□□□□□□   0%  (0/144)
-   thorium-web.json      □□□□□□□□□□   0%  (0/41)
-   TOTAL                 □□□□□□□□□□   0%  (0/185)
-   USED                  □□□□□□□□□□   0%  (0/86)
+   thorium-web.json      □□□□□□□□□□   0%  (0/50)
+   TOTAL                 □□□□□□□□□□   0%  (0/194)
+   USED                  □□□□□□□□□□   0%  (0/94)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (34 keys):
+   WEB (42 keys):
    • reader.fullscreen.close
    • reader.fullscreen.trigger
    • reader.fullscreen.tooltip
    • reader.jumpToPosition.label
+   • reader.jumpToPosition.error.notFound
    • reader.jumpToPosition.go
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
@@ -401,6 +560,13 @@ UK (0% complete, 0% of inferred usage)
    • reader.app.docking.dockingCollapsed
    • reader.app.docking.dockingEmpty
    • reader.app.publicationWrapper
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
    • reader.app.loading
    • reader.settings.spacing.advanced.trigger
    • reader.settings.spacing.advanced.tooltip
