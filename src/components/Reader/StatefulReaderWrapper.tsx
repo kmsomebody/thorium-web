@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import { lazy, Suspense } from "react";
 
 import { Publication, Locator } from "@readium/shared";
 import { ThThemeKeys, ThemeKeyType, useTheming } from "@/preferences";
@@ -24,13 +24,9 @@ import {
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { prefixString } from "@/core/Helpers/prefixString";
 
-const StatefulEpubReader = dynamic(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })), {
-  ssr: false
-});
+const StatefulEpubReader = lazy(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })));
 
-const StatefulWebPubReader = dynamic(() => import("@/components/WebPub").then(mod => ({ default: mod.ExperimentalWebPubStatefulReader })), {
-  ssr: false
-});
+const StatefulWebPubReader = lazy(() => import("@/components/WebPub").then(mod => ({ default: mod.ExperimentalWebPubStatefulReader })));
 
 interface ReaderComponentProps {
   profile: "epub" | "webPub" | "audio" | undefined | null;
@@ -72,12 +68,12 @@ export const StatefulReaderWrapper = ({ profile, ...props }: ReaderComponentProp
 
   switch (profile) {
     case "epub":
-      return <StatefulEpubReader { ...props } />;
+      return <Suspense><StatefulEpubReader { ...props } /></Suspense>;
     case "audio":
       // TODO: Implement audio reader when available
       return <div className="container"><h1>Audio Reader Coming Soon</h1></div>;
     case "webPub":
     default:
-      return <StatefulWebPubReader { ...props } />;
+      return <Suspense><StatefulWebPubReader { ...props } /></Suspense>;
   }
 };
