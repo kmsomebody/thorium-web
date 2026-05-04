@@ -172,7 +172,8 @@ export const useWebPubPreferencesConfig = ({
     settings,
     fontLanguage,
     hasDisplayTransformability,
-    getFontMetadata
+    getFontMetadata,
+    lineHeightOptions,
   ]);
 
   return { webPubPreferences };
