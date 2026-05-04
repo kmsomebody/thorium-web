@@ -4,8 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { 
   ThemeKeyType, 
-  usePreferenceKeys, 
-  useTheming
+  usePreferenceKeys
 } from "../../preferences";
 
 import readerStyles from "../assets/styles/thorium-web.reader.app.module.css";
@@ -66,13 +65,6 @@ import { toggleActionOpen } from "@/lib/actionsReducer";
 import { useAppSelector, useAppDispatch, useAppStore } from "@/lib/hooks";
 
 import { 
-  setBreakpoint, 
-  setColorScheme, 
-  setContrast, 
-  setForcedColors, 
-  setMonochrome, 
-  setReducedMotion, 
-  setReducedTransparency, 
   setTheme 
 } from "@/lib/themeReducer";
 import { 
@@ -98,9 +90,7 @@ import { buildThemeObject } from "@/preferences/helpers/buildThemeObject";
 import { createDefaultPlugin } from "../Plugins/helpers/createDefaultPlugin";
 import Peripherals from "../../helpers/peripherals";
 import { getPlatformModifier } from "@/core/Helpers/keyboardUtilities";
-import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
-import { prefixString } from "@/core/Helpers/prefixString";
 import { resolveContentProtectionConfig } from "@/preferences/models/protection";
 
 export interface StatefulReaderProps {
@@ -226,29 +216,6 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     isHovering,
     arrowsOccupySpace
   );
-
-  // Init theming (breakpoints, theme, media queries…)
-  useTheming<ThemeKeyType>({ 
-    theme: theme,
-    themeKeys: preferences.theming.themes.keys,
-    systemKeys: preferences.theming.themes.systemThemes,
-    breakpointsMap: preferences.theming.breakpoints,
-    initProps: {
-      ...propsToCSSVars(preferences.theming.arrow, { prefix: prefixString("arrow") }), 
-      ...propsToCSSVars(preferences.theming.icon, { prefix: prefixString("icon") }),
-      ...propsToCSSVars(preferences.theming.layout, { 
-        prefix: prefixString("layout"),
-        exclude: ["ui"]
-      })
-    },
-    onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
-    onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
-    onContrastChange: (contrast) => dispatch(setContrast(contrast)),
-    onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
-    onMonochromeChange: (isMonochrome) => dispatch(setMonochrome(isMonochrome)),
-    onReducedMotionChange: (reducedMotion) => dispatch(setReducedMotion(reducedMotion)),
-    onReducedTransparencyChange: (reducedTransparency) => dispatch(setReducedTransparency(reducedTransparency))
-  });
 
   const atPublicationStart = useAppSelector(state => state.publication.atPublicationStart);
   const atPublicationEnd = useAppSelector(state => state.publication.atPublicationEnd);
