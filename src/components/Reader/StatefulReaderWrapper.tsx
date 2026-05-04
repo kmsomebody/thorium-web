@@ -3,11 +3,6 @@ import { lazy, Suspense } from "react";
 import { Publication, Locator } from "@readium/shared";
 import { ThThemeKeys, ThemeKeyType, useTheming } from "@/preferences";
 
-export interface PositionStorage {
-  get: () => Locator | undefined;
-  set: (locator: Locator) => void | Promise<void>;
-}
-
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
@@ -23,12 +18,25 @@ import {
 
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { prefixString } from "@/core/Helpers/prefixString";
+import { ThPlugin } from "../Plugins";
 
 const StatefulEpubReader = lazy(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })));
 
 const StatefulWebPubReader = lazy(() => import("@/components/WebPub").then(mod => ({ default: mod.ExperimentalWebPubStatefulReader })));
 
-interface ReaderComponentProps {
+export interface PositionStorage {
+  get: () => Locator | undefined;
+  set: (locator: Locator) => void | Promise<void>;
+}
+
+export interface StatefulReaderProps {
+  publication: Publication;
+  localDataKey: string | null;
+  plugins?: ThPlugin[];
+  positionStorage?: PositionStorage;
+}
+
+export interface ReaderComponentProps {
   profile: "epub" | "webPub" | "audio" | undefined | null;
   publication: Publication;
   localDataKey: string | null;

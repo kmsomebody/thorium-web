@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useMemo, useLayoutEffect } from "react";
 
 import readerStyles from "../assets/styles/thorium-web.reader.app.module.css";
 
-import { StatefulReaderProps } from "../Epub/StatefulReader";
+import { StatefulReaderProps } from "../Reader/StatefulReaderWrapper";
 
 import { 
   ThActionsKeys, 

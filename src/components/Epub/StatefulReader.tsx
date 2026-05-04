@@ -44,7 +44,7 @@ import { StatefulDockingWrapper } from "../Docking/StatefulDockingWrapper";
 import { StatefulReaderHeader } from "../StatefulReaderHeader";
 import { StatefulReaderArrowButton } from "../StatefulReaderArrowButton";
 import { StatefulReaderFooter } from "../StatefulReaderFooter";
-import { PositionStorage } from "../Reader/StatefulReaderWrapper";
+import { PositionStorage, StatefulReaderProps } from "../Reader/StatefulReaderWrapper";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
@@ -93,13 +93,6 @@ import Peripherals from "../../helpers/peripherals";
 import { getPlatformModifier } from "@/core/Helpers/keyboardUtilities";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
 import { resolveContentProtectionConfig } from "@/preferences/models/protection";
-
-export interface StatefulReaderProps {
-  publication: Publication;
-  localDataKey: string | null;
-  plugins?: ThPlugin[];
-  positionStorage?: PositionStorage;
-}
 
 // We need to register plugins before hooks run
 // otherwise we can’t access the values of spacing presets
