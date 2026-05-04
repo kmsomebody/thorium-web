@@ -144,8 +144,9 @@ export const useEpubNavigator = () => {
     if (navigatorInstance?.layout === Layout.fixed) {
       FXLPositionChanged.disconnect();
     }
-    navigatorInstance?.destroy();
-    navigatorInstance = null; // Clear the singleton reference
+    navigatorInstance?.destroy().then(() => {
+      navigatorInstance = null; // Clear the singleton reference
+    });
   }, [FXLPositionChanged]);
 
   const goRight = useCallback((animated: boolean, callback: cbb) => {

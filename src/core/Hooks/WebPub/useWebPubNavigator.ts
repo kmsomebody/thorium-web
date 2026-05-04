@@ -75,8 +75,9 @@ export const useWebPubNavigator = () => {
 
   const WebPubNavigatorDestroy = useCallback((cb: Function) => {
     cb();
-    navigatorInstance?.destroy();
-    navigatorInstance = null; // Clear the singleton reference
+    navigatorInstance?.destroy().then(() => {
+      navigatorInstance = null; // Clear the singleton reference
+    });
   }, []);
 
   const goRight = useCallback((animated: boolean, callback: cbb) => {
