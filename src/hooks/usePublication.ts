@@ -51,9 +51,9 @@ export interface UsePublicationReturn {
   hasDisplayTransformability: boolean;
 }
 
-const detectProfile = (manifest: object): ReaderProfile => {
+const detectProfile = (manifest: Manifest): ReaderProfile => {
   // Check conformsTo in manifest metadata to determine profile
-  const metadata = (manifest as any).metadata;
+  const metadata = manifest.metadata;
   if (!metadata) return "webPub"; // Default to webPub when no metadata
   
   const conformsTo = metadata.conformsTo;
@@ -63,15 +63,15 @@ const detectProfile = (manifest: object): ReaderProfile => {
   const profiles = Array.isArray(conformsTo) ? conformsTo : [conformsTo];
   
   // Check for audiobook profile first
-  if (profiles.some((profile: any) => 
-    typeof profile === 'string' && profile === Profile.AUDIOBOOK
+  if (profiles.some((profile: Profile) => 
+    profile === Profile.AUDIOBOOK
   )) {
     return "audio";
   }
   
   // Check for epub profile
-  if (profiles.some((profile: any) => 
-    typeof profile === 'string' && profile === Profile.EPUB
+  if (profiles.some((profile: Profile) => 
+    profile === Profile.EPUB
   )) {
     return "epub";
   }
@@ -141,14 +141,14 @@ export const usePublication = ({
           
           setManifest(manifestData as object);
           
-          // Detect profile from manifest
-          const detectedProfile = detectProfile(manifestData || {});
-          setProfile(detectedProfile);
-          dispatch(setReaderProfile(detectedProfile));
-          
           // Create publication
           const manifestObj = Manifest.deserialize(manifestData)!;
           manifestObj.setSelfLink(selfHref);
+
+          // Detect profile from parsed manifest
+          const detectedProfile = detectProfile(manifestObj);
+          setProfile(detectedProfile);
+          dispatch(setReaderProfile(detectedProfile));
 
           const pub = new Publication({
             manifest: manifestObj,

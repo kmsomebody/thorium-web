@@ -8,7 +8,7 @@ import { EpubNavigatorListeners, IContentProtectionConfig, ILinkInjectable, IBlo
 import { ThPreferences } from "@/preferences";
 import { FontMetadata, InjectableFontResources } from "@/preferences/services/fonts";
 
-import { EPubStatelessCache } from "@/core/Hooks/Epub/useEpubSettingsCache";
+import { EPubStatelessCache } from "./useEpubStatelessCache";
 import { useEpubPreferencesConfig } from "./usePreferencesConfig";
 import { useEpubInjectablesConfig } from "./useInjectablesConfig";
 import { useEpubNavigator, EpubNavigatorLoadProps } from "@/core/Hooks/Epub/useEpubNavigator";

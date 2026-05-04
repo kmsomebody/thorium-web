@@ -71,7 +71,7 @@ export const createDefinitionsFromBunnyFonts = (params: BunnyFontDefinitionParam
     const hasItalic = Array.from(weightStyles.values()).some(styles => styles.has("italic"));
     const styles: Array<"normal" | "italic"> = hasItalic ? ["normal", "italic"] : ["normal"];
 
-    const fontId = familyName;  // Keep the original ID as is (e.g., 'advent-pro')
+    const fontId = familyName;  // Keep the original ID as is (e.g., "advent-pro")
     const familyDisplayName = familyName
       .split("-")
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))

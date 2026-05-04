@@ -5,7 +5,7 @@ import { StatefulLoader } from "@/components/Misc/StatefulLoader";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
 import { verifyManifestUrl } from "@/app/api/verify-manifest/verifyDomain";
-import { ReaderComponent } from "@/components/Reader/ReaderComponent";
+import { StatefulReaderWrapper } from "@/components/Reader/StatefulReaderWrapper";
 
 type Params = { manifest: string };
 
@@ -60,7 +60,7 @@ export default function ManifestPage({ params }: Props) {
       ) : (
         <StatefulLoader isLoading={ isLoading || publicationLoading }>
           { publication && (
-            <ReaderComponent 
+            <StatefulReaderWrapper 
               profile={ profile } 
               publication={ publication } 
               localDataKey={ localDataKey }

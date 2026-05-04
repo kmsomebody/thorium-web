@@ -47,8 +47,8 @@ import { StatefulReaderFooter } from "../StatefulReaderFooter";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
-import { useEpubSettingsCache } from '@/core/Hooks/Epub/useEpubSettingsCache';
-import { useEpubReaderInit } from './Hooks/useReaderInit';
+import { useEpubStatelessCache } from "./Hooks/useEpubStatelessCache";
+import { useEpubReaderInit } from "./Hooks/useReaderInit";
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { usePrevious } from "@/core/Hooks/usePrevious";
@@ -191,7 +191,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
       ? preferences.theming.layout.ui?.reflow || ThLayoutUI.layered
       : ThLayoutUI.stacked;
 
-  const cache = useEpubSettingsCache(
+  const cache = useEpubStatelessCache(
     textAlign,
     columnCount,
     fontFamily,

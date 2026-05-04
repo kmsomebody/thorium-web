@@ -1,10 +1,8 @@
 "use client";
 
 import { useRef, useMemo } from "react";
-import { ThLayoutUI, ThTextAlignOptions, ThLineHeightOptions } from "@/preferences/models";
-import { ThColorScheme } from "@/core/Hooks/useColorScheme";
+import { ThTextAlignOptions, ThLineHeightOptions } from "@/preferences/models";
 import { LineLengthStateObject, FontFamilyStateObject } from "@/lib/settingsReducer";
-import { Locator } from "@readium/shared";
 
 export interface ReadiumCSSSettings {
   columnCount: string;
@@ -25,15 +23,8 @@ export interface ReadiumCSSSettings {
   wordSpacing: number | null;
 }
 
-export interface EPubStatelessCache {
-  layoutUI: ThLayoutUI;
-  isImmersive: boolean;
-  isHovering: boolean;
-  arrowsOccupySpace: boolean;
+export interface EPubSettingsCache {
   settings: ReadiumCSSSettings;
-  positionsList: Locator[];
-  colorScheme?: ThColorScheme;
-  reducedMotion?: boolean;
 }
 
 export const useEpubSettingsCache = (
@@ -52,20 +43,9 @@ export const useEpubSettingsCache = (
   scroll: boolean,
   textNormalization: boolean,
   wordSpacing: number | null,
-  theme: string | undefined,
-  positionsList: Locator[],
-  colorScheme: ThColorScheme,
-  reducedMotion: boolean,
-  layoutUI: ThLayoutUI,
-  isImmersive: boolean,
-  isHovering: boolean,
-  arrowsOccupySpace: boolean
+  theme: string | undefined
 ) => {
-  const cache = useRef<EPubStatelessCache>({
-    layoutUI,
-    isImmersive,
-    isHovering,
-    arrowsOccupySpace: arrowsOccupySpace || false,
+  const cache = useRef<EPubSettingsCache>({
     settings: {
       columnCount,
       fontFamily,
@@ -84,16 +64,9 @@ export const useEpubSettingsCache = (
       theme,
       wordSpacing,
     },
-    positionsList: positionsList || [],
-    colorScheme,
-    reducedMotion,
   });
 
   const memoizedCache = useMemo(() => ({
-    layoutUI,
-    isImmersive,
-    isHovering,
-    arrowsOccupySpace: arrowsOccupySpace || false,
     settings: {
       columnCount,
       fontFamily,
@@ -112,14 +85,7 @@ export const useEpubSettingsCache = (
       theme,
       wordSpacing,
     },
-    positionsList: positionsList || [],
-    colorScheme,
-    reducedMotion,
   }), [
-    layoutUI,
-    isImmersive,
-    isHovering,
-    arrowsOccupySpace,
     columnCount,
     fontFamily,
     fontSize,
@@ -136,9 +102,6 @@ export const useEpubSettingsCache = (
     textNormalization,
     theme,
     wordSpacing,
-    positionsList,
-    colorScheme,
-    reducedMotion,
   ]);
 
   // Update synchronously to match original behavior

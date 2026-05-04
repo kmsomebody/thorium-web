@@ -34,7 +34,7 @@ interface ReaderComponentProps {
   initialPosition?: Locator | null;
 }
 
-export const ReaderComponent = ({ profile, ...props }: ReaderComponentProps) => {
+export const StatefulReaderWrapper = ({ profile, ...props }: ReaderComponentProps) => {
   const { preferences } = usePreferences();
   const themeObject = useAppSelector(state => state.theming.theme);
   const isFXL = useAppSelector(state => state.publication.isFXL);

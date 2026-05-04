@@ -6,7 +6,7 @@ import { PUBLICATION_MANIFESTS } from "@/config/publications";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
 import { verifyManifestUrl } from "@/app/api/verify-manifest/verifyDomain";
-import { ReaderComponent } from "@/components/Reader/ReaderComponent";
+import { StatefulReaderWrapper } from "@/components/Reader/StatefulReaderWrapper";
 
 type Params = { identifier: string };
 
@@ -67,7 +67,7 @@ export default function BookPage({ params }: Props) {
       ) : (
         <StatefulLoader isLoading={ isLoading || publicationLoading }>
           { publication && (
-            <ReaderComponent 
+            <StatefulReaderWrapper 
               profile={ profile } 
               publication={ publication } 
               localDataKey={ localDataKey }
