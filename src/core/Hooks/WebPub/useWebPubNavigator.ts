@@ -43,7 +43,7 @@ export const useWebPubNavigator = () => {
       await navigatorInstance?.submitPreferences(new WebPubPreferences(preferences));
     }, []);
   
-    const getSetting = useCallback(<K extends keyof WebPubSettings>(settingKey: K) => {
+  const getSetting = useCallback(<K extends keyof WebPubSettings>(settingKey: K) => {
       return navigatorInstance?.settings[settingKey] as WebPubSettings[K];
     }, []);
 
@@ -75,9 +75,8 @@ export const useWebPubNavigator = () => {
 
   const WebPubNavigatorDestroy = useCallback((cb: Function) => {
     cb();
-    navigatorInstance?.destroy().then(() => {
-      navigatorInstance = null; // Clear the singleton reference
-    });
+    navigatorInstance?.destroy();
+    navigatorInstance = null; // Clear the singleton reference
   }, []);
 
   const goRight = useCallback((animated: boolean, callback: cbb) => {

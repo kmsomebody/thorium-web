@@ -82,6 +82,12 @@ export const useWebPubReaderInit = ({
     // Only initialize once, never re-render
     if (!publication || isNavigatorLoadedWebPub.current) return;
 
+    // Add container protection
+    if (!container.current) {
+      console.error("Container ref is not available for navigator initialization");
+      return;
+    }
+
     const config: WebPubNavigatorLoadProps = {
       container: container.current,
       publication,
@@ -109,6 +115,7 @@ export const useWebPubReaderInit = ({
 
     return () => {
       if (isNavigatorLoadedWebPub.current) {
+        setNavigatorReady(false);
         WebPubNavigatorDestroy(() => {
           isNavigatorLoadedWebPub.current = false;
           handleCleanup();

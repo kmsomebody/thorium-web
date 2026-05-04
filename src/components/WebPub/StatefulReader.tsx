@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useLayoutEffect } from "react";
 
 import readerStyles from "../assets/styles/thorium-web.reader.app.module.css";
 
@@ -78,7 +78,7 @@ export const ExperimentalWebPubStatefulReader = ({
 }: StatefulReaderProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (plugins && plugins.length > 0) {
       plugins.forEach(plugin => {
         ThPluginRegistry.register(plugin);

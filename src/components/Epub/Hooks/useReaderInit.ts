@@ -106,6 +106,12 @@ export const useEpubReaderInit = ({
     // Only initialize once, never re-render
     if (!publication || isNavigatorLoadedEpub.current) return;
 
+    // Add container protection
+    if (!container.current) {
+      console.error("Container ref is not available for navigator initialization");
+      return;
+    }
+
     // Initialize navigator for EPUB like WebPub
     const config: EpubNavigatorLoadProps = {
       container: container.current,
@@ -133,6 +139,7 @@ export const useEpubReaderInit = ({
 
     return () => {
       if (isNavigatorLoadedEpub.current) {
+        setNavigatorReady(false);
         EpubNavigatorDestroy(() => {
           isNavigatorLoadedEpub.current = false;
           handleCleanup();
