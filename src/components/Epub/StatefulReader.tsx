@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { 
   ThemeKeyType, 
@@ -311,7 +311,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
 
   // Warning: this is using navigator’s internal methods that will become private, do not rely on them
   // See https://github.com/edrlab/thorium-web/issues/25
-  const handleTap = (event: FrameClickEvent) => {
+  const handleTap = useCallback((event: FrameClickEvent) => {
     const _cframes = getCframes();
     if (_cframes) {
       if (!cache.current.settings.scroll) {
@@ -336,9 +336,9 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
         }
       }
     }
-  };
+  }, [getCframes, cache, preferences.affordances.scroll, goLeft, goRight, dispatch, activateImmersiveOnAction, toggleIsImmersive]);
 
-  const handleClick = (event: FrameClickEvent) => {
+  const handleClick = useCallback((event: FrameClickEvent) => {
     if (
       cache.current.layoutUI === ThLayoutUI.layered &&
       ( !cache.current.settings.scroll ||
@@ -346,7 +346,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
       ) {
         toggleIsImmersive();
       }
-  };
+  }, [cache, preferences.affordances.scroll, toggleIsImmersive]);
 
   // We need this as a workaround due to positionChanged being unreliable
   // in FXL – if the frame is in the pool hidden and is shown again,
@@ -357,18 +357,20 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
 
   onFXLPositionChange(handleFXLProgression);
 
-  const initReadingEnv = async () => {
+  const initReadingEnv = useCallback(async () => {
     if (navLayout() === Layout.fixed) {
       // [TMP] Working around positionChanged not firing consistently for FXL
-      // Init’ing so that progression can be populated on first spread loaded
+      // Init'ing so that progression can be populated on first spread loaded
       const cLoc = currentLocator();
       if (cLoc) {
         handleFXLProgression(cLoc);
       };
     }
-  };
+  }, [navLayout, currentLocator, handleFXLProgression]);
 
-  const p = new Peripherals(useAppStore(), preferences.actions, {
+  const appStore = useAppStore();
+
+  const p = useMemo(() => new Peripherals(appStore, preferences.actions, {
     moveTo: (direction) => {
       const navigationCallback = () => {
         dispatch(setUserNavigated(true));
@@ -425,12 +427,14 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
           break
       }
     }
-  });
+  }), [appStore, preferences.actions, dispatch, activateImmersiveOnAction, cache, goRight, goLeft, goBackward, goForward, fs]);
 
-  const listeners: EpubNavigatorListeners = {
+  const scrollAffordances = preferences.affordances.scroll;
+
+  const listeners: EpubNavigatorListeners = useMemo(() => ({
     frameLoaded: async function (_wnd: Window): Promise<void> {
       await initReadingEnv();
-      // Warning: this is using navigator’s internal methods that will become private, do not rely on them
+      // Warning: this is using navigator's internal methods that will become private, do not rely on them
       // See https://github.com/edrlab/thorium-web/issues/25
       const _cframes = getCframes();
       _cframes?.forEach(
@@ -486,14 +490,14 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
             dispatch(setScrollAffordance(true));
           }
         } else if (!cache.current.isImmersive && _delta > 20) {
-          if (preferences.affordances.scroll.hideOnForwardScroll) {
+          if (scrollAffordances.hideOnForwardScroll) {
             dispatch(setImmersive(true));
           }
         } else if (cache.current.isImmersive && _delta < -20) {
           if (
             // Keep consistent with pagination behavior
             cache.current.layoutUI === ThLayoutUI.layered && 
-            preferences.affordances.scroll.showOnBackwardScroll
+            scrollAffordances.showOnBackwardScroll
           ) {
             dispatch(setImmersive(false));
           }
@@ -520,7 +524,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     contentProtection: function (type: string, data: unknown) {/*TODO*/},
     contextMenu: function (_data: unknown) {/*TODO*/},
     peripheral: function (_data: unknown) {/*TODO*/}
-  };
+  }), [p, initReadingEnv, getCframes, navLayout, setLocalData, canGoBackward, canGoForward, dispatch, handleTap, handleClick, cache, scrollAffordances, isScrollStart, isScrollEnd]);
 
   // Initialize reader using the new composite hook
   const { navigatorReady } = useEpubReaderInit({
