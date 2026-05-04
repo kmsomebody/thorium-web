@@ -164,7 +164,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     canGoForward,
   } = webPubNavigator;
 
-  const { setLocalData, getLocalData, localData } = useLocalStorage(localDataKey || 'no-local-storage');
+  const { setLocalData, getLocalData, localData } = useLocalStorage(localDataKey);
 
   const timeline = useTimeline({
     publication: publication,
