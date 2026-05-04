@@ -20,12 +20,11 @@ export const ReaderComponent = ({ profile, ...props }: ReaderComponentProps) => 
   switch (profile) {
     case "epub":
       return <StatefulEpubReader { ...props } />;
-    case "webPub":
-      return <StatefulWebPubReader { ...props } />;
     case "audio":
       // TODO: Implement audio reader when available
       return <div className="container"><h1>Audio Reader Coming Soon</h1></div>;
+    case "webPub":
     default:
-      return <StatefulEpubReader { ...props } />;
+      return <StatefulWebPubReader { ...props } />;
   }
 };

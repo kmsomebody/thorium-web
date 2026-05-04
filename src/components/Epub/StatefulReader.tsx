@@ -13,15 +13,12 @@ import arrowStyles from "../assets/styles/thorium-web.reader.paginatedArrow.modu
 
 import { 
   ThActionsKeys,  
-  ThLineHeightOptions, 
-  ThTextAlignOptions, 
   ThLayoutUI,
   ThDocumentTitleFormat,
   ThSpacingSettingsKeys,
   ThProgressionFormat,
   ThSettingsKeys
 } from "../../preferences/models";
-import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 
 import { ThPlugin, ThPluginRegistry } from "../Plugins/PluginRegistry";
 
@@ -36,11 +33,7 @@ import {
 import { 
   EpubNavigatorListeners, 
   FrameManager, 
-  FXLFrameManager, 
-  IEpubDefaults, 
-  IEpubPreferences,  
-  IInjectablesConfig,  
-  TextAlignment
+  FXLFrameManager
 } from "@readium/navigator";
 import { 
   Locator, 
@@ -55,6 +48,8 @@ import { StatefulReaderFooter } from "../StatefulReaderFooter";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
+import { useEpubSettingsCache } from '@/core/Hooks/Epub/useEpubSettingsCache';
+import { useEpubReaderInit } from '@/core/Hooks/useReaderInit';
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { usePrevious } from "@/core/Hooks/usePrevious";
@@ -69,7 +64,7 @@ import { useFonts } from "@/core/Hooks/fonts/useFonts";
 
 import { toggleActionOpen } from "@/lib/actionsReducer";
 import { useAppSelector, useAppDispatch, useAppStore } from "@/lib/hooks";
-import { AppDispatch } from "@/lib/store";
+
 import { 
   setBreakpoint, 
   setColorScheme, 
@@ -96,7 +91,6 @@ import {
   setPublicationStart,
   setPublicationEnd
 } from "@/lib/publicationReducer";
-import { LineLengthStateObject, FontFamilyStateObject } from "@/lib/settingsReducer";
 
 import classNames from "classnames";
 import debounce from "debounce";
@@ -108,7 +102,6 @@ import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
 import { prefixString } from "@/core/Helpers/prefixString";
 import { resolveContentProtectionConfig } from "@/preferences/models/protection";
-import { useEpubSettingsCache } from '@/core/Hooks/Epub/useEpubSettingsCache';
 
 export interface StatefulReaderProps {
   publication: Publication;
@@ -267,17 +260,13 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     dispatch(setImmersive(false));
   }, [isScroll, dispatch]);
 
-  const [navigatorReady, setNavigatorReady] = useState(false);
-
   const onFsChange = useCallback((isFullscreen: boolean) => {
-      dispatch(setFullscreen(isFullscreen));
-    }, [dispatch]);
+    dispatch(setFullscreen(isFullscreen));
+  }, [dispatch]);
   const fs = useFullscreen(onFsChange);
 
   const epubNavigator = useEpubNavigator();
   const { 
-    EpubNavigatorLoad, 
-    EpubNavigatorDestroy, 
     goLeft, 
     goRight, 
     goBackward, 
@@ -566,6 +555,38 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     peripheral: function (_data: unknown) {/*TODO*/}
   };
 
+  // Initialize reader using the new composite hook
+  const { navigatorReady } = useEpubReaderInit({
+    container,
+    publication,
+    positionsList,
+    initialPosition: initialPositionOverride ?? getLocalData(),
+    listeners,
+    preferences,
+    cache,
+    isFontFamilyUsed,
+    fontLanguage,
+    getFontMetadata,
+    injectFontResources,
+    removeFontResources,
+    getAndroidFXLPatch,
+    getFontInjectables,
+    fxlThemeKeys,
+    reflowThemeKeys,
+    lineHeightOptions,
+    arrowsOccupySpace,
+    arrowsWidth,
+    colorScheme,
+    isFXL,
+    contentProtectionConfig: resolveContentProtectionConfig(preferences.contentProtection, t),
+    onNavigatorReady: () => {
+      dispatch(setLoading(false));
+    },
+    onCleanup: () => {
+      // Additional cleanup if needed
+    },
+  });
+
   const applyConstraint = useCallback(async (value: number) => {
     await submitPreferences({
       constraint: value
@@ -619,129 +640,6 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     preferences.direction && dispatch(setDirection(preferences.direction));
     dispatch(setPlatformModifier(getPlatformModifier()));
   }, [preferences.direction, dispatch]);
-
-  useEffect(() => {
-    if (!publication || !positionsList || positionsList.length === 0) return;
-
-    const initialPosition: Locator | null = initialPositionOverride ?? getLocalData();
-
-    const initialConstraint = cache.current.arrowsOccupySpace ? arrowsWidth.current : 0;
-    
-    const themeKeys = isFXL ? fxlThemeKeys : reflowThemeKeys;
-    const theme = themeKeys.includes(cache.current.settings.theme as any) ? cache.current.settings.theme : "auto";
-    const themeProps = buildThemeObject<ThemeKeyType>({
-      theme: theme,
-      themeKeys: preferences.theming.themes.keys,
-      systemThemes: preferences.theming.themes.systemThemes,
-      colorScheme: cache.current.colorScheme
-    });
-
-    const epubPreferences: IEpubPreferences = isFXL ? {} : {
-          columnCount: cache.current.settings.columnCount === "auto" ? null : Number(cache.current.settings.columnCount),
-          constraint: initialConstraint,
-          fontFamily: getFontMetadata(cache.current.settings.fontFamily[fontLanguage] ?? "")?.fontStack || null,
-          fontSize: cache.current.settings.fontSize,
-          fontWeight: cache.current.settings.fontWeight,
-          hyphens: cache.current.settings.hyphens,
-          letterSpacing: cache.current.settings.publisherStyles ? undefined : cache.current.settings.letterSpacing,
-          lineHeight: cache.current.settings.publisherStyles 
-            ? undefined 
-            : cache.current.settings.lineHeight === null 
-              ? null 
-              : (lineHeightOptions as any)[cache.current.settings.lineHeight],
-          optimalLineLength: cache.current.settings.lineLength?.optimal != null 
-            ? cache.current.settings.lineLength.optimal 
-            : undefined,
-          maximalLineLength: cache.current.settings.lineLength?.max?.isDisabled 
-            ? null 
-            : (cache.current.settings.lineLength?.max?.chars != null) 
-              ? cache.current.settings.lineLength.max.chars 
-              : undefined,
-          minimalLineLength: cache.current.settings.lineLength?.min?.isDisabled 
-            ? null 
-            : (cache.current.settings.lineLength?.min?.chars != null) 
-              ? cache.current.settings.lineLength.min.chars 
-              : undefined,
-          paragraphIndent: cache.current.settings.publisherStyles ? undefined : cache.current.settings.paragraphIndent,
-          paragraphSpacing: cache.current.settings.publisherStyles ? undefined : cache.current.settings.paragraphSpacing,
-          scroll: cache.current.settings.scroll,
-          textAlign: cache.current.settings.textAlign as unknown as TextAlignment | null | undefined,
-          textNormalization: cache.current.settings.textNormalization,
-          wordSpacing: cache.current.settings.publisherStyles ? undefined : cache.current.settings.wordSpacing,
-          ...themeProps
-        };
-
-        const defaults: IEpubDefaults = isFXL ? {} : {
-          maximalLineLength: preferences.typography.maximalLineLength,
-          minimalLineLength: preferences.typography.minimalLineLength,
-          optimalLineLength: preferences.typography.optimalLineLength,
-          pageGutter: preferences.typography.pageGutter,
-          scrollPaddingTop: preferences.theming.layout.ui?.reflow === ThLayoutUI.layered 
-            ? (preferences.theming.icon.size || 24) * 3 
-            : (preferences.theming.icon.size || 24),
-          scrollPaddingBottom: preferences.theming.layout.ui?.reflow === ThLayoutUI.layered 
-            ? (preferences.theming.icon.size || 24) * 5 
-            : (preferences.theming.icon.size || 24),
-          scrollPaddingLeft: preferences.typography.pageGutter,
-          scrollPaddingRight: preferences.typography.pageGutter,
-          experiments: preferences.experiments?.reflow || null
-        }
-
-        let injectables: IInjectablesConfig | undefined;
-
-        if (isFXL) {
-          const androidPatch = getAndroidFXLPatch();
-          if (androidPatch) {
-            injectables = {
-              allowedDomains: [window.location.origin],
-              rules: [{
-                resources: [/\.xhtml$/, /\.html$/],
-                prepend: [androidPatch]
-              }]
-            };
-          }
-        }
-        
-        if (!isFXL && isFontFamilyUsed) {
-          const fontResources = getFontInjectables({ language: fontLanguage });
-          if (fontResources) {
-            injectFontResources(getFontInjectables(undefined, true));
-            injectables = {
-              allowedDomains: fontResources.allowedDomains,
-              rules: [{
-                resources: [/\.xhtml$/, /\.html$/],
-                prepend: fontResources.prepend,
-                append: fontResources.append
-              }]
-            };
-          }
-        }
-  
-        EpubNavigatorLoad({
-          container: container.current, 
-          publication: publication,
-          listeners: listeners, 
-          positionsList: positionsList.map(loc => new Locator(loc)),
-          initialPosition: initialPosition ? new Locator(initialPosition) : undefined,
-          preferences: epubPreferences,
-          defaults: defaults,
-          injectables: injectables,
-          contentProtection: resolveContentProtectionConfig(preferences.contentProtection, t)
-        }, () => p.observe(window));
-
-      const setLoadingThunk = (dispatch: AppDispatch) => {
-        dispatch(setLoading(false));
-      };
-      dispatch(setLoadingThunk);
-
-      setNavigatorReady(true);
-
-    return () => {
-      EpubNavigatorDestroy(() => p.destroy());
-      if (!isFXL) removeFontResources();
-      setNavigatorReady(false);
-    };
-  }, [publication, positionsList, preferences, cache, initialPositionOverride, fxlThemeKeys, reflowThemeKeys, isFontFamilyUsed, injectFontResources, removeFontResources, fontLanguage, dispatch]);
 
   // If breakpoint is not defined, we are not ready to render
   // since useDocking needs it to derive the sheet type

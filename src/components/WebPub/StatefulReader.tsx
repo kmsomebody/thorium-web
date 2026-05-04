@@ -14,8 +14,6 @@ import {
   ThDocumentTitleFormat,
   ThProgressionFormat, 
   ThThemeKeys,
-  ThLineHeightOptions,
-  ThTextAlignOptions,
   ThSpacingSettingsKeys,
   ThSettingsKeys
 } from "@/preferences/models";
@@ -30,7 +28,7 @@ import {
   BasicTextSelection,
   FrameClickEvent,
 } from "@readium/navigator-html-injectables";
-import { IInjectablesConfig, IWebPubPreferences, TextAlignment, WebPubNavigatorListeners } from "@readium/navigator";
+import { WebPubNavigatorListeners } from "@readium/navigator";
 import { 
   Locator,  
   Publication
@@ -43,6 +41,8 @@ import { StatefulReaderFooter } from "../StatefulReaderFooter";
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
 import { useWebPubNavigator } from "@/core/Hooks/WebPub";
+import { useWebPubSettingsCache } from "@/core/Hooks/WebPub/useWebPubSettingsCache";
+import { useWebPubReaderInit } from "@/core/Hooks/useReaderInit";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { useI18n } from "@/i18n/useI18n";
 import { useTimeline } from "@/core/Hooks/useTimeline";
@@ -72,9 +72,8 @@ import {
 import { 
   setTimeline,
   setPublicationStart,
-  setPublicationEnd,
+  setPublicationEnd
 } from "@/lib/publicationReducer";
-import { FontFamilyStateObject } from "@/lib/settingsReducer";
 
 import classNames from "classnames";
 import { createDefaultPlugin } from "../Plugins/helpers/createDefaultPlugin";
@@ -83,7 +82,6 @@ import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
 import { prefixString } from "@/core/Helpers/prefixString";
 import { resolveContentProtectionConfig } from "@/preferences/models/protection";
-import { useWebPubSettingsCache } from "@/core/Hooks/WebPub/useWebPubSettingsCache";
 
 export const ExperimentalWebPubStatefulReader = ({
   publication,
@@ -199,8 +197,6 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
 
   const webPubNavigator = useWebPubNavigator();
   const { 
-    WebPubNavigatorLoad, 
-    WebPubNavigatorDestroy,
     currentPositions,
     canGoBackward,
     canGoForward,
@@ -286,7 +282,7 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
       p.observe(window);
     },
     positionChanged: async function (locator: Locator): Promise<void> {
-      setLocalData(locator)
+      setLocalData(locator);
 
       if (canGoBackward()) {
         dispatch(setPublicationStart(false));
@@ -331,69 +327,30 @@ const StatefulReaderInner = ({ publication, localDataKey, initialPosition: initi
     peripheral: function (_data: unknown) {/*TODO*/}
   };
 
-  useEffect(() => {
-    if (!publication) return;
-
-    const initialPosition: Locator | null = initialPositionOverride ?? getLocalData();
-
-    const webPubPreferences: IWebPubPreferences = {
-      zoom: cache.current.settings.zoom
-    };
-
-    let injectables: IInjectablesConfig | undefined;
-
-    if (hasDisplayTransformability) {
-      webPubPreferences.fontFamily = getFontMetadata(cache.current.settings.fontFamily[fontLanguage] ?? "")?.fontStack || null;
-      webPubPreferences.fontWeight = cache.current.settings.fontWeight;
-      webPubPreferences.hyphens = cache.current.settings.hyphens;
-      webPubPreferences.letterSpacing = cache.current.settings.letterSpacing;
-      webPubPreferences.lineHeight = cache.current.settings.lineHeight === null 
-        ? null 
-        : lineHeightOptions[cache.current.settings.lineHeight];
-      webPubPreferences.paragraphIndent = cache.current.settings.paragraphIndent;
-      webPubPreferences.paragraphSpacing = cache.current.settings.paragraphSpacing;
-      webPubPreferences.textAlign = cache.current.settings.textAlign as TextAlignment | null | undefined;
-      webPubPreferences.textNormalization = cache.current.settings.textNormalization;
-      webPubPreferences.wordSpacing = cache.current.settings.wordSpacing;
-    }
-    
-    if (isFontFamilyUsed) {
-      const fontResources = getFontInjectables({ language: fontLanguage });
-      if (fontResources) {
-        injectFontResources(getFontInjectables(undefined, true));
-        injectables = {
-          allowedDomains: fontResources.allowedDomains,
-          rules: [{
-            resources: [/\.xhtml$/, /\.html$/],
-            prepend: fontResources.prepend,
-            append: fontResources.append
-          }]
-        };
-      }
-    }
-    
-    WebPubNavigatorLoad({
-      container: container.current,
-      publication: publication,
-      listeners: listeners,
-      initialPosition: initialPosition ? new Locator(initialPosition) : undefined,
-      preferences: webPubPreferences,
-      defaults: {
-        experiments: preferences.experiments?.webPub || null
-      },
-      injectables: injectables,
-      contentProtection: resolveContentProtectionConfig(preferences.contentProtection, t)
-    }, () => {
-      p.observe(window);
-    });
-
-    dispatch(setLoading(false));
-
-    return () => {
-      WebPubNavigatorDestroy(() => p.destroy());
-      removeFontResources();
-    };
-  }, [publication, preferences, isFontFamilyUsed, injectFontResources, removeFontResources, fontLanguage, dispatch, initialPositionOverride, getLocalData, WebPubNavigatorLoad, listeners, t, getFontMetadata, lineHeightOptions, getFontInjectables, p, WebPubNavigatorDestroy]);
+  // Initialize reader using the new composite hook
+  const { navigatorReady } = useWebPubReaderInit({
+    container,
+    publication,
+    initialPosition: initialPositionOverride ?? getLocalData(),
+    listeners,
+    preferences,
+    cache,
+    isFontFamilyUsed,
+    fontLanguage,
+    hasDisplayTransformability,
+    getFontMetadata,
+    injectFontResources,
+    removeFontResources,
+    getFontInjectables,
+    lineHeightOptions,
+    contentProtectionConfig: resolveContentProtectionConfig(preferences.contentProtection, t),
+    onNavigatorReady: () => {
+      dispatch(setLoading(false));
+    },
+    onCleanup: () => {
+      // Additional cleanup if needed
+    },
+  });
 
   return (
     <>
