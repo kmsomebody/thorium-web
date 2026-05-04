@@ -22,8 +22,7 @@ The Reader Component is the main component of this package. It automatically sel
 You can use it like this:
 
 ```tsx
-import { StatefulReaderWrapper, ThStoreProvider, ThPreferencesProvider, ThI18nProvider } from "@edrlab/thorium-web/reader";
-import { usePublication } from "@edrlab/thorium-web/hooks";
+import { StatefulReaderWrapper, ThStoreProvider, ThPreferencesProvider, ThI18nProvider, usePublication } from "@edrlab/thorium-web/reader";
 
 const App = ({ manifestUrl }) => {
   const { publication, localDataKey, isLoading, error } = usePublication({

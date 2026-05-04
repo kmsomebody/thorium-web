@@ -26,16 +26,23 @@ const nextConfig = {
     const isProduction = process.env.NODE_ENV === "production";
     const isManifestEnabled = !isProduction || process.env.MANIFEST_ROUTE_FORCE_ENABLE === "true";
 
+    const redirects = [
+      {
+        source: "/read/experimental/:identifier",
+        destination: "/read/:identifier",
+        permanent: true,
+      },
+    ];
+
     if (isProduction && !isManifestEnabled) {
-      return [
-        {
-          source: "/read/manifest/:path*",
-          destination: "/",
-          permanent: false,
-        },
-      ];
+      redirects.push({
+        source: "/read/manifest/:path*",
+        destination: "/",
+        permanent: false,
+      });
     }
-    return [];
+
+    return redirects;
   }
 };
 
