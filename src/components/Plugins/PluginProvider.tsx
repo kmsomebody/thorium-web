@@ -1,13 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { ThPluginRegistry, ActionComponent, SettingComponent } from "./PluginRegistry";
+import { ThPluginRegistry, ActionComponent, SettingComponent, PrimaryAudioActionComponent } from "./PluginRegistry";
 
 interface ThPluginContextType {
   actionsComponentsMap: Record<string, ActionComponent>;
   settingsComponentsMap: Record<string, SettingComponent>;
   textSettingsComponentsMap: Record<string, SettingComponent>;
   spacingSettingsComponentsMap: Record<string, SettingComponent>;
+  primaryAudioActionsMap: Record<string, PrimaryAudioActionComponent>;
   registerPlugin: typeof ThPluginRegistry.register;
   unregisterPlugin: typeof ThPluginRegistry.unregister;
 }
@@ -17,6 +18,7 @@ const ThPluginContext = createContext<ThPluginContextType>({
   settingsComponentsMap: {} as Record<string, SettingComponent>,
   textSettingsComponentsMap: {} as Record<string, SettingComponent>,
   spacingSettingsComponentsMap: {} as Record<string, SettingComponent>,
+  primaryAudioActionsMap: {} as Record<string, PrimaryAudioActionComponent>,
   registerPlugin: ThPluginRegistry.register.bind(ThPluginRegistry),
   unregisterPlugin: ThPluginRegistry.unregister.bind(ThPluginRegistry)
 });
@@ -29,6 +31,7 @@ export const ThPluginProvider = ({ children }: { children: React.ReactNode }) =>
     settingsComponentsMap: Record<string, SettingComponent>;
     textSettingsComponentsMap: Record<string, SettingComponent>;
     spacingSettingsComponentsMap: Record<string, SettingComponent>;
+    primaryAudioActionsMap: Record<string, PrimaryAudioActionComponent>;
   }>(() => {
     // Force a fresh retrieval of component maps
     const maps = ThPluginRegistry.getComponentMaps();
@@ -59,7 +62,7 @@ export const ThPluginProvider = ({ children }: { children: React.ReactNode }) =>
       setComponentMaps({
         ...maps,
         textSettingsComponentsMap: getTypedSettingsComponents(maps.settingsComponentsMap, "text"),
-        spacingSettingsComponentsMap: getTypedSettingsComponents(maps.settingsComponentsMap, "spacing")
+        spacingSettingsComponentsMap: getTypedSettingsComponents(maps.settingsComponentsMap, "spacing"),
       });
     };
         

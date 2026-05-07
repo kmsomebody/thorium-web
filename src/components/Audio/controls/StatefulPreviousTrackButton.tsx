@@ -2,8 +2,8 @@
 
 import SkipPreviousIcon from "./assets/icons/skip_previous.svg";
 
-import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
-import audioStyles from "../assets/styles/thorium-web.audioControls.module.css";
+import { StatefulActionIcon } from "../../Actions/Triggers/StatefulActionIcon";
+import audioStyles from "./assets/styles/thorium-web.audioPlayback.module.css";
 
 import { useNavigator } from "@/core/Navigator";
 import { useAppSelector } from "@/lib/hooks";
@@ -18,8 +18,8 @@ export const StatefulPreviousTrackButton = ({ isDisabled }: { isDisabled?: boole
     <StatefulActionIcon
       onPress={ () => goBackward(false, () => {}) }
       isDisabled={ isDisabled || atStart }
-      aria-label={ t("audio.player.previousTrack") }
-      tooltipLabel={ t("audio.player.previousTrack") }
+      aria-label={ t("reader.actions.goBackward") }
+      tooltipLabel={ t("reader.actions.goBackward") }
       className={ audioStyles.audioPreviousTrackButton }
     >
       <SkipPreviousIcon aria-hidden="true" focusable="false" />

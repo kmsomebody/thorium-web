@@ -10,7 +10,7 @@ import { ThActionsTriggerVariant } from "@/core/Components/Actions/ThActionsBar"
 import { StatefulActionIcon } from "../Triggers/StatefulActionIcon";
 import { StatefulOverflowMenuItem } from "../Triggers/StatefulOverflowMenuItem";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
 import { setHovering } from "@/lib/readerReducer";
@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const { t } = useI18n();
   const actionState = useAppSelector(state => state.actions.keys[ThActionsKeys.settings]);
   const profile = useAppSelector(state => state.reader.profile);
@@ -41,12 +41,12 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
       ? <StatefulOverflowMenuItem 
           label={ t("reader.preferences.title") }
           SVGIcon={ isAudio ? TuneIcon : LetterIcon }
-          shortcut={ preferences.actions.keys[ThActionsKeys.settings].shortcut } 
+          shortcut={ preferences.actionsKeys[ThActionsKeys.settings].shortcut } 
           id={ ThActionsKeys.settings }
           onAction={ () => setOpen(!actionState?.isOpen) }
         />
       : <StatefulActionIcon 
-          visibility={ preferences.actions.keys[ThActionsKeys.settings].visibility }
+          visibility={ preferences.actionsKeys[ThActionsKeys.settings].visibility }
           aria-label={ t("reader.preferences.title") }
           placement="bottom" 
           tooltipLabel={ t("reader.preferences.title") } 

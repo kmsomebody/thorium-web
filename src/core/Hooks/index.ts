@@ -14,5 +14,6 @@ export * from "./usePrevious";
 export * from "./useReducedMotion";
 export * from "./useReducedTransparency";
 export * from "./useTimeline";
+export * from "./Audio";
 export * from "./Epub";
 export * from "./WebPub";

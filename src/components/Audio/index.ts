@@ -1,8 +1,9 @@
-// export { StatefulPlayPauseButton } from './StatefulPlayPauseButton';
-// export { StatefulSkipForwardButton } from './StatefulSkipForwardButton';
-// export { StatefulSkipBackwardButton } from './StatefulSkipBackwardButton';
-// export { StatefulNextTrackButton } from './StatefulNextTrackButton';
-// export { StatefulPreviousTrackButton } from './StatefulPreviousTrackButton';
-// export { StatefulAudioProgressBar } from './StatefulAudioProgressBar';
+"use client";
 
-export { StatefulPlayer } from './StatefulPlayer';
+// For external consumers, import styles from app here
+// So that we are sure they come first in the compiled output
+import "../../app/read/app.css";
+import "../../app/reset.css";
+
+export * from "../index";
+export * from "./audio-core";

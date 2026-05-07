@@ -2,14 +2,14 @@
 
 import { UnstableShortcutMetaKeywords, UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
-import { 
-  ThActionsKeys, 
-  ThBreakpoints, 
-  ThDockingTypes, 
-  ThDockingKeys, 
-  ThSettingsKeys, 
+import {
+  ThActionsKeys,
+  ThBreakpoints,
+  ThDockingTypes,
+  ThDockingKeys,
+  ThSettingsKeys,
   ThSheetTypes,
-  ThThemeKeys,  
+  ThThemeKeys,
   ThSheetHeaderVariant,
   ThLayoutUI,
   ThBackLinkVariant,
@@ -28,28 +28,21 @@ import {
   defaultFullscreenAction,
   defaultTocAction,
   defaultJumpToPositionAction,
-  defaultAudioContentProtectionConfig,
   defaultContentProtectionConfig,
   defaultFontCollection,
-  defaultLetterSpacing, 
-  defaultLineHeights, 
-  defaultParagraphIndent, 
-  defaultParagraphSpacing, 
-  defaultSpacingPresets, 
-  defaultSpacingPresetsOrder, 
-  defaultSpacingSettingsMain, 
-  defaultSpacingSettingsSubpanel, 
-  defaultTextSettingsMain, 
-  defaultTextSettingsSubpanel, 
-  defaultWordSpacing, 
+  defaultLetterSpacing,
+  defaultLineHeights,
+  defaultParagraphIndent,
+  defaultParagraphSpacing,
+  defaultSpacingPresets,
+  defaultSpacingPresetsOrder,
+  defaultSpacingSettingsMain,
+  defaultSpacingSettingsSubpanel,
+  defaultTextSettingsMain,
+  defaultTextSettingsSubpanel,
+  defaultWordSpacing,
   defaultZoom,
   tamilCollection,
-  ThAudioKeys,
-  defaultAudioVolume,
-  defaultAudioPlaybackRate,
-  defaultAudioSkipBackwardInterval,
-  defaultAudioSkipForwardInterval,
-  ThAudioPlayerComponent
 } from "./models";
 import { createPreferences, ThPreferences, DefaultKeys } from "./preferences";
 
@@ -187,15 +180,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         reflow: ThLayoutUI.layered,
         fxl: ThLayoutUI.layered,
         webPub: ThLayoutUI.stacked,
-        audio: ThLayoutUI.stacked
-      },
-      audio: {
-        order: [
-          ThAudioPlayerComponent.cover,
-          ThAudioPlayerComponent.playbackControls,
-          ThAudioPlayerComponent.progressBar,
-          ThAudioPlayerComponent.mediaControls
-        ]
       },
       radius: 5, // border-radius of containers
       spacing: 20, // padding of containers/sheets
@@ -234,11 +218,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         ThThemeKeys.light,
         ThThemeKeys.dark
       ],
-      audioOrder: [
-        "auto",
-        ThThemeKeys.light,
-        ThThemeKeys.dark
-      ],
       systemThemes: {
         light: ThThemeKeys.light,
         dark: ThThemeKeys.dark
@@ -255,7 +234,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
     },
   },
   contentProtection: defaultContentProtectionConfig,
-  audioContentProtection: defaultAudioContentProtectionConfig,
   affordances: { 
     scroll: {
       hintInImmersive: true,
@@ -291,20 +269,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       }
     }
   },
-  audio: {
-    order: [
-      ThAudioKeys.theme,
-      ThAudioKeys.skipBackwardInterval,
-      ThAudioKeys.skipForwardInterval,
-      ThAudioKeys.autoPlay
-    ],
-    keys: {
-      [ThAudioKeys.volume]: defaultAudioVolume,
-      [ThAudioKeys.playbackRate]: defaultAudioPlaybackRate,
-      [ThAudioKeys.skipBackwardInterval]: defaultAudioSkipBackwardInterval,
-      [ThAudioKeys.skipForwardInterval]: defaultAudioSkipForwardInterval,
-    }
-  },
   shortcuts: {
     representation: UnstableShortcutRepresentation.symbol,
     joiner: "+"
@@ -327,23 +291,18 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       ThActionsKeys.toc,
       ThActionsKeys.fullscreen
     ],
-    audioOrder: [
-      ThActionsKeys.settings,
-      ThActionsKeys.toc,
-      ThActionsKeys.jumpToPosition
-    ],
     collapse: {
       // Number of partially icons to display
       // value "all" a keyword for the length of displayOrder above
       // Icons with visibility always are excluded from collapsing
       [ThBreakpoints.compact]: 2,
       [ThBreakpoints.medium]: 3
-    }, 
+    },
     keys: {
       [ThActionsKeys.settings]: defaultSettingsAction,
       [ThActionsKeys.fullscreen]: defaultFullscreenAction,
       [ThActionsKeys.toc]: defaultTocAction,
-      [ThActionsKeys.jumpToPosition]: defaultJumpToPositionAction
+      [ThActionsKeys.jumpToPosition]: defaultJumpToPositionAction,
     }
   },
   docking: {

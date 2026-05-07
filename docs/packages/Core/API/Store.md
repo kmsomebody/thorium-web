@@ -10,7 +10,8 @@ Context provider component for the Redux store.
 
 **Props:**
 - `children`: Child components
-- `initialState`: Optional initial state
+- `storageKey`: Optional key for localStorage persistence (defaults to `thorium-web-state`)
+- `store`: Optional custom Redux store — use this when extending the default store
 
 **Features:**
 - Global state management
@@ -19,6 +20,65 @@ Context provider component for the Redux store.
 - State selectors
 
 ## Reducers
+
+### AudioSettings Reducer
+
+Manages audio playback settings state.
+
+**State Interface:**
+```typescript
+interface AudioSettingsState {
+  volume: number;
+  playbackRate: number;
+  preservePitch: boolean;
+  skipBackwardInterval: number;
+  skipForwardInterval: number;
+  skipInterval: number;
+  pollInterval: number;
+  autoPlay: boolean;
+  enableMediaSession: boolean;
+}
+```
+
+**Actions:**
+- `setVolume`: Set playback volume
+- `setPlaybackRate`: Set playback rate
+- `setPreservePitch`: Set preserve pitch flag
+- `setSkipBackwardInterval`: Set skip backward interval in seconds
+- `setSkipForwardInterval`: Set skip forward interval in seconds
+- `setSkipInterval`: Set unified skip interval in seconds
+- `setPollInterval`: Set position polling interval in milliseconds
+- `setAutoPlay`: Set auto-play flag
+- `setEnableMediaSession`: Set Media Session API flag
+
+### Player Reducer
+
+Manages audio player runtime state.
+
+**State Interface:**
+```typescript
+type PlayerStatus = "idle" | "playing" | "paused";
+
+interface SeekableRange {
+  start: number;
+  end: number;
+}
+
+interface PlayerReducerState {
+  status: PlayerStatus;
+  isSeeking: boolean;
+  isStalled: boolean;
+  isTrackReady: boolean;
+  seekableRanges: SeekableRange[];
+}
+```
+
+**Actions:**
+- `setStatus`: Set player status (`idle`, `playing`, or `paused`)
+- `setSeeking`: Set seeking state
+- `setStalled`: Set stalled state
+- `setTrackReady`: Set track-ready flag
+- `setSeekableRanges`: Update seekable time ranges
 
 ### Actions Reducer
 

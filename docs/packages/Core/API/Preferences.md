@@ -2,6 +2,79 @@
 
 This document details the preferences management system that handles user settings, theming, and layout preferences.
 
+## Audio Preferences
+
+### ThAudioPreferencesProvider
+
+Context provider component for audio preferences management.
+
+**Props:**
+```typescript
+interface Props<K extends AudioCustomizableKeys = AudioDefaultKeys> {
+  adapter?: ThAudioPreferencesAdapter<K>;
+  initialPreferences?: ThAudioPreferences<K>;
+  devMode?: boolean;
+  children: React.ReactNode;
+}
+```
+
+**Features:**
+- Audio-specific preferences context management
+- Default audio preferences handling
+- Type-safe customization via `AudioCustomizableKeys`
+- Adapter support for custom persistence
+- Dev mode support (disables content protection)
+
+### useAudioPreferences
+
+Hook for accessing the audio preferences context.
+
+```typescript
+function useAudioPreferences<K extends AudioCustomizableKeys = AudioDefaultKeys>(): {
+  preferences: ThAudioPreferences<K>;
+  updatePreferences: (prefs: ThAudioPreferences<K>) => void;
+}
+```
+
+Must be used within a `<ThAudioPreferencesProvider>`.
+
+### createAudioPreferences
+
+Helper to create a validated `ThAudioPreferences` object. Validates at runtime:
+- Secondary action keys are present in `keys`
+- `skipInterval` and `skipBackwardInterval`/`skipForwardInterval` are not used together
+- Theme keys referenced in `audioOrder` exist in `keys`
+- Slider presets are reachable given the configured `range` and `step`
+
+```typescript
+function createAudioPreferences<K extends AudioCustomizableKeys = {}>(
+  params: ThAudioPreferences<K>
+): ThAudioPreferences<K>
+```
+
+### ThAudioPreferencesAdapter
+
+Interface for implementing a custom audio preferences adapter.
+
+```typescript
+interface ThAudioPreferencesAdapter<T extends AudioCustomizableKeys = AudioCustomizableKeys> {
+  getPreferences(): ThAudioPreferences<T>;
+  setPreferences(prefs: ThAudioPreferences<T>): void;
+  subscribe(callback: (prefs: ThAudioPreferences<T>) => void): void;
+  unsubscribe(callback: (prefs: ThAudioPreferences<T>) => void): void;
+}
+```
+
+### ThAudioMemoryPreferencesAdapter
+
+In-memory implementation of `ThAudioPreferencesAdapter`. Used as the default adapter by `ThAudioPreferencesProvider`.
+
+```typescript
+new ThAudioMemoryPreferencesAdapter<K>(initialPreferences: ThAudioPreferences<K>)
+```
+
+---
+
 ## Core Components
 
 ### ThPreferencesProvider
@@ -96,13 +169,16 @@ interface useThemingProps<T extends string> {
   };
   breakpointsMap: BreakpointsMap<number | null>;
   initProps?: Record<string, any>;
+  coverUrl?: string;
+  autoThemeSource?: "cover" | "system";
+  onCoverThemeGenerated?: (themeTokens: ThemeTokens) => void;
   onBreakpointChange?: (breakpoint: ThBreakpoints | null) => void;
   onColorSchemeChange?: (colorScheme: ThColorScheme) => void;
   onContrastChange?: (contrast: ThContrast) => void;
   onForcedColorsChange?: (forcedColors: boolean) => void;
   onMonochromeChange?: (isMonochrome: boolean) => void;
   onReducedMotionChange?: (reducedMotion: boolean) => void;
-  onReducedTransparencyChange?: (reducedTransparency: boolean) => void; 
+  onReducedTransparencyChange?: (reducedTransparency: boolean) => void;
 }
 
 function useTheming<T extends string>(props: useThemingProps<T>): {
@@ -115,15 +191,19 @@ function useTheming<T extends string>(props: useThemingProps<T>): {
   monochrome: boolean;
   reducedMotion: boolean;
   reducedTransparency: boolean;
+  coverThemeTokens: ThemeTokens | null;
+  themeResolved: boolean;
 }
 ```
 
 **Features:**
 - Theme management
 - System theme detection
+- Cover-based automatic theme generation (`autoThemeSource: "cover"`)
 - CSS variable handling
 - Media query support
 - Automatic theme color meta tag updates
+- `themeResolved` flag to defer rendering until cover theme extraction completes
 
 ## Helpers
 

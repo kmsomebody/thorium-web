@@ -32,8 +32,8 @@ export const StatefulAudioAutoPlay = ({
   return (
     <StatefulSwitch
       standalone={ standalone }
-      heading={ t("audio.settings.autoPlay.title") }
-      label={ t("audio.settings.autoPlay.label") }
+      heading={ t("reader.playback.preferences.autoPlay.title") }
+      label={ t("reader.playback.preferences.autoPlay.label") }
       isSelected={ autoPlay }
       onChange={ updatePreference }
     />

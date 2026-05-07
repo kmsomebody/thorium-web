@@ -2,7 +2,7 @@
 
 import { useCallback } from "react";
 
-import { usePreferenceKeys } from "@/preferences";
+import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { ThActionsKeys, ThSheetHeaderVariant } from "@/preferences/models";
 import { StatefulActionContainerProps } from "../models/actions";
 
@@ -18,7 +18,8 @@ import { setActionOpen } from "@/lib/actionsReducer";
 export const StatefulAudioSettingsContainer = ({
   triggerRef
 }: StatefulActionContainerProps) => {
-  const { audioSettingsKeys } = usePreferenceKeys();
+  const { preferences } = useAudioPreferences();
+  const audioSettingsKeys = preferences.settings.order;
   const { settingsComponentsMap } = usePlugins();
   const { t } = useI18n();
   const dispatch = useAppDispatch();
@@ -31,7 +32,7 @@ export const StatefulAudioSettingsContainer = ({
   return (
     <StatefulSettingsWrapper
       triggerRef={ triggerRef }
-      heading={ t("audio.settings.title") }
+      heading={ t("reader.playback.preferences.audio.title") }
       headerVariant={ ThSheetHeaderVariant.close }
       onClosePress={ close }
     >

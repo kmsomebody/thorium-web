@@ -1,6 +1,7 @@
 "use client";
 
-export * from "./Actions"; 
+export * from "./Actions";
+export * from "./Audio";
 export * from "./Buttons";
 export * from "./Containers";
 export * from "./Form";

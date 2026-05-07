@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { StatefulLoader, ErrorDisplay } from "@/components/Misc";
+import { ErrorDisplay } from "@/components/Misc";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
 import { verifyManifestUrl } from "@/app/api/verify-manifest/verifyDomain";
@@ -58,17 +58,14 @@ export default function ManifestPage({ params }: Props) {
     <>
       { error ? (
         <ErrorDisplay error={ error } />
-      ) : (
-        <StatefulLoader isLoading={ isLoading || publicationLoading }>
-          { publication && (
-            <StatefulReaderWrapper 
-              profile={ profile } 
-              publication={ publication } 
-              localDataKey={ localDataKey }
-            />
-          )}
-        </StatefulLoader>
-      )}
+      ) : publication ? (
+        <StatefulReaderWrapper
+          profile={ profile }
+          publication={ publication }
+          localDataKey={ localDataKey }
+          isLoading={ isLoading || publicationLoading }
+        />
+      ) : null }
     </>
   );
 }

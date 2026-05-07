@@ -31,10 +31,14 @@ It accepts two optional props:
 The Core package comes with a list of slices offering multiple reducers:
 
 - `actionsReducer`: manages the actions of the application (opening a menu, opening a modal, etc.);
+- `audioSettingsReducer`: manages audio playback settings (volume, playback rate, skip intervals, etc.);
+- `playerReducer`: manages audio player state (playback status, seeking, stalled, seekable ranges);
+- `preferencesReducer`: manages persisted preferences state via Redux;
 - `publicationReducer`: manages data related to the publication (direction, title, etc.);
 - `readerReducer`: manages state of the reader (loading, immersive mode, etc.);
 - `settingsReducer`: manages settings of the application (typography, spacing, etc.);
-- `themeReducer`: manages the theme and accessibility of the application.
+- `themeReducer`: manages the theme and accessibility of the application;
+- `webPubSettingsReducer`: manages WebPub-specific settings.
 
 These are used to build the default store if none is provided through the `store` prop.
 

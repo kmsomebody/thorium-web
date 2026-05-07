@@ -8,6 +8,7 @@ export interface AudioSettings {
   preservePitch: boolean;
   skipBackwardInterval: number;
   skipForwardInterval: number;
+  skipInterval: number;
   pollInterval: number;
   autoPlay: boolean;
   enableMediaSession: boolean;
@@ -23,6 +24,7 @@ export const useAudioSettingsCache = (
   preservePitch: boolean,
   skipBackwardInterval: number,
   skipForwardInterval: number,
+  skipInterval: number,
   pollInterval: number,
   autoPlay: boolean,
   enableMediaSession: boolean
@@ -34,6 +36,7 @@ export const useAudioSettingsCache = (
       preservePitch,
       skipBackwardInterval,
       skipForwardInterval,
+      skipInterval,
       pollInterval,
       autoPlay,
       enableMediaSession,
@@ -47,6 +50,7 @@ export const useAudioSettingsCache = (
       preservePitch,
       skipBackwardInterval,
       skipForwardInterval,
+      skipInterval,
       pollInterval,
       autoPlay,
       enableMediaSession,
@@ -57,6 +61,7 @@ export const useAudioSettingsCache = (
     preservePitch,
     skipBackwardInterval,
     skipForwardInterval,
+    skipInterval,
     pollInterval,
     autoPlay,
     enableMediaSession,

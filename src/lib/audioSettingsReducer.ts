@@ -6,6 +6,7 @@ export interface AudioSettingsState {
   preservePitch: boolean;
   skipBackwardInterval: number;
   skipForwardInterval: number;
+  skipInterval: number;
   pollInterval: number;
   autoPlay: boolean;
   enableMediaSession: boolean;
@@ -17,6 +18,7 @@ const initialState: AudioSettingsState = {
   preservePitch: true,
   skipBackwardInterval: 10,
   skipForwardInterval: 10,
+  skipInterval: 10,
   pollInterval: 1000,
   autoPlay: true,
   enableMediaSession: true,
@@ -41,6 +43,9 @@ export const audioSettingsSlice = createSlice({
     setSkipForwardInterval: (state, action) => {
       state.skipForwardInterval = action.payload;
     },
+    setSkipInterval: (state, action) => {
+      state.skipInterval = action.payload;
+    },
     setPollInterval: (state, action) => {
       state.pollInterval = action.payload;
     },
@@ -59,6 +64,7 @@ export const {
   setPreservePitch,
   setSkipBackwardInterval,
   setSkipForwardInterval,
+  setSkipInterval,
   setPollInterval,
   setAutoPlay,
   setEnableMediaSession,

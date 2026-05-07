@@ -1,0 +1,24 @@
+.audioControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  --audio-icon-base: var(--th-icon-size, 24px);
+}
+
+.audioPreviousTrackButton,
+.audioNextTrackButton {
+  --th-icon-size: calc(var(--audio-icon-base) * (5/4));
+  padding: calc(var(--th-icon-size) * (1/5));
+}
+
+.audioSkipBackwardButton,
+.audioSkipForwardButton {
+  --th-icon-size: calc(var(--audio-icon-base) * (3/2));
+  padding: calc(var(--th-icon-size) * (1/6));
+}
+
+.audioPlayPauseButton {
+  --th-icon-size: calc(var(--audio-icon-base) * 2);
+  padding: calc(var(--th-icon-size) * (1/8));
+}

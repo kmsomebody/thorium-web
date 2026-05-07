@@ -58,6 +58,74 @@
                 "descriptive": "Previous sentence"
             }
         },
+        "annotations": {
+            "actions": {
+                "editNote": {
+                    "compact": "Edit note"
+                }
+            },
+            "bookmarks": {
+                "actions": {
+                    "add": {
+                        "compact": "Add bookmark"
+                    },
+                    "delete": {
+                        "compact": "Delete bookmark",
+                        "confirmation": "Are you sure you want to delete this bookmark?"
+                    }
+                },
+                "emptyState": {
+                    "description": "No bookmarks added yet.",
+                    "title": "No bookmarks"
+                },
+                "title": "Bookmarks"
+            },
+            "note": {
+                "title": "Note"
+            },
+            "sort": {
+                "lastAdded": {
+                    "compact": "Last added"
+                },
+                "lastEdited": {
+                    "compact": "Last edited"
+                },
+                "progression": {
+                    "compact": "Progression"
+                }
+            }
+        },
+        "playback": {
+            "actions": {
+                "pause": "Pause",
+                "play": "Play",
+                "skipBackward": {
+                    "compact": "Rewind",
+                    "descriptive": "Skip backward"
+                },
+                "skipForward": {
+                    "compact": "Forward",
+                    "descriptive": "Skip forward"
+                }
+            },
+            "preferences": {
+                "audio": {
+                    "skipBackwardInterval": "Skip backward interval",
+                    "skipForwardInterval": "Skip forward interval",
+                    "skipInterval": "Skip interval",
+                    "title": "Audio Settings",
+                    "volume": "Volume"
+                },
+                "autoPlay": {
+                    "label": "Continuous play",
+                    "title": "Autoplay"
+                },
+                "playbackRate": {
+                    "compact": "Speed",
+                    "descriptive": "Playback rate"
+                }
+            }
+        },
         "preferences": {
             "brightness": "Brightness",
             "columns": {

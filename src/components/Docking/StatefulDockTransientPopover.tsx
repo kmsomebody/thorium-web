@@ -14,14 +14,14 @@ import { StatefulActionIcon } from "../Actions/Triggers/StatefulActionIcon";
 import { StatefulOverflowMenuItem } from "../Actions/Triggers/StatefulOverflowMenuItem";
 
 import { useActions } from "@/core/Components/Actions/hooks/useActions";
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { dockAction } from "@/lib/actionsReducer";
 
 export const StatefulDockTransientPopover = ({ variant, associatedKey }: StatefulActionTriggerProps) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const { t } = useI18n();
   const actionsMap = useAppSelector(state => state.actions.keys);
   const actions = useActions(actionsMap);

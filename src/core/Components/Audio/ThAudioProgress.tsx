@@ -22,8 +22,6 @@ export interface ThAudioProgressProps {
   duration: number;
   onSeek: (time: number) => void;
   currentChapter?: string;
-  elapsedTime?: string;
-  remainingTime?: string;
   seekableRanges?: SeekableRange[];
   compounds?: {
     wrapper?: React.HTMLAttributes<HTMLDivElement>;
@@ -43,19 +41,20 @@ export const ThAudioProgress = ({
   duration,
   onSeek,
   currentChapter,
-  elapsedTime,
-  remainingTime,
   seekableRanges,
   compounds
 }: ThAudioProgressProps) => {
-  const defaultElapsedTime = elapsedTime || formatTime(currentTime);
-  const defaultRemainingTime = remainingTime || formatTime(Math.max(0, duration - currentTime));
+  const defaultElapsedTime = formatTime(currentTime);
+  const defaultRemainingTime = formatTime(Math.max(0, duration - currentTime));
 
   function formatTime(seconds: number) {
     if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
-    const mins = Math.floor(seconds / 60);
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    return `${ mins }:${ secs.toString().padStart(2, "0") }`;
+    return hrs > 0
+      ? `${ hrs }:${ mins.toString().padStart(2, "0") }:${ secs.toString().padStart(2, "0") }`
+      : `${ mins }:${ secs.toString().padStart(2, "0") }`;
   }
 
   const validSeekableRanges = duration > 0

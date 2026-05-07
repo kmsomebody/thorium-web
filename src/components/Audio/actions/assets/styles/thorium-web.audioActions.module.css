@@ -1,0 +1,262 @@
+.audioMediaActions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  --audio-icon-base: var(--th-icon-size, 24px);
+}
+
+.audioVolumeButton,
+.audioPlaybackRateButton,
+.audioSleepTimerButton,
+.audioTocButton {
+  --th-icon-size: calc(var(--audio-icon-base) * (5/4));
+  padding: calc(var(--th-icon-size) * (1/4));
+}
+
+.audioPlaybackRateButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+}
+
+.audioPlaybackRateButton[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioPlaybackRateButton[data-disabled] {
+  color: var(--th-theme-disable);
+}
+
+.audioPlaybackRateLabel {
+  line-height: 1;
+  font-size: calc(var(--th-icon-size, 24px) * (5/12));
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+
+.audioControlPopover {
+  background-color: var(--th-theme-background);
+  color: var(--th-theme-text);
+  border: 1px solid var(--th-theme-subdue);
+  border-radius: var(--th-layout-radius);
+  filter: drop-shadow(var(--th-theme-elevate));
+  padding: var(--th-layout-spacing);
+}
+
+.audioControlPopoverDialog {
+  outline: none;
+}
+
+.audioControlPopoverHeading {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0 0 calc(var(--th-layout-spacing) / 2) 0;
+}
+
+/* Sleep timer */
+
+.audioSleepTimerButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  outline: none;
+}
+
+.audioSleepTimerButton[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioSleepTimerButton[data-disabled] {
+  color: var(--th-theme-disable);
+}
+
+.audioSleepTimerLabel {
+  line-height: 1;
+  font-size: calc(var(--th-icon-size, 24px) * (5/12));
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+
+.audioSleepTimerListbox {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--th-layout-spacing) / 2);
+}
+
+.audioSleepTimerListboxItem {
+  padding: calc(var(--th-layout-spacing) / 4);
+  border-radius: var(--th-layout-radius);
+  outline: none;
+  cursor: default;
+}
+
+.audioSleepTimerListboxItem[data-selected] {
+  background-color: var(--th-theme-hover);
+  font-weight: bold;
+}
+
+.audioSleepTimerListboxItem[data-hovered]:not([data-selected]) {
+  background-color: var(--th-theme-hover);
+}
+
+.audioSleepTimerListboxItem[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+/* Sleep timer duration field */
+
+.audioSleepTimerDurationField {
+  display: flex;
+  flex-direction: column;
+}
+
+.audioSleepTimerInstruction {
+  display: block;
+  margin: 0 0 var(--th-layout-spacing) 0;
+}
+
+.audioSleepTimerInputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--th-layout-spacing) / 4);
+  margin-bottom: var(--th-layout-spacing);
+}
+
+.audioSleepTimerFieldGroup {
+  display: contents;
+}
+
+.audioSleepTimerFieldInput {
+  width: 4ch;
+  text-align: center;
+  background: transparent;
+  border: 2px solid var(--th-theme-subdue);
+  border-radius: var(--th-layout-radius);
+  padding: calc(var(--th-icon-size, 24px) * (1/4)) calc(var(--th-layout-spacing) / 2);
+  color: var(--th-theme-text);
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  outline: none;
+}
+
+.audioSleepTimerFieldInput[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioSleepTimerUnitLabel {
+  margin-inline-end: calc(var(--th-layout-spacing) / 4);
+}
+
+.audioSleepTimerRemaining {
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  margin: 0 0 var(--th-layout-spacing) 0;
+}
+
+.audioSleepTimerPresetCancelButton {
+  margin-top: var(--th-layout-spacing);
+}
+
+.audioSleepTimerActionButton {
+  padding: calc(var(--th-icon-size, 24px) * (1/4)) calc(var(--th-icon-size, 24px) * (1/2));
+  border-radius: var(--th-layout-radius);
+  border: 2px solid var(--th-theme-subdue);
+  background: transparent;
+  color: var(--th-theme-text);
+  cursor: default;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.audioSleepTimerActionButton[data-hovered] {
+  background-color: var(--th-theme-hover);
+}
+
+.audioSleepTimerActionButton[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioSleepTimerActionButton[data-disabled] {
+  color: var(--th-theme-disable);
+}
+
+/* Volume slider */
+
+.audioVolumeSliderTrack {
+  position: relative;
+  height: 150px;
+  width: 30px;
+  box-sizing: border-box;
+  margin-block: calc(1.25rem / 2);
+}
+
+.audioVolumeSliderTrack::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background: var(--th-theme-subdue);
+  width: 3px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.audioVolumeSlider[data-disabled] .audioVolumeSliderTrack::before {
+  background: var(--th-theme-disable);
+}
+
+.audioVolumeSliderThumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--th-theme-text);
+  border: 2px solid var(--th-theme-subdue);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.audioVolumeSlider[data-disabled] .audioVolumeSliderThumb {
+  background: var(--th-theme-disable);
+  border: 2px solid var(--th-theme-disable);
+}
+
+.audioVolumeSliderThumb[data-dragging] {
+  background: var(--th-theme-subdue);
+}
+
+.audioVolumeSliderThumb[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+  border: 2px solid var(--th-theme-focus);
+}
+
+/* Playback rate - slider with presets variant */
+
+.audioPlaybackRateSliderContent {
+  min-width: 260px;
+}
+
+/* Playback rate - number field variant */
+
+.audioPlaybackRateNumberField {
+  min-width: 140px;
+  display: flex;
+  justify-content: center;
+}
+
+/* TOC popover */
+
+.audioTocContent {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--th-layout-spacing) / 2);
+}
+
+.audioTocTree {
+  max-height: 360px;
+  overflow-y: auto;
+}

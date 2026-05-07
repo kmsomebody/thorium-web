@@ -1,26 +1,25 @@
 import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThemeTokens } from "@/preferences/hooks/useTheming";
-import { 
+import {
   ThActionsKeys,
-  ThAudioKeys,
-  ThAudioSettingsKeys,
   ThDocumentTitleFormat,
   ThDockingKeys,
   ThLayoutUI,
   ThLineHeightOptions,
   ThProgressionFormat,
   ThRunningHeadFormat,
-  ThSettingsKeys, 
+  ThSettingsKeys,
   ThSheetTypes,
-  ThTextSettingsKeys, 
-  ThSpacingSettingsKeys, 
-  ThThemeKeys, 
-  ThLayoutDirection, 
+  ThTextSettingsKeys,
+  ThSpacingSettingsKeys,
+  ThThemeKeys,
+  ThLayoutDirection,
   ThSpacingPresetKeys,
   ThActionsTokens,
   ThFontFamilyPref,
-  ThSettingsRangePref,
+  ThSettingsRangePrefRequired,
+  ThSettingsRangeVariant,
   ThSettingsRadioPref,
   I18nValue,
   ThBackLinkPref,
@@ -29,12 +28,12 @@ import {
   ThDockingPref,
   ThSettingsGroupPref,
   ValidatedLanguageCollection,
-  ThAudioPlayerComponent
 } from "./models";
 import { ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
-import { AudioContentProtectionConfig, ContentProtectionConfig } from "./models/protection";
+import { ContentProtectionConfig } from "./models/protection";
+import { validateObjectKeys } from "./helpers";
 
 export type CustomizableKeys = {
   action?: string;
@@ -42,7 +41,6 @@ export type CustomizableKeys = {
   settings?: string;
   text?: string;
   spacing?: string;
-  audio?: string;
 };
 
 // Default internal keys alias for convenience
@@ -52,18 +50,17 @@ export type DefaultKeys = {
   settings: ThSettingsKeys;
   text: ThTextSettingsKeys;
   spacing: ThSpacingSettingsKeys;
-  audio: ThAudioKeys;
 };
 
 // Key types to better handle custom keys for external consumers
-export type ActionKey<K extends CustomizableKeys> = 
-  K extends { action: infer A } 
-    ? A extends string 
-      ? ThActionsKeys | A 
+export type ActionKey<K extends CustomizableKeys> =
+  K extends { action: infer A }
+    ? A extends string
+      ? ThActionsKeys | A
       : ThActionsKeys
     : ThActionsKeys;
 
-export type ThemeKey<K extends CustomizableKeys> = 
+export type ThemeKey<K extends CustomizableKeys> =
   K extends { theme: infer T } 
     ? T extends string 
       ? ThThemeKeys | T 
@@ -91,25 +88,6 @@ export type SpacingSettingsKey<K extends CustomizableKeys> =
       : ThSpacingSettingsKeys
     : ThSpacingSettingsKeys;
 
-export type AudioSettingsKey<K extends CustomizableKeys> = 
-  K extends { audio: infer A } 
-    ? A extends string 
-      ? ThAudioSettingsKeys | A 
-      : ThAudioSettingsKeys
-    : ThAudioSettingsKeys;
-
-export type ThAudioKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
-  [ThAudioKeys.volume]: Required<ThSettingsRangePref>;
-  [ThAudioKeys.playbackRate]: Required<ThSettingsRangePref>;
-  [ThAudioKeys.skipBackwardInterval]: Required<ThSettingsRangePref>;
-  [ThAudioKeys.skipForwardInterval]: Required<ThSettingsRangePref>;
-} & (
-  K extends { audio: infer A } 
-    ? A extends string 
-      ? { [key in A]: any }
-      : {}
-    : {}
-);
 
 export interface ThSettingsSpacingPresets<K extends CustomizableKeys = DefaultKeys> {
   reflowOrder: Array<ThSpacingPresetKeys>;
@@ -137,19 +115,18 @@ export interface ThActionsPref<K extends CustomizableKeys> {
   reflowOrder: Array<ActionKey<K>>;
   fxlOrder: Array<ActionKey<K>>;
   webPubOrder: Array<ActionKey<K>>;
-  audioOrder: Array<ActionKey<K>>;
   collapse: ThCollapsibility;
   keys: Record<ActionKey<K>, ThActionsTokens>;
 };
 
 export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
   [ThSettingsKeys.fontFamily]: ThFontFamilyPref;
-  [ThSettingsKeys.letterSpacing]: Required<ThSettingsRangePref>;
+  [ThSettingsKeys.letterSpacing]: ThSettingsRangePrefRequired;
   [ThSettingsKeys.lineHeight]: ThSettingsRadioPref<Exclude<ThLineHeightOptions, ThLineHeightOptions.publisher>>;
-  [ThSettingsKeys.paragraphIndent]: Required<ThSettingsRangePref>;
-  [ThSettingsKeys.paragraphSpacing]: Required<ThSettingsRangePref>;
-  [ThSettingsKeys.wordSpacing]: Required<ThSettingsRangePref>;
-  [ThSettingsKeys.zoom]: Required<ThSettingsRangePref>;
+  [ThSettingsKeys.paragraphIndent]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.paragraphSpacing]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.wordSpacing]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.zoom]: ThSettingsRangePrefRequired;
 } & (
   K extends { settings: infer S } 
     ? S extends string 
@@ -188,7 +165,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
           reflow?: ThFormatPref<ThRunningHeadFormat>;
           fxl?: ThFormatPref<ThRunningHeadFormat>;
           webPub?: ThFormatPref<ThRunningHeadFormat>;
-          audio?: ThFormatPref<ThRunningHeadFormat>;
         }
       }
     };
@@ -197,7 +173,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
         reflow?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
         fxl?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
         webPub?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
-        audio?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
       };
     };
     arrow: {
@@ -215,10 +190,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
         reflow?: ThLayoutUI,
         fxl?: ThLayoutUI,
         webPub?: ThLayoutUI,
-        audio?: ThLayoutUI
-      };
-      audio: {
-        order: Array<ThAudioPlayerComponent>;
       };
       radius: number;
       spacing: number;
@@ -234,7 +205,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     themes: {
       reflowOrder: Array<ThemeKey<K> | "auto">;
       fxlOrder: Array<ThemeKey<K> | "auto">;
-      audioOrder: Array<ThemeKey<K> | "auto">;
       systemThemes?: {
         light: ThemeKey<K>;
         dark: ThemeKey<K>;
@@ -253,7 +223,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     };
   };
   contentProtection?: ContentProtectionConfig;
-  audioContentProtection?: AudioContentProtectionConfig;
   affordances: {
     scroll: {
       hintInImmersive: boolean;
@@ -267,10 +236,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     }
   };
   actions: ThActionsPref<K>;
-  audio: {
-    order: Array<AudioSettingsKey<K>>;
-    keys: ThAudioKeyTypes<K>;
-  };
   shortcuts: {
     representation: UnstableShortcutRepresentation;
     joiner?: string;
@@ -304,56 +269,23 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
     }
   }
 
-  // Helper function to validate keys against the provided order arrays
-  const validateObjectKeys = <K extends string, V>(
-    orderArrays: K[][],
-    keysObj: Record<string, V>,
-    context: string,
-    specialCase?: string | string[],
-    fallback?: V
-  ): void => {
-    // Combine all arrays and filter out special cases if needed
-    const allOrders = new Set<K>(
-      orderArrays.flatMap(arr => {
-        if (!specialCase) return arr;
-        return arr.filter(k => {
-          if (Array.isArray(specialCase)) {
-            return !specialCase.includes(k);
-          } else {
-            return k !== specialCase;
-          }
-        });
-      })
-    );
-    
-    // Get available keys
-    const availableKeys = Object.keys(keysObj);
-    
-    // Check that all keys exist and add from fallback if available
-    allOrders.forEach(key => {
-      if (!availableKeys.includes(key)) {
-        if (fallback) {
-          // Add the missing key from fallback to the params object
-          keysObj[key] = fallback;
-        }
-        console.warn(`Key "${ key }" in ${ context } order arrays not found in ${ context }.keys.${ fallback ? `\nUsing fallback: ${ JSON.stringify(fallback) }` : "" }`);
-      }
-    });
-  };
-  
   // Validate actions
   if (params.actions) {
     validateObjectKeys<ActionKey<K>, ThActionsTokens>(
-      [params.actions.reflowOrder as Array<ActionKey<K>>, params.actions.fxlOrder as Array<ActionKey<K>>, params.actions.webPubOrder as Array<ActionKey<K>>],
+      [
+        params.actions.reflowOrder as Array<ActionKey<K>>,
+        params.actions.fxlOrder as Array<ActionKey<K>>,
+        params.actions.webPubOrder as Array<ActionKey<K>>,
+      ],
       params.actions.keys as Record<string, ThActionsTokens>,
       "actions"
     );
   }
-  
+
   // Validate themes
   if (params.theming?.themes) {
     validateObjectKeys<ThemeKey<K> | "auto", ThemeTokens>(
-      [params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.audioOrder as Array<ThemeKey<K> | "auto">],
+      [params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">],
       params.theming.themes.keys as Record<string, ThemeTokens>,
       "theming.themes",
       "auto" // Special case for themes
@@ -494,6 +426,28 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
       }
     });
   }
+
+  // Validate sliderWithPresets presets are reachable given range and step
+  const validateRangePresets = (pref: ThSettingsRangePrefRequired, context: string): void => {
+    if (pref.variant !== ThSettingsRangeVariant.sliderWithPresets || !pref.presets?.length) return;
+    const [min, max] = [Math.min(...pref.range), Math.max(...pref.range)];
+    const step = pref.step;
+    const tolerance = step * 1e-9;
+    const invalid = pref.presets.filter(p => {
+      if (p < min || p > max) return true;
+      const offset = (p - min) / step;
+      return Math.abs(offset - Math.round(offset)) > tolerance;
+    });
+    if (invalid.length > 0) {
+      console.warn(`${ context }: presets [${ invalid.join(", ") }] are not reachable with range=[${ min }, ${ max }] and step=${ step }.`);
+    }
+  };
+
+  Object.entries(params.settings?.keys ?? {}).forEach(([key, pref]) => {
+    if (pref && typeof pref === "object" && "variant" in pref) {
+      validateRangePresets(pref as ThSettingsRangePrefRequired, `settings.keys.${ key }`);
+    }
+  });
 
   return params;
 };

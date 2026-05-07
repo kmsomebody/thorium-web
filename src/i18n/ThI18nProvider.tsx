@@ -4,7 +4,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { i18n, initI18n } from "./config";
 import { InitOptions } from "i18next";
-import { usePreferences } from "@/preferences";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
 export type ThI18nProviderProps = {
   children: ReactNode;
@@ -14,23 +14,23 @@ export const ThI18nProvider = ({
   children,
   ...options
 }: ThI18nProviderProps) => {
-  const { preferences } = usePreferences();
+  const { locale } = useSharedPreferences();
   const [isInitialized, setIsInitialized] = useState(i18n.isInitialized);
   
   useEffect(() => {
     if (!i18n.isInitialized) {      
       initI18n({
         ...options,
-        lng: preferences?.locale || options.lng,
+        lng: locale || options.lng,
       }).then(() => setIsInitialized(true));
     }
   });
 
   useEffect(() => {
-    if (isInitialized && preferences?.locale) {
-      i18n.changeLanguage(preferences.locale);
+    if (isInitialized && locale) {
+      i18n.changeLanguage(locale);
     }
-  }, [preferences?.locale, isInitialized]);
+  }, [locale, isInitialized]);
 
   if (!isInitialized) {
     return null;

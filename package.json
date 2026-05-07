@@ -35,6 +35,8 @@
     "./core/i18n": "./dist/core/i18n/index.mjs",
     "./core/lib": "./dist/lib/index.mjs",
     "./core/preferences": "./dist/preferences/index.mjs",
+    "./audio": "./dist/components/Audio/index.mjs",
+    "./audio/styles": "./dist/components/Audio/index.css",
     "./epub": "./dist/components/Epub/index.mjs",
     "./epub/styles": "./dist/components/Epub/index.css",
     "./misc": "./dist/components/Misc/index.mjs",

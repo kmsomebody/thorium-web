@@ -1,0 +1,26 @@
+.audioMetadata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  gap: var(--th-layout-spacing);
+  text-align: center;
+}
+
+.audioMetadataTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--th-theme-text);
+}
+
+.audioMetadataSubtitle {
+  display: block;
+  margin-top: calc(var(--th-layout-spacing) / 4);
+  font-weight: normal;
+  color: var(--th-theme-text);
+}
+
+.audioMetadataAuthors {
+  color: var(--th-theme-subdue-text);
+}

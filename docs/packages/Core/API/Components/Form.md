@@ -71,7 +71,7 @@ interface ThFormNumberFieldProps extends NumberFieldProps {
 ### Props
 
 ```typescript
-interface ThFormSearchFieldProps extends NumberFieldProps {
+interface ThFormSearchFieldProps extends SearchFieldProps {
   ref?: React.ForwardedRef<HTMLInputElement>;
   label?: string;                      // Field label text
   compounds?: {

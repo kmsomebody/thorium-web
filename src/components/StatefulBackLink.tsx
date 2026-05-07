@@ -13,9 +13,7 @@ import { ThLibrary } from "@/core/Components/Links";
 import { ThLink } from "@/core/Components/Links";
 
 import { useI18n } from "@/i18n";
-import { usePreferences } from "@/preferences/hooks/usePreferences";
-
-import { useAppSelector } from "@/lib/hooks";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
 import classNames from "classnames";
 
@@ -25,20 +23,21 @@ export const StatefulBackLink = ({
   className?: string 
 }) => {
   const { t } = useI18n();
-  const { preferences } = usePreferences();
-  const direction = useAppSelector(state => state.reader.direction);
+  const { direction, theming } = useSharedPreferences();
+  const backLinkPref = theming.header?.backLink;
+  const tooltipDelay = theming.icon.tooltipDelay;
   const isRTL = direction === ThLayoutDirection.rtl;
-  
-  const variant = preferences.theming.header?.backLink?.variant || ThBackLinkVariant.arrow;
-  const href = preferences.theming.header?.backLink?.href;
-  const content = preferences.theming.header?.backLink?.content;
-  const visibility = preferences.theming.header?.backLink?.visibility || "partially";
+
+  const variant = backLinkPref?.variant || ThBackLinkVariant.arrow;
+  const href = backLinkPref?.href;
+  const content = backLinkPref?.content;
+  const visibility = backLinkPref?.visibility || "partially";
   const backLinkClassName = classNames(backLinkStyles.link, visibility === "always" ? readerSharedUI.alwaysVisible : readerSharedUI.partiallyVisible);
 
   const compounds = {
     tooltipTrigger: {
-      delay: preferences.theming.arrow.tooltipDelay,
-      closeDelay: preferences.theming.arrow.tooltipDelay
+      delay: tooltipDelay,
+      closeDelay: tooltipDelay
     },
     tooltip: {
       className: readerSharedUI.tooltip

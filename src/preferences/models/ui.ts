@@ -103,7 +103,8 @@ export enum ThRunningHeadFormat {
 
 export enum ThAudioPlayerComponent {
   cover = "cover",
+  metadata = "metadata",
   playbackControls = "playbackControls",
   progressBar = "progressBar",
-  mediaControls = "mediaControls"
+  mediaActions = "mediaActions"
 }

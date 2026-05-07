@@ -266,6 +266,62 @@
   color: var(--th-theme-subdue);  
 }
 
+/* Slider with presets */
+
+.sliderWithPresetsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--th-layout-spacing);
+}
+
+/* Let the slider fill the full width of the wrapper */
+.sliderWithPresetsWrapper .sliderWrapper {
+  width: 100%;
+}
+
+.sliderWithPresetsWrapper .slider {
+  max-width: 100%;
+}
+
+.sliderWithPresetsPresets {
+  display: grid;
+  grid-template-columns: repeat(var(--th-presets-columns, 4), 1fr);
+  gap: calc(var(--th-layout-spacing) / 4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sliderWithPresetsPreset {
+  text-align: center;
+  padding: calc(var(--th-layout-spacing) / 3) calc(var(--th-layout-spacing) / 2);
+  border-radius: var(--th-layout-radius);
+  box-sizing: border-box;
+  border: 2px solid var(--th-theme-subdue);
+  font-variant-numeric: tabular-nums;
+  background: transparent;
+  color: var(--th-theme-text);
+}
+
+.sliderWithPresetsPreset[data-selected] {
+  border-color: var(--th-theme-text);
+  background-color: var(--th-theme-hover);
+}
+
+.sliderWithPresetsPreset[data-hovered]:not([data-selected]) {
+  background-color: var(--th-theme-hover);
+}
+
+.sliderWithPresetsPreset[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+  outline-offset: 2px;
+}
+
+.sliderWithPresetsPreset[data-disabled] {
+  color: var(--th-theme-disable);
+  border-color: var(--th-theme-disable);
+}
+
 /* Slider with ticks */
 
 .sliderWithTicks .sliderTrack::before {

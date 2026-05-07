@@ -2,8 +2,8 @@
 
 import SkipNextIcon from "./assets/icons/skip_next.svg";
 
-import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
-import audioStyles from "../assets/styles/thorium-web.audioControls.module.css";
+import { StatefulActionIcon } from "../../Actions/Triggers/StatefulActionIcon";
+import audioStyles from "./assets/styles/thorium-web.audioPlayback.module.css";
 
 import { useNavigator } from "@/core/Navigator";
 import { useAppSelector } from "@/lib/hooks";
@@ -18,8 +18,8 @@ export const StatefulNextTrackButton = ({ isDisabled }: { isDisabled?: boolean }
     <StatefulActionIcon
       onPress={ () => goForward(false, () => {}) }
       isDisabled={ isDisabled || atEnd }
-      aria-label={ t("audio.player.nextTrack") }
-      tooltipLabel={ t("audio.player.nextTrack") }
+      aria-label={ t("reader.actions.goForward") }
+      tooltipLabel={ t("reader.actions.goForward") }
       className={ audioStyles.audioNextTrackButton }
     >
       <SkipNextIcon aria-hidden="true" focusable="false" />

@@ -12,7 +12,14 @@ export interface ThSettingsRangePref {
   placeholder?: I18nValue<ThSettingsRangePlaceholder>;
   range?: [number, number];
   step?: number;
+  presets?: number[];
 }
+
+/**
+ * Use instead of ThSettingsRangePrefRequired for default values,
+ * so that presets remains optional.
+ */
+export type ThSettingsRangePrefRequired = Required<Omit<ThSettingsRangePref, "presets">> & Pick<ThSettingsRangePref, "presets">;
 
 export interface ThSettingsRadioPref<T extends string> {
   allowUnset?: boolean;
@@ -69,7 +76,8 @@ export enum ThSettingsContainerKeys {
 export enum ThSettingsRangeVariant {
   slider = "slider",
   incrementedSlider = "incrementedSlider",
-  numberField = "numberField"
+  numberField = "numberField",
+  sliderWithPresets = "sliderWithPresets"
 }
 
 export enum ThSettingsRangePlaceholder {
@@ -136,28 +144,28 @@ export const defaultSpacingPresetsOrder = [
   ThSpacingPresetKeys.loose
 ]
 
-export const defaultParagraphSpacing: Required<ThSettingsRangePref> = {
+export const defaultParagraphSpacing: ThSettingsRangePrefRequired = {
   variant: ThSettingsRangeVariant.numberField,
   placeholder: ThSettingsRangePlaceholder.range,
   range: [0, 3],
   step: 0.25
 }
 
-export const defaultParagraphIndent: Required<ThSettingsRangePref> = {
+export const defaultParagraphIndent: ThSettingsRangePrefRequired = {
   variant: ThSettingsRangeVariant.numberField,
   placeholder: ThSettingsRangePlaceholder.range,
   range: [0, 2],
   step: 0.25
 }
 
-export const defaultWordSpacing: Required<ThSettingsRangePref> = {
+export const defaultWordSpacing: ThSettingsRangePrefRequired = {
   variant: ThSettingsRangeVariant.numberField,
   placeholder: ThSettingsRangePlaceholder.range,
   range: [0, 1],
   step: 0.1
 }
 
-export const defaultLetterSpacing: Required<ThSettingsRangePref> = {
+export const defaultLetterSpacing: ThSettingsRangePrefRequired = {
   variant: ThSettingsRangeVariant.numberField,
   placeholder: ThSettingsRangePlaceholder.range,
   range: [0, 0.5],
@@ -170,7 +178,7 @@ export const defaultLineHeights = {
   [ThLineHeightOptions.large]: 1.75
 }
 
-export const defaultZoom: Required<ThSettingsRangePref> = {
+export const defaultZoom: ThSettingsRangePrefRequired = {
   variant: ThSettingsRangeVariant.numberField,
   placeholder: ThSettingsRangePlaceholder.range,
   range: [0.7, 4],

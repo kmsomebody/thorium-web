@@ -23,6 +23,14 @@ When using the `StatefulReader` component for EPUB, the styles are exported in t
 import "@edrlab/thorium-web/epub/styles";
 ```
 
+### Audio StatefulPlayer
+
+When using the `StatefulPlayer` component for audio, the styles are exported in the `audio` package.
+
+```tsx
+import "@edrlab/thorium-web/audio/styles";
+```
+
 ### WebPub StatefulReader
 
 When using the `StatefulReader` component for WebPub, the styles are exported in the `webpub` package.
@@ -38,6 +46,7 @@ import "@edrlab/thorium-web/webpub/styles";
 
 Although easily importable, you can also copy the styles from:
 
+- `dist/components/Audio/index.css`
 - `dist/components/Misc/index.css`
 - `dist/components/Epub/index.css`
 - `dist/components/WebPub/index.css`

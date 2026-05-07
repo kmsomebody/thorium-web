@@ -11,7 +11,8 @@ This document outlines the available styling classes and custom properties for t
 5. [Docking](#docking)
 6. [Reader Components](#reader-components)
 7. [Table of Contents](#table-of-contents)
-8. [Misc Components](#misc-components)
+8. [Audio Components](#audio-components)
+9. [Misc Components](#misc-components)
 
 ## Button Component
 
@@ -195,6 +196,76 @@ This document outlines the available styling classes and custom properties for t
 - `.thorium_web_toc_searchIcon` - Search icon
 - `.thorium_web_toc_clearButton` - Clear search button
 - `.thorium_web_toc_empty` - Empty state
+
+## Audio Components
+
+### Player
+
+- `.thorium_web_audioPlayer_audioPlayerWrapper` - Root wrapper for the audio player
+
+### Cover
+
+- `.thorium_web_audioCover_audioCoverSection` - Cover image section container
+- `.thorium_web_audioCover_audioCoverImage` - Cover image element
+- `.thorium_web_audioCover_audioCoverPlaceholder` - Placeholder shown when no cover is available
+
+### Metadata
+
+- `.thorium_web_audioMetadata_audioMetadata` - Metadata container
+- `.thorium_web_audioMetadata_audioMetadataTitle` - Publication title
+- `.thorium_web_audioMetadata_audioMetadataSubtitle` - Publication subtitle
+- `.thorium_web_audioMetadata_audioMetadataAuthors` - Authors list
+
+### Playback Controls
+
+- `.thorium_web_audioPlayback_audioControls` - Playback controls bar container
+- `.thorium_web_audioPlayback_audioPlayPauseButton` - Play/pause button
+- `.thorium_web_audioPlayback_audioPreviousTrackButton` - Previous track button
+- `.thorium_web_audioPlayback_audioNextTrackButton` - Next track button
+- `.thorium_web_audioPlayback_audioSkipBackwardButton` - Skip backward button
+- `.thorium_web_audioPlayback_audioSkipForwardButton` - Skip forward button
+
+### Media Actions
+
+- `.thorium_web_audioActions_audioMediaActions` - Media actions bar container
+- `.thorium_web_audioActions_audioVolumeButton` - Volume button
+- `.thorium_web_audioActions_audioVolumeSlider` - Volume slider
+- `.thorium_web_audioActions_audioVolumeSliderTrack` - Volume slider track
+- `.thorium_web_audioActions_audioVolumeSliderThumb` - Volume slider thumb
+- `.thorium_web_audioActions_audioPlaybackRateButton` - Playback rate button
+- `.thorium_web_audioActions_audioPlaybackRateLabel` - Playback rate label (e.g. `1×`)
+- `.thorium_web_audioActions_audioPlaybackRateSliderContent` - Playback rate slider popover content
+- `.thorium_web_audioActions_audioPlaybackRateNumberField` - Playback rate number field (number field variant)
+- `.thorium_web_audioActions_audioTocButton` - Table of contents button
+- `.thorium_web_audioActions_audioTocContent` - TOC popover content
+- `.thorium_web_audioActions_audioTocTree` - TOC tree within the popover
+- `.thorium_web_audioActions_audioSleepTimerButton` - Sleep timer button
+- `.thorium_web_audioActions_audioSleepTimerLabel` - Sleep timer label
+- `.thorium_web_audioActions_audioSleepTimerListbox` - Sleep timer preset listbox
+- `.thorium_web_audioActions_audioSleepTimerListboxItem` - Sleep timer preset item
+- `.thorium_web_audioActions_audioSleepTimerDurationField` - Sleep timer duration input group
+- `.thorium_web_audioActions_audioSleepTimerInstruction` - Sleep timer instruction text
+- `.thorium_web_audioActions_audioSleepTimerInputs` - Sleep timer inputs container
+- `.thorium_web_audioActions_audioSleepTimerFieldGroup` - Sleep timer field group
+- `.thorium_web_audioActions_audioSleepTimerFieldInput` - Sleep timer field input
+- `.thorium_web_audioActions_audioSleepTimerUnitLabel` - Sleep timer unit label
+- `.thorium_web_audioActions_audioSleepTimerRemaining` - Remaining sleep time display
+- `.thorium_web_audioActions_audioSleepTimerPresetCancelButton` - Sleep timer cancel button
+- `.thorium_web_audioActions_audioSleepTimerActionButton` - Sleep timer action button
+- `.thorium_web_audioActions_audioControlPopover` - Control popover container
+- `.thorium_web_audioActions_audioControlPopoverDialog` - Control popover dialog
+- `.thorium_web_audioActions_audioControlPopoverHeading` - Control popover heading
+
+### Progress Bar
+
+- `.thorium_web_audioProgressBar_audioProgressControl` - Progress bar container
+- `.thorium_web_audioProgressBar_audioProgressChapter` - Current chapter label
+- `.thorium_web_audioProgressBar_audioProgressSlider` - Progress slider
+- `.thorium_web_audioProgressBar_audioProgressTrack` - Progress slider track
+- `.thorium_web_audioProgressBar_audioProgressThumb` - Progress slider thumb
+- `.thorium_web_audioProgressBar_audioProgressSeekableRange` - Seekable range overlay
+- `.thorium_web_audioProgressBar_audioProgressElapsedTime` - Elapsed time display
+- `.thorium_web_audioProgressBar_audioProgressRemainingTime` - Remaining time display
 
 ## Misc Components
 

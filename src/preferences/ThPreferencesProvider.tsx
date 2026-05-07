@@ -32,7 +32,6 @@ export function ThPreferencesProvider<K extends CustomizableKeys = DefaultKeys>(
       fallbackPreferences = {
         ...fallbackPreferences,
         contentProtection: devContentProtectionConfig,
-        audioContentProtection: devContentProtectionConfig,
       };
     }
 
@@ -49,7 +48,6 @@ export function ThPreferencesProvider<K extends CustomizableKeys = DefaultKeys>(
         fallbackPreferences = {
           ...fallbackPreferences,
           contentProtection: devContentProtectionConfig,
-          audioContentProtection: devContentProtectionConfig,
         };
       }
       

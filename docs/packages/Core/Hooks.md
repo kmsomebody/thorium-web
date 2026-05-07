@@ -1,6 +1,22 @@
 # Core Hooks
 
-The Core package provides various hooks, including a custom hook for handling EPUB publications, accessibility, and responsive design.
+The Core package provides various hooks, including custom hooks for handling audio, EPUB, and WebPub publications, accessibility, and responsive design.
+
+## Audio Support Hook
+
+```tsx
+import {
+  useAudioNavigator,
+  useAudioSettingsCache
+} from "@edrlab/thorium-web/core/hooks";
+```
+
+`useAudioNavigator` exposes the Readium TS-Toolkit `AudioNavigator` and provides methods to load and destroy the navigator, control playback, navigate to positions, and submit preferences.
+
+`useAudioSettingsCache` provides a stateless cache for audio settings that maps React state to mutable refs — useful for settings that need to persist across re-renders without triggering navigator re-initialization.
+
+> [!IMPORTANT]
+> When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/audio` package so that they all share the same instance, not from `@edrlab/thorium-web/core`.
 
 ## EPUB Support Hook
 

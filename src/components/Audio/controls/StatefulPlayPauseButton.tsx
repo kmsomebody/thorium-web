@@ -5,8 +5,8 @@ import { useCallback } from "react";
 import PauseIcon from "./assets/icons/pause.svg";
 import PlayIcon from "./assets/icons/play_arrow.svg";
 
-import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
-import audioStyles from "../assets/styles/thorium-web.audioControls.module.css";
+import { StatefulActionIcon } from "../../Actions/Triggers/StatefulActionIcon";
+import audioStyles from "./assets/styles/thorium-web.audioPlayback.module.css";
 
 import { useNavigator } from "@/core/Navigator";
 import { useAppSelector } from "@/lib/hooks";
@@ -29,8 +29,8 @@ export const StatefulPlayPauseButton = ({ isDisabled }: { isDisabled?: boolean }
     <StatefulActionIcon
       onPress={ handlePress }
       isDisabled={ isDisabled }
-      aria-label={ isPlaying ? t("audio.player.pause") : t("audio.player.play") }
-      tooltipLabel={ isPlaying ? t("audio.player.pause") : t("audio.player.play") }
+      aria-label={ isPlaying ? t("reader.playback.actions.pause") : t("reader.playback.actions.play") }
+      tooltipLabel={ isPlaying ? t("reader.playback.actions.pause") : t("reader.playback.actions.play") }
       className={ audioStyles.audioPlayPauseButton }
     >
       {isPlaying ? (

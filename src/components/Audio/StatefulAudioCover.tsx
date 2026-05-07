@@ -19,6 +19,7 @@ export function StatefulAudioCover({ coverUrl, title }: StatefulAudioCoverProps)
           src={ proxyUrl(coverUrl) }
           alt={ title || t("audio.player.coverAlt") }
           className={ styles.audioCoverImage }
+          crossOrigin="anonymous"
         />
       ) : (
         <div className={ styles.audioCoverPlaceholder }>

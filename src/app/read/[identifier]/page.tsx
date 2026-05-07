@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { StatefulLoader, ErrorDisplay } from "@/components/Misc";
+import { ErrorDisplay } from "@/components/Misc";
 import { PUBLICATION_MANIFESTS } from "@/config/publications";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
@@ -65,17 +65,14 @@ export default function BookPage({ params }: Props) {
     <>
       { error ? (
         <ErrorDisplay error={ error } />
-      ) : (
-        <StatefulLoader isLoading={ isLoading || publicationLoading }>
-          { publication && (
-            <StatefulReaderWrapper 
-              profile={ profile } 
-              publication={ publication } 
-              localDataKey={ localDataKey }
-            />
-          )}
-        </StatefulLoader>
-      )}
+      ) : publication ? (
+        <StatefulReaderWrapper
+          profile={ profile }
+          publication={ publication }
+          localDataKey={ localDataKey }
+          isLoading={ isLoading || publicationLoading }
+        />
+      ) : null }
     </>
   );
 }

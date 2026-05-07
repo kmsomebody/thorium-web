@@ -9,14 +9,14 @@ import TargetIcon from "./assets/icons/pin_drop.svg";
 import { StatefulActionIcon } from "../Triggers/StatefulActionIcon";
 import { StatefulOverflowMenuItem } from "../Triggers/StatefulOverflowMenuItem";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
 import { setActionOpen, useAppDispatch, useAppSelector } from "@/lib";
 import { isPositionsListValid } from "./helpers/utils";
 
 export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTriggerProps) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const { t } = useI18n();
   const actionState = useAppSelector(state => state.actions.keys[ThActionsKeys.jumpToPosition]);
   const positionsList = useAppSelector(state => state.publication.positionsList);
@@ -38,12 +38,12 @@ export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTrigger
      ? <StatefulOverflowMenuItem 
          label={ t("reader.actions.goToPosition.descriptive") }
           SVGIcon={ TargetIcon }
-          shortcut={ preferences.actions.keys[ThActionsKeys.jumpToPosition].shortcut }
+          shortcut={ preferences.actionsKeys[ThActionsKeys.jumpToPosition].shortcut }
           id={ ThActionsKeys.jumpToPosition }
           onAction={ () => setOpen(!actionState?.isOpen) }
         />
       : <StatefulActionIcon
-          visibility={ preferences.actions.keys[ThActionsKeys.jumpToPosition].visibility } 
+          visibility={ preferences.actionsKeys[ThActionsKeys.jumpToPosition].visibility } 
           aria-label={ t("reader.actions.goToPosition.descriptive") }
           placement="bottom" 
           tooltipLabel={ t("reader.actions.goToPosition.compact") }

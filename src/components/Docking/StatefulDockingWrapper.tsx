@@ -10,7 +10,7 @@ import { ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "rea
 import { ThDockingTypes, ThDockingKeys, ThLayoutDirection } from "@/preferences/models";
 import { ActionsStateKeys } from "@/lib/actionsReducer";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 import { useResizablePanel } from "./hooks/useResizablePanel";
 import { useI18n } from "@/i18n/useI18n";
 
@@ -190,7 +190,7 @@ export const StatefulDockingWrapper = ({
 }: { 
   children: ReactNode; 
 }) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const dockingStart = useAppSelector(state => state.actions.dock[ThDockingKeys.start]);
   const dockingEnd = useAppSelector(state => state.actions.dock[ThDockingKeys.end])
   const startPanel = useResizablePanel(dockingStart);

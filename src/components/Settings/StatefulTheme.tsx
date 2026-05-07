@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef } from "react";
 
-import { ThemeKeyType, usePreferenceKeys } from "@/preferences";
+import { ThemeKeyType } from "@/preferences";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
 import settingsStyles from "../Settings/assets/styles/thorium-web.reader.settings.module.css";
 
@@ -13,7 +14,6 @@ import { ThActionsKeys, ThLayoutDirection } from "@/preferences/models";
 import { StatefulRadioGroup } from "./StatefulRadioGroup";
 import { Radio } from "react-aria-components";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
 import { useI18n } from "@/i18n/useI18n";
 import { useGridNavigation } from "@/components/Settings/hooks/useGridNavigation";
@@ -27,8 +27,8 @@ import { buildThemeObject } from "@/preferences/helpers/buildThemeObject";
 
 export const StatefulTheme = () => {
   const profile = useAppSelector(state => state.reader.profile);
-  const { fxlThemeKeys, reflowThemeKeys, audioThemeKeys } = usePreferenceKeys();
-  const { preferences } = usePreferences();
+  const { theming } = useSharedPreferences();
+  const { systemThemes, keys: themeKeys, audioOrder: audioThemeOrder, reflowOrder: reflowThemeOrder, fxlOrder: fxlThemeOrder } = theming.themes;
   const { t } = useI18n();
 
   const radioGroupRef = useRef<HTMLDivElement | null>(null);
@@ -37,7 +37,12 @@ export const StatefulTheme = () => {
   const isFXL = useAppSelector(state => state.publication.isFXL);
   const direction = useAppSelector(state => state.reader.direction);
   const isRTL = direction === ThLayoutDirection.rtl;
-  const themeArray = profile === "audio" ? audioThemeKeys : (isFXL ? fxlThemeKeys : reflowThemeKeys);
+
+  const themeArray: (ThemeKeyType | "auto")[] = profile === "audio"
+    ? ((audioThemeOrder ?? []) as (ThemeKeyType | "auto")[])
+    : (isFXL
+        ? ((fxlThemeOrder ?? []) as (ThemeKeyType | "auto")[])
+        : ((reflowThemeOrder ?? []) as (ThemeKeyType | "auto")[]));
 
   const themeObject = useAppSelector(state => state.theming.theme);
   const theme = profile === "audio" ? themeObject.audio : (isFXL ? themeObject.fxl : themeObject.reflow);
@@ -47,10 +52,8 @@ export const StatefulTheme = () => {
   const themeItems = useRef<(ThemeKeyType | "auto")[]>(
     themeArray.filter((theme: ThemeKeyType | "auto") => {
       if (theme === "auto") {
-        return preferences.theming.themes.systemThemes !== undefined && 
-          Object.values(preferences.theming.themes.systemThemes).every(t => 
-            themeArray.includes(t)
-          );
+        return systemThemes !== undefined &&
+          Object.values(systemThemes).every(t => themeArray.includes(t as ThemeKeyType));
       }
       return true;
     })
@@ -68,9 +71,9 @@ export const StatefulTheme = () => {
     currentValue: theme,
     onChange: async (val) => await updatePreference(val as ThemeKeyType),
     isRTL,
-    onEscape: () => dispatch(setActionOpen({ 
+    onEscape: () => dispatch(setActionOpen({
       key: ThActionsKeys.settings,
-      isOpen: false 
+      isOpen: false
     })),
     onFocus: (id) => {
       const element = radioGroupWrapperRef.current?.querySelector(`[id="${ id }"]`);
@@ -83,19 +86,19 @@ export const StatefulTheme = () => {
   const updatePreference = useCallback(async (value: ThemeKeyType | "auto") => {
     const themeProps = buildThemeObject<typeof value>({
       theme: value,
-      themeKeys: preferences.theming.themes.keys,
-      systemThemes: preferences.theming.themes.systemThemes,
+      themeKeys: themeKeys ?? {},
+      systemThemes: systemThemes as { light: ThemeKeyType; dark: ThemeKeyType } | undefined,
       colorScheme
     })
     await submitPreferences(themeProps);
 
-    dispatch(setTheme({ 
-      key: profile === "audio" ? "audio" : (isFXL ? "fxl" : "reflow"), 
+    dispatch(setTheme({
+      key: profile === "audio" ? "audio" : (isFXL ? "fxl" : "reflow"),
       value: value
     }));
-  }, [isFXL, preferences.theming.themes.keys, preferences.theming.themes.systemThemes, submitPreferences, dispatch, colorScheme, profile]);
+  }, [isFXL, themeKeys, systemThemes, submitPreferences, dispatch, colorScheme, profile]);
 
-  // It’s easier to inline styles from preferences for these
+  // It's easier to inline styles from preferences for these
   // than spamming the entire app with all custom properties right now
   const doStyles = useCallback((t: ThemeKeyType | "auto") => {
     // For some reason Typescript will just refuse to create dts files
@@ -110,27 +113,28 @@ export const StatefulTheme = () => {
         cssProps.background = coverTheme.background;
         cssProps.color = coverTheme.text;
         cssProps.border = `1px solid ${ coverTheme.subdue }`;
-      } else if (preferences.theming.themes.systemThemes !== undefined) {
+      } else if (systemThemes !== undefined) {
         cssProps.background = isRTL
-        ? `linear-gradient(148deg, ${ preferences.theming.themes.keys[preferences.theming.themes.systemThemes.dark].background } 48%, ${ preferences.theming.themes.keys[preferences.theming.themes.systemThemes.light].background } 100%)`
-        : `linear-gradient(148deg, ${ preferences.theming.themes.keys[preferences.theming.themes.systemThemes.light].background } 0%, ${ preferences.theming.themes.keys[preferences.theming.themes.systemThemes.dark].background } 48%)`;
+        ? `linear-gradient(148deg, ${ themeKeys[systemThemes.dark].background } 48%, ${ themeKeys[systemThemes.light].background } 100%)`
+        : `linear-gradient(148deg, ${ themeKeys[systemThemes.light].background } 0%, ${ themeKeys[systemThemes.dark].background } 48%)`;
         cssProps.color = "#ffffff";
-        cssProps.border = `1px solid ${ preferences.theming.themes.keys[preferences.theming.themes.systemThemes.light].subdue }`;
+        cssProps.border = `1px solid ${ themeKeys[systemThemes.light].subdue }`;
       } else {
         cssProps.display = "none";
       }
     } else {
-      const themeKey = t as keyof typeof preferences.theming.themes.keys;
-      const theme = preferences.theming.themes.keys[themeKey];
-      cssProps.background = theme.background;
-      cssProps.color = theme.text;
-      cssProps.border = `1px solid ${theme.subdue}`;
+      const theme = themeKeys[t as string];
+      if (theme) {
+        cssProps.background = theme.background;
+        cssProps.color = theme.text;
+        cssProps.border = `1px solid ${theme.subdue}`;
+      }
     };
-    
-    return cssProps;
-  }, [preferences, isRTL, profile, coverTheme]);
 
-  // Edge case where the value stored is auto, but the array doesn’t have it
+    return cssProps;
+  }, [themeKeys, systemThemes, isRTL, profile, coverTheme]);
+
+  // Edge case where the value stored is auto, but the array doesn't have it
   useEffect(() => {
     if (theme === "auto" && !themeItems.current.includes(theme)) {
       updatePreference(themeItems.current[0]);
@@ -147,14 +151,14 @@ export const StatefulTheme = () => {
       onChange={ async (val) => await updatePreference(val as ThemeKeyType) }
       useGraphicalNavigation={ false }
     >
-      <div 
+      <div
         ref={ radioGroupWrapperRef }
-        className={ classNames(settingsStyles.radioWrapper, settingsStyles.themesWrapper) 
+        className={ classNames(settingsStyles.radioWrapper, settingsStyles.themesWrapper)
       }>
-        { themeItems.current.map(( themeItem ) => 
+        { themeItems.current.map(( themeItem ) =>
           <Radio
             className={ classNames(
-              settingsStyles.radio, 
+              settingsStyles.radio,
               settingsStyles.themeRadio
             ) }
             value={ themeItem }

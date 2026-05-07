@@ -4,18 +4,21 @@ import { useCallback } from "react";
 
 import { ThSettingsRangeVariant } from "@/preferences";
 
-import { ThAudioKeys } from "@/preferences/models";
+import { ThActionsKeys, ThAudioKeys } from "@/preferences/models";
 
 import { StatefulNumberField } from "../../Settings/StatefulNumberField";
 import { StatefulSlider } from "../../Settings/StatefulSlider";
+import { StatefulSliderWithPresets } from "../../Settings/StatefulSliderWithPresets";
 
 import { useNavigator } from "@/core/Navigator/hooks";
 import { usePlaceholder } from "../../Settings/hooks/usePlaceholder";
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
+import { setActionOpen } from "@/lib";
 import { setSkipBackwardInterval } from "@/lib/audioSettingsReducer";
+import { defaultAudioSkipBackwardInterval } from "@/preferences/models/audio";
 
 export interface StatefulAudioSkipBackwardIntervalProps {
   standalone?: boolean;
@@ -25,13 +28,13 @@ export const StatefulAudioSkipBackwardInterval = ({
   standalone = true
 }: StatefulAudioSkipBackwardIntervalProps) => {
   const { t } = useI18n();
-  const { preferences } = usePreferences();
+  const { preferences } = useAudioPreferences();
 
   const skipBackwardInterval = useAppSelector(state => state.audioSettings.skipBackwardInterval);
   const dispatch = useAppDispatch();
   const { submitPreferences, getSetting } = useNavigator().media;
 
-  const config = preferences.audio.keys[ThAudioKeys.skipBackwardInterval];
+  const config = preferences.settings.keys[ThAudioKeys.skipBackwardInterval] ?? defaultAudioSkipBackwardInterval;
 
   const skipBackwardIntervalRangeConfig = {
     variant: config.variant,
@@ -49,12 +52,11 @@ export const StatefulAudioSkipBackwardInterval = ({
     dispatch(setSkipBackwardInterval(effectiveSkipBackwardInterval));
   }, [submitPreferences, getSetting, dispatch]);
 
-  return (
-    <>
-    { skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.numberField 
-      ? <StatefulNumberField
+  if (skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.numberField) {
+    return (
+      <StatefulNumberField
         standalone={ standalone }
-        label={ t("audio.settings.skipBackwardInterval") }
+        label={ t("reader.playback.preferences.audio.skipBackwardInterval") }
         placeholder={ placeholderText }
         defaultValue={ undefined }
         value={ skipBackwardInterval ?? undefined }
@@ -70,18 +72,38 @@ export const StatefulAudioSkipBackwardInterval = ({
         isWheelDisabled={ true }
         isVirtualKeyboardDisabled={ true }
       />
-      : <StatefulSlider
-        standalone={ standalone}
-        displayTicks={ skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.incrementedSlider }
-        label={ t("audio.settings.skipBackwardInterval") }
+    );
+  }
+
+  if (skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.sliderWithPresets) {
+    return (
+      <StatefulSliderWithPresets
+        standalone={ standalone }
+        label={ t("reader.playback.preferences.audio.skipBackwardInterval") }
         placeholder={ placeholderText }
-        defaultValue={ undefined }
+        presets={ config.presets || [] }
+        formatOptions={{ style: "unit", unit: "second" }}
+        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
         value={ skipBackwardInterval ?? undefined }
         onChange={ updatePreference }
         range={ skipBackwardIntervalRangeConfig.range }
         step={ skipBackwardIntervalRangeConfig.step }
       />
-    }
-    </>
+    );
+  }
+
+  return (
+    <StatefulSlider
+      standalone={ standalone }
+      displayTicks={ skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.incrementedSlider }
+      label={ t("reader.playback.preferences.audio.skipBackwardInterval") }
+      placeholder={ placeholderText }
+      defaultValue={ undefined }
+      value={ skipBackwardInterval ?? undefined }
+      onChange={ updatePreference }
+      range={ skipBackwardIntervalRangeConfig.range }
+      step={ skipBackwardIntervalRangeConfig.step }
+      formatOptions={{ style: "unit", unit: "second" }}
+    />
   );
 };

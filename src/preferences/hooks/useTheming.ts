@@ -194,16 +194,19 @@ export const useTheming = <T extends string>({
     updateThemeColorMetaTag(coverThemeTokens.background);
   }, [coverThemeTokens, theme, updateThemeColorMetaTag]);
 
+  const themeResolved = autoThemeSource !== "cover" || !coverUrl || !!coverThemeTokens || coverThemeFailed;
+
   return {
     inferThemeAuto,
-    theme, 
+    theme,
     breakpoints,
     colorScheme,
-    contrast, 
-    forcedColors, 
-    monochrome, 
-    reducedMotion, 
+    contrast,
+    forcedColors,
+    monochrome,
+    reducedMotion,
     reducedTransparency,
-    coverThemeTokens
+    coverThemeTokens,
+    themeResolved
   }
 }

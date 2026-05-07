@@ -6,7 +6,7 @@ import { UnstableShortcut, UnstableShortcutRepresentation, buildShortcut, metaKe
 
 import { Keyboard } from "react-aria-components";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
 import { useAppSelector } from "@/lib/hooks";
 
@@ -16,11 +16,11 @@ export const UnstableStatefulShortcut = ({
   representation,
   joiner
 }: UnstableShortcut) => {
-  const { preferences } = usePreferences();
+  const { shortcuts } = useSharedPreferences();
   const platformModifier = useAppSelector(state => state.reader.platformModifier);
 
-  representation = representation ? representation : preferences.shortcuts.representation || UnstableShortcutRepresentation.symbol;
-  joiner = joiner ? joiner : preferences.shortcuts.joiner || " + ";
+  representation = representation ? representation : shortcuts.representation || UnstableShortcutRepresentation.symbol;
+  joiner = joiner ? joiner : (shortcuts.joiner || " + ");
 
   const shortcutObj = buildShortcut(rawForm);
 

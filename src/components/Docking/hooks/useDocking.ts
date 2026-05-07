@@ -11,12 +11,12 @@ import { dockAction, setActionOpen } from "@/lib/actionsReducer";
 
 import { usePrevious } from "@/core/Hooks/usePrevious";
 import { useActions } from "@/core/Components/Actions/hooks/useActions";
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 
 let dockingMap: Required<BreakpointsMap<ThDockingTypes>> | null = null;
 
 export const useDocking = <T extends string>(key: T) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const breakpoint = useAppSelector(state => state.theming.breakpoint);
   const actionsMap = useAppSelector(state => state.actions.keys);
   const actionState = actionsMap[key];
@@ -35,14 +35,14 @@ export const useDocking = <T extends string>(key: T) => {
   const currentDockConfig = breakpoint && dockingMap[breakpoint];
   
   // Use type assertion to tell TypeScript that the key is valid
-  const dockablePref = (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.docked?.dockable || ThDockingTypes.none;
-  
-  const defaultSheet = (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.sheet?.defaultSheet || ThSheetTypes.popover;
-  
+  const dockablePref = (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.docked?.dockable || ThDockingTypes.none;
+
+  const defaultSheet = (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.sheet?.defaultSheet || ThSheetTypes.popover;
+
   const sheetMap = makeBreakpointsMap<ThSheetTypes>({
-    defaultValue: (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.sheet?.defaultSheet || ThSheetTypes.popover,
+    defaultValue: (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.sheet?.defaultSheet || ThSheetTypes.popover,
     fromEnum: ThSheetTypes,
-    pref: (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.sheet?.breakpoints
+    pref: (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.sheet?.breakpoints
   });
   const sheetPref = breakpoint && sheetMap[breakpoint] || defaultSheet;
 

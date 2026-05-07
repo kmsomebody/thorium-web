@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ThStoreProvider } from "@/lib/ThStoreProvider";
-import { ThPreferencesProvider } from "@/preferences/ThPreferencesProvider";
-import { ThI18nProvider } from "@/i18n/ThI18nProvider";
 
 import "./reset.css";
 
@@ -25,11 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={ inter.className }>
         <ThStoreProvider>
-          <ThPreferencesProvider devMode={ process.env.NODE_ENV !== "production" }>
-            <ThI18nProvider>
-              { children }
-            </ThI18nProvider>
-          </ThPreferencesProvider>
+          { children }
         </ThStoreProvider>
       </body>
     </html>

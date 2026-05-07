@@ -86,15 +86,15 @@ export const resolveContentProtectionConfig = (
     protectCopy: contentProtection.protectCopy,
     disableContextMenu: contentProtection.disableContextMenu,
     disableDragAndDrop: contentProtection.disableDragAndDrop,
-    protectPrinting: contentProtection.protectPrinting ? {
-      disable: contentProtection.protectPrinting.disable,
+    protectPrinting: contentProtection.protectPrinting?.disable ? {
+      disable: true,
       watermark: resolvedWatermark
     } : undefined,
     disableSelectAll: contentProtection.disableSelectAll,
     disableSave: contentProtection.disableSave,
     monitorDevTools: contentProtection.monitorDevTools
   };
-  
+
   return resolved;
 };
 
@@ -132,8 +132,8 @@ export const resolveAudioContentProtectionConfig = (
     protectCopy: contentProtection.protectCopy,
     disableContextMenu: contentProtection.disableContextMenu,
     disableDragAndDrop: contentProtection.disableDragAndDrop,
-    protectPrinting: contentProtection.protectPrinting ? {
-      disable: contentProtection.protectPrinting.disable,
+    protectPrinting: contentProtection.protectPrinting?.disable ? {
+      disable: true,
       watermark: resolvedWatermark
     } : undefined,
     disableSelectAll: contentProtection.disableSelectAll,

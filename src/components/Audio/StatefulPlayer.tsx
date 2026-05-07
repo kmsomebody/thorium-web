@@ -18,15 +18,15 @@ import { PositionStorage } from "../Reader/StatefulReaderWrapper";
 import { ThLayoutUI, ThAudioPlayerComponent } from "@/preferences/models";
 
 import { StatefulDockingWrapper } from "../Docking/StatefulDockingWrapper";
-import { StatefulReaderHeader } from "../StatefulReaderHeader";
+import { StatefulPlayerHeader } from "./StatefulPlayerHeader";
 
 import { StatefulAudioCover } from "./StatefulAudioCover";
+import { StatefulAudioMetadata } from "./StatefulAudioMetadata";
 import { StatefulAudioPlaybackControls } from "./controls/StatefulAudioPlaybackControls";
-import { StatefulAudioMediaControls } from "./controls/StatefulAudioMediaControls";
+import { StatefulAudioMediaActions } from "./actions/StatefulAudioMediaActions";
 import { StatefulAudioProgressBar } from "./controls/StatefulAudioProgressBar";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
-import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";
+import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useAudioNavigator } from "@/core/Hooks/Audio/useAudioNavigator";
 import { useAudioSettingsCache } from "@/core/Hooks/Audio/useAudioSettingsCache";
 import { useI18n } from "@/i18n/useI18n";
@@ -82,17 +82,14 @@ export const StatefulPlayer = ({
   }
 
   return (
-    <>
-      <ThPluginProvider>
-        <StatefulPlayerInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverUrl } />
-      </ThPluginProvider>
-    </>
+    <ThPluginProvider>
+      <StatefulPlayerInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverUrl } />
+    </ThPluginProvider>
   );
 };
 
 const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, coverUrl }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage; coverUrl?: string }) => {
-  const { preferences } = usePreferences();
-  const { audioActionKeys } = usePreferenceKeys();
+  const { preferences } = useAudioPreferences();
   const { t } = useI18n();
 
   const volume = useAppSelector(state => state.audioSettings.volume);
@@ -100,6 +97,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   const preservePitch = useAppSelector(state => state.audioSettings.preservePitch);
   const skipBackwardInterval = useAppSelector(state => state.audioSettings.skipBackwardInterval);
   const skipForwardInterval = useAppSelector(state => state.audioSettings.skipForwardInterval);
+  const skipInterval = useAppSelector(state => state.audioSettings.skipInterval);
   const pollInterval = useAppSelector(state => state.audioSettings.pollInterval);
   const autoPlay = useAppSelector(state => state.audioSettings.autoPlay);
   const enableMediaSession = useAppSelector(state => state.audioSettings.enableMediaSession);
@@ -110,6 +108,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     preservePitch,
     skipBackwardInterval,
     skipForwardInterval,
+    skipInterval,
     pollInterval,
     autoPlay,
     enableMediaSession
@@ -205,24 +204,26 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     listeners,
     preferences,
     cache,
-    contentProtectionConfig: resolveAudioContentProtectionConfig(preferences.audioContentProtection, t),
+    contentProtectionConfig: resolveAudioContentProtectionConfig(preferences.contentProtection, t),
     onNavigatorLoaded: () => dispatch(setLoading(false)),
   });
 
-  const playerOrder = preferences.theming.layout.audio.order;
+  const playerOrder = preferences.theming.layout.order;
 
   const renderPlayerComponent = useCallback((component: ThAudioPlayerComponent) => {
     switch (component) {
       case ThAudioPlayerComponent.cover:
         return <StatefulAudioCover key={ component } coverUrl={ coverUrl } title={ publication?.metadata?.title?.getTranslation("en") } />;
+      case ThAudioPlayerComponent.metadata:
+        return publication ? <StatefulAudioMetadata key={ component } publication={ publication } /> : null;
       case ThAudioPlayerComponent.playbackControls:
         return <StatefulAudioPlaybackControls key={ component } />;
       case ThAudioPlayerComponent.progressBar:
-        return <StatefulAudioProgressBar key={ component } currentChapter={ timeline?.progression?.currentChapter || t("reader.app.progression.referenceFallback") } />;
-      case ThAudioPlayerComponent.mediaControls:
-        return <StatefulAudioMediaControls key={ component } />;
+        return <StatefulAudioProgressBar key={ component } currentChapter={ timeline?.progression?.currentChapter } />;
+      case ThAudioPlayerComponent.mediaActions:
+        return <StatefulAudioMediaActions key={ component } />;
     }
-  }, [coverUrl, publication, timeline, t]);
+  }, [coverUrl, publication, timeline]);
 
   return (
     <>
@@ -231,17 +232,16 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       <main className={ readerStyles.main }>
         <StatefulDockingWrapper>
           <div className={ getReaderClassNames({
-            layoutUI: preferences.theming.layout?.ui?.audio || ThLayoutUI.stacked,
+            layoutUI: preferences.theming.layout?.ui || ThLayoutUI.stacked,
             isScroll: false,
             isImmersive,
             isHovering,
             isFXL: false,
           })}>
-            <StatefulReaderHeader
-              actionKeys={ audioActionKeys }
-              actionsOrder={ preferences.actions.audioOrder }
-              layout={ preferences.theming.layout?.ui?.audio || ThLayoutUI.stacked }
-              runningHeadFormatPref={ preferences.theming.header?.runningHead?.format?.audio }
+            <StatefulPlayerHeader
+              actionKeys={ preferences.actions.secondary.displayOrder as string[] }
+              actionsOrder={ preferences.actions.secondary.displayOrder as string[] }
+              layout={ preferences.theming.layout?.ui || ThLayoutUI.stacked }
             />
 
             <article className={ audioStyles.audioPlayerWrapper } aria-label={ t("reader.app.publicationWrapper") }>

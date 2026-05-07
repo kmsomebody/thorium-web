@@ -143,6 +143,34 @@ interface ThSliderProps extends Omit<SliderProps, "minValue" | "maxValue"> {
 - Accessibility support
 - Reset functionality
 
+## ThSliderWithPresets
+
+A slider combined with a set of preset radio buttons, keeping both controls in sync.
+
+### Props
+
+```typescript
+interface ThSliderWithPresetsProps extends Omit<ThSliderProps, "compounds"> {
+  presets: number[];                   // Preset values shown as radio buttons
+  formatValue?: (value: number) => string; // Optional formatter for preset labels
+  compounds?: {
+    wrapper?: HTMLAttributesWithRef<HTMLDivElement>;  // Outer wrapper (slider + presets)
+    slider?: ThSliderProps["compounds"];              // Compounds forwarded to ThSlider
+    presetsList?: Omit<RadioGroupProps, "value" | "onChange" | "children">; // RadioGroup wrapper
+    presetsWrapper?: HTMLAttributesWithRef<HTMLDivElement>; // Inner grid container for Radio items
+    preset?: RadioProps;               // Props for each preset Radio
+    presetLabel?: HTMLAttributesWithRef<HTMLSpanElement>;  // Props for each preset label
+  };
+}
+```
+
+### Features
+
+- Synchronizes slider value with preset radio selection
+- Preset radio deselects automatically when slider moves off a preset value
+- Inherits all `ThSlider` props (range, step, label, etc.) except `compounds`
+- Compound components pattern for full layout control
+
 ## ThSwitch
 
 A toggle switch component with optional heading and customizable indicator.

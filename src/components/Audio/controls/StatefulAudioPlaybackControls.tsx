@@ -1,12 +1,12 @@
 "use client";
 
-import audioStyles from "./assets/styles/thorium-web.audioControls.module.css";
+import audioStyles from "./assets/styles/thorium-web.audioPlayback.module.css";
 
-import { StatefulPreviousTrackButton } from "./playback/StatefulPreviousTrackButton";
-import { StatefulSkipBackwardButton } from "./playback/StatefulSkipBackwardButton";
-import { StatefulPlayPauseButton } from "./playback/StatefulPlayPauseButton";
-import { StatefulSkipForwardButton } from "./playback/StatefulSkipForwardButton";
-import { StatefulNextTrackButton } from "./playback/StatefulNextTrackButton";
+import { StatefulPreviousTrackButton } from "./StatefulPreviousTrackButton";
+import { StatefulSkipBackwardButton } from "./StatefulSkipBackwardButton";
+import { StatefulPlayPauseButton } from "./StatefulPlayPauseButton";
+import { StatefulSkipForwardButton } from "./StatefulSkipForwardButton";
+import { StatefulNextTrackButton } from "./StatefulNextTrackButton";
 
 import { ThActionsBar } from "@/core/Components/Actions/ThActionsBar";
 
