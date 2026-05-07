@@ -16,6 +16,7 @@ import {
 
 export interface ThFormNumberFieldProps extends NumberFieldProps {
   ref?: React.ForwardedRef<HTMLInputElement>;
+  onInputChange?: (rawValue: string) => void;
   label?: string;
   compounds?: {
     label?: WithRef<LabelProps, HTMLLabelElement>;
@@ -28,6 +29,7 @@ export interface ThFormNumberFieldProps extends NumberFieldProps {
 
 export const ThFormNumberField = ({
   ref,
+  onInputChange,
   label,
   compounds,
   children,
@@ -53,7 +55,10 @@ export const ThFormNumberField = ({
             </FieldError> 
           }
           
-          <Input {...compounds?.input } />
+          <Input
+            { ...compounds?.input }
+            onInput={ onInputChange ? (e) => onInputChange((e.target as HTMLInputElement).value) : undefined }
+          />
           
           { compounds?.description && <Text slot="description"> 
               { compounds?.description } 

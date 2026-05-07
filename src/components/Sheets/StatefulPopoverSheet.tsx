@@ -33,7 +33,8 @@ export const StatefulPopoverSheet = ({
     triggerRef,
     heading,
     headerVariant,
-    className, 
+    className,
+    headerClassName,
     isOpen,
     onOpenChange, 
     onClosePress,
@@ -97,9 +98,9 @@ export const StatefulPopoverSheet = ({
           }
         }}
       >
-        <ThContainerHeader 
+        <ThContainerHeader
           ref={ popoverHeaderRef }
-          className={ sheetStyles.header }
+          className={ classNames(sheetStyles.header, headerClassName) }
           label={ heading }
           compounds={{
             heading: {

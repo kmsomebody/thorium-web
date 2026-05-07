@@ -29,11 +29,13 @@ The `settings.keys` object configures each audio setting. `ThAudioKeys.volume` a
 
 `volume`, `playbackRate`, `skipInterval`, `skipBackwardInterval`, and `skipForwardInterval` accept a `ThSettingsRangePrefRequired` object:
 
-- `variant`: from enum `ThSettingsRangeVariant` (`slider`, `sliderWithPresets`, or `numberField`)
+- `variant`: from enum `ThSettingsRangeVariant` (`slider`, `incrementedSlider`, `sliderWithPresets`, `presetsGroup`, or `numberField`)
 - `range`: the min and max values, as `[number, number]`
 - `step`: the step value, as `number`
 - `placeholder` (optional): from enum `ThSettingsRangePlaceholder`, or a `string`, or an object with `key` and `fallback` properties
-- `presets` (optional, required for `sliderWithPresets`): array of preset values reachable within the configured `range` and `step`
+- `presets` (optional, required for `sliderWithPresets` and `presetsGroup`): array of preset values reachable within the configured `range` and `step`
+
+`presetsGroup` renders only the preset buttons without a slider, which is the default for `skipInterval`, `skipBackwardInterval`, and `skipForwardInterval`.
 
 For instance:
 
@@ -47,7 +49,7 @@ settings: {
       presets: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2]
     },
     [ThAudioKeys.skipInterval]: {
-      variant: ThSettingsRangeVariant.sliderWithPresets,
+      variant: ThSettingsRangeVariant.presetsGroup,
       range: [5, 60],
       step: 5,
       presets: [5, 10, 30]
@@ -66,11 +68,13 @@ settings: {
 - `ThSettingsTimerVariant.presetList`: displays a list of preset durations (in minutes)
 - `ThSettingsTimerVariant.durationField`: displays a duration input field with an optional `maxHours` cap
 
+The `presets` array accepts numbers (minutes) or the special `"endOfResource"` string, which pauses playback at the end of the current track.
+
 ```typescript
 // Preset list
 [ThAudioKeys.sleepTimer]: {
   variant: ThSettingsTimerVariant.presetList,
-  presets: [15, 30, 45, 60, 90]
+  presets: [15, 30, 45, 60, 90, "endOfResource"]
 }
 
 // Duration field
@@ -80,28 +84,3 @@ settings: {
 }
 ```
 
-## Player Layout Order
-
-The `theming.layout.order` array controls which player components are rendered and in what order. Values come from enum `ThAudioPlayerComponent`:
-
-- `cover`: the cover image
-- `metadata`: title and author
-- `progressBar`: the seekable progress bar
-- `playbackControls`: previous, skip backward, play/pause, skip forward, next
-- `mediaActions`: the primary actions bar (volume, playback rate, and other primary actions)
-
-```typescript
-import { ThAudioPlayerComponent } from "@edrlab/thorium-web/audio";
-
-theming: {
-  layout: {
-    order: [
-      ThAudioPlayerComponent.cover,
-      ThAudioPlayerComponent.metadata,
-      ThAudioPlayerComponent.progressBar,
-      ThAudioPlayerComponent.playbackControls,
-      ThAudioPlayerComponent.mediaActions
-    ]
-  }
-}
-```

@@ -2,11 +2,11 @@
 
 import audioStyles from "./assets/styles/thorium-web.audioPlayback.module.css";
 
-import { StatefulPreviousTrackButton } from "./StatefulPreviousTrackButton";
+import { StatefulPreviousButton } from "./StatefulPreviousButton";
 import { StatefulSkipBackwardButton } from "./StatefulSkipBackwardButton";
 import { StatefulPlayPauseButton } from "./StatefulPlayPauseButton";
 import { StatefulSkipForwardButton } from "./StatefulSkipForwardButton";
-import { StatefulNextTrackButton } from "./StatefulNextTrackButton";
+import { StatefulNextButton } from "./StatefulNextButton";
 
 import { ThActionsBar } from "@/core/Components/Actions/ThActionsBar";
 
@@ -20,11 +20,11 @@ export const StatefulAudioPlaybackControls = () => {
 
   return (
     <ThActionsBar className={ audioStyles.audioControls } aria-label={ t("audio.player.controls") }>
-      <StatefulPreviousTrackButton isDisabled={ !isTrackReady || isStalled } />
+      <StatefulPreviousButton isDisabled={ !isTrackReady || isStalled } />
       <StatefulSkipBackwardButton isDisabled={ !isTrackReady || isStalled } />
       <StatefulPlayPauseButton isDisabled={ !isTrackReady || isStalled } />
       <StatefulSkipForwardButton isDisabled={ !isTrackReady || isStalled } />
-      <StatefulNextTrackButton isDisabled={ !isTrackReady || isStalled } />
+      <StatefulNextButton isDisabled={ !isTrackReady || isStalled } />
     </ThActionsBar>
   );
 };

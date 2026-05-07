@@ -9,9 +9,11 @@ import { ThActionsKeys, ThAudioKeys } from "@/preferences/models";
 import { StatefulNumberField } from "../../Settings/StatefulNumberField";
 import { StatefulSlider } from "../../Settings/StatefulSlider";
 import { StatefulSliderWithPresets } from "../../Settings/StatefulSliderWithPresets";
+import { StatefulPresetsGroup } from "../../Settings/StatefulPresetsGroup";
 
 import { useNavigator } from "@/core/Navigator/hooks";
 import { usePlaceholder } from "../../Settings/hooks/usePlaceholder";
+import { useEffectiveRange } from "../../Settings/hooks/useEffectiveRange";
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
@@ -32,14 +34,16 @@ export const StatefulAudioSkipBackwardInterval = ({
 
   const skipBackwardInterval = useAppSelector(state => state.audioSettings.skipBackwardInterval);
   const dispatch = useAppDispatch();
-  const { submitPreferences, getSetting } = useNavigator().media;
+  const { submitPreferences, getSetting, preferencesEditor } = useNavigator().media;
 
   const config = preferences.settings.keys[ThAudioKeys.skipBackwardInterval] ?? defaultAudioSkipBackwardInterval;
+
+  const { range, presets } = useEffectiveRange(config.range, preferencesEditor?.skipBackwardInterval?.supportedRange, config.presets);
 
   const skipBackwardIntervalRangeConfig = {
     variant: config.variant,
     placeholder: config.placeholder,
-    range: config.range,
+    range,
     step: config.step
   };
 
@@ -75,13 +79,27 @@ export const StatefulAudioSkipBackwardInterval = ({
     );
   }
 
+  if (skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.presetsGroup) {
+    return (
+      <StatefulPresetsGroup
+        standalone={ standalone }
+        label={ t("reader.playback.preferences.audio.skipBackwardInterval") }
+        presets={ presets || [] }
+        formatOptions={{ style: "unit", unit: "second" }}
+        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
+        value={ skipBackwardInterval ?? undefined }
+        onChange={ (v) => updatePreference(v) }
+      />
+    );
+  }
+
   if (skipBackwardIntervalRangeConfig.variant === ThSettingsRangeVariant.sliderWithPresets) {
     return (
       <StatefulSliderWithPresets
         standalone={ standalone }
         label={ t("reader.playback.preferences.audio.skipBackwardInterval") }
         placeholder={ placeholderText }
-        presets={ config.presets || [] }
+        presets={ presets || [] }
         formatOptions={{ style: "unit", unit: "second" }}
         onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
         value={ skipBackwardInterval ?? undefined }

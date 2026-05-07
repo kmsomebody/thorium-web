@@ -170,3 +170,7 @@ interface PositionStorage {
 - **Redux State Management**: Integrates with Thorium's Redux store for theme, publication, and settings state
 - **Accessibility**: Manages breakpoints, color schemes, contrast, and motion preferences
 - **Position Storage**: Optional interface for overriding the built-in position persistence
+
+## Hooks
+
+See the [Reader Hooks](./Hooks.md) reference for the full API.

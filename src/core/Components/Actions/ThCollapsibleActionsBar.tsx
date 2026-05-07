@@ -13,6 +13,7 @@ export interface ThCollapsibleActionsBarProps extends ThActionsBarProps {
   items: ThActionEntry<string>[];
   prefs: CollapsiblePref;
   breakpoint?: string;
+  targetPlacement?: "top" | "bottom";
   children?: never;
   compounds?: {
     menu: THMenuProps<string> | React.ReactElement<typeof ThMenu>;
@@ -25,6 +26,7 @@ export const ThCollapsibleActionsBar = ({
   items,
   prefs,
   breakpoint,
+  targetPlacement = "bottom",
   compounds,
   ...props
 }: ThCollapsibleActionsBarProps) => {
@@ -45,7 +47,7 @@ export const ThCollapsibleActionsBar = ({
               { ...(associatedKey ? { associatedKey: associatedKey } : {}) } 
               { ...props }
             />
-            { Target && <Target key={ `${ key }-container` } triggerRef={ resolvedRef } /> }
+            { Target && <Target key={ `${ key }-container` } triggerRef={ resolvedRef } placement={ targetPlacement } /> }
           </Fragment>
         ) 
       }

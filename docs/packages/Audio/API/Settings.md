@@ -26,7 +26,7 @@ interface StatefulAudioSkipIntervalProps {
 }
 ```
 
-Renders as a slider, slider with presets, or number field depending on `settings.keys.skipInterval.variant`. Updates both `skipForwardInterval` and `skipBackwardInterval` in Redux simultaneously.
+Renders as a preset group, slider with presets, slider, or number field depending on `settings.keys.skipInterval.variant`. Defaults to `presetsGroup`. Updates both `skipForwardInterval` and `skipBackwardInterval` in Redux simultaneously.
 
 > [!NOTE]
 > Use either `StatefulAudioSkipInterval` **or** the pair `StatefulAudioSkipBackwardInterval` + `StatefulAudioSkipForwardInterval` — not both. Including both in `settings.order` will trigger a console warning from `createAudioPreferences`.
@@ -41,7 +41,7 @@ interface StatefulAudioSkipBackwardIntervalProps {
 }
 ```
 
-Renders based on `settings.keys.skipBackwardInterval.variant`. Updates only `skipBackwardInterval` in Redux.
+Renders based on `settings.keys.skipBackwardInterval.variant`. Defaults to `presetsGroup`. Updates only `skipBackwardInterval` in Redux.
 
 ## StatefulAudioSkipForwardInterval
 
@@ -53,7 +53,7 @@ interface StatefulAudioSkipForwardIntervalProps {
 }
 ```
 
-Renders based on `settings.keys.skipForwardInterval.variant`. Updates only `skipForwardInterval` in Redux.
+Renders based on `settings.keys.skipForwardInterval.variant`. Defaults to `presetsGroup`. Updates only `skipForwardInterval` in Redux.
 
 ## Common Features
 

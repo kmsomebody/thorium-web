@@ -58,6 +58,8 @@ This document outlines the available styling classes and custom properties for t
 ### Sheet Types
 
 - `.thorium_web_sheets_fullscreen` - Fullscreen sheet
+- `.thorium_web_sheets_modal` - Centered modal sheet
+- `.thorium_web_sheets_modalDialog` - Inner dialog container of the modal sheet
 - `.thorium_web_sheets_popover` - Popover-style sheet
 - `.thorium_web_sheets_draggable` - Draggable bottom sheet
 - `.thorium_web_sheets_docked` - Docked sidesheet
@@ -112,6 +114,8 @@ This document outlines the available styling classes and custom properties for t
 - `.thorium_web_reader_app_srOnly` - Screen reader only text
 
 ### Header & Footer
+
+> These classes apply to Epub/WebPub readers only. For audio, see [Audio App Structure](#audio-app-structure).
 
 - `.thorium_web_reader_app_topBar` - Top navigation bar
 - `.thorium_web_reader_app_bottomBar` - Bottom navigation bar
@@ -199,15 +203,27 @@ This document outlines the available styling classes and custom properties for t
 
 ## Audio Components
 
+### App Structure
+
+- `.thorium_web_audio_app_main` - Root container for the audio player application. Applied to the `<main>` element
+- `.thorium_web_audio_app_shell` - Inner shell container, found within the docking wrapper
+- `.thorium_web_audio_app_topBar` - Top navigation bar
+
 ### Player
 
-- `.thorium_web_audioPlayer_audioPlayerWrapper` - Root wrapper for the audio player
+- `.thorium_web_audioPlayer_audioPlayerWrapper` - Root wrapper for the audio player in compact (single-column) layout
+- `.thorium_web_audioPlayer_audioPlayerWrapperExpanded` - Root wrapper for the audio player in expanded (two-column) layout, activated when compact overflows
+- `.thorium_web_audioPlayer_audioPlayerExpandedStart` - Inline-start column in the expanded layout
+- `.thorium_web_audioPlayer_audioPlayerExpandedEnd` - Inline-end column in the expanded layout
+- `.thorium_web_audioPlayer_coverMetadataGroup` - Flex group wrapping cover and metadata when they are adjacent in the compact player order
 
 ### Cover
 
-- `.thorium_web_audioCover_audioCoverSection` - Cover image section container
+- `.thorium_web_audioCover_audioCoverSection` - Cover figure; grows to fill remaining player space and constrains itself to a 1:1 aspect ratio
 - `.thorium_web_audioCover_audioCoverImage` - Cover image element
 - `.thorium_web_audioCover_audioCoverPlaceholder` - Placeholder shown when no cover is available
+- `.thorium_web_audioCover_audioCoverSyncOverlay` - Overlay shown on top of the cover image when the track is not ready or stalled
+- `.thorium_web_audioCover_audioCoverSyncIcon` - Spinning sync icon shown inside the overlay (or replacing the placeholder icon) when the track is not ready or stalled
 
 ### Metadata
 

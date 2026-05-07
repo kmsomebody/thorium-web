@@ -190,6 +190,7 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       constraints: {
         [ThSheetTypes.bottomSheet]: 600, // Max-width of all bottom sheets
         [ThSheetTypes.popover]: 600, // Max-width of all popover sheets
+        [ThSheetTypes.modal]: 600, // Max-width of all modal sheets
         pagination: 1024, // Max-width of pagination component
         dropdown: 250 // Max-height of main UI dropdowns
       }

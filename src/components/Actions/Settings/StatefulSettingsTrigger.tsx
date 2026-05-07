@@ -37,19 +37,19 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
 
   return(
     <>
-    { (variant && variant === ThActionsTriggerVariant.menu) 
-      ? <StatefulOverflowMenuItem 
-          label={ t("reader.preferences.title") }
+    { (variant && variant === ThActionsTriggerVariant.menu)
+      ? <StatefulOverflowMenuItem
+          label={ isAudio ? t("reader.playback.preferences.audio.title") : t("reader.preferences.title") }
           SVGIcon={ isAudio ? TuneIcon : LetterIcon }
-          shortcut={ preferences.actionsKeys[ThActionsKeys.settings].shortcut } 
+          shortcut={ preferences.actionsKeys[ThActionsKeys.settings].shortcut }
           id={ ThActionsKeys.settings }
           onAction={ () => setOpen(!actionState?.isOpen) }
         />
-      : <StatefulActionIcon 
+      : <StatefulActionIcon
           visibility={ preferences.actionsKeys[ThActionsKeys.settings].visibility }
-          aria-label={ t("reader.preferences.title") }
-          placement="bottom" 
-          tooltipLabel={ t("reader.preferences.title") } 
+          aria-label={ isAudio ? t("reader.playback.preferences.audio.title") : t("reader.preferences.title") }
+          placement="bottom"
+          tooltipLabel={ isAudio ? t("reader.playback.preferences.audio.title") : t("reader.preferences.title") }
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           { isAudio 

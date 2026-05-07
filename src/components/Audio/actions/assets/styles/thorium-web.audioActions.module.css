@@ -6,6 +6,12 @@
   --audio-icon-base: var(--th-icon-size, 24px);
 }
 
+@container (max-width: 300px) {
+  .audioMediaActions {
+    --th-icon-size: 18px;
+  }
+}
+
 .audioVolumeButton,
 .audioPlaybackRateButton,
 .audioSleepTimerButton,
@@ -15,6 +21,7 @@
 }
 
 .audioPlaybackRateButton {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,7 +36,18 @@
   color: var(--th-theme-disable);
 }
 
-.audioPlaybackRateLabel {
+.audioPlaybackRateButton:has(.audioPlaybackRateLabel),
+.audioSleepTimerButton:has(.audioSleepTimerLabel) {
+  padding-bottom: calc(var(--th-icon-size) * (2/3));
+}
+
+.audioPlaybackRateLabel,
+.audioSleepTimerLabel {
+  position: absolute;
+  bottom: calc(var(--th-icon-size) * (1/4));
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
   line-height: 1;
   font-size: calc(var(--th-icon-size, 24px) * (5/12));
   font-variant-numeric: tabular-nums;
@@ -37,27 +55,18 @@
 }
 
 .audioControlPopover {
-  background-color: var(--th-theme-background);
-  color: var(--th-theme-text);
-  border: 1px solid var(--th-theme-subdue);
-  border-radius: var(--th-layout-radius);
-  filter: drop-shadow(var(--th-theme-elevate));
-  padding: var(--th-layout-spacing);
+  /* Override the default popover width — audio controls are more compact */
+  width: auto;
 }
 
-.audioControlPopoverDialog {
-  outline: none;
-}
-
-.audioControlPopoverHeading {
-  font-weight: bold;
-  font-size: 1rem;
-  margin: 0 0 calc(var(--th-layout-spacing) / 2) 0;
+.audioControlPopoverHeader {
+  border-bottom: none;
 }
 
 /* Sleep timer */
 
 .audioSleepTimerButton {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,12 +81,6 @@
   color: var(--th-theme-disable);
 }
 
-.audioSleepTimerLabel {
-  line-height: 1;
-  font-size: calc(var(--th-icon-size, 24px) * (5/12));
-  font-variant-numeric: tabular-nums;
-  font-weight: bold;
-}
 
 .audioSleepTimerListbox {
   display: flex;
@@ -188,10 +191,7 @@
 
 .audioVolumeSliderTrack {
   position: relative;
-  height: 150px;
-  width: 30px;
   box-sizing: border-box;
-  margin-block: calc(1.25rem / 2);
 }
 
 .audioVolumeSliderTrack::before {
@@ -199,15 +199,57 @@
   display: block;
   position: absolute;
   background: var(--th-theme-subdue);
+}
+
+.audioVolumeSlider[data-disabled] .audioVolumeSliderTrack::before {
+  background: var(--th-theme-disable);
+}
+
+/* Vertical */
+
+.audioVolumeSlider[data-orientation="vertical"] .audioVolumeSliderTrack {
+  height: 150px;
+  width: 30px;
+  margin-block: calc(1.25rem / 2);
+}
+
+.audioVolumeSlider[data-orientation="vertical"] .audioVolumeSliderTrack::before {
   width: 3px;
   height: 100%;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.audioVolumeSlider[data-disabled] .audioVolumeSliderTrack::before {
-  background: var(--th-theme-disable);
+.audioVolumeSlider[data-orientation="vertical"] .audioVolumeSliderThumb {
+  left: 50%;
+  transform: translateX(-50%);
 }
+
+/* Horizontal */
+
+.audioVolumeSlider[data-orientation="horizontal"] {
+  max-width: 320px;
+  width: 100%;
+}
+
+.audioVolumeSlider[data-orientation="horizontal"] .audioVolumeSliderTrack {
+  width: 100%;
+  height: 30px;
+}
+
+.audioVolumeSlider[data-orientation="horizontal"] .audioVolumeSliderTrack::before {
+  height: 3px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.audioVolumeSlider[data-orientation="horizontal"] .audioVolumeSliderThumb {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Thumb shared */
 
 .audioVolumeSliderThumb {
   width: 1.25rem;
@@ -215,8 +257,6 @@
   border-radius: 50%;
   background: var(--th-theme-text);
   border: 2px solid var(--th-theme-subdue);
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .audioVolumeSlider[data-disabled] .audioVolumeSliderThumb {
@@ -247,16 +287,3 @@
   justify-content: center;
 }
 
-/* TOC popover */
-
-.audioTocContent {
-  width: 280px;
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--th-layout-spacing) / 2);
-}
-
-.audioTocTree {
-  max-height: 360px;
-  overflow-y: auto;
-}

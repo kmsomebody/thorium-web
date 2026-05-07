@@ -7,18 +7,21 @@ import {
   ThAudioActionKeys,
   ThAudioKeys,
   ThAudioPlayerComponent,
+  ThAudioProgressBarVariant,
+  ThAudioPublicationMetadataComponent,
   ThBreakpoints,
   ThDockingKeys,
-  ThDockingTypes,
-  ThLayoutUI,
   ThSheetTypes,
   ThThemeKeys,
   ThBackLinkVariant,
   lightTheme,
   darkTheme,
   defaultSettingsAction,
+  defaultAudioVolumeAction,
+  defaultAudioPlaybackRateAction,
   defaultAudioTocAction,
   defaultAudioSleepTimerAction,
+  defaultAudioRemotePlaybackAction,
   defaultAudioContentProtectionConfig,
   defaultAudioVolume,
   defaultAudioPlaybackRate,
@@ -26,7 +29,7 @@ import {
   defaultAudioSkipForwardInterval,
   defaultAudioSleepTimer,
 } from "./models";
-import { createAudioPreferences, ThAudioPreferences, AudioDefaultKeys } from "./audioPreferences";
+import { createAudioPreferences, ThAudioPreferences, AudioDefaultKeys, ThAudioAffordance } from "./audioPreferences";
 
 export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
   createAudioPreferences<AudioDefaultKeys>({
@@ -43,16 +46,36 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
         tooltipOffset: 10
       },
       layout: {
-        ui: ThLayoutUI.stacked,
-        order: [
-          ThAudioPlayerComponent.cover,
-          ThAudioPlayerComponent.metadata,
-          ThAudioPlayerComponent.playbackControls,
-          ThAudioPlayerComponent.progressBar,
-          ThAudioPlayerComponent.mediaActions
-        ],
+        compact: {
+          order: [
+            ThAudioPlayerComponent.cover,
+            ThAudioPlayerComponent.metadata,
+            ThAudioPlayerComponent.playbackControls,
+            ThAudioPlayerComponent.progressBar,
+            ThAudioPlayerComponent.mediaActions
+          ]
+        },
+        expanded: {
+          start: [
+            ThAudioPlayerComponent.cover,
+            ThAudioPlayerComponent.metadata
+          ],
+          end: [
+            ThAudioPlayerComponent.playbackControls,
+            ThAudioPlayerComponent.progressBar,
+            ThAudioPlayerComponent.mediaActions
+          ]
+        },
+        publicationMetadata: {
+          order: [
+            ThAudioPublicationMetadataComponent.titleWithSubtitle
+          ]
+        },
         radius: 5,
         spacing: 20,
+        progressBar: {
+          variant: ThAudioProgressBarVariant.segmented
+        },
         defaults: {
           dockingWidth: 340,
           scrim: "rgba(0, 0, 0, 0.2)"
@@ -60,8 +83,8 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
         constraints: {
           [ThSheetTypes.bottomSheet]: 600,
           [ThSheetTypes.popover]: 600,
-          pagination: 1024,
-          dropdown: 250
+          [ThSheetTypes.modal]: 600,
+          cover: 300,
         }
       },
       breakpoints: {
@@ -95,10 +118,17 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
           ThAudioActionKeys.playbackRate,
           ThAudioActionKeys.toc,
           ThAudioActionKeys.sleepTimer
-        ]
+        ],
+        keys: {
+          [ThAudioActionKeys.volume]: defaultAudioVolumeAction,
+          [ThAudioActionKeys.playbackRate]: defaultAudioPlaybackRateAction,
+          [ThAudioActionKeys.toc]: defaultAudioTocAction,
+          [ThAudioActionKeys.sleepTimer]: defaultAudioSleepTimerAction,
+        }
       },
       secondary: {
         displayOrder: [
+          ThAudioActionKeys.remotePlayback,
           ThActionsKeys.settings
         ],
         collapse: {
@@ -106,9 +136,8 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
           [ThBreakpoints.medium]: 3
         },
         keys: {
+          [ThAudioActionKeys.remotePlayback]: defaultAudioRemotePlaybackAction,
           [ThActionsKeys.settings]: defaultSettingsAction,
-          [ThAudioActionKeys.toc]: defaultAudioTocAction,
-          [ThAudioActionKeys.sleepTimer]: defaultAudioSleepTimerAction
         }
       }
     },
@@ -131,6 +160,11 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
 
     contentProtection: defaultAudioContentProtectionConfig,
 
+    affordances: {
+      previous: ThAudioAffordance.toc,
+      next: ThAudioAffordance.toc
+    },
+
     shortcuts: {
       representation: UnstableShortcutRepresentation.symbol,
       joiner: "+"
@@ -142,8 +176,8 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
         ThDockingKeys.start,
         ThDockingKeys.end
       ],
-      // Audio secondary actions are all dockable:none — disable panels entirely
-      dock: false,
+      // Only toc is dockable; others have dockable:none so dock panels are TOC-only
+      dock: {},
       collapse: true,
       keys: {
         [ThDockingKeys.start]: { visibility: ThCollapsibilityVisibility.overflow, shortcut: null },

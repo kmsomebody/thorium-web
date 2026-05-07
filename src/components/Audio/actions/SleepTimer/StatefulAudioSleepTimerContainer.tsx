@@ -1,41 +1,38 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { Button, Dialog, Popover } from "react-aria-components";
+import { Button } from "react-aria-components";
 import { FocusScope } from "react-aria";
 
-import SnoozeIcon from "../assets/icons/snooze.svg";
-
 import { ThAudioActionKeys, ThAudioKeys, ThSettingsTimerVariant } from "@/preferences/models";
-import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
 import { ThNumberField } from "@/core/Components/Settings/ThNumberField";
 import { ThRadioGroup } from "@/core/Components/Settings/ThRadioGroup";
+import { StatefulActionContainerProps } from "../../../Actions/models/actions";
 
 import audioStyles from "../assets/styles/thorium-web.audioActions.module.css";
 
 import { useNavigator } from "@/core/Navigator";
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useI18n } from "@/i18n/useI18n";
+import { useDocking } from "../../../Docking/hooks/useDocking";
+import { StatefulSheetWrapper } from "@/components/Sheets/StatefulSheetWrapper";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { toggleActionOpen, setActionOpen } from "@/lib/actionsReducer";
+import { setActionOpen } from "@/lib/actionsReducer";
+import { setSleepTimerOnTrackEnd, setSleepTimerRemainingSeconds } from "@/lib/playerReducer";
 
-export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => {
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null);
+export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top" }: StatefulActionContainerProps) => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
 
   const isOpen = useAppSelector(state => state.actions.keys[ThAudioActionKeys.sleepTimer]?.isOpen ?? false);
+  const remainingSeconds = useAppSelector(state => state.player.sleepTimer.remainingSeconds);
+  const onTrackEnd = useAppSelector(state => state.player.sleepTimer.onTrackEnd);
+  const playerStatus = useAppSelector(state => state.player.status);
   const dispatch = useAppDispatch();
 
   const { t } = useI18n();
-
-  const formatBadge = (seconds: number): string => {
-    if (seconds < 60) return `${ seconds }${ t("audio.settings.sleepTimer.seconds") }`;
-    return `${ Math.ceil(seconds / 60) }${ t("audio.settings.sleepTimer.minutes") }`;
-  };
 
   const formatRemaining = (seconds: number): string => {
     const h = Math.floor(seconds / 3600);
@@ -48,10 +45,9 @@ export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => 
     if (h > 0) return `${ h }${ t("audio.settings.sleepTimer.hours") } ${ mm }${ min } ${ ss }${ sec }`;
     return `${ mm }${ min } ${ ss }${ sec }`;
   };
+
   const { preferences } = useAudioPreferences();
   const { pause } = useNavigator().media;
-  const pauseRef = useRef(pause);
-  pauseRef.current = pause;
 
   const config = preferences.settings.keys[ThAudioKeys.sleepTimer];
   const variant = config.variant;
@@ -59,49 +55,72 @@ export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => 
   useEffect(() => {
     if (remainingSeconds === null) return;
     if (remainingSeconds <= 0) {
-      pauseRef.current();
-      setRemainingSeconds(null);
+      pause();
+      dispatch(setSleepTimerRemainingSeconds(null));
       return;
     }
+    if (playerStatus !== "playing") return;
     const id = setTimeout(() => {
-      setRemainingSeconds(prev => prev !== null ? prev - 1 : null);
+      dispatch(setSleepTimerRemainingSeconds(remainingSeconds - 1));
     }, 1000);
     return () => clearTimeout(id);
-  }, [remainingSeconds]);
+  }, [remainingSeconds, playerStatus, pause, dispatch]);
 
   const handleCancel = useCallback(() => {
-    setRemainingSeconds(null);
+    dispatch(setSleepTimerRemainingSeconds(null));
+    dispatch(setSleepTimerOnTrackEnd(false));
     dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: false }));
   }, [dispatch]);
 
   const handleStart = useCallback(() => {
     const totalSeconds = hours * 3600 + minutes * 60;
     if (totalSeconds <= 0) return;
-    setRemainingSeconds(totalSeconds);
+    dispatch(setSleepTimerRemainingSeconds(totalSeconds));
     dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: false }));
   }, [hours, minutes, dispatch]);
 
   const handlePresetSelect = useCallback((value: string) => {
-    setRemainingSeconds(Number(value) * 60);
+    if (value === "endOfResource") {
+      dispatch(setSleepTimerOnTrackEnd(true));
+    } else {
+      dispatch(setSleepTimerRemainingSeconds(Number(value) * 60));
+    }
     dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: false }));
   }, [dispatch]);
 
-  const isActive = remainingSeconds !== null;
+  const docking = useDocking(ThAudioActionKeys.sleepTimer);
+
+  const setOpen = useCallback((open: boolean) => {
+    dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: open }));
+  }, [dispatch]);
+
+  const isActive = remainingSeconds !== null || onTrackEnd;
   const maxHours = (config.variant === ThSettingsTimerVariant.durationField ? config.maxHours : undefined) ?? 23;
 
   const renderContent = () => {
     if (variant === ThSettingsTimerVariant.presetList && config?.variant === ThSettingsTimerVariant.presetList) {
-      const items = config.presets.map(minutes => ({
-        id: String(minutes),
-        value: String(minutes),
-        label: `${ minutes } ${ t("audio.settings.sleepTimer.minutes") }`,
-      }));
+      const items = config.presets.map(preset => preset === "endOfResource"
+        ? {
+            id: "endOfResource",
+            value: "endOfResource",
+            label: t("reader.playback.preferences.sleepTimer.presets.endOfResource"),
+          }
+        : {
+            id: String(preset),
+            value: String(preset),
+            label: `${ preset } ${ t("audio.settings.sleepTimer.minutes") }`,
+          }
+      );
+
+      const activeValue = onTrackEnd
+        ? "endOfResource"
+        : remainingSeconds !== null ? String(remainingSeconds / 60) : "";
 
       return (
         <div className={ audioStyles.audioSleepTimerDurationField }>
           <ThRadioGroup
-            aria-label={ t("audio.settings.sleepTimer._") }
-            value={ remainingSeconds !== null ? String(remainingSeconds) : "" }
+            aria-label={ t("reader.playback.preferences.sleepTimer.descriptive") }
+            value={ activeValue }
             onChange={ handlePresetSelect }
             items={ items }
             compounds={{
@@ -122,11 +141,11 @@ export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => 
     }
 
     // durationField variant
-    if (isActive) {
+    if (isActive && remainingSeconds !== null) {
       return (
         <div className={ audioStyles.audioSleepTimerDurationField }>
           <p className={ audioStyles.audioSleepTimerRemaining }>
-            { t("audio.settings.sleepTimer.remaining") } { formatRemaining(remainingSeconds!) }
+            { t("audio.settings.sleepTimer.remaining", { remaining: formatRemaining(remainingSeconds) }) }
           </p>
           <Button
             className={ audioStyles.audioSleepTimerActionButton }
@@ -150,6 +169,7 @@ export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => 
             step={ 1 }
             value={ hours }
             onChange={ setHours }
+            onInputChange={ (raw) => setHours(parseInt(raw) || 0) }
             compounds={{
               group: { className: audioStyles.audioSleepTimerFieldGroup },
               input: { className: audioStyles.audioSleepTimerFieldInput }
@@ -164,6 +184,7 @@ export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => 
             step={ 1 }
             value={ minutes }
             onChange={ setMinutes }
+            onInputChange={ (raw) => setMinutes(parseInt(raw) || 0) }
             compounds={{
               group: { className: audioStyles.audioSleepTimerFieldGroup },
               input: { className: audioStyles.audioSleepTimerFieldInput }
@@ -185,35 +206,24 @@ export const StatefulSleepTimer = ({ isDisabled }: { isDisabled?: boolean }) => 
   };
 
   return (
-    <>
-      <StatefulActionIcon
-        ref={ triggerRef }
-        tooltipLabel={ t("audio.settings.sleepTimer._") }
-        placement="top"
-        onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.sleepTimer })) }
-        isDisabled={ isDisabled }
-        className={ audioStyles.audioSleepTimerButton }
-      >
-        <SnoozeIcon aria-hidden="true" focusable="false" />
-        { isActive && (
-          <span className={ audioStyles.audioSleepTimerLabel } aria-hidden="true">
-            { formatBadge(remainingSeconds!) }
-          </span>
-        ) }
-      </StatefulActionIcon>
-      <Popover
-        triggerRef={ triggerRef }
-        isOpen={ isOpen }
-        onOpenChange={ (open) => dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: open })) }
-        placement="top"
-        className={ audioStyles.audioControlPopover }
-      >
-        <Dialog aria-label={ t("audio.settings.sleepTimer._") } className={ audioStyles.audioControlPopoverDialog }>
-          <FocusScope contain>
-            { renderContent() }
-          </FocusScope>
-        </Dialog>
-      </Popover>
-    </>
+    <StatefulSheetWrapper
+      sheetType={ docking.sheetType }
+      sheetProps={ {
+        id: ThAudioActionKeys.sleepTimer,
+        triggerRef,
+        heading: t("reader.playback.preferences.sleepTimer.descriptive"),
+        className: audioStyles.audioControlPopover,
+        headerClassName: audioStyles.audioControlPopoverHeader,
+        placement,
+        isOpen,
+        onOpenChange: setOpen,
+        onClosePress: () => setOpen(false),
+        docker: docking.getDocker(),
+      } }
+    >
+      <FocusScope contain>
+        { renderContent() }
+      </FocusScope>
+    </StatefulSheetWrapper>
   );
 };

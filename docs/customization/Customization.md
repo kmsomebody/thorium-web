@@ -7,7 +7,7 @@ If you are not forking this project but importing its packages, please refer to 
 Otherwise you should be able to modify the preferences object directly in [defaultPreferences](../../src/preferences/defaultPreferences.ts).
 
 > [!NOTE]
-> Audio has its own separate preferences system. Use `createAudioPreferences` and `ThAudioPreferencesProvider` instead of their EPUB/WebPub equivalents. See [Audio Handling Preferences](./audio/HandlingPreferences.md), [Audio Settings](./audio/Settings.md), and [Audio Content Protection](./audio/Protection.md) for details.
+> Audio has its own separate preferences system. Use `createAudioPreferences` and `ThAudioPreferencesProvider` instead of their EPUB/WebPub equivalents. See the [Audio Customization doc](./audio/Customization.md) for a full overview.
 
 ## Direction
 
@@ -237,7 +237,7 @@ You can enable collapsibility i.e. an overflow menu will be used based on your c
 The `keys` object contains the configuration for each `action`, with optional properties that can be used when the action’s is not just a trigger, but also has a sheet/container:
 
 - `sheet` to specify the type of sheet the action’s container should use:
-  - as a `defaultSheet` (`fullscreen`, `popover`, or `bottomSheet`);
+  - as a `defaultSheet` (`fullscreen`, `modal`, `popover`, or `bottomSheet`);
   - as an override of this default for specific breakpoints in a `breakpoints` object (value is a key of `ThSheetTypes` enum).
 - `docked`: the configuration for docking. See the [docking doc](./Docking.md) for further details.
 - `snapped`: the configuration for snap points. See the [snap points doc](Snappoints.md) for further details.

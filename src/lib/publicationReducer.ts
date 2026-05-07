@@ -2,6 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { Locator } from "@readium/shared";
 import { UnstableTimeline } from "@/core/Hooks/useTimeline";
+import { TocItem, toEntryRef } from "@/helpers/buildTocTree";
+
+export interface AdjacentTimelineItem {
+  title: string;
+  href: string;
+}
 
 export interface PublicationReducerState {
   fontLanguage: string;
@@ -12,6 +18,10 @@ export interface PublicationReducerState {
   atPublicationStart: boolean;
   atPublicationEnd: boolean;
   unstableTimeline?: UnstableTimeline;
+  adjacentTimelineItems: {
+    previous: AdjacentTimelineItem | null;
+    next: AdjacentTimelineItem | null;
+  };
 }
 
 const initialState: PublicationReducerState = {
@@ -22,7 +32,8 @@ const initialState: PublicationReducerState = {
   positionsList: [],
   atPublicationStart: false,
   atPublicationEnd: false,
-  unstableTimeline: undefined
+  unstableTimeline: undefined,
+  adjacentTimelineItems: { previous: null, next: null }
 }
 
 export const publicationSlice = createSlice({
@@ -67,22 +78,26 @@ export const publicationSlice = createSlice({
         state.unstableTimeline.toc = { tree: action.payload, currentEntry: undefined };
       }
     },
-    setTocEntry: (state, action) => {
+    setAdjacentTimelineItems: (state, action: { payload: { previous: AdjacentTimelineItem | null; next: AdjacentTimelineItem | null } }) => {
+      state.adjacentTimelineItems = action.payload;
+    },
+    setTocEntry: (state, action: { payload: TocItem | null }) => {
+      const entry = action.payload ? toEntryRef(action.payload) : null;
       if (!state.unstableTimeline) {
         state.unstableTimeline = {
-          toc: { tree: undefined, currentEntry: action.payload }
+          toc: { tree: undefined, currentEntry: entry }
         };
       } else if (state.unstableTimeline.toc) {
-        state.unstableTimeline.toc.currentEntry = action.payload;
+        state.unstableTimeline.toc.currentEntry = entry;
       } else {
-        state.unstableTimeline.toc = { tree: undefined, currentEntry: action.payload };
+        state.unstableTimeline.toc = { tree: undefined, currentEntry: entry };
       }
     }
   }
 });
 
 // Action creators are generated for each case reducer function
-export const { 
+export const {
   setFontLanguage,
   setFXL,
   setRTL,
@@ -91,8 +106,9 @@ export const {
   setPublicationStart,
   setPublicationEnd,
   setTimeline,
-  setTocTree, 
+  setTocTree,
   setTocEntry,
+  setAdjacentTimelineItems,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;

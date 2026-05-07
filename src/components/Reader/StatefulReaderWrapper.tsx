@@ -23,6 +23,7 @@ import {
 import { setFontLanguage } from "@/lib/publicationReducer";
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { prefixString } from "@/core/Helpers/prefixString";
+import { useCoverBlobUrl } from "@/hooks/useCoverBlobUrl";
 import { ThPlugin } from "../Plugins";
 import { StatefulLoader } from "@/components/Misc";
 import { ThPreferences, CustomizableKeys } from "@/preferences/preferences";
@@ -139,18 +140,20 @@ const StatefulAudioContent = ({ publication, localDataKey, positionStorage, cove
   const themeObject = useAppSelector(state => state.theming.theme);
   const dispatch = useAppDispatch();
 
+  const { coverBlobUrl, coverReady } = useCoverBlobUrl(coverUrl);
+
   const { themeResolved } = useTheming<ThemeKeyType>({
     theme: themeObject.audio,
     themeKeys: preferences.theming.themes.keys,
     systemKeys: preferences.theming.themes.systemThemes,
     breakpointsMap: preferences.theming.breakpoints,
-    coverUrl,
+    coverUrl: coverBlobUrl,
     autoThemeSource: "cover",
     initProps: {
       ...propsToCSSVars(preferences.theming.icon, { prefix: prefixString("icon") }),
       ...propsToCSSVars(preferences.theming.layout, {
         prefix: prefixString("layout"),
-        exclude: ["ui", "order", "defaults", "constraints"]
+        exclude: ["ui", "compact", "expanded", "progressBar"]
       })
     },
     onCoverThemeGenerated: (themeTokens) => dispatch(setCoverTheme(themeTokens)),
@@ -164,9 +167,9 @@ const StatefulAudioContent = ({ publication, localDataKey, positionStorage, cove
   });
 
   return (
-    <StatefulLoader isLoading={ externalLoading || !themeResolved }>
+    <StatefulLoader isLoading={ externalLoading || !themeResolved || !coverReady }>
       <Suspense>
-        <StatefulPlayer publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverUrl } />
+        <StatefulPlayer publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverBlobUrl } />
       </Suspense>
     </StatefulLoader>
   );

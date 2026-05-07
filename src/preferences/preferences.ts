@@ -135,7 +135,7 @@ export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
     : {}
 );
 
-export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover> | "pagination" | "dropdown";
+export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover | ThSheetTypes.modal> | "pagination" | "dropdown";
 
 // Main preferences interface with simplified generics
 export interface ThPreferences<K extends CustomizableKeys = {}> {

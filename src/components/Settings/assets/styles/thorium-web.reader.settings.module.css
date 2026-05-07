@@ -274,6 +274,7 @@
   gap: var(--th-layout-spacing);
 }
 
+
 /* Let the slider fill the full width of the wrapper */
 .sliderWithPresetsWrapper .sliderWrapper {
   width: 100%;
@@ -285,7 +286,7 @@
 
 .sliderWithPresetsPresets {
   display: grid;
-  grid-template-columns: repeat(var(--th-presets-columns, 4), 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
   gap: calc(var(--th-layout-spacing) / 4);
   list-style: none;
   margin: 0;

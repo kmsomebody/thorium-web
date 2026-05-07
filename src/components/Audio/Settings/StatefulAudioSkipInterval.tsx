@@ -9,9 +9,11 @@ import { ThActionsKeys, ThAudioKeys } from "@/preferences/models";
 import { StatefulNumberField } from "../../Settings/StatefulNumberField";
 import { StatefulSlider } from "../../Settings/StatefulSlider";
 import { StatefulSliderWithPresets } from "../../Settings/StatefulSliderWithPresets";
+import { StatefulPresetsGroup } from "../../Settings/StatefulPresetsGroup";
 
 import { useNavigator } from "@/core/Navigator/hooks";
 import { usePlaceholder } from "../../Settings/hooks/usePlaceholder";
+import { useEffectiveRange } from "../../Settings/hooks/useEffectiveRange";
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
@@ -33,14 +35,16 @@ export const StatefulAudioSkipInterval = ({
   const skipInterval = useAppSelector(state => state.audioSettings.skipInterval);
   const dispatch = useAppDispatch();
 
-  const { submitPreferences, getSetting } = useNavigator().media;
+  const { submitPreferences, getSetting, preferencesEditor } = useNavigator().media;
 
   const config = preferences.settings.keys[ThAudioKeys.skipInterval] ?? defaultAudioSkipInterval;
+
+  const { range, presets } = useEffectiveRange(config.range, preferencesEditor?.skipForwardInterval?.supportedRange, config.presets);
 
   const skipIntervalRangeConfig = {
     variant: config.variant,
     placeholder: config.placeholder,
-    range: config.range,
+    range,
     step: config.step
   };
 
@@ -78,13 +82,27 @@ export const StatefulAudioSkipInterval = ({
     );
   }
 
+  if (skipIntervalRangeConfig.variant === ThSettingsRangeVariant.presetsGroup) {
+    return (
+      <StatefulPresetsGroup
+        standalone={ standalone }
+        label={ t("reader.playback.preferences.audio.skipInterval") }
+        presets={ presets || [] }
+        formatOptions={{ style: "unit", unit: "second" }}
+        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
+        value={ skipInterval }
+        onChange={ (v) => updatePreference(v) }
+      />
+    );
+  }
+
   if (skipIntervalRangeConfig.variant === ThSettingsRangeVariant.sliderWithPresets) {
     return (
       <StatefulSliderWithPresets
         standalone={ standalone }
         label={ t("reader.playback.preferences.audio.skipInterval") }
         placeholder={ placeholderText }
-        presets={ config.presets || [] }
+        presets={ presets || [] }
         formatOptions={{ style: "unit", unit: "second" }}
         onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
         value={ skipInterval }

@@ -6,8 +6,14 @@
   --audio-icon-base: var(--th-icon-size, 24px);
 }
 
-.audioPreviousTrackButton,
-.audioNextTrackButton {
+@container (max-width: 300px) {
+  .audioControls {
+    --th-icon-size: 18px;
+  }
+}
+
+.audioPreviousButton,
+.audioNextButton {
   --th-icon-size: calc(var(--audio-icon-base) * (5/4));
   padding: calc(var(--th-icon-size) * (1/5));
 }

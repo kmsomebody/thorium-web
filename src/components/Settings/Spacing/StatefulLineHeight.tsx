@@ -14,8 +14,10 @@ import LargeIcon from "./assets/icons/density_large.svg";
 import { StatefulRadioGroup } from "../StatefulRadioGroup";
 
 import { useNavigator } from "@/core/Navigator";
+import { EpubPreferencesEditor } from "@readium/navigator";
 import { useI18n } from "@/i18n/useI18n";
 import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useEffectiveRange } from "../hooks/useEffectiveRange";
 
 import { useAppSelector } from "@/lib/hooks";
 import { useLineHeight } from "./hooks/useLineHeight";
@@ -30,7 +32,7 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
 
   const publisherStyles = useAppSelector(state => isWebPub ? state.webPubSettings.publisherStyles : state.settings.publisherStyles) ?? true;
 
-  const { getSetting, submitPreferences } = useNavigator().visual;
+  const { getSetting, submitPreferences, preferencesEditor } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setLineHeight } = useSpacingPresets();
 
@@ -38,7 +40,18 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
 
   const lineHeightOptions = useLineHeight();
 
-  // Dynamically build items array based on allowUnset preference
+  const lineHeightNumericValues = useMemo(
+    () => Object.values(lineHeightOptions).filter((v): v is number => v !== null),
+    [lineHeightOptions]
+  );
+
+  const { presets: effectivePresets } = useEffectiveRange(
+    [Math.min(...lineHeightNumericValues), Math.max(...lineHeightNumericValues)],
+    (preferencesEditor as EpubPreferencesEditor | undefined)?.lineHeight?.supportedRange,
+    lineHeightNumericValues
+  );
+
+  // Dynamically build items array based on allowUnset preference and navigator supported range
   const items = useMemo(() => {
     const baseItems = [
       {
@@ -59,7 +72,10 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
         label: t("reader.preferences.lineHeight.large"),
         value: ThLineHeightOptions.large
       },
-    ];
+    ].filter(item => {
+      const v = lineHeightOptions[item.id];
+      return effectivePresets === undefined || effectivePresets.includes(v);
+    });
 
     // Only add publisher option if allowUnset is true
     if (preferences.settings.keys[ThSettingsKeys.lineHeight].allowUnset !== false) {
@@ -72,7 +88,7 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
     }
 
     return baseItems;
-  }, [preferences.settings.keys, t]);
+  }, [preferences.settings.keys, lineHeightOptions, effectivePresets, t]);
 
   const updatePreference = useCallback(async (value: string) => {
     const computedValue = value === ThLineHeightOptions.publisher

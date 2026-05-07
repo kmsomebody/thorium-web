@@ -77,7 +77,8 @@ export enum ThSettingsRangeVariant {
   slider = "slider",
   incrementedSlider = "incrementedSlider",
   numberField = "numberField",
-  sliderWithPresets = "sliderWithPresets"
+  sliderWithPresets = "sliderWithPresets",
+  presetsGroup = "presetsGroup"
 }
 
 export enum ThSettingsRangePlaceholder {

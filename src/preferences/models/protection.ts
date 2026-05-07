@@ -1,4 +1,4 @@
-import { IContentProtectionConfig } from "@readium/navigator";
+import { IContentProtectionConfig, IAudioContentProtectionConfig } from "@readium/navigator";
 import { I18nValue } from "./i18n";
 
 export interface CopyProtectionConfig {
@@ -53,6 +53,9 @@ export interface ContentProtectionConfig {
 
   /** Monitor developer tools for suspicious activity. We need it for the shortcut protection */
   monitorDevTools?: boolean;
+
+  /** Prevent casting to remote devices via the Remote Playback API. */
+  disableRemotePlayback?: boolean;
 }
 
 /**
@@ -92,7 +95,9 @@ export const resolveContentProtectionConfig = (
     } : undefined,
     disableSelectAll: contentProtection.disableSelectAll,
     disableSave: contentProtection.disableSave,
-    monitorDevTools: contentProtection.monitorDevTools
+    monitorDevTools: contentProtection.monitorDevTools,
+    // TODO: When we implement it in non-audio navigators, uncomment
+    // disableRemotePlayback: contentProtection.disableRemotePlayback
   };
 
   return resolved;
@@ -114,7 +119,7 @@ export type AudioContentProtectionConfig = Omit<ContentProtectionConfig, "protec
 export const resolveAudioContentProtectionConfig = (
   contentProtection: AudioContentProtectionConfig | undefined,
   t: (key: string, options?: { defaultValue?: string }) => string
-): IContentProtectionConfig | undefined => {
+): IAudioContentProtectionConfig | undefined => {
   if (!contentProtection) return undefined;
 
   let resolvedWatermark: string | undefined;
@@ -139,6 +144,7 @@ export const resolveAudioContentProtectionConfig = (
     disableSelectAll: contentProtection.disableSelectAll,
     disableSave: contentProtection.disableSave,
     monitorDevTools: contentProtection.monitorDevTools,
+    disableRemotePlayback: contentProtection.disableRemotePlayback,
   };
 };
 
@@ -171,7 +177,8 @@ export const defaultAudioContentProtectionConfig: AudioContentProtectionConfig =
   },
   disableSelectAll: false,
   disableSave: false,
-  monitorDevTools: false
+  monitorDevTools: false,
+  disableRemotePlayback: false,
 };
 
 /**
@@ -186,5 +193,6 @@ export const devContentProtectionConfig = {
   },
   disableSelectAll: false,
   disableSave: false,
-  monitorDevTools: false
+  monitorDevTools: false,
+  disableRemotePlayback: false,
 };

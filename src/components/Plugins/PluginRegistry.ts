@@ -1,4 +1,3 @@
-import { ComponentType } from "react";
 import { ThSettingsEntry } from "@/core/Components";
 import { StatefulActionsMapObject } from "../Actions";
 
@@ -14,8 +13,6 @@ export interface SettingComponent extends ThSettingsEntry {
   props?: any;
 }
 
-export type PrimaryAudioActionComponent = ComponentType<{ isDisabled: boolean }>;
-
 export interface ThPlugin {
   id: string;
   name: string;
@@ -24,7 +21,7 @@ export interface ThPlugin {
   components: {
     actions?: Record<string, ActionComponent>;
     settings?: Record<string, SettingComponent>;
-    primaryAudioActions?: Record<string, PrimaryAudioActionComponent>;
+    primaryAudioActions?: Record<string, ActionComponent>;
   };
 }
 
@@ -57,7 +54,7 @@ class PluginRegistryClass {
   getComponentMaps() {
     const actionsComponentsMap: Record<string, ActionComponent> = {} as Record<string, ActionComponent>;
     const settingsComponentsMap: Record<string, SettingComponent> = {} as Record<string, SettingComponent>;
-    const primaryAudioActionsMap: Record<string, PrimaryAudioActionComponent> = {} as Record<string, PrimaryAudioActionComponent>;
+    const primaryAudioActionsMap: Record<string, ActionComponent> = {} as Record<string, ActionComponent>;
 
     // Process plugins in reverse order so later plugins override earlier ones
     [...pluginsStore].reverse().forEach(plugin => {

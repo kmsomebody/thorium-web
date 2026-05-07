@@ -18,6 +18,7 @@ import { useI18n } from "@/i18n/useI18n";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setActionOpen } from "@/lib/actionsReducer";
 import { setTocEntry } from "@/lib/publicationReducer";
+import { findTocItemById } from "@/helpers/buildTocTree";
 import { setImmersive, setUserNavigated } from "@/lib/readerReducer";
 
 import { isActiveElement } from "@/core/Helpers/focusUtilities";
@@ -30,6 +31,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
 
   const unstableTimeline = useAppSelector(state => state.publication.unstableTimeline);
   const tocEntry = unstableTimeline?.toc?.currentEntry ?? undefined;
+  const tocEntryId = tocEntry?.id;
   const tocTree = unstableTimeline?.toc?.tree;
 
   const direction = useAppSelector(state => state.reader.direction);
@@ -47,7 +49,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
   }, [dispatch]);
 
   const { expandedKeys, setExpandedKeys, filterValue, setFilterValue, displayedTocTree, treeRef, searchInputRef } =
-    useTocContent({ isOpen: actionState?.isOpen ?? false, tocTree, tocEntry });
+    useTocContent({ isOpen: actionState?.isOpen ?? false, tocTree, tocEntry: tocEntryId });
 
   const handleAction = (keys: Selection) => {
     if (keys === "all" || !keys || keys.size === 0) return;
@@ -59,16 +61,17 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
     if (!href) return;
 
     const link: Link = new Link({ href: href });
+    const matched = findTocItemById(tocTree || [], key as string);
 
     const cb = actionState?.isOpen &&
       (sheetType === ThSheetTypes.dockedStart || sheetType === ThSheetTypes.dockedEnd)
         ? () => {
-          dispatch(setTocEntry(key));
+          dispatch(setTocEntry(matched || null));
           dispatch(setImmersive(true));
           dispatch(setUserNavigated(true));
         }
         : () => {
-          dispatch(setTocEntry(key));
+          dispatch(setTocEntry(matched || null));
           dispatch(setImmersive(true));
           dispatch(setUserNavigated(true));
           setOpen(false);
@@ -108,7 +111,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
         onOpenChange: setOpen,
         onClosePress: () => setOpen(false),
         docker: docking.getDocker(),
-        resetFocus: tocEntry,
+        resetFocus: tocEntryId,
         focusWithinRef: treeRef
       } }
     >
@@ -117,7 +120,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
         onFilterChange={ setFilterValue }
         displayedTocTree={ displayedTocTree }
         tocTree={ tocTree }
-        tocEntry={ tocEntry }
+        tocEntry={ tocEntryId }
         expandedKeys={ expandedKeys }
         onExpandedChange={ setExpandedKeys }
         onSelectionChange={ handleAction }

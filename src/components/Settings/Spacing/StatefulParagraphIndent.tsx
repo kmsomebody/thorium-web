@@ -11,24 +11,30 @@ import { StatefulSlider } from "../StatefulSlider";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useNavigator } from "@/core/Navigator";
+import { EpubPreferencesEditor } from "@readium/navigator";
 import { useI18n } from "@/i18n/useI18n";
 import { useSpacingPresets } from "./hooks/useSpacingPresets";
 import { usePlaceholder } from "../hooks/usePlaceholder";
+import { useEffectiveRange } from "../hooks/useEffectiveRange";
 
 export const StatefulParagraphIndent = ({ standalone = true }: StatefulSettingsItemProps) => {
   const { preferences } = usePreferences();
   const { t } = useI18n();
   
+  const config = preferences.settings.keys[ThSettingsKeys.paragraphIndent];
+
+  const { getSetting, submitPreferences, preferencesEditor } = useNavigator().visual;
+
+  const { range } = useEffectiveRange(config.range, (preferencesEditor as EpubPreferencesEditor | undefined)?.paragraphIndent?.supportedRange);
+
   const paragraphIndentRangeConfig = {
-      variant: preferences.settings.keys[ThSettingsKeys.paragraphIndent].variant,
-      placeholder: preferences.settings.keys[ThSettingsKeys.paragraphIndent].placeholder,
-      range: preferences.settings.keys[ThSettingsKeys.paragraphIndent].range,
-      step: preferences.settings.keys[ThSettingsKeys.paragraphIndent].step
-    };
+    variant: config.variant,
+    placeholder: config.placeholder,
+    range,
+    step: config.step
+  };
 
   const placeholderText = usePlaceholder(paragraphIndentRangeConfig.placeholder, paragraphIndentRangeConfig.range, "multiplier");
-  
-  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setParagraphIndent, canBeReset } = useSpacingPresets();
 

@@ -1,7 +1,8 @@
 "use client";
 
 export * from "./StatefulAudioMediaActions";
-export * from "./Volume/StatefulAudioVolume";
-export * from "./PlaybackRate/StatefulAudioPlaybackRate";
-export * from "./SleepTimer/StatefulSleepTimer";
-export * from "./Toc/StatefulAudioTocAction";
+export * from "./Volume";
+export * from "./PlaybackRate";
+export * from "./SleepTimer";
+export * from "./Toc";
+export * from "./RemotePlayback";

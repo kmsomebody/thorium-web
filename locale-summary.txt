@@ -1,22 +1,22 @@
 Locale Completion Status
 Reference language: en
-Generated: 2026-03-26T16:36:44.273Z
+Generated: 2026-03-31T15:59:49.362Z
 
 
 Locale Completion Summary:
 ----------------------------------------
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
-FI     [■■■■■■■■■■■■■■■□□□□□]  78%
-FR     [■■■■■■■■■■■■■■■□□□□□]  78%
-IT     [■■■■■■■■■■■■■■■□□□□□]  78%
+FI     [■■■■■■■■■■■■■■■■■□□□]  88%
 LT     [■■■■■■■■■■■■■■■□□□□□]  78%
 SV     [■■■■■■■■■■■■■■■□□□□□]  78%
+FR     [■■■■■■■■■■■■■■■□□□□□]  77%
+IT     [■■■■■■■■■■■■■■■□□□□□]  77%
 PT-PT  [■■■■■■■■■■■■■■■□□□□□]  77%
 AR     [■■■■■■■■■■■■■■□□□□□□]  71%
-PT-BR  [■■■■■■■■■■■■■□□□□□□□]  66%
-DA     [■■■■■■■■■■□□□□□□□□□□]  52%
-ET     [■■■■■■■■■□□□□□□□□□□□]  47%
-PL     [■■■■■■■■■□□□□□□□□□□□]  46%
+PT-BR  [■■■■■■■■■■■■■□□□□□□□]  65%
+ET     [■■■■■■■■■■■■□□□□□□□□]  63%
+DA     [■■■■■■■■■■□□□□□□□□□□]  51%
+PL     [■■■■■■■■■□□□□□□□□□□□]  45%
 TA     [■■■■■■■■■□□□□□□□□□□□]  45%
 EL     [■■■□□□□□□□□□□□□□□□□□]  17%
 TR     [■■■□□□□□□□□□□□□□□□□□]  16%
@@ -26,19 +26,19 @@ UK     [□□□□□□□□□□□□□□□□□□□□]   0%
 Inferred Usage Summary:
 ----------------------------------------
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
-FI     [■■■■■■■■■■■■■■■□□□□□]  77%
-FR     [■■■■■■■■■■■■■■■□□□□□]  77%
-IT     [■■■■■■■■■■■■■■■□□□□□]  77%
-LT     [■■■■■■■■■■■■■■■□□□□□]  77%
-SV     [■■■■■■■■■■■■■■■□□□□□]  77%
-PT-PT  [■■■■■■■■■■■■■■■□□□□□]  77%
-PT-BR  [■■■■■■■■■■■■■■■□□□□□]  77%
-DA     [■■■■■■■■■■■■■■□□□□□□]  74%
-PL     [■■■■■■■■■■■■■■□□□□□□]  74%
-AR     [■■■■■■■■■■■■■■□□□□□□]  71%
-TA     [■■■■■■■■■■■■■■□□□□□□]  71%
-ET     [■■■■■■■■■□□□□□□□□□□□]  45%
-EL     [■■■■■■□□□□□□□□□□□□□□]  30%
+FI     [■■■■■■■■■■■■■■■■■□□□]  85%
+LT     [■■■■■■■■■■■■■■□□□□□□]  74%
+SV     [■■■■■■■■■■■■■■□□□□□□]  74%
+FR     [■■■■■■■■■■■■■■□□□□□□]  74%
+IT     [■■■■■■■■■■■■■■□□□□□□]  74%
+PT-PT  [■■■■■■■■■■■■■■□□□□□□]  74%
+PT-BR  [■■■■■■■■■■■■■■□□□□□□]  74%
+DA     [■■■■■■■■■■■■■■□□□□□□]  72%
+PL     [■■■■■■■■■■■■■■□□□□□□]  72%
+AR     [■■■■■■■■■■■■■□□□□□□□]  68%
+TA     [■■■■■■■■■■■■■□□□□□□□]  68%
+ET     [■■■■■■■■■■■■□□□□□□□□]  62%
+EL     [■■■■■□□□□□□□□□□□□□□□]  29%
 TR     [■■□□□□□□□□□□□□□□□□□□]  12%
 UK     [□□□□□□□□□□□□□□□□□□□□]   0%
 
@@ -46,40 +46,32 @@ Locale Breakdown:
 ----------------------------------------
 
 EN (100% complete, 100% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■■ 100%  (170/170)
-   thorium-web.json      ■■■■■■■■■■ 100%  (68/68)
-   TOTAL                 ■■■■■■■■■■ 100%  (238/238)
-   USED                  ■■■■■■■■■■ 100%  (113/113)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (178/178)
+   thorium-web.json      ■■■■■■■■■■ 100%  (62/62)
+   TOTAL                 ■■■■■■■■■■ 100%  (240/240)
+   USED                  ■■■■■■■■■■ 100%  (117/117)
 
-FI (78% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  85%  (144/170)
-   thorium-web.json      ■■■■■■□□□□  62%  (42/68)
-   TOTAL                 ■■■■■■■□□□  78%  (186/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+FI (88% complete, 85% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  96%  (170/178)
+   thorium-web.json      ■■■■■■□□□□  68%  (42/62)
+   TOTAL                 ■■■■■■■■□□  88%  (212/240)
+   USED                  ■■■■■■■■□□  85%  (99/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -89,35 +81,27 @@ FI (78% complete, 77% of inferred usage)
    • reader.app.errors.title
 
 
-FR (78% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  85%  (144/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■■■■■■■□□□  78%  (185/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+LT (78% complete, 74% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  81%  (144/178)
+   thorium-web.json      ■■■■■■□□□□  68%  (42/62)
+   TOTAL                 ■■■■■■■□□□  78%  (186/240)
+   USED                  ■■■■■■■□□□  74%  (87/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -126,36 +110,42 @@ FR (78% complete, 77% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-IT (78% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  85%  (144/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■■■■■■■□□□  78%  (185/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+
+SV (78% complete, 74% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  81%  (144/178)
+   thorium-web.json      ■■■■■■□□□□  68%  (42/62)
+   TOTAL                 ■■■■■■■□□□  78%  (186/240)
+   USED                  ■■■■■■■□□□  74%  (87/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -164,36 +154,42 @@ IT (78% complete, 77% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-LT (78% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  85%  (144/170)
-   thorium-web.json      ■■■■■■□□□□  62%  (42/68)
-   TOTAL                 ■■■■■■■□□□  78%  (186/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+
+FR (77% complete, 74% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  81%  (144/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■■■■■■■□□□  77%  (185/240)
+   USED                  ■■■■■■■□□□  74%  (87/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -202,36 +198,42 @@ LT (78% complete, 77% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-SV (78% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  85%  (144/170)
-   thorium-web.json      ■■■■■■□□□□  62%  (42/68)
-   TOTAL                 ■■■■■■■□□□  78%  (186/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+
+IT (77% complete, 74% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  81%  (144/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■■■■■■■□□□  77%  (185/240)
+   USED                  ■■■■■■■□□□  74%  (87/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -240,36 +242,42 @@ SV (78% complete, 77% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-PT-PT (77% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  84%  (142/170)
-   thorium-web.json      ■■■■■■□□□□  62%  (42/68)
-   TOTAL                 ■■■■■■■□□□  77%  (184/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+
+PT-PT (77% complete, 74% of inferred usage)
+   thorium-shared.json   ■■■■■■■■□□  80%  (142/178)
+   thorium-web.json      ■■■■■■□□□□  68%  (42/62)
+   TOTAL                 ■■■■■■■□□□  77%  (184/240)
+   USED                  ■■■■■■■□□□  74%  (87/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -278,39 +286,45 @@ PT-PT (77% complete, 77% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-AR (71% complete, 71% of inferred usage)
-   thorium-shared.json   ■■■■■■■■□□  81%  (138/170)
-   thorium-web.json      ■■■■□□□□□□  47%  (32/68)
-   TOTAL                 ■■■■■■■□□□  71%  (170/238)
-   USED                  ■■■■■■■□□□  71%  (80/113)
+
+AR (71% complete, 68% of inferred usage)
+   thorium-shared.json   ■■■■■■■□□□  78%  (138/178)
+   thorium-web.json      ■■■■■□□□□□  52%  (32/62)
+   TOTAL                 ■■■■■■■□□□  71%  (170/240)
+   USED                  ■■■■■■□□□□  68%  (80/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (33 keys):
+   WEB (25 keys):
    • reader.jumpToPosition.label
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -323,36 +337,42 @@ AR (71% complete, 71% of inferred usage)
    • reader.settings.text.advanced.trigger
    • reader.settings.text.advanced.tooltip
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-PT-BR (66% complete, 77% of inferred usage)
-   thorium-shared.json   ■■■■■■□□□□  68%  (116/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■■■■■■□□□□  66%  (157/238)
-   USED                  ■■■■■■■□□□  77%  (87/113)
+
+PT-BR (65% complete, 74% of inferred usage)
+   thorium-shared.json   ■■■■■■□□□□  65%  (116/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■■■■■■□□□□  65%  (157/240)
+   USED                  ■■■■■■■□□□  74%  (87/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -361,36 +381,41 @@ PT-BR (66% complete, 77% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
+   SHARED (12 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
 
-DA (52% complete, 74% of inferred usage)
-   thorium-shared.json   ■■■■□□□□□□  48%  (82/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■■■■■□□□□□  52%  (123/238)
-   USED                  ■■■■■■■□□□  74%  (84/113)
+
+ET (63% complete, 62% of inferred usage)
+   thorium-shared.json   ■■■■■■□□□□  60%  (107/178)
+   thorium-web.json      ■■■■■■□□□□  69%  (43/62)
+   TOTAL                 ■■■■■■□□□□  63%  (150/240)
+   USED                  ■■■■■■□□□□  62%  (73/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
-   • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
+   WEB (17 keys):
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -399,81 +424,29 @@ DA (52% complete, 74% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
-   SHARED (3 keys):
-   • common.actions.cancel
-   • reader.preferences.columns.single.compact
-   • reader.preferences.columns.dual.compact
-
-
-ET (47% complete, 45% of inferred usage)
-   thorium-shared.json   ■■■■□□□□□□  40%  (68/170)
-   thorium-web.json      ■■■■■■□□□□  63%  (43/68)
-   TOTAL                 ■■■■□□□□□□  47%  (111/238)
-   USED                  ■■■■□□□□□□  45%  (51/113)
-
-   ----------------------------------------
-   Missing Keys:
-
-   WEB (25 keys):
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
-   • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
-   • audio.player.controls
-   • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
-   • reader.app.errors.notFound
-   • reader.app.errors.accessDenied
-   • reader.app.errors.network
-   • reader.app.errors.serverError
-   • reader.app.errors.clientError
-   • reader.app.errors.generic
-   • reader.app.errors.title
-
-   SHARED (37 keys):
+   SHARED (27 keys):
+   • reader.playback.preferences.audio.title
    • reader.preferences.title
-   • reader.preferences.text
-   • reader.preferences.spacing.title
    • reader.tableOfContents.title
    • reader.tableOfContents.emptyState.description
-   • reader.preferences.layout.paginated
-   • reader.preferences.layout.scrolled
-   • reader.preferences.layout.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • reader.playback.preferences.audio.volume
    • reader.preferences.letterSpacing
-   • reader.preferences.lineHeight.small
-   • reader.preferences.lineHeight.medium
-   • reader.preferences.lineHeight.large
-   • reader.preferences.lineHeight.default
    • reader.preferences.lineHeight.title
    • reader.preferences.paragraphIndent
    • reader.preferences.paragraphSpacing
    • reader.preferences.wordSpacing
    • reader.preferences.publisherStyles.label
-   • reader.preferences.themes.title
    • reader.preferences.zoom
    • reader.preferences.fontSize
    • reader.preferences.fontFamily.publisher
    • reader.preferences.fontFamily.title
-   • reader.preferences.fontWeight.normal
-   • reader.preferences.fontWeight.bold
    • reader.preferences.fontWeight.title
-   • reader.preferences.hyphens.title
    • reader.preferences.hyphens.label
-   • reader.preferences.textAlign.default
-   • reader.preferences.textAlign.right
-   • reader.preferences.textAlign.left
-   • reader.preferences.textAlign.justify
    • reader.preferences.textAlign.title
    • reader.preferences.textNormalization.title
    • reader.preferences.textNormalization.label
@@ -481,35 +454,27 @@ ET (47% complete, 45% of inferred usage)
    • reader.progression.xOfY.descriptive
 
 
-PL (46% complete, 74% of inferred usage)
-   thorium-shared.json   ■■■■□□□□□□  40%  (68/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■■■■□□□□□□  46%  (109/238)
-   USED                  ■■■■■■■□□□  74%  (84/113)
+DA (51% complete, 72% of inferred usage)
+   thorium-shared.json   ■■■■□□□□□□  46%  (82/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■■■■■□□□□□  51%  (123/240)
+   USED                  ■■■■■■■□□□  72%  (84/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -518,41 +483,92 @@ PL (46% complete, 74% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
-   SHARED (3 keys):
+   SHARED (15 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
    • common.actions.cancel
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
+   • reader.preferences.columns.single.compact
+   • reader.preferences.columns.dual.compact
+
+
+PL (45% complete, 72% of inferred usage)
+   thorium-shared.json   ■■■□□□□□□□  38%  (68/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■■■■□□□□□□  45%  (109/240)
+   USED                  ■■■■■■■□□□  72%  (84/117)
+
+   ----------------------------------------
+   Missing Keys:
+
+   WEB (18 keys):
+   • reader.jumpToPosition.error.notFound
+   • audio.player.coverAlt
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
+   • audio.player.controls
+   • audio.player.progress
+   • reader.app.errors.notFound
+   • reader.app.errors.accessDenied
+   • reader.app.errors.network
+   • reader.app.errors.serverError
+   • reader.app.errors.clientError
+   • reader.app.errors.generic
+   • reader.app.errors.title
+
+   SHARED (15 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
+   • common.actions.cancel
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
    • reader.preferences.spacing.presets.title
    • common.actions.reset
 
 
-TA (45% complete, 71% of inferred usage)
-   thorium-shared.json   ■■■□□□□□□□  39%  (66/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■■■■□□□□□□  45%  (107/238)
-   USED                  ■■■■■■■□□□  71%  (80/113)
+TA (45% complete, 68% of inferred usage)
+   thorium-shared.json   ■■■□□□□□□□  37%  (66/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■■■■□□□□□□  45%  (107/240)
+   USED                  ■■■■■■□□□□  68%  (80/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -561,8 +577,20 @@ TA (45% complete, 71% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
-   SHARED (7 keys):
+   SHARED (19 keys):
+   • reader.playback.preferences.audio.title
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
    • common.actions.cancel
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
    • reader.preferences.columns.single.compact
    • reader.preferences.columns.dual.compact
    • reader.preferences.spacing.presets.title
@@ -571,35 +599,27 @@ TA (45% complete, 71% of inferred usage)
    • reader.preferences.fontWeight.bold
 
 
-EL (17% complete, 30% of inferred usage)
-   thorium-shared.json   □□□□□□□□□□   0%  (0/170)
-   thorium-web.json      ■■■■■■□□□□  60%  (41/68)
-   TOTAL                 ■□□□□□□□□□  17%  (41/238)
-   USED                  ■■■□□□□□□□  30%  (34/113)
+EL (17% complete, 29% of inferred usage)
+   thorium-shared.json   □□□□□□□□□□   0%  (0/178)
+   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
+   TOTAL                 ■□□□□□□□□□  17%  (41/240)
+   USED                  ■■□□□□□□□□  29%  (34/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (26 keys):
+   WEB (18 keys):
    • reader.jumpToPosition.error.notFound
-   • audio.settings.title
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.errors.notFound
    • reader.app.errors.accessDenied
    • reader.app.errors.network
@@ -608,19 +628,33 @@ EL (17% complete, 30% of inferred usage)
    • reader.app.errors.generic
    • reader.app.errors.title
 
-   SHARED (53 keys):
+   SHARED (65 keys):
    • reader.actions.goToPosition.descriptive
    • reader.actions.goToPosition.compact
+   • reader.playback.preferences.audio.title
    • reader.preferences.title
    • reader.preferences.text
    • reader.preferences.spacing.title
    • reader.tableOfContents.title
+   • reader.tableOfContents.emptyState.description
    • common.actions.search
    • common.actions.clear
-   • reader.tableOfContents.emptyState.description
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
    • common.actions.decrease
    • common.actions.increase
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
    • common.actions.cancel
+   • reader.playback.preferences.audio.volume
+   • reader.actions.goForward
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.actions.goBackward
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
    • common.actions.close
    • reader.preferences.columns.auto
    • reader.preferences.columns.single.compact
@@ -658,51 +692,41 @@ EL (17% complete, 30% of inferred usage)
    • reader.preferences.textAlign.title
    • reader.preferences.textNormalization.title
    • reader.preferences.textNormalization.label
-   • reader.actions.goForward
-   • reader.actions.goBackward
    • reader.progression.xOfY.compact
    • reader.progression.xOfY.descriptive
 
 
 TR (16% complete, 12% of inferred usage)
-   thorium-shared.json   ■■□□□□□□□□  23%  (39/170)
-   thorium-web.json      □□□□□□□□□□   0%  (0/68)
-   TOTAL                 ■□□□□□□□□□  16%  (39/238)
-   USED                  ■□□□□□□□□□  12%  (14/113)
+   thorium-shared.json   ■■□□□□□□□□  22%  (39/178)
+   thorium-web.json      □□□□□□□□□□   0%  (0/62)
+   TOTAL                 ■□□□□□□□□□  16%  (39/240)
+   USED                  ■□□□□□□□□□  12%  (14/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (60 keys):
+   WEB (52 keys):
    • reader.fullscreen.close
    • reader.fullscreen.trigger
    • reader.fullscreen.tooltip
    • reader.jumpToPosition.label
    • reader.jumpToPosition.error.notFound
    • reader.jumpToPosition.go
-   • audio.settings.title
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
    • reader.toc.entries
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
    • reader.app.publicationWrapper
    • reader.app.header.actions
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.docker.fullscreen.trigger
    • reader.app.docker.fullscreen.tooltip
    • reader.app.docker.popover.trigger
@@ -735,16 +759,28 @@ TR (16% complete, 12% of inferred usage)
    • reader.app.progression.wrapper
    • reader.app.header.runningHead
 
-   SHARED (39 keys):
+   SHARED (51 keys):
+   • reader.playback.preferences.audio.title
    • reader.preferences.text
    • reader.preferences.spacing.title
    • reader.tableOfContents.title
+   • reader.tableOfContents.emptyState.description
    • common.actions.search
    • common.actions.clear
-   • reader.tableOfContents.emptyState.description
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
    • common.actions.decrease
    • common.actions.increase
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
    • common.actions.cancel
+   • reader.playback.preferences.audio.volume
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
    • common.actions.close
    • reader.preferences.layout.paginated
    • reader.preferences.layout.scrolled
@@ -778,44 +814,36 @@ TR (16% complete, 12% of inferred usage)
 
 
 UK (0% complete, 0% of inferred usage)
-   thorium-shared.json   □□□□□□□□□□   0%  (0/170)
-   thorium-web.json      □□□□□□□□□□   0%  (0/68)
-   TOTAL                 □□□□□□□□□□   0%  (0/238)
-   USED                  □□□□□□□□□□   0%  (0/113)
+   thorium-shared.json   □□□□□□□□□□   0%  (0/178)
+   thorium-web.json      □□□□□□□□□□   0%  (0/62)
+   TOTAL                 □□□□□□□□□□   0%  (0/240)
+   USED                  □□□□□□□□□□   0%  (0/117)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (60 keys):
+   WEB (52 keys):
    • reader.fullscreen.close
    • reader.fullscreen.trigger
    • reader.fullscreen.tooltip
    • reader.jumpToPosition.label
    • reader.jumpToPosition.error.notFound
    • reader.jumpToPosition.go
-   • audio.settings.title
    • reader.overflowMenu.active.trigger
    • reader.overflowMenu.active.tooltip
    • reader.toc.entries
-   • audio.settings.autoPlay.title
-   • audio.settings.autoPlay.label
-   • audio.settings.skipBackwardInterval
-   • audio.settings.skipForwardInterval
    • audio.player.coverAlt
    • reader.app.publicationWrapper
    • reader.app.header.actions
-   • audio.settings.playbackRate
-   • audio.settings.sleepTimer
-   • audio.player.mediaControls
+   • audio.settings.sleepTimer.seconds
+   • audio.settings.sleepTimer.minutes
+   • audio.settings.sleepTimer.hours
+   • audio.settings.sleepTimer.endOfResource
+   • audio.settings.sleepTimer.remaining
+   • audio.settings.sleepTimer.instruction
+   • audio.settings.sleepTimer.start
    • audio.player.controls
    • audio.player.progress
-   • audio.settings.volume
-   • audio.player.nextTrack
-   • audio.player.pause
-   • audio.player.play
-   • audio.player.previousTrack
-   • audio.player.skipBackward
-   • audio.player.skipForward
    • reader.app.docker.fullscreen.trigger
    • reader.app.docker.fullscreen.tooltip
    • reader.app.docker.popover.trigger
@@ -848,19 +876,33 @@ UK (0% complete, 0% of inferred usage)
    • reader.app.progression.wrapper
    • reader.app.header.runningHead
 
-   SHARED (53 keys):
+   SHARED (65 keys):
    • reader.actions.goToPosition.descriptive
    • reader.actions.goToPosition.compact
+   • reader.playback.preferences.audio.title
    • reader.preferences.title
    • reader.preferences.text
    • reader.preferences.spacing.title
    • reader.tableOfContents.title
+   • reader.tableOfContents.emptyState.description
    • common.actions.search
    • common.actions.clear
-   • reader.tableOfContents.emptyState.description
+   • reader.playback.preferences.autoPlay.title
+   • reader.playback.preferences.autoPlay.label
+   • reader.playback.preferences.audio.skipBackwardInterval
    • common.actions.decrease
    • common.actions.increase
+   • reader.playback.preferences.audio.skipForwardInterval
+   • reader.playback.preferences.audio.skipInterval
+   • reader.playback.preferences.playbackRate.descriptive
    • common.actions.cancel
+   • reader.playback.preferences.audio.volume
+   • reader.actions.goForward
+   • reader.playback.actions.pause
+   • reader.playback.actions.play
+   • reader.actions.goBackward
+   • reader.playback.actions.skipBackward.descriptive
+   • reader.playback.actions.skipForward.descriptive
    • common.actions.close
    • reader.preferences.columns.auto
    • reader.preferences.columns.single.compact
@@ -898,8 +940,6 @@ UK (0% complete, 0% of inferred usage)
    • reader.preferences.textAlign.title
    • reader.preferences.textNormalization.title
    • reader.preferences.textNormalization.label
-   • reader.actions.goForward
-   • reader.actions.goBackward
    • reader.progression.xOfY.compact
    • reader.progression.xOfY.descriptive
 
@@ -924,7 +964,7 @@ DYNAMIC TEMPLATE LITERALS WARNING
       t(`reader.${ actionKey }.heading`)
    📄 components/Settings/Spacing/StatefulSpacingPresets.tsx:128
       t(`reader.preferences.spacing.presets.${ key === ThSpacingPresetKeys.publisher ? "default" : key }`)
-   📄 components/Settings/StatefulTheme.tsx:167
+   📄 components/Settings/StatefulTheme.tsx:171
       t(`reader.preferences.themes.${ themeItem }`)
 
    These patterns depend on runtime values and cannot be automatically validated.

@@ -43,8 +43,6 @@ export const StatefulSliderWithPresets = ({
   const resolvedFormatValue = formatValue ?? (props.formatOptions ? (v: number) => numberFormatter.format(v) : undefined);
   const tooltipDelay = theming.icon.tooltipDelay;
 
-  const presetsColumns = presets?.length > 1 ? Math.ceil(presets.length / 2) : 1;
-
   const presetsListRef = useRef<HTMLDivElement | null>(null);
   const presetsRef = useRef(presets);
   presetsRef.current = presets;
@@ -137,7 +135,6 @@ export const StatefulSliderWithPresets = ({
         presetsWrapper: {
           ref: presetsListRef,
           className: settingsStyles.sliderWithPresetsPresets,
-          style: { "--th-presets-columns": presetsColumns } as never
         },
         preset: {
           className: settingsStyles.sliderWithPresetsPreset,

@@ -1,8 +1,8 @@
 "use client";
 
-import { useLayoutEffect, useState, useMemo, useCallback } from "react";
+import { useLayoutEffect, useState, useMemo, useCallback, useRef, useEffect } from "react";
 
-import readerStyles from "../assets/styles/thorium-web.reader.app.module.css";
+import audioLayoutStyles from "./assets/styles/thorium-web.audio.app.module.css";
 import audioStyles from "./assets/styles/thorium-web.audioPlayer.module.css";
 
 import { ThPluginRegistry } from "../Plugins/PluginRegistry";
@@ -15,7 +15,7 @@ import { Publication } from "@readium/shared";
 import { ContextMenuEvent, KeyboardEventData, SuspiciousActivityEvent } from "@readium/navigator-html-injectables";
 import { AudioNavigatorListeners } from "@readium/navigator";
 import { PositionStorage } from "../Reader/StatefulReaderWrapper";
-import { ThLayoutUI, ThAudioPlayerComponent } from "@/preferences/models";
+import { ThAudioPlayerComponent } from "@/preferences/models";
 
 import { StatefulDockingWrapper } from "../Docking/StatefulDockingWrapper";
 import { StatefulPlayerHeader } from "./StatefulPlayerHeader";
@@ -28,26 +28,37 @@ import { StatefulAudioProgressBar } from "./controls/StatefulAudioProgressBar";
 
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useAudioNavigator } from "@/core/Hooks/Audio/useAudioNavigator";
-import { useAudioSettingsCache } from "@/core/Hooks/Audio/useAudioSettingsCache";
+import { useAudioStatelessCache } from "./Hooks/useAudioStatelessCache";
 import { useI18n } from "@/i18n/useI18n";
 import { resolveAudioContentProtectionConfig } from "@/preferences/models/protection";
-import { useTimeline } from "@/core/Hooks/useTimeline";
 import { usePositionStorage } from "@/hooks/usePositionStorage";
 import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useAudioPlayerInit } from "./Hooks/useAudioPlayerInit";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { 
+import {
   setLoading
 } from "@/lib/readerReducer";
 import {
-  setTimeline,
   setPublicationStart,
-  setPublicationEnd
+  setPublicationEnd,
+  setTocEntry,
+  setAdjacentTimelineItems,
 } from "@/lib/publicationReducer";
-import { setStatus, setSeeking, setStalled, setTrackReady, setSeekableRanges } from "@/lib/playerReducer";
+import { findTocItemByHref, TocItem } from "@/helpers/buildTocTree";
+import { isWebKit } from "@/helpers/browser";
+import { TimelineItem } from "@readium/shared";
+import { 
+  setStatus,
+  setSeeking,
+  setStalled,
+  setTrackReady,
+  setSleepTimerOnTrackEnd,
+  setRemotePlaybackState,
+  setSeekableRanges
+} from "@/lib/playerReducer";
 
 import { createAudioDefaultPlugin } from "../Plugins/helpers/createAudioDefaultPlugin";
-import { getReaderClassNames } from "../Helpers/getReaderClassNames";
+import debounce from "debounce";
 
 export interface StatefulPlayerProps {
   publication: Publication;
@@ -92,6 +103,11 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   const { preferences } = useAudioPreferences();
   const { t } = useI18n();
 
+  const wrapperRef = useRef<HTMLElement>(null);
+  const compactMinHeight = useRef<number>(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const sleepOnTrackEnd = useAppSelector(state => state.player.sleepTimer.onTrackEnd);
   const volume = useAppSelector(state => state.audioSettings.volume);
   const playbackRate = useAppSelector(state => state.audioSettings.playbackRate);
   const preservePitch = useAppSelector(state => state.audioSettings.preservePitch);
@@ -102,7 +118,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   const autoPlay = useAppSelector(state => state.audioSettings.autoPlay);
   const enableMediaSession = useAppSelector(state => state.audioSettings.enableMediaSession);
 
-  const cache = useAudioSettingsCache(
+  const cache = useAudioStatelessCache(
     volume,
     playbackRate,
     preservePitch,
@@ -111,41 +127,45 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     skipInterval,
     pollInterval,
     autoPlay,
-    enableMediaSession
+    enableMediaSession,
+    sleepOnTrackEnd
   );
-
-  const isImmersive = useAppSelector(state => state.reader.isImmersive);
-  const isHovering = useAppSelector(state => state.reader.isHovering);
 
   const dispatch = useAppDispatch();
 
   const audioNavigator = useAudioNavigator();
-  const { 
-    canGoBackward,
-    canGoForward,
-  } = audioNavigator;
+  const { canGoBackward, canGoForward, submitPreferences } = audioNavigator;
 
-  const { setLocalData, getLocalData, localData } = usePositionStorage(localDataKey, positionStorage);
+  const { setLocalData, getLocalData } = usePositionStorage(localDataKey, positionStorage);
 
-  const handleTimelineChange = useCallback((timeline: any) => {
-    dispatch(setTimeline(timeline));
-  }, [dispatch]);
-
-  const emptyPositions = useMemo(() => [], []);
-
-  const timeline = useTimeline({
-    publication: publication,
-    currentLocation: localData,
-    currentPositions: emptyPositions,
-    positionsList: undefined,
-    onChange: handleTimelineChange,
-  });
-
-  const documentTitle = timeline?.title;
-
+  const documentTitle = publication?.metadata?.title?.getTranslation("en");
   useDocumentTitle(documentTitle);
 
+  const tocTree = useAppSelector(state => state.publication.unstableTimeline?.toc?.tree);
+  const tocTreeRef = useRef<TocItem[] | undefined>(undefined);
+  useEffect(() => {
+    tocTreeRef.current = tocTree;
+  }, [tocTree]);
+
   const listeners: AudioNavigatorListeners = useMemo(() => ({
+    timelineItemChanged: (item: TimelineItem | undefined) => {
+      if (!item) {
+        dispatch(setTocEntry(null));
+        dispatch(setAdjacentTimelineItems({ previous: null, next: null }));
+        return;
+      }
+      const tl = publication.timeline;
+      const link = tl.linkFor(item);
+      if (link) {
+        const matched = findTocItemByHref(tocTreeRef.current || [], link.href);
+        dispatch(setTocEntry(matched || null));
+      }
+      const { previous, next } = tl.adjacentTo(item);
+      dispatch(setAdjacentTimelineItems({
+        previous: previous ? { title: previous.title, href: tl.linkFor(previous)?.href ?? "" } : null,
+        next: next ? { title: next.title, href: tl.linkFor(next)?.href ?? "" } : null,
+      }));
+    },
     positionChanged: (locator) => {
       setLocalData(locator);
 
@@ -166,9 +186,17 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       dispatch(setStalled(false));
       dispatch(setStatus("paused"));
     },
-    trackEnded: () => {},
+    trackEnded: () => {
+      if (cache.current.sleepTimerOnTrackEnd) {
+        submitPreferences({ autoPlay: false });
+      }
+    },
     metadataLoaded: () => {},
     play: () => {
+      if (cache.current.sleepTimerOnTrackEnd) {
+        submitPreferences({ autoPlay: cache.current.settings.autoPlay });
+        dispatch(setSleepTimerOnTrackEnd(false));
+      }
       dispatch(setStatus("playing"));
     },
     pause: () => {
@@ -191,10 +219,14 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       console.error("[AudioNavigator] playback error", error, locator);
       dispatch(setStatus("paused"));
     },
+    remotePlaybackStateChanged: (state) => {
+      if (isWebKit) return;
+      dispatch(setRemotePlaybackState(state));
+    },
     contentProtection: (_type: string, _detail: SuspiciousActivityEvent) => {},
     peripheral: (_data: KeyboardEventData) => {},
     contextMenu: (_data: ContextMenuEvent) => {}
-  }), [setLocalData, canGoBackward, canGoForward, dispatch]);
+  }), [setLocalData, canGoBackward, canGoForward, dispatch, cache, submitPreferences, publication]);
 
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
@@ -208,7 +240,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     onNavigatorLoaded: () => dispatch(setLoading(false)),
   });
 
-  const playerOrder = preferences.theming.layout.order;
+  const { compact, expanded } = preferences.theming.layout;
 
   const renderPlayerComponent = useCallback((component: ThAudioPlayerComponent) => {
     switch (component) {
@@ -219,33 +251,92 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       case ThAudioPlayerComponent.playbackControls:
         return <StatefulAudioPlaybackControls key={ component } />;
       case ThAudioPlayerComponent.progressBar:
-        return <StatefulAudioProgressBar key={ component } currentChapter={ timeline?.progression?.currentChapter } />;
+        return <StatefulAudioProgressBar key={ component } />;
       case ThAudioPlayerComponent.mediaActions:
         return <StatefulAudioMediaActions key={ component } />;
     }
-  }, [coverUrl, publication, timeline]);
+  }, [coverUrl, publication]);
+
+  const renderCompactComponents = useCallback(() => {
+    const coverIdx = compact.order.indexOf(ThAudioPlayerComponent.cover);
+    const metaIdx = compact.order.indexOf(ThAudioPlayerComponent.metadata);
+    const adjacent = coverIdx !== -1 && metaIdx !== -1 && Math.abs(coverIdx - metaIdx) === 1;
+
+    if (!adjacent) {
+      return compact.order.map(renderPlayerComponent);
+    }
+
+    const groupStart = Math.min(coverIdx, metaIdx);
+    const nodes: React.ReactNode[] = [];
+    for (let i = 0; i < compact.order.length; i++) {
+      if (i === groupStart) {
+        nodes.push(
+          <div key="cover-metadata-group" className={ audioStyles.coverMetadataGroup }>
+            { renderPlayerComponent(compact.order[i]) }
+            { renderPlayerComponent(compact.order[i + 1]) }
+          </div>
+        );
+        i++;
+      } else {
+        nodes.push(renderPlayerComponent(compact.order[i]));
+      }
+    }
+    return nodes;
+  }, [compact.order, renderPlayerComponent]);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+
+    const check = debounce(() => {
+      if (!isExpanded) {
+        if (el.scrollHeight > el.clientHeight) {
+          compactMinHeight.current = el.scrollHeight;
+          setIsExpanded(true);
+        }
+      } else {
+        if (el.clientHeight > compactMinHeight.current) {
+          setIsExpanded(false);
+        }
+      }
+    }, 100);
+
+    const observer = new ResizeObserver(check);
+
+    observer.observe(el);
+    return () => {
+      check.clear();
+      observer.disconnect();
+    };
+  }, [isExpanded]);
 
   return (
     <>
     <I18nProvider locale={ preferences.locale }>
     <NavigatorProvider mediaNavigator={ audioNavigator }>
-      <main className={ readerStyles.main }>
+      <main className={ audioLayoutStyles.main }>
         <StatefulDockingWrapper>
-          <div className={ getReaderClassNames({
-            layoutUI: preferences.theming.layout?.ui || ThLayoutUI.stacked,
-            isScroll: false,
-            isImmersive,
-            isHovering,
-            isFXL: false,
-          })}>
+          <div className={ audioLayoutStyles.shell }>
             <StatefulPlayerHeader
               actionKeys={ preferences.actions.secondary.displayOrder as string[] }
               actionsOrder={ preferences.actions.secondary.displayOrder as string[] }
-              layout={ preferences.theming.layout?.ui || ThLayoutUI.stacked }
             />
 
-            <article className={ audioStyles.audioPlayerWrapper } aria-label={ t("reader.app.publicationWrapper") }>
-              { playerOrder.map(renderPlayerComponent) }
+            <article
+              ref={ wrapperRef }
+              className={ isExpanded ? audioStyles.audioPlayerWrapperExpanded : audioStyles.audioPlayerWrapper }
+              aria-label={ t("reader.app.publicationWrapper") }
+            >
+              { isExpanded ? (
+                <>
+                  <div className={ audioStyles.audioPlayerExpandedStart }>
+                    { expanded.start.map(renderPlayerComponent) }
+                  </div>
+                  <div className={ audioStyles.audioPlayerExpandedEnd }>
+                    { expanded.end.map(renderPlayerComponent) }
+                  </div>
+                </>
+              ) : renderCompactComponents() }
             </article>
           </div>
         </StatefulDockingWrapper>

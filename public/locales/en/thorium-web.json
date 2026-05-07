@@ -112,15 +112,18 @@
       "mediaControls": "Audio settings",
       "coverAlt": "Audiobook cover"
     },
+    "remotePlayback": {
+      "trigger": "Remote Playback",
+      "connected": "Remote connected"
+    },
     "settings": {
       "sleepTimer": {
-        "_": "Sleep Timer",
         "hours": "h",
         "minutes": "min",
         "seconds": "s",
         "start": "Start",
         "instruction": "Playback will pause after the set duration.",
-        "remaining": "Pausing in:"
+        "remaining": "Pausing in {{ remaining }}"
       }
     }
   }

@@ -78,6 +78,25 @@ interface StatefulRadioGroupProps extends Omit<ThRadioGroupProps, "classNames"> 
 **Features:**
 - Accessible labeling
 
+### StatefulPresetsGroup
+
+A preset button group for selecting a numeric value from a fixed list, without a slider. Built on top of `StatefulRadioGroup`.
+
+```typescript
+interface StatefulPresetsGroupProps extends Omit<StatefulRadioGroupProps, "items" | "value" | "onChange"> {
+  presets: number[];
+  value?: number;
+  formatOptions?: Intl.NumberFormatOptions;
+  formatValue?: (value: number) => string;
+  onChange?: (value: number) => void;
+}
+```
+
+**Features:**
+- Number-to-string conversion for radio group compatibility
+- Optional `formatOptions` or `formatValue` for preset labels
+- Inherits grid layout and keyboard navigation from `StatefulRadioGroup`
+
 ### StatefulSlider
 
 A slider component for numeric settings with customizable styling.

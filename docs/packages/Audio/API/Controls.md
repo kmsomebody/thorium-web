@@ -22,12 +22,14 @@ interface StatefulAudioPlaybackControlsProps {}
 
 ### StatefulAudioProgressBar
 
-Seekable progress bar showing elapsed time, remaining time, an optional chapter label, and seekable range overlays. Disabled when the track is not ready or stalled. Pressing Escape blurs the slider.
+Seekable progress bar showing elapsed time, remaining time, an optional chapter label, seekable range overlays, and timeline segment ticks (when configured). Disabled when the track is not ready or stalled. Pressing Escape blurs the slider.
+
+The progress bar appearance is controlled by the `progressBar.variant` preference:
+- `ThAudioProgressBarVariant.normal`: Standard progress bar
+- `ThAudioProgressBarVariant.segmented`: Shows timeline segment ticks with hover tooltips
 
 ```typescript
-interface StatefulAudioProgressBarProps {
-  currentChapter?: string;
-}
+interface StatefulAudioProgressBarProps {}
 ```
 
 ## Individual Controls

@@ -39,6 +39,21 @@ Features:
 - Scrim customization
 - Focus management
 
+### StatefulModalSheet
+
+A centered modal sheet component.
+
+```typescript
+interface StatefulModalSheetProps extends StatefulSheet {}
+```
+
+Features:
+- Modal dialog implementation
+- Centered layout with configurable max-width via `--th-layout-constraints-modal`
+- Header with navigation/close button
+- Focus management
+- Keyboard dismissal control
+
 ### StatefulFullScreenSheet
 
 A full-screen modal sheet component.
@@ -94,6 +109,7 @@ A wrapper component that renders the appropriate sheet type based on configurati
 interface StatefulSheetWrapperProps {
   sheetType: ThSheetTypes;                // Type of sheet to render
   sheetProps: StatefulPopoverSheetProps | // Props for the selected sheet type
+             StatefulModalSheetProps |
              StatefulFullScreenSheetProps |
              StatefulDockedSheetProps |
              StatefulBottomSheetProps;
@@ -105,6 +121,7 @@ Features:
 - Dynamic sheet type rendering using `ThTypedComponentRenderer`
 - Support for all sheet variants:
   - Popover (`ThSheetTypes.popover`)
+  - Modal (`ThSheetTypes.modal`)
   - Bottom sheet (`ThSheetTypes.bottomSheet`)
   - Fullscreen (`ThSheetTypes.fullscreen`)
   - Docked start (`ThSheetTypes.dockedStart`)

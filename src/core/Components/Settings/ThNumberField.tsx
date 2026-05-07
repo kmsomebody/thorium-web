@@ -28,6 +28,7 @@ import { useObjectRef } from "react-aria";
 export interface ThNumberFieldProps extends Omit<NumberFieldProps, "minValue" | "maxValue" | "decrementAriaLabel" | "incrementAriaLabel"> {
   ref?: React.ForwardedRef<HTMLInputElement>;
   onReset?: () => void;
+  onInputChange?: (rawValue: string) => void;
   label?: string;
   placeholder?: string;
   range: number[];
@@ -69,6 +70,7 @@ export interface ThNumberFieldProps extends Omit<NumberFieldProps, "minValue" | 
 export const ThNumberField = ({
   ref,
   onReset,
+  onInputChange,
   label,
   placeholder,
   range,
@@ -130,6 +132,7 @@ export const ThNumberField = ({
               { ...compounds?.input }
               { ...(isVirtualKeyboardDisabled ? { inputMode: "none" } : {}) }
               placeholder={ placeholder }
+              onInput={ onInputChange ? (e) => onInputChange((e.target as HTMLInputElement).value) : undefined }
             />
 
             { steppers &&

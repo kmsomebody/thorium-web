@@ -8,12 +8,23 @@ export interface ThActionsTokens {
   visibility: ThCollapsibilityVisibility;
   shortcut: string | null;
   sheet?: {
-    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd>;
-    breakpoints: BreakpointsMap<ThSheetTypes>;
+    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd | ThSheetTypes.compactPopover>;
+    breakpoints: BreakpointsMap<Exclude<ThSheetTypes, ThSheetTypes.compactPopover>>;
   };
   docked?: ThActionsDockedPref;
   snapped?: ThActionsSnappedPref;
-};
+}
+
+export interface ThAudioActionsTokens {
+  visibility: ThCollapsibilityVisibility;
+  shortcut: string | null;
+  sheet?: {
+    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd | ThSheetTypes.popover>;
+    breakpoints: BreakpointsMap<Exclude<ThSheetTypes, ThSheetTypes.popover>>;
+  };
+  docked?: ThActionsDockedPref;
+  snapped?: ThActionsSnappedPref;
+}
 
 export interface ThActionsDockedPref {
   dockable: ThDockingTypes,
@@ -62,6 +73,8 @@ export enum ThDockingTypes {
 
 export enum ThSheetTypes {
   popover = "popover",
+  compactPopover = "compactPopover",
+  modal = "modal",
   fullscreen = "fullscreen",
   dockedStart = "docked start",
   dockedEnd = "docked end",

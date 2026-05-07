@@ -16,6 +16,7 @@ import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useNavigator } from "@/core/Navigator/hooks";
 import { useI18n } from "@/i18n/useI18n";
 import { usePlaceholder } from "./hooks/usePlaceholder";
+import { useEffectiveRange } from "./hooks/useEffectiveRange";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setFontSize } from "@/lib/settingsReducer";
@@ -60,28 +61,14 @@ export const StatefulZoom = () => {
     }
   }, [readerProfile, submitPreferences, getSetting, dispatch]);
 
-  const getEffectiveRange = (preferred: [number, number], supportedRange: [number, number] | undefined): [number, number] => {
-    if (!supportedRange) {
-      return preferred
-    }
-    if (preferred && isRangeWithinSupportedRange(preferred, supportedRange)) {
-      return preferred;
-    }
-    return supportedRange;
-  }
-  
-  const isRangeWithinSupportedRange = (range: [number, number], supportedRange: [number, number]): boolean => {
-    return Math.min(range[0], range[1]) >= Math.min(supportedRange[0], supportedRange[1]) &&
-           Math.max(range[0], range[1]) <= Math.max(supportedRange[0], supportedRange[1]);
-  }
+  const zoomConfig = preferences.settings.keys[ThSettingsKeys.zoom];
+  const { range: effectiveRange } = useEffectiveRange(zoomConfig.range, preferenceEditorProperty?.supportedRange);
 
   const zoomRangeConfig = {
-    variant: preferences.settings.keys[ThSettingsKeys.zoom].variant,
-    placeholder: preferences.settings.keys[ThSettingsKeys.zoom].placeholder,
-    range: preferenceEditorProperty?.supportedRange
-      ? getEffectiveRange(preferences.settings.keys[ThSettingsKeys.zoom].range, preferenceEditorProperty.supportedRange)
-      : preferences.settings.keys[ThSettingsKeys.zoom].range,
-    step: preferences.settings.keys[ThSettingsKeys.zoom].step
+    variant: zoomConfig.variant,
+    placeholder: zoomConfig.placeholder,
+    range: effectiveRange,
+    step: zoomConfig.step
   }
 
   const placeholderText = usePlaceholder(zoomRangeConfig.placeholder, zoomRangeConfig.range);

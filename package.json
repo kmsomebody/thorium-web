@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/edrlab/thorium-web/issues"
   },
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": false,
   "files": [
     "./dist"
@@ -60,13 +60,14 @@
     "extract-locales": "node scripts/extract-locales.mjs",
     "check-locales": "node scripts/check-locales.mjs",
     "update-locales": "pnpm remove @edrlab/thorium-locales && pnpm add @edrlab/thorium-locales@github:edrlab/thorium-locales && pnpm extract-locales && pnpm check-locales --summary --show-missing",
-    "bundle": "pnpm extract-locales && tsup --config tsup.config.ts && pnpm copy-locales && pnpm copy-fonts"
+    "bundle": "pnpm extract-locales && tsup --config tsup.config.ts && pnpm copy-locales && pnpm copy-fonts",
+    "increment": "node scripts/increment.mjs"
   },
   "peerDependencies": {
     "@readium/css": "^2.0.0",
-    "@readium/navigator": "2.4.0-beta.7",
+    "@readium/navigator": "2.4.0-beta.12",
     "@readium/navigator-html-injectables": "2.3.1-alpha.2",
-    "@readium/shared": "2.2.0-beta.1",
+    "@readium/shared": "2.2.0-beta.3",
     "@reduxjs/toolkit": "^2.11.2",
     "i18next": "^25.8.13",
     "i18next-browser-languagedetector": "^8.2.1",
@@ -85,9 +86,9 @@
   "dependencies": {
     "@edrlab/thorium-locales": "github:edrlab/thorium-locales",
     "@readium/css": "^2.0.0",
-    "@readium/navigator": "2.4.0-beta.7",
+    "@readium/navigator": "2.4.0-beta.12",
     "@readium/navigator-html-injectables": "2.3.1-alpha.2",
-    "@readium/shared": "2.2.0-beta.1",
+    "@readium/shared": "2.2.0-beta.3",
     "@reduxjs/toolkit": "^2.11.2",
     "classnames": "^2.5.1",
     "colorthief": "^3.3.1",

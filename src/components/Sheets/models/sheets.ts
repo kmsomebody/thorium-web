@@ -8,6 +8,7 @@ export interface StatefulSheet {
   heading: string;
   headerVariant?: ThSheetHeaderVariant;
   className: string;
+  headerClassName?: string;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onClosePress: () => void;

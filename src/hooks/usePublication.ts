@@ -18,7 +18,9 @@ import {
   setFXL,
   setPositionsList,
   setHasDisplayTransformability,
+  setTocTree,
 } from "@/lib/publicationReducer";
+import { buildTocTree } from "@/helpers/buildTocTree";
 import { setReaderProfile, ReaderProfile } from "@/lib/readerReducer";
 import { deserializePositions } from "@/helpers/deserializePositions";
 import { ErrorHandler, ProcessedError } from "@/helpers/errorHandler";
@@ -171,7 +173,18 @@ export const usePublication = ({
                 dispatch(setPositionsList([]));
               }
             }
-            
+
+            // For audio, build the TOC tree from the publication
+            if (detectedProfile === "audio") {
+              const tocLinks = manifestObj.toc?.items && manifestObj.toc.items.length > 0
+                ? manifestObj.toc.items
+                : manifestObj.readingOrder?.items || [];
+              const publicationTitle = manifestObj.metadata.title.getTranslation("en");
+              let idCounter = 0;
+              const idGenerator = () => `toc-${ ++idCounter }`;
+              dispatch(setTocTree(buildTocTree(tocLinks, idGenerator, undefined, publicationTitle)));
+            }
+
             setPublication(pub);
             setIsLoading(false);
           }

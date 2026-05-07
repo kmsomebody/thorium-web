@@ -1,14 +1,9 @@
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 
 import { Layout, Link, Locator, Publication } from "@readium/shared";
+import { TocItem, TocEntryRef, buildTocTree, toEntryRef } from "@/helpers/buildTocTree";
 
-export interface TocItem {
-  id: string;
-  href: string;
-  title?: string;
-  children?: TocItem[];
-  position?: number;
-}
+export type { TocItem, TocEntryRef } from "@/helpers/buildTocTree";
 
 export interface TimelineItem {
   href: string;
@@ -39,7 +34,7 @@ export interface UnstableTimeline {
   };
   toc?: {
     tree?: TocItem[];
-    currentEntry?: string | null;
+    currentEntry?: TocEntryRef | null;
   };
   currentItem?: TimelineItem | null;
   previousItem?: TimelineItem | null;
@@ -66,7 +61,7 @@ export const useTimeline = ({
 
   const [timelineItems, setTimelineItems] = useState<{ [href: string]: TimelineItem }>({});
   const [tocTree, setTocTree] = useState<TocItem[]>([]);
-  const [currentTocEntry, setCurrentTocEntry] = useState<string | null>(null);
+  const [currentTocEntry, setCurrentTocEntry] = useState<TocEntryRef | null>(null);
   const [currentItem, setCurrentItem] = useState<TimelineItem | null>(null);
   const [previousItem, setPreviousItem] = useState<TimelineItem | null>(null);
   const [nextItem, setNextItem] = useState<TimelineItem | null>(null);
@@ -122,46 +117,6 @@ export const useTimeline = ({
     totalProgression
   ]);
 
-  const buildTocTree = useCallback((
-    links: Link[],
-    idGenerator: () => string,
-    positionsList?: Locator[],
-    publicationTitle?: string
-  ): TocItem[] => {
-    return links.map((link) => {
-      // Generate a new ID for the current Link
-      const newId = idGenerator();
-  
-      // Create a plain object for compatibility with Tree components
-      let href = link.href;
-      const fragmentIndex = href.indexOf("#");
-      if (fragmentIndex !== -1) {
-        const baseHref = href.substring(0, fragmentIndex);
-        const duplicateLink = links.find((l) => l.href.startsWith(baseHref) && l.href !== href);
-        if (!duplicateLink) {
-          href = baseHref;
-        }
-      }
-  
-      const treeNode: TocItem = {
-        id: newId,
-        href: href,
-        title: link.title || (
-          publicationTitle 
-            ? `${ publicationTitle } ${ idCounterRef.current }` 
-            : newId
-        ),
-        position: positionsList?.find((position) => position.href === href)?.locations.position
-      };
-  
-      // Recursively process children if they exist
-      if (link.children) {
-        treeNode.children = buildTocTree(link.children.items, idGenerator, positionsList, publicationTitle);
-      }
-  
-      return treeNode;
-    });
-  }, []);
 
   const handleTocEntryOnNav = useCallback((locator?: Locator, currentPos?: number[]) => {
     if (!locator || !tocTree.length) return;
@@ -181,7 +136,7 @@ export const useTimeline = ({
 
     const currentMatch = findMatch(tocTree, new Link(locator));
     if (currentMatch) {
-      setCurrentTocEntry(currentMatch.id);
+      setCurrentTocEntry(prev => prev?.id === currentMatch.id ? prev : toEntryRef(currentMatch));
       return;
     }
 
@@ -193,7 +148,7 @@ export const useTimeline = ({
         if (otherPositionInList) {
           const match = findMatch(tocTree, new Link(otherPositionInList));
           if (match) {
-            setCurrentTocEntry(match.id);
+            setCurrentTocEntry(prev => prev?.id === match.id ? prev : toEntryRef(match));
             return;
           }
         }
@@ -207,7 +162,7 @@ export const useTimeline = ({
       if (otherPositionInList) {
         const match = findMatch(tocTree, new Link(otherPositionInList));
         if (match) {
-          setCurrentTocEntry(match.id);
+          setCurrentTocEntry(prev => prev?.id === match.id ? prev : toEntryRef(match));
           return;
         }
       }
@@ -318,7 +273,7 @@ export const useTimeline = ({
     }
 
     return timelineItems;
-  }, [publication?.readingOrder?.items, publication?.toc?.items, positionsList]);
+  }, [publication, positionsList]);
 
   const updateTimelineItems = useCallback((currentLoc?: Locator) => {
     if (!currentLoc || !timelineItems) {
@@ -360,7 +315,7 @@ export const useTimeline = ({
     const publicationTitle = publication?.metadata.title.getTranslation("en");
     setTocTree(buildTocTree(tocItems, idGenerator, positionsList, publicationTitle));
     setTimelineItems(buildTimelineItems());
-  }, [publication, positionsList, buildTocTree, buildTimelineItems]);
+  }, [publication, positionsList, buildTimelineItems]);
 
   useEffect(() => {
     if (!tocTree.length || !timelineItems) return;

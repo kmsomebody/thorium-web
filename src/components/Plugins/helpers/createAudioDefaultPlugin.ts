@@ -14,17 +14,22 @@ import { StatefulAudioSkipInterval } from "../../Audio/Settings/StatefulAudioSki
 import { StatefulAudioAutoPlay } from "../../Audio/Settings/StatefulAudioAutoPlay";
 import { StatefulTheme } from "../../Settings/StatefulTheme";
 
-import { StatefulAudioVolume } from "../../Audio/actions/Volume/StatefulAudioVolume";
-import { StatefulAudioPlaybackRate } from "../../Audio/actions/PlaybackRate/StatefulAudioPlaybackRate";
-import { StatefulAudioTocAction } from "../../Audio/actions/Toc/StatefulAudioTocAction";
-import { StatefulSleepTimer } from "../../Audio/actions/SleepTimer/StatefulSleepTimer";
+import { StatefulAudioVolumeTrigger } from "../../Audio/actions/Volume/StatefulAudioVolumeTrigger";
+import { StatefulAudioVolumeContainer } from "../../Audio/actions/Volume/StatefulAudioVolumeContainer";
+import { StatefulAudioPlaybackRateTrigger } from "../../Audio/actions/PlaybackRate/StatefulAudioPlaybackRateTrigger";
+import { StatefulAudioPlaybackRateContainer } from "../../Audio/actions/PlaybackRate/StatefulAudioPlaybackRateContainer";
+import { StatefulAudioTocTrigger } from "../../Audio/actions/Toc/StatefulAudioTocTrigger";
+import { StatefulAudioTocContainer } from "../../Audio/actions/Toc/StatefulAudioTocContainer";
+import { StatefulAudioSleepTimerTrigger } from "../../Audio/actions/SleepTimer/StatefulAudioSleepTimerTrigger";
+import { StatefulAudioSleepTimerContainer } from "../../Audio/actions/SleepTimer/StatefulAudioSleepTimerContainer";
+import { StatefulAudioRemotePlaybackTrigger } from "../../Audio/actions/RemotePlayback/StatefulAudioRemotePlaybackTrigger";
 
 export const createAudioDefaultPlugin = (): ThPlugin => {
   return {
     id: "audio-core",
     name: "Audio Core Components",
     description: "Default components for Thorium Web Audio StatefulReader",
-    version: "1.0.0",
+    version: "1.3.0",
     components: {
       actions: {
         [ThActionsKeys.settings]: {
@@ -37,13 +42,16 @@ export const createAudioDefaultPlugin = (): ThPlugin => {
         },
         [ThActionsKeys.fullscreen]: {
           Trigger: StatefulFullscreenTrigger
+        },
+        [ThAudioActionKeys.remotePlayback]: {
+          Trigger: StatefulAudioRemotePlaybackTrigger
         }
       },
       primaryAudioActions: {
-        [ThAudioActionKeys.volume]:       StatefulAudioVolume,
-        [ThAudioActionKeys.playbackRate]: StatefulAudioPlaybackRate,
-        [ThAudioActionKeys.toc]:          StatefulAudioTocAction,
-        [ThAudioActionKeys.sleepTimer]:   StatefulSleepTimer,
+        [ThAudioActionKeys.volume]:       { Trigger: StatefulAudioVolumeTrigger,      Target: StatefulAudioVolumeContainer },
+        [ThAudioActionKeys.playbackRate]: { Trigger: StatefulAudioPlaybackRateTrigger, Target: StatefulAudioPlaybackRateContainer },
+        [ThAudioActionKeys.toc]:          { Trigger: StatefulAudioTocTrigger,          Target: StatefulAudioTocContainer },
+        [ThAudioActionKeys.sleepTimer]:   { Trigger: StatefulAudioSleepTimerTrigger,   Target: StatefulAudioSleepTimerContainer },
       },
       settings: {
         [ThAudioKeys.theme]: {

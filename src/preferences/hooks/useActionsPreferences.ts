@@ -1,13 +1,19 @@
 "use client";
 
 import { useContext } from "react";
-import { ThActionsTokens, ThDockingKeys, ThDockingPref } from "../models";
+import { ThActionsTokens, ThAudioActionsTokens, ThDockingKeys, ThDockingPref } from "../models";
 import { ThAudioPreferencesContext } from "../ThAudioPreferencesContext";
 import { ThPreferencesContext } from "../ThPreferencesContext";
 
 export interface ActionsPreferences {
   docking: ThDockingPref<ThDockingKeys>;
-  actionsKeys: Record<string, ThActionsTokens>;
+  actionsKeys: Record<string, ThActionsTokens | ThAudioActionsTokens>;
+}
+
+export interface AudioActionsPreferences {
+  docking: ThDockingPref<ThDockingKeys>;
+  primaryActionsKeys: Record<string, ThAudioActionsTokens>;
+  secondaryActionsKeys: Record<string, ThActionsTokens>;
 }
 
 /**
@@ -23,7 +29,10 @@ export const useActionsPreferences = (): ActionsPreferences => {
   if (audioCtx) {
     return {
       docking: audioCtx.preferences.docking,
-      actionsKeys: audioCtx.preferences.actions.secondary.keys,
+      actionsKeys: {
+        ...audioCtx.preferences.actions.primary.keys,
+        ...audioCtx.preferences.actions.secondary.keys,
+      },
     };
   }
 
@@ -35,4 +44,18 @@ export const useActionsPreferences = (): ActionsPreferences => {
   }
 
   throw new Error("useActionsPreferences must be used within a ThPreferencesProvider or ThAudioPreferencesProvider");
+};
+
+export const useAudioActionsPreferences = (): AudioActionsPreferences => {
+  const audioCtx = useContext(ThAudioPreferencesContext);
+
+  if (!audioCtx) {
+    throw new Error("useAudioActionsPreferences must be used within a ThAudioPreferencesProvider");
+  }
+
+  return {
+    docking: audioCtx.preferences.docking,
+    primaryActionsKeys: audioCtx.preferences.actions.primary.keys,
+    secondaryActionsKeys: audioCtx.preferences.actions.secondary.keys,
+  };
 };

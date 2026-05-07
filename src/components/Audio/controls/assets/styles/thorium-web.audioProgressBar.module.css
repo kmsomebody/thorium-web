@@ -9,11 +9,15 @@
   grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   gap: 0.5rem;
+  container-type: inline-size;
 }
 
 .audioProgressChapter {
   grid-area: chapter;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .audioProgressSlider {
@@ -88,6 +92,31 @@
   z-index: 1;
 }
 
+.audioProgressSegmentTick {
+  position: absolute;
+  width: 1px;
+  height: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--th-theme-text);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.audioProgressTooltip {
+  background-color: var(--th-theme-text);
+  color: var(--th-theme-background);
+  border-radius: var(--th-layout-radius);
+  padding: 5px;
+  font-size: 0.75rem;
+  pointer-events: none;
+  max-width: 400px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 .audioProgressElapsedTime {
   grid-area: elapsed;
   justify-self: start;
@@ -100,4 +129,10 @@
   justify-self: end;
   font-size: 0.875rem;
   color: var(--th-theme-text);
+}
+
+@container (max-width: 300px) {
+  .audioProgressChapter {
+    font-size: 0.875rem;
+  }
 }

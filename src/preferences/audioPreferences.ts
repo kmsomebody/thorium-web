@@ -9,16 +9,19 @@ import {
   ThAudioKeys,
   ThDockingKeys,
   ThLayoutDirection,
-  ThLayoutUI,
   ThSheetTypes,
   ThThemeKeys,
   ThActionsTokens,
+  ThAudioActionsTokens,
   ThSettingsRangePrefRequired,
   ThSettingsRangeVariant,
   ThSettingsTimerPref,
   ThBackLinkPref,
   ThDockingPref,
   ThAudioPlayerComponent,
+  ThAudioProgressBarVariant,
+  ThAudioPublicationMetadataComponent,
+  ThPublicationMetadataOrder,
 } from "./models";
 import { AudioContentProtectionConfig } from "./models/protection";
 import {
@@ -30,6 +33,12 @@ export type AudioCustomizableKeys = {
   audioAction?: string;
   audio?: string;
   theme?: string;
+};
+
+export enum ThAudioAffordance {
+  "timeline" = "timeline",
+  "readingOrder" = "readingOrder",
+  "toc" = "toc"
 };
 
 export type ThAudioThemeKeys = ThThemeKeys.light | ThThemeKeys.dark;
@@ -100,6 +109,7 @@ export type ThAudioActionKey<K extends AudioCustomizableKeys = {}> =
 export interface ThAudioActionsPref<K extends AudioCustomizableKeys = {}> {
   primary: {
     displayOrder: Array<ThAudioActionKey<K>>;
+    keys: Record<string, ThAudioActionsTokens>;
   };
   secondary: {
     displayOrder: Array<ActionKey<{ action: ThAudioActionKey<K> }> | ThAudioActionKey<K>>;
@@ -110,10 +120,7 @@ export interface ThAudioActionsPref<K extends AudioCustomizableKeys = {}> {
 
 // Main audio preferences
 
-export type ThAudioConstraintKeys =
-  | Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover>
-  | "pagination"
-  | "dropdown";
+export type ThAudioConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover | ThSheetTypes.modal> | "cover";
 
 export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
   direction?: ThLayoutDirection;
@@ -129,12 +136,25 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
       tooltipDelay?: number;
     };
     layout: {
-      /** Overall layout mode for the audio player UI. */
-      ui?: ThLayoutUI;
-      /** Ordered list of player components to render. */
-      order: Array<ThAudioPlayerComponent>;
+      compact: {
+        /** Ordered list of player components in the single-column layout. */
+        order: Array<ThAudioPlayerComponent>;
+      };
+      expanded: {
+        /** Components in the inline-start column of the two-column layout. */
+        start: Array<ThAudioPlayerComponent>;
+        /** Components in the inline-end column of the two-column layout. */
+        end: Array<ThAudioPlayerComponent>;
+      };
+      publicationMetadata: {
+        /** Ordered list of metadata components (title, subtitle, authors). */
+        order: ThPublicationMetadataOrder;
+      };
       radius: number;
       spacing: number;
+      progressBar?: {
+        variant?: ThAudioProgressBarVariant;
+      };
       defaults: {
         dockingWidth: number;
         scrim: string;
@@ -162,6 +182,11 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
   };
 
   contentProtection?: AudioContentProtectionConfig;
+
+  affordances: {
+    previous: ThAudioAffordance;
+    next: ThAudioAffordance;
+  };
 
   shortcuts: {
     representation: UnstableShortcutRepresentation;
@@ -224,6 +249,28 @@ export const createAudioPreferences = <K extends AudioCustomizableKeys = {}>(
       "theming.themes",
       "auto"
     );
+  }
+
+  // Validate publicationMetadata order - ensure only one title variant
+  if (params.theming?.layout?.publicationMetadata?.order) {
+    const order = params.theming.layout.publicationMetadata.order;
+    const titleVariants: ThAudioPublicationMetadataComponent[] = [
+      ThAudioPublicationMetadataComponent.title,
+      ThAudioPublicationMetadataComponent.titleWithSubtitle,
+      ThAudioPublicationMetadataComponent.subtitleWithTitle
+    ];
+
+    const titleVariantsInOrder = order.filter((c: ThAudioPublicationMetadataComponent) => titleVariants.includes(c));
+    if (titleVariantsInOrder.length > 1) {
+      console.warn(
+        `publicationMetadata.order contains multiple title variants [${ titleVariantsInOrder.join(", ") }]. Using first one only.`
+      );
+      const firstTitleIndex = order.findIndex((c: ThAudioPublicationMetadataComponent) => titleVariants.includes(c));
+      params.theming.layout.publicationMetadata.order = order.filter((component: ThAudioPublicationMetadataComponent, index: number) => {
+        if (component === ThAudioPublicationMetadataComponent.authors) return true;
+        return index === firstTitleIndex;
+      }) as ThPublicationMetadataOrder;
+    }
   }
 
   // Validate range presets in settings keys
