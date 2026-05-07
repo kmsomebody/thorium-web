@@ -1,5 +1,3 @@
-"use client";
-
 import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import {

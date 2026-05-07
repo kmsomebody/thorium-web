@@ -2,16 +2,17 @@
 
 import { useCallback } from "react";
 
-import { 
-  defaultSpacingSettingsMain, 
-  defaultSpacingSettingsSubpanel, 
-  ThSettingsContainerKeys, 
-  ThSpacingSettingsKeys 
+import {
+  defaultSpacingSettingsMain,
+  defaultSpacingSettingsSubpanel,
+  ThSettingsContainerKeys,
+  ThSpacingSettingsKeys
 } from "@/preferences";
 
 import { StatefulGroupWrapper } from "../StatefulGroupWrapper";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useFilteredPreferenceKeys } from "@/preferences/hooks/useFilteredPreferenceKeys";
 import { usePlugins } from "../../Plugins/PluginProvider";
 import { useI18n } from "@/i18n/useI18n";
 
@@ -22,24 +23,29 @@ export const StatefulSpacingGroup = () => {
   const { preferences } = usePreferences();
   const { t } = useI18n();
   const { spacingSettingsComponentsMap } = usePlugins();
+  const { mainSpacingSettingsKeys, subPanelSpacingSettingsKeys } = useFilteredPreferenceKeys();
 
   const dispatch = useAppDispatch();
-  
+
   const setSpacingContainer = useCallback(() => {
     dispatch(setSettingsContainer(ThSettingsContainerKeys.spacing));
   }, [dispatch]);
 
   return (
     <>
-    <StatefulGroupWrapper<ThSpacingSettingsKeys> 
+    <StatefulGroupWrapper<ThSpacingSettingsKeys>
       label={ t("reader.preferences.spacing.title") }
       moreLabel={ t("reader.settings.spacing.advanced.trigger") }
       moreTooltip={ t("reader.settings.spacing.advanced.tooltip") }
       onPressMore={ setSpacingContainer }
       componentsMap={ spacingSettingsComponentsMap }
-      prefs={ preferences.settings.spacing }
+      prefs={ {
+        main: mainSpacingSettingsKeys,
+        subPanel: preferences.settings.spacing?.subPanel === null ? null : subPanelSpacingSettingsKeys,
+        header: preferences.settings.spacing?.header
+      } }
       defaultPrefs={ {
-        main: defaultSpacingSettingsMain, 
+        main: defaultSpacingSettingsMain,
         subPanel: defaultSpacingSettingsSubpanel
       }}
     />
@@ -48,14 +54,12 @@ export const StatefulSpacingGroup = () => {
 }
 
 export const StatefulSpacingGroupContainer = () => {
-  const { preferences } = usePreferences();
-
-  const displayOrder = preferences.settings.spacing?.subPanel as ThSpacingSettingsKeys[] | null | undefined || defaultSpacingSettingsSubpanel;
+  const { subPanelSpacingSettingsKeys } = useFilteredPreferenceKeys();
   const { spacingSettingsComponentsMap } = usePlugins();
 
   return(
     <>
-    { displayOrder.map((key: ThSpacingSettingsKeys) => {
+    { subPanelSpacingSettingsKeys.map((key: ThSpacingSettingsKeys) => {
       const match = spacingSettingsComponentsMap[key];
       if (!match) {
         console.warn(`Setting key "${ key }" not found in the plugin registry while present in preferences.`);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext } from "react";
+import { ScriptMode } from "@readium/navigator";
 import { ThPreferencesContext } from "../ThPreferencesContext";
 import { CustomizableKeys, DefaultKeys, ThPreferences } from "../preferences";
 import { createFontService } from "../services/fonts";
@@ -31,8 +32,8 @@ export function usePreferences<K extends CustomizableKeys = DefaultKeys>() {
       return fontService.getFontMetadata(fontId);
     },
     
-    resolveFontLanguage: (bcp47Tag: string | undefined, direction: "ltr" | "rtl") => {
-      return fontService.resolveFontLanguage(bcp47Tag, direction);
+    resolveFontLanguage: (bcp47Tag: string | undefined, scriptMode: ScriptMode) => {
+      return fontService.resolveFontLanguage(bcp47Tag, scriptMode);
     }
   };
 }

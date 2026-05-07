@@ -2,6 +2,9 @@
 
 import { CSSProperties, Key, useCallback, useRef } from "react";
 
+import { ThSettingsKeys } from "@/preferences/models";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
+
 import { StatefulSettingsItemProps } from "../models/settings";
 
 import settingsStyles from "../assets/styles/thorium-web.reader.settings.module.css";
@@ -15,6 +18,7 @@ import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { FontDefinition } from "@/preferences/models";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useReaderSetting } from "../hooks/useReaderSetting";
 import { setFontFamily } from "@/lib/settingsReducer";
 import { setWebPubFontFamily } from "@/lib/webPubSettingsReducer";
 
@@ -46,10 +50,8 @@ export const StatefulFontFamily = ({ standalone = true }: StatefulSettingsItemPr
   // Get language-specific font preferences
   const fontPreferences = getFontsList({ language: fontLanguage });
 
-  const fontFamily = useAppSelector(state => {
-    const fontSettings = isWebPub ? state.webPubSettings.fontFamily : state.settings.fontFamily;
-    return fontSettings[fontLanguage] ?? "publisher";
-  });
+  const fontFamilySettings = useReaderSetting("fontFamily");
+  const fontFamily = fontFamilySettings[fontLanguage] ?? "publisher";
   
   // Check if current font exists in available options, fallback to publisher if not
   const availableFontIds = new Set([
@@ -78,6 +80,8 @@ export const StatefulFontFamily = ({ standalone = true }: StatefulSettingsItemPr
 
   const { getSetting, submitPreferences } = useNavigator().visual;
 
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.fontFamily];
+
   const updatePreference = useCallback(async (key: Key | null) => {
     if (!key || key === fontFamily) return;
 
@@ -86,11 +90,11 @@ export const StatefulFontFamily = ({ standalone = true }: StatefulSettingsItemPr
       label: string;
       value: string | null;
     };
-    
+
     if (selectedOption) {
-      await submitPreferences({ fontFamily: selectedOption.value });
+      await submitPreferences({ [prefKey]: selectedOption.value });
       
-      const currentSetting = getSetting("fontFamily");
+      const currentSetting = getSetting(prefKey);
       
       // Handle publisher font case (when currentSetting is null)
       if (currentSetting === null) {
@@ -118,7 +122,7 @@ export const StatefulFontFamily = ({ standalone = true }: StatefulSettingsItemPr
         }
       }
     }
-  }, [isWebPub, fontLanguage, fontFamily, submitPreferences, getSetting, fontPreferences, getFontMetadata, dispatch]);
+  }, [prefKey, isWebPub, fontLanguage, fontFamily, submitPreferences, getSetting, fontPreferences, getFontMetadata, dispatch]);
 
   return (
     <StatefulDropdown

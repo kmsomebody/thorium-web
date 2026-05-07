@@ -13,7 +13,7 @@ import { ThActionButton, ThActionButtonProps } from "@/core/Components/Buttons/T
 
 import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch } from "@/lib/hooks";
 import { setImmersive } from "@/lib/readerReducer";
 
 import { isActiveElement, isKeyboardTriggered } from "@/core/Helpers/focusUtilities";

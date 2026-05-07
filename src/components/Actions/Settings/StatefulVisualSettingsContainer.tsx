@@ -7,7 +7,7 @@ import {
   defaultSpacingSettingsSubpanel,
   defaultTextSettingsMain,
   defaultTextSettingsSubpanel,
-  usePreferenceKeys
+  useFilteredPreferenceKeys
 } from "@/preferences";
 
 import {
@@ -43,7 +43,7 @@ export const StatefulVisualSettingsContainer = ({
     subPanelSpacingSettingsKeys,
     subPanelTextSettingsKeys,
     webPubSettingsKeys,
-  } = usePreferenceKeys();
+  } = useFilteredPreferenceKeys();
   const { preferences } = usePreferences();
   const { t } = useI18n();
   const { settingsComponentsMap } = usePlugins();

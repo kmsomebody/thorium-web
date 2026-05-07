@@ -11,9 +11,8 @@ import { ThSliderWithPresets, ThSliderWithPresetsProps } from "@/core/Components
 import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 import { useI18n } from "@/i18n/useI18n";
 import { useGridNavigation } from "./hooks/useGridNavigation";
-import { ThLayoutDirection } from "@/preferences/models";
-
 import classNames from "classnames";
+import { useAppSelector } from "@/lib/hooks";
 
 export interface StatefulSliderWithPresetsProps extends Omit<ThSliderWithPresetsProps, "compounds"> {
   standalone?: boolean;
@@ -38,7 +37,8 @@ export const StatefulSliderWithPresets = ({
   ...props
 }: StatefulSliderWithPresetsProps) => {
   const { t } = useI18n();
-  const { theming, direction } = useSharedPreferences();
+  const { theming } = useSharedPreferences();
+  const isRTL = useAppSelector(state => state.publication.isRTL);
   const numberFormatter = useNumberFormatter(props.formatOptions);
   const resolvedFormatValue = formatValue ?? (props.formatOptions ? (v: number) => numberFormatter.format(v) : undefined);
   const tooltipDelay = theming.icon.tooltipDelay;
@@ -54,7 +54,7 @@ export const StatefulSliderWithPresets = ({
     items: presetsRef,
     currentValue: currentScalarValue,
     onChange: (v) => props.onChange?.([v]),
-    isRTL: direction === ThLayoutDirection.rtl,
+    isRTL,
     onEscape,
     onFocus: (v) => {
       const el = presetsListRef.current?.querySelector(`input[value="${ v }"]`) as HTMLElement | null;

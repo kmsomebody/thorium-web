@@ -1,7 +1,13 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
+import unusedImports from "eslint-plugin-unused-imports";
 
 const eslintConfig = [
   ...nextCoreWebVitals,
+  {
+    plugins: {
+      "unused-imports": unusedImports,
+    },
+  },
   {
     ignores: [
       "node_modules/**",
@@ -23,11 +29,12 @@ const eslintConfig = [
       "!src/**/__mocks__/**"
     ],
     rules: {
-      // Keep rules-of-hooks as error
+      // Unused imports rule
+      "unused-imports/no-unused-imports": "warn",
+
+      // Your existing rules
       "react-hooks/rules-of-hooks": "error",
-      // Set exhaustive-deps to warning
       "react-hooks/exhaustive-deps": "warn",
-      // Disable other rules, as Next.JS lint config < 16 did
       "react-hooks/exhaustive-deps-misuse": "off",
       "react-hooks/stable-deps": "off",
       "react-hooks/set-state-in-effect": "off",

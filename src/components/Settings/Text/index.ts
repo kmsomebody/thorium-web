@@ -6,3 +6,5 @@ export * from "./StatefulHyphens";
 export * from "./StatefulTextAlign";
 export * from "./StatefulTextGroup";
 export * from "./StatefulTextNormalize";
+export * from "./StatefulLigatures";
+export * from "./StatefulNoRuby";

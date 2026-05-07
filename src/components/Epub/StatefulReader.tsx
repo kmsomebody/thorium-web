@@ -2,16 +2,17 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { 
-  ThemeKeyType, 
-  usePreferenceKeys
+import {
+  ThemeKeyType,
+  useFilteredPreferenceKeys
 } from "../../preferences";
 
 import readerStyles from "../assets/styles/thorium-web.reader.app.module.css";
 import arrowStyles from "../assets/styles/thorium-web.reader.paginatedArrow.module.css";
 
-import { 
-  ThActionsKeys,  
+import {
+  ThActionsKeys,
+  ThLayoutDirection,
   ThLayoutUI,
   ThDocumentTitleFormat,
   ThSpacingSettingsKeys,
@@ -19,9 +20,9 @@ import {
   ThSettingsKeys
 } from "../../preferences/models";
 
-import { ThPlugin, ThPluginRegistry } from "../Plugins/PluginRegistry";
+import { ThPluginRegistry } from "../Plugins/PluginRegistry";
 
-import { I18nProvider } from "react-aria";
+import { useLocale } from "react-aria";
 import { ThPluginProvider } from "../Plugins/PluginProvider";
 import { NavigatorProvider } from "@/core/Navigator";
 
@@ -58,7 +59,7 @@ import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { usePrevious } from "@/core/Hooks/usePrevious";
 import { useI18n } from "@/i18n/useI18n";
 import { useTimeline } from "@/core/Hooks/useTimeline";
-import { usePositionStorage } from "@/hooks/usePositionStorage";
+import { useIsScroll, usePositionStorage } from "@/hooks";
 import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useSpacingPresets } from "../Settings/Spacing/hooks/useSpacingPresets";
 import { useLineHeight } from "../Settings/Spacing/hooks/useLineHeight";
@@ -134,8 +135,9 @@ export const StatefulReader = ({
 };
 
 const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage }) => {
-  const { fxlActionKeys, fxlThemeKeys, reflowActionKeys, reflowThemeKeys } = usePreferenceKeys();
+  const { fxlActionKeys, fxlThemeKeys, reflowActionKeys, reflowThemeKeys } = useFilteredPreferenceKeys();
   const { preferences, getFontMetadata, getFontInjectables } = usePreferences();
+  const { direction: uiDirection } = useLocale();
   const { t } = useI18n();
   const { getEffectiveSpacingValue } = useSpacingPresets();
   const { occupySpace: arrowsOccupySpace } = usePaginatedArrows();
@@ -153,7 +155,6 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const { isComponentUsed: isFontFamilyUsed } = useSettingsComponentStatus({
     settingsKey: ThSettingsKeys.fontFamily,
     publicationType: isFXL ? "fxl" : "reflow",
-    componentType: "text"
   });
 
   const textAlign = useAppSelector(state => state.settings.textAlign);
@@ -162,14 +163,15 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const fontSize = useAppSelector(state => state.settings.fontSize);
   const fontWeight = useAppSelector(state => state.settings.fontWeight);
   const hyphens = useAppSelector(state => state.settings.hyphens);
+  const ligatures = useAppSelector(state => state.settings.ligatures);
+  const noRuby = useAppSelector(state => state.settings.noRuby);
   const letterSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.letterSpacing);
   const lineLength = useAppSelector(state => state.settings.lineLength);
   const lineHeight = getEffectiveSpacingValue(ThSpacingSettingsKeys.lineHeight);
   const paragraphIndent = getEffectiveSpacingValue(ThSpacingSettingsKeys.paragraphIndent);
   const paragraphSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.paragraphSpacing);
   const publisherStyles = useAppSelector(state => state.settings.publisherStyles);
-  const scroll = useAppSelector(state => state.settings.scroll);
-  const isScroll = scroll && !isFXL;
+  const isScroll = useIsScroll();
   const textNormalization = useAppSelector(state => state.settings.textNormalization);
   const wordSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.wordSpacing);
   const themeObject = useAppSelector(state => state.theming.theme);
@@ -197,8 +199,10 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
     fontWeight,
     hyphens,
     letterSpacing,
+    ligatures,
     lineLength,
     lineHeight,
+    noRuby,
     paragraphIndent,
     paragraphSpacing,
     publisherStyles,
@@ -612,13 +616,12 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   }, [cache, themeObject, previousTheme, preferences.theming.themes, fxlThemeKeys, reflowThemeKeys, colorScheme, isFXL, submitPreferences, dispatch, navigatorReady]);
 
   useLayoutEffect(() => {
-    preferences.direction && dispatch(setDirection(preferences.direction));
+    dispatch(setDirection(uiDirection as ThLayoutDirection));
     dispatch(setPlatformModifier(getPlatformModifier()));
-  }, [preferences.direction, dispatch]);
+  }, [uiDirection, dispatch]);
 
   return (
     <>
-    <I18nProvider locale={ preferences.locale }>
     <NavigatorProvider visualNavigator={ epubNavigator }>
       <main className={ readerStyles.main }>
         <StatefulDockingWrapper>
@@ -698,6 +701,5 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
       </StatefulDockingWrapper>
     </main>
   </NavigatorProvider>
-  </I18nProvider>
   </>
 )};

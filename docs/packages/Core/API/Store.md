@@ -137,6 +137,7 @@ interface PublicationReducerState {
   fontLanguage: string;
   isFXL: boolean;
   isRTL: boolean;
+  scriptMode: ScriptMode; // "ltr" | "rtl" | "cjk-horizontal" | "cjk-vertical"
   hasDisplayTransformability: boolean;
   positionsList: Locator[];
   atPublicationStart: boolean;
@@ -149,6 +150,7 @@ interface PublicationReducerState {
 - `setFontLanguage`: Set font language
 - `setFXL`: Set publication as fixed layout
 - `setRTL`: Set publication as right-to-left
+- `setScriptMode`: Set the publication's script mode (`ScriptMode` from `@readium/navigator`)
 - `setHasDisplayTransformability`: Set display transformability flag
 - `setPositionsList`: Update positions list
 - `setPublicationStart`: Set at publication start state
@@ -156,6 +158,9 @@ interface PublicationReducerState {
 - `setTimeline`: Set timeline data
 - `setTocTree`: Set table of contents tree
 - `setTocEntry`: Set current TOC entry
+
+> [!IMPORTANT]
+> `isRTL` reflects the **publication content direction** (set from the manifest). For UI direction (driven by the user's locale preference), use `useLocale().direction` from `react-aria` instead.
 
 ### Reader Reducer
 
@@ -205,8 +210,10 @@ interface SettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineHeight: ThLineHeightOptions;
   lineLength: LineLengthStateObject | null;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -225,8 +232,10 @@ interface SettingsReducerState {
 - `setFontWeight`: Set font weight
 - `setHyphens`: Set hyphenation
 - `setLetterSpacing`: Set letter spacing
+- `setLigatures`: Set ligatures
 - `setLineHeight`: Set line height
 - `setLineLength`: Set one or several line lengths (optimal, min, max)
+- `setNoRuby`: Set no-ruby (suppress ruby annotations)
 - `setParagraphIndent`: Set paragraph indent
 - `setParagraphSpacing`: Set paragraph spacing
 - `setPublisherStyles`: Set publisher styles
@@ -271,10 +280,6 @@ Manages state for reader preferences.
 **State Interface:**
 ```typescript
 interface PreferencesReducerState {
-  l10n?: {
-    locale?: string;
-    direction?: ThLayoutDirection;
-  };
   progressionFormat?: RenditionObject<ThProgressionFormat | Array<ThProgressionFormat>>;
   runningHeadFormat?: RenditionObject<ThRunningHeadFormat>;
   paginatedAffordances?: PaginatedAffordanceObject;
@@ -293,13 +298,31 @@ interface PreferencesReducerState {
 ```
 
 **Actions:**
-- `setL10n`: Update localization settings (locale and direction)
 - `setProgressionFormat`: Update progression format for reflow or FXL modes
 - `setRunningHeadFormat`: Update running head format
 - `setUI`: Update UI settings
 - `setScrollAffordances`: Configure scroll behavior
 - `setPaginatedAffordance`: Update paginated affordance settings
 - `updateFromPreferences`: Bulk update from a preferences object
+
+> [!NOTE]
+> `l10n`, `setL10n`, and `L10nObject` were removed in 1.4.0. Locale is now managed by `globalPreferencesReducer` — see below.
+
+### Global Preferences Reducer
+
+Manages locale state independently of reader preferences. Added in 1.4.0.
+
+**State Interface:**
+```typescript
+interface GlobalPreferencesReducerState {
+  locale?: string;
+}
+```
+
+**Actions:**
+- `setLocale`: Set the UI locale (`string | undefined`). Unsupported locales should be validated by `createGlobalPreferences` before dispatching.
+
+The locale is persisted to `localStorage` alongside the rest of the app state. Use `StatefulGlobalPreferencesProvider` to wire it automatically, or dispatch `setLocale` directly.
 
 ### WebPubSettings Reducer
 
@@ -312,7 +335,9 @@ interface WebPubSettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineHeight: ThLineHeightOptions;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -329,7 +354,9 @@ interface WebPubSettingsReducerState {
 - `setWebPubFontWeight`: Set font weight for WebPub
 - `setWebPubHyphens`: Set hyphenation for WebPub
 - `setWebPubLetterSpacing`: Set letter spacing for WebPub
+- `setWebPubLigatures`: Set ligatures for WebPub
 - `setWebPubLineHeight`: Set line height for WebPub
+- `setWebPubNoRuby`: Set no-ruby for WebPub
 - `setWebPubParagraphIndent`: Set paragraph indent for WebPub
 - `setWebPubParagraphSpacing`: Set paragraph spacing for WebPub
 - `setWebPubPublisherStyles`: Set publisher styles for WebPub

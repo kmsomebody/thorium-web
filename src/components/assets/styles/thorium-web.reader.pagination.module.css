@@ -16,7 +16,7 @@
   list-style: none;
 }
 
-.listItem:has(.previousButton) {
+.listItem:has(.leftButton) {
   grid-area: pagination-start;
   justify-self: start;
 }
@@ -26,10 +26,11 @@
   justify-self: center;
 }
 
-.listItem:has(.nextButton) {
+.listItem:has(.rightButton) {
   grid-area: pagination-end;
   justify-self: end;
 }
+
 
 .listItem button {
   box-sizing: border-box;
@@ -42,7 +43,7 @@
   align-items: center;
 }
 
-.nextButton {
+.rightButton {
   margin-inline-start: auto;
   text-align: end;
 }

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { Locator } from "@readium/shared";
+import { ScriptMode } from "@readium/navigator";
 import { UnstableTimeline } from "@/core/Hooks/useTimeline";
 import { TocItem, toEntryRef } from "@/helpers/buildTocTree";
 
@@ -13,6 +14,7 @@ export interface PublicationReducerState {
   fontLanguage: string;
   isFXL: boolean;
   isRTL: boolean;
+  scriptMode: ScriptMode;
   hasDisplayTransformability: boolean;
   positionsList: Locator[],
   atPublicationStart: boolean;
@@ -28,6 +30,7 @@ const initialState: PublicationReducerState = {
   fontLanguage: "default",
   isFXL: false,
   isRTL: false,
+  scriptMode: "ltr",
   hasDisplayTransformability: false,
   positionsList: [],
   atPublicationStart: false,
@@ -48,6 +51,9 @@ export const publicationSlice = createSlice({
     },
     setRTL: (state, action) => {
       state.isRTL = action.payload
+    },
+    setScriptMode: (state, action) => {
+      state.scriptMode = action.payload
     },
     setHasDisplayTransformability: (state, action) => {
       state.hasDisplayTransformability = action.payload
@@ -101,6 +107,7 @@ export const {
   setFontLanguage,
   setFXL,
   setRTL,
+  setScriptMode,
   setHasDisplayTransformability,
   setPositionsList,
   setPublicationStart,

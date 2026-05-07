@@ -1,5 +1,6 @@
-"use client";
-
+export * from "./globalPreferences";
+export * from "./ThGlobalPreferencesContext";
+export * from "./ThGlobalPreferencesProvider";
 export * from "./audioPreferences";
 export * from "./defaultAudioPreferences";
 export * from "./ThAudioPreferencesContext";

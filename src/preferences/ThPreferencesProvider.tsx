@@ -8,8 +8,6 @@ import { devContentProtectionConfig } from "./models/protection";
 
 import { ThPreferencesAdapter } from "./adapters/ThPreferencesAdapter";
 import { ThMemoryPreferencesAdapter } from "./adapters/ThMemoryPreferencesAdapter";
-import { ThDirectionSetter } from "./ThDirectionSetter";
-
 type Props<K extends CustomizableKeys = DefaultKeys> = {
   adapter?: ThPreferencesAdapter<K>;
   initialPreferences?: ThPreferences<K>;
@@ -84,9 +82,7 @@ export function ThPreferencesProvider<K extends CustomizableKeys = DefaultKeys>(
 
   return (
     <ThPreferencesContext.Provider value={ contextValue }>
-      <ThDirectionSetter direction={ preferences.direction }>
-        { children }
-      </ThDirectionSetter>
+      { children }
     </ThPreferencesContext.Provider>
   );
 }

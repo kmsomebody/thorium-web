@@ -6,6 +6,7 @@ export * from "./Plugins";
 export * from "./Settings";
 export * from "./Sheets";
 export * from "./StatefulPreferencesProvider";
+export * from "./StatefulGlobalPreferencesProvider";
 
 // export * from "../StatefulReaderArrowButton";
 // export * from "../StatefulReaderFooter";

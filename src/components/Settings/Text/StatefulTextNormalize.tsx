@@ -2,6 +2,9 @@
 
 import { useCallback } from "react";
 
+import { ThSettingsKeys } from "@/preferences/models";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
+
 import { StatefulSettingsItemProps } from "../models/settings";
 
 import { StatefulSwitch } from "../StatefulSwitch";
@@ -10,6 +13,7 @@ import { useNavigator } from "@/core/Navigator";
 import { useI18n } from "@/i18n/useI18n";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useReaderSetting } from "../hooks/useReaderSetting";
 import { setTextNormalization } from "@/lib/settingsReducer";
 import { setWebPubTextNormalization } from "@/lib/webPubSettingsReducer";
 
@@ -20,21 +24,23 @@ export const StatefulTextNormalize = ({ standalone = true }: StatefulSettingsIte
   const profile = useAppSelector(state => state.reader.profile);
   const isWebPub = profile === "webPub";
   
-  const textNormalization = useAppSelector(state => isWebPub ? state.webPubSettings.textNormalization : state.settings.textNormalization) ?? false;
+  const textNormalization = useReaderSetting("textNormalization");
   const dispatch = useAppDispatch();
 
   const { getSetting, submitPreferences } = useNavigator().visual;
 
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.textNormalize];
+
   const updatePreference = useCallback(async (value: boolean) => {
-    await submitPreferences({ textNormalization: value });
-    const effectiveSetting = getSetting("textNormalization");
+    await submitPreferences({ [prefKey]: value });
+    const effectiveSetting = getSetting(prefKey);
 
     if (isWebPub) {
       dispatch(setWebPubTextNormalization(effectiveSetting));
     } else {
       dispatch(setTextNormalization(effectiveSetting));
     }
-  }, [isWebPub, submitPreferences, getSetting, dispatch]);
+  }, [prefKey, isWebPub, submitPreferences, getSetting, dispatch]);
 
   return(
     <>

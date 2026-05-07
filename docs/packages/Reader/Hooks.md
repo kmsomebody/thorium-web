@@ -130,6 +130,26 @@ interface UsePaginatedArrowsReturn {
 
 ---
 
+## useIsScroll
+
+Returns `true` when the reader is currently in scroll mode. This centralizes scroll detection across all publication profiles:
+
+- Always `true` for `webPub` profile (WebPub is always scroll)
+- For `epub`: `true` when the scroll setting is enabled, **or** when `scriptMode === "cjk-vertical"`, **and** the publication is not FXL
+
+```typescript
+import { useIsScroll } from "@edrlab/thorium-web/reader";
+
+const isScroll = useIsScroll();
+```
+
+**Returns** `boolean`
+
+> [!NOTE]
+> CJK-vertical publications are treated as scroll even when the user has not toggled scroll on, because navigators do not support paged for this writing mode.
+
+---
+
 ## useCoverBlobUrl
 
 Fetches a cover image once and returns a stable blob URL. Both the theme extraction system and the cover image component receive the same URL, so the image is fetched exactly once and never reloaded on layout changes.

@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { 
-  ThLayoutDirection, 
-  ThLayoutUI, 
-  ThProgressionFormat, 
-  ThRunningHeadFormat, 
+import {
+  ThLayoutUI,
+  ThProgressionFormat,
+  ThRunningHeadFormat,
   ThPreferences,
   CustomizableKeys,
   ThBreakpoints,
@@ -12,11 +11,6 @@ import {
 } from "@/preferences";
 
 import { mapPreferencesToState } from "./helpers/mapPreferences";
-
-export interface L10nObject {
-  locale?: string;
-  direction?: ThLayoutDirection;
-}
 
 export interface RenditionProperties<T extends string | Array<string>> {
   default?: T;
@@ -70,10 +64,6 @@ export interface PaginatedAffordancePayload {
 }
 
 export interface PreferencesReducerState {
-  l10n?: {
-    locale?: string;
-    direction?: ThLayoutDirection;
-  },
   progressionFormat?: RenditionObject<ThProgressionFormat | Array<ThProgressionFormat>>;
   runningHeadFormat?: RenditionObject<ThRunningHeadFormat>;
   paginatedAffordances?: PaginatedAffordanceObject;
@@ -96,9 +86,6 @@ export const preferencesSlice = createSlice({
   name: "preferences",
   initialState,
   reducers: {
-    setL10n: (state, action: PayloadAction<L10nObject>) => {
-      state.l10n = action.payload
-    },
     setProgressionFormat: (state, action: RenditionChangePayload<ThProgressionFormat | Array<ThProgressionFormat>>) => {
       const { key, value, breakpoint } = action.payload;
       state.progressionFormat = {
@@ -162,8 +149,7 @@ export const preferencesSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { 
-  setL10n,
+export const {
   setProgressionFormat,
   setRunningHeadFormat,
   setUI,

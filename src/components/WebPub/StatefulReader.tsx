@@ -17,7 +17,6 @@ import {
 
 import { ThPluginRegistry } from "../Plugins/PluginRegistry";
 
-import { I18nProvider } from "react-aria";
 import { ThPluginProvider } from "../Plugins/PluginProvider";
 import { NavigatorProvider } from "@/core/Navigator";
 
@@ -29,8 +28,8 @@ import {
   SuspiciousActivityEvent,
 } from "@readium/navigator-html-injectables";
 import { WebPubNavigatorListeners } from "@readium/navigator";
-import { 
-  Locator,  
+import {
+  Locator,
   Publication
 } from "@readium/shared";
 
@@ -115,7 +114,6 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const { isComponentUsed: isFontFamilyUsed } = useSettingsComponentStatus({
     settingsKey: ThSettingsKeys.fontFamily,
     publicationType: "webpub",
-    componentType: "text"
   });
 
   const container = useRef<HTMLDivElement>(null);
@@ -124,6 +122,8 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const fontFamily = useAppSelector(state => state.webPubSettings.fontFamily);
   const fontWeight = useAppSelector(state => state.webPubSettings.fontWeight);
   const hyphens = useAppSelector(state => state.webPubSettings.hyphens);
+  const ligatures = useAppSelector(state => state.webPubSettings.ligatures);
+  const noRuby = useAppSelector(state => state.webPubSettings.noRuby);
   const letterSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.letterSpacing);
   const lineHeight = getEffectiveSpacingValue(ThSpacingSettingsKeys.lineHeight);
   const paragraphIndent = getEffectiveSpacingValue(ThSpacingSettingsKeys.paragraphIndent);
@@ -142,7 +142,9 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
     fontWeight,
     hyphens,
     letterSpacing,
+    ligatures,
     lineHeight,
+    noRuby,
     paragraphIndent,
     paragraphSpacing,
     publisherStyles,
@@ -328,7 +330,6 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
 
   return (
     <>
-    <I18nProvider locale={ preferences.locale }>
     <NavigatorProvider visualNavigator={ webPubNavigator }>
       <main className={ readerStyles.main }>
         <StatefulDockingWrapper>
@@ -364,6 +365,5 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
       </StatefulDockingWrapper>
     </main>
   </NavigatorProvider>
-  </I18nProvider>
   </>
 )};

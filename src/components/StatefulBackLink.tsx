@@ -5,13 +5,14 @@ import React from "react";
 import backLinkStyles from "./assets/styles/thorium-web.backlink.module.css";
 import readerSharedUI from "./assets/styles/thorium-web.button.module.css";
 
-import { ThBackLinkVariant, ThLayoutDirection } from "@/preferences/models";
+import { ThBackLinkVariant } from "@/preferences/models";
 
 import { ThBackArrow } from "@/core/Components/Links";
 import { ThHome } from "@/core/Components/Links";
 import { ThLibrary } from "@/core/Components/Links";
 import { ThLink } from "@/core/Components/Links";
 
+import { useLocale } from "react-aria";
 import { useI18n } from "@/i18n";
 import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
@@ -23,10 +24,11 @@ export const StatefulBackLink = ({
   className?: string 
 }) => {
   const { t } = useI18n();
-  const { direction, theming } = useSharedPreferences();
+  const { theming } = useSharedPreferences();
+  const { direction } = useLocale();
   const backLinkPref = theming.header?.backLink;
   const tooltipDelay = theming.icon.tooltipDelay;
-  const isRTL = direction === ThLayoutDirection.rtl;
+  const isRTL = direction === "rtl";
 
   const variant = backLinkPref?.variant || ThBackLinkVariant.arrow;
   const href = backLinkPref?.href;

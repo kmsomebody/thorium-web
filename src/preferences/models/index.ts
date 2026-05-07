@@ -1,5 +1,3 @@
-"use client";
-
 export * from "./CSSValues";
 export * from "./actions";
 export * from "./audio";

@@ -9,7 +9,9 @@ export interface WebPubCSSSettings {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineHeight: ThLineHeightOptions | null;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -28,7 +30,9 @@ export const useWebPubSettingsCache = (
   fontWeight: number,
   hyphens: boolean | null,
   letterSpacing: number | null,
+  ligatures: boolean | null,
   lineHeight: ThLineHeightOptions | null,
+  noRuby: boolean | null,
   paragraphIndent: number | null,
   paragraphSpacing: number | null,
   publisherStyles: boolean,
@@ -43,7 +47,9 @@ export const useWebPubSettingsCache = (
       fontWeight,
       hyphens,
       letterSpacing,
+      ligatures,
       lineHeight,
+      noRuby,
       paragraphIndent,
       paragraphSpacing,
       publisherStyles,
@@ -60,7 +66,9 @@ export const useWebPubSettingsCache = (
       fontWeight,
       hyphens,
       letterSpacing,
+      ligatures,
       lineHeight,
+      noRuby,
       paragraphIndent,
       paragraphSpacing,
       publisherStyles,
@@ -74,7 +82,9 @@ export const useWebPubSettingsCache = (
     fontWeight,
     hyphens,
     letterSpacing,
+    ligatures,
     lineHeight,
+    noRuby,
     paragraphIndent,
     paragraphSpacing,
     publisherStyles,

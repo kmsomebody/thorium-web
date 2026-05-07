@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 
 import { ThLineHeightOptions, ThSpacingSettingsKeys, ThSettingsKeys } from "@/preferences";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
 
 import { StatefulSettingsItemProps } from "../models/settings";
 
@@ -22,6 +23,7 @@ import { useEffectiveRange } from "../hooks/useEffectiveRange";
 import { useAppSelector } from "@/lib/hooks";
 import { useLineHeight } from "./hooks/useLineHeight";
 import { useSpacingPresets } from "./hooks/useSpacingPresets";
+import { useReaderSetting } from "../hooks/useReaderSetting";
 
 export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemProps) => {
   const { t } = useI18n();
@@ -30,9 +32,11 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
   const profile = useAppSelector(state => state.reader.profile);
   const isWebPub = profile === "webPub";
 
-  const publisherStyles = useAppSelector(state => isWebPub ? state.webPubSettings.publisherStyles : state.settings.publisherStyles) ?? true;
+  const publisherStyles = useReaderSetting("publisherStyles");
 
   const { getSetting, submitPreferences, preferencesEditor } = useNavigator().visual;
+
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.lineHeight];
 
   const { getEffectiveSpacingValue, setLineHeight } = useSpacingPresets();
 
@@ -94,16 +98,15 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
     const computedValue = value === ThLineHeightOptions.publisher
       ? null
       : lineHeightOptions[value as keyof typeof ThLineHeightOptions];
-
     await submitPreferences({
-      lineHeight: computedValue
+      [prefKey]: computedValue
     });
 
-    const currentLineHeight = getSetting("lineHeight");
+    const currentLineHeight = getSetting(prefKey);
     const currentDisplayLineHeightOption = Object.entries(lineHeightOptions).find(([key, value]) => value === currentLineHeight)?.[0] as ThLineHeightOptions;
 
     setLineHeight(currentDisplayLineHeightOption);
-  }, [submitPreferences, getSetting, setLineHeight, lineHeightOptions]);
+  }, [prefKey, submitPreferences, getSetting, setLineHeight, lineHeightOptions]);
 
   return (
     <>

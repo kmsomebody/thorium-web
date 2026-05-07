@@ -1,5 +1,3 @@
-"use client";
-
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { ThActionsTokens, ThAudioActionsTokens, ThDockingTypes, ThSheetTypes } from "./actions";
 import { ThBreakpoints } from "./ui";

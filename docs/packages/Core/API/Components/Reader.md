@@ -60,21 +60,28 @@ interface ThInteractiveOverlayProps extends HTMLAttributesWithRef<HTMLDivElement
 
 ## ThPagination
 
+A layout-only pagination component with `left` and `right` slots. The caller is responsible for mapping semantic navigation (previous/next) to the correct slot based on publication direction.
+
 ### Props
 
 ```typescript
+interface ThPaginationLinkProps {
+  icon?: ComponentType<SVGProps<SVGElement>> | null; // overrides the default arrow icon
+  node: React.ReactNode;
+  onPress: () => void;
+}
+
 interface ThPaginationProps extends HTMLAttributesWithRef<HTMLDivElement> {
   ref?: React.RefObject<HTMLDivElement>;
-  direction?: "left" | "right";
   links?: {
-    previous?: ThPaginationLinkProps;
-    next?: ThPaginationLinkProps;
+    left?: ThPaginationLinkProps;  // renders icon-then-text, default ArrowBack
+    right?: ThPaginationLinkProps; // renders text-then-icon, default ArrowForward
   };
   children?: React.ReactNode;
   compounds?: {
     listItem?: React.HTMLAttributes<HTMLLIElement>;
-    previousButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type"> | React.ReactElement<typeof Button>;
-    nextButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type"> | React.ReactElement<typeof Button>;
+    leftButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type">;
+    rightButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type">;
   };
 }
 ```
@@ -82,11 +89,11 @@ interface ThPaginationProps extends HTMLAttributesWithRef<HTMLDivElement> {
 ### Features
 
 - Semantic `<nav>` structure
-- Directional arrow icon support
-- Accessibility support
-- Accepts a `links` prop to define the previous and next links, their icons and onPress handlers
-- Accepts a `compounds` prop to define the previous and next buttons
-- Accepts a `children` prop to define the content between the previous and next links
+- `left` slot: icon on the leading edge (default `ArrowBack`), then node
+- `right` slot: node first, then icon on the trailing edge (default `ArrowForward`)
+- Icon can be overridden per link via the `icon` prop
+- `children` renders in the center slot between left and right
+- Direction-agnostic: LTR/RTL mapping is the caller's responsibility
 
 ## ThProgression
 

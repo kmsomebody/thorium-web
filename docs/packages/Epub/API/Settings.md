@@ -495,3 +495,153 @@ All settings components share these characteristics:
 - **Redux State**: Centralized state management for applied settings
 - **Accessibility**: ARIA attributes and keyboard navigation support
 - **Styling**: Consistent styling through CSS modules
+
+## Hooks
+
+All hooks are exported from `@/components/Settings/hooks`.
+
+### useReaderSetting
+
+Reads a setting from the correct Redux slice based on the active reader profile (`epub` or `webPub`), with automatic fallback to the reducer's initial state.
+
+```typescript
+// Shared keys — returns the value from settings or webPubSettings
+function useReaderSetting<K extends SharedSettingsKey>(key: K): SettingsReducerState[K];
+
+// Special case: "zoom" maps to webPubSettings.zoom for webPub and settings.fontSize for epub
+function useReaderSetting(key: "zoom"): number;
+```
+
+**Behaviour:**
+- Reads `state.reader.profile` internally to determine which slice to use
+- Falls back to `initialSettingsState` or `initialWebPubSettingsState` when a value is `undefined`, so components never receive stale hardcoded defaults
+- The `"zoom"` overload abstracts the naming difference between profiles: `settings.fontSize` (epub) and `webPubSettings.zoom` (webPub) are both exposed under a single key
+
+**Available keys:** all keys shared between `SettingsReducerState` and `WebPubSettingsReducerState` — `fontFamily`, `fontWeight`, `hyphens`, `letterSpacing`, `ligatures`, `lineHeight`, `noRuby`, `paragraphIndent`, `paragraphSpacing`, `publisherStyles`, `spacing`, `textAlign`, `textNormalization`, `wordSpacing` — plus the cross-profile alias `"zoom"`.
+
+**Note:** epub-only keys (`columnCount`, `scroll`, `lineLength`) are not covered and must be accessed directly via `useAppSelector`.
+
+**Example:**
+```typescript
+const publisherStyles = useReaderSetting("publisherStyles");
+const textAlign = useReaderSetting("textAlign");
+const zoom = useReaderSetting("zoom"); // fontSize for epub, zoom for webPub
+```
+
+### useEffectiveRange
+
+Returns the effective `[min, max]` range and filtered presets for a range-based setting, clamping to the navigator's supported range when provided.
+
+```typescript
+function useEffectiveRange(
+  preferred: [number, number],
+  supportedRange: [number, number] | undefined,
+  presets?: number[]
+): { range: [number, number]; presets?: number[] }
+```
+
+**Behaviour:**
+- Uses `preferred` when it fits within `supportedRange`, otherwise falls back to `supportedRange`
+- Filters `presets` to only include values within the effective range
+
+**Example:**
+```typescript
+const { range, presets } = useEffectiveRange([0.5, 2], preferencesEditor?.fontSize?.supportedRange, [0.75, 1, 1.25, 1.5]);
+```
+
+### useGridNavigation
+
+Adds keyboard arrow-key navigation to a CSS grid of radio-like items, aware of the number of visible columns.
+
+```typescript
+function useGridNavigation(props: useGridNavigationProps): { onKeyDown: React.KeyboardEventHandler }
+
+interface useGridNavigationProps {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  items: React.RefObject<any[]>;
+  currentValue: any;
+  onChange: (value: any) => void;
+  isRTL?: boolean;
+  onEscape?: () => void;
+  onFocus?: (value: string) => void;
+}
+```
+
+**Behaviour:**
+- Arrow Up/Down move by one row (column count derived from `grid-template-columns`)
+- Arrow Left/Right move by one cell, direction-aware when `isRTL` is set
+- Items can be primitives or objects with a `value` property
+
+**Example:**
+```typescript
+const { onKeyDown } = useGridNavigation({ containerRef, items, currentValue: value, onChange });
+```
+
+### useGridTemplate
+
+Observes a grid container and returns the number of visible columns (or rows) by reading the computed `grid-template-columns` / `grid-template-rows` style. Updates on resize via `ResizeObserver`.
+
+```typescript
+function useGridTemplate(
+  ref: React.RefObject<HTMLDivElement | null>,
+  type?: "columns" | "rows"
+): number | null
+```
+
+**Example:**
+```typescript
+const columnCount = useGridTemplate(containerRef); // defaults to "columns"
+```
+
+### usePlaceholder
+
+Resolves a settings range placeholder value to a display string, supporting i18n keys, enum variants, and literal strings.
+
+```typescript
+function usePlaceholder(
+  placeholder: ThSettingsRangePlaceholder | string | { key: string; fallback?: string } | undefined,
+  range: [number, number],
+  format?: "percent" | "number" | "multiplier"
+): string | undefined
+```
+
+**Behaviour:**
+- `ThSettingsRangePlaceholder.none` → `undefined`
+- `ThSettingsRangePlaceholder.range` → formatted range string (e.g. `"50% - 200%"`)
+- `{ key, fallback }` → translated string via i18n, falling back to `fallback`
+- Literal string → returned as-is
+
+**Example:**
+```typescript
+const placeholder = usePlaceholder(zoomConfig.placeholder, zoomConfig.range, "percent");
+```
+
+### useSettingsComponentStatus
+
+Checks whether a settings component is registered in the plugin map and included in the active display order, returning a set of status flags used to conditionally render or enable components.
+
+```typescript
+function useSettingsComponentStatus(options: UseSettingsComponentStatusOptions): SettingsComponentStatus
+
+interface UseSettingsComponentStatusOptions {
+  settingsKey: ThSettingsKeys | ThTextSettingsKeys | ThSpacingSettingsKeys;
+  publicationType?: "reflow" | "fxl" | "webpub";
+  additionalCondition?: boolean;
+}
+
+interface SettingsComponentStatus {
+  isComponentRegistered: boolean;
+  isInMainPanel: boolean;
+  isInSubPanel: boolean;
+  isDisplayed: boolean;
+  isComponentUsed: boolean; // registered AND displayed
+}
+```
+
+**Example:**
+```typescript
+const { isComponentUsed: isHyphensUsed } = useSettingsComponentStatus({
+  settingsKey: ThTextSettingsKeys.hyphens,
+  publicationType: "reflow"
+});
+```

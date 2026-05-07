@@ -92,6 +92,7 @@ export const TocContent = ({
         selectedKeys={ tocEntry ? [tocEntry] : [] }
         expandedKeys={ expandedKeys }
         onExpandedChange={ onExpandedChange }
+        dir={ isRTL ? "rtl" : "ltr" }
       >
         { function renderItem(item) {
           return (

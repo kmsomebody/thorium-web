@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from "react";
 
 import { Link } from "@readium/shared";
-import { ThAudioActionKeys, ThSheetTypes, ThLayoutDirection } from "@/preferences/models";
+import { ThAudioActionKeys, ThSheetTypes } from "@/preferences/models";
 
 import { useTocContent } from "@/components/Actions/Toc/useTocContent";
 import { TocContent } from "@/components/Actions/Toc/TocContent";
@@ -36,8 +36,7 @@ export const StatefulAudioTocContainer = ({ triggerRef }: StatefulActionContaine
   const tocEntryId = tocEntry?.id;
   const tocTree = unstableTimeline?.toc?.tree;
 
-  const direction = useAppSelector(state => state.reader.direction);
-  const isRTL = direction === ThLayoutDirection.rtl;
+  const isRTL = useAppSelector(state => state.publication.isRTL);
 
   const docking = useDocking(ThAudioActionKeys.toc);
   const sheetType = docking.sheetType;

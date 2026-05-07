@@ -1,19 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import { useLocale } from "react-aria";
 
-import { ThLayoutDirection } from "./models";
+export const ThDirectionSetter = ({ children }: { children: React.ReactNode }) => {
+  const { direction } = useLocale();
 
-export const ThDirectionSetter = ({ 
-  direction, 
-  children 
-}: { 
-  direction?: ThLayoutDirection,
-  children: React.ReactNode 
-}) => {
-  
   useEffect(() => {
-    if (direction) document.documentElement.dir = direction;
+    document.documentElement.dir = direction;
   }, [direction]);
 
   return children;

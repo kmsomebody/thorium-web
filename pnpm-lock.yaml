@@ -10,18 +10,18 @@ importers:
     dependencies:
       '@edrlab/thorium-locales':
         specifier: github:edrlab/thorium-locales
-        version: thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/1680aa167c97909ff3204347a7177631dd598374
+        version: thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/4a9e7d687d9469ffd1c9fa153cb2b7fc93b15cb8
       '@readium/css':
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^2.0.2
+        version: 2.0.2
       '@readium/navigator':
-        specifier: 2.4.0
-        version: 2.4.0
+        specifier: ^2.5.0
+        version: 2.5.0
       '@readium/navigator-html-injectables':
-        specifier: 2.3.1
-        version: 2.3.1
+        specifier: ^2.4.0
+        version: 2.4.0
       '@readium/shared':
-        specifier: 2.2.0
+        specifier: ^2.2.0
         version: 2.2.0
       '@reduxjs/toolkit':
         specifier: ^2.11.2
@@ -105,6 +105,9 @@ importers:
       eslint-config-next:
         specifier: 16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.53.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
+      eslint-plugin-unused-imports:
+        specifier: ^4.4.1
+        version: 4.4.1(@typescript-eslint/eslint-plugin@8.53.0(@typescript-eslint/parser@8.53.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)
       glob:
         specifier: ^13.0.6
         version: 13.0.6
@@ -1853,15 +1856,15 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@readium/css@2.0.1':
-    resolution: {integrity: sha512-u5S8Q41ISWRXGyAmDh+R0YBdEULwOIyRvDO8HhmnBbP8pvbEZm/NaSf7Iu079iBd5BWGiAnAo6f2tSavoRzO4w==}
+  '@readium/css@2.0.2':
+    resolution: {integrity: sha512-2cLkU3NPzLlVxVWPlyxoFTCFE2y5521cQ+sgHnPBAKnOdCh3SltQwd7XodvB+xTGgS4TdVbQmxfr3x1Ke6nZWA==}
 
-  '@readium/navigator-html-injectables@2.3.1':
-    resolution: {integrity: sha512-i89cxXuVjpXg1XYwIZII/7Fyf3kueJlEi7QVA308CyhmQnRjMBErfraK4fD9z18TZNMiuDnXArPRIQWBC89P1Q==}
+  '@readium/navigator-html-injectables@2.4.0':
+    resolution: {integrity: sha512-vZPYZXoS4Ccs3TkqUxWCurOz32OINCm0/0LQ9TEU++2riQC9sawFESpD4X8DD+YPFIu9BXkQJBimSRpOeD5JJw==}
     engines: {node: '>=18'}
 
-  '@readium/navigator@2.4.0':
-    resolution: {integrity: sha512-/FycosELp3hySMfxSbNbKL4iEBm15ojuqx1vgcLRtidqC2rH7khhwvZAnzNf6gHQIwwNMoMsWOdwaGOQTAI64w==}
+  '@readium/navigator@2.5.0':
+    resolution: {integrity: sha512-tg9DUMMr991ojHTNuPulV+Em0lVsQB6tKMs7U7y6ZeW3ppcFvgoqzOYJGjpf3WMerdPfy3jI5yaIDp/G8e35zQ==}
     engines: {node: '>=18'}
 
   '@readium/shared@2.2.0':
@@ -2808,6 +2811,15 @@ packages:
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+
+  eslint-plugin-unused-imports@4.4.1:
+    resolution: {integrity: sha512-oZGYUz1X3sRMGUB+0cZyK2VcvRX5lm/vB56PgNNcU+7ficUCKm66oZWKUubXWnOuPjQ8PvmXtCViXBMONPe7tQ==}
+    peerDependencies:
+      '@typescript-eslint/eslint-plugin': ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
+      eslint: ^10.0.0 || ^9.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      '@typescript-eslint/eslint-plugin':
+        optional: true
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -3932,12 +3944,8 @@ packages:
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
 
-  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/1680aa167c97909ff3204347a7177631dd598374:
-    resolution: {tarball: https://codeload.github.com/edrlab/thorium-locales/tar.gz/1680aa167c97909ff3204347a7177631dd598374}
-    version: 1.0.0
-
-  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/e175badc67ac33dcda6911dd5ebcf7a1570bee8c:
-    resolution: {tarball: https://codeload.github.com/edrlab/thorium-locales/tar.gz/e175badc67ac33dcda6911dd5ebcf7a1570bee8c}
+  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/4a9e7d687d9469ffd1c9fa153cb2b7fc93b15cb8:
+    resolution: {tarball: https://codeload.github.com/edrlab/thorium-locales/tar.gz/4a9e7d687d9469ffd1c9fa153cb2b7fc93b15cb8}
     version: 1.0.0
 
   tinyexec@0.3.2:
@@ -6343,15 +6351,15 @@ snapshots:
       '@react-types/shared': 3.33.0(react@19.2.4)
       react: 19.2.4
 
-  '@readium/css@2.0.1': {}
+  '@readium/css@2.0.2': {}
 
-  '@readium/navigator-html-injectables@2.3.1': {}
+  '@readium/navigator-html-injectables@2.4.0': {}
 
-  '@readium/navigator@2.4.0': {}
+  '@readium/navigator@2.5.0': {}
 
   '@readium/shared@2.2.0':
     dependencies:
-      '@edrlab/thorium-locales': thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/e175badc67ac33dcda6911dd5ebcf7a1570bee8c
+      '@edrlab/thorium-locales': thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/4a9e7d687d9469ffd1c9fa153cb2b7fc93b15cb8
 
   '@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.4)(redux@5.0.1))(react@19.2.4)':
     dependencies:
@@ -7406,6 +7414,12 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
+
+  eslint-plugin-unused-imports@4.4.1(@typescript-eslint/eslint-plugin@8.53.0(@typescript-eslint/parser@8.53.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2):
+    dependencies:
+      eslint: 9.39.2
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 8.53.0(@typescript-eslint/parser@8.53.0(eslint@9.39.2)(typescript@5.9.3))(eslint@9.39.2)(typescript@5.9.3)
 
   eslint-scope@8.4.0:
     dependencies:
@@ -8718,9 +8732,7 @@ snapshots:
     dependencies:
       any-promise: 1.3.0
 
-  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/1680aa167c97909ff3204347a7177631dd598374: {}
-
-  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/e175badc67ac33dcda6911dd5ebcf7a1570bee8c: {}
+  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/4a9e7d687d9469ffd1c9fa153cb2b7fc93b15cb8: {}
 
   tinyexec@0.3.2: {}
 

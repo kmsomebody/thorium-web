@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ThStoreProvider } from "@/lib/ThStoreProvider";
+import { ThGlobalPreferencesProvider } from "@/preferences/ThGlobalPreferencesProvider";
 
 import "./reset.css";
 
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={ inter.className }>
         <ThStoreProvider>
-          { children }
+          <ThGlobalPreferencesProvider>
+            { children }
+          </ThGlobalPreferencesProvider>
         </ThStoreProvider>
       </body>
     </html>

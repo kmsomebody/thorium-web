@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import { useMemo } from "react";
 
 import progressionStyles from "./assets/styles/thorium-web.reader.progression.module.css";
 

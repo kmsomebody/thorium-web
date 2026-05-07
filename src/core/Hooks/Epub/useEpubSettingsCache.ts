@@ -11,8 +11,10 @@ export interface ReadiumCSSSettings {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineLength: LineLengthStateObject | null;
   lineHeight: ThLineHeightOptions | null;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -35,8 +37,10 @@ export const useEpubSettingsCache = (
   fontWeight: number,
   hyphens: boolean | null,
   letterSpacing: number | null,
+  ligatures: boolean | null,
   lineLength: LineLengthStateObject | null,
   lineHeight: ThLineHeightOptions | null,
+  noRuby: boolean | null,
   paragraphIndent: number | null,
   paragraphSpacing: number | null,
   publisherStyles: boolean,
@@ -53,8 +57,10 @@ export const useEpubSettingsCache = (
       fontWeight,
       hyphens,
       letterSpacing,
+      ligatures,
       lineHeight,
       lineLength,
+      noRuby,
       paragraphIndent,
       paragraphSpacing,
       publisherStyles,
@@ -74,8 +80,10 @@ export const useEpubSettingsCache = (
       fontWeight,
       hyphens,
       letterSpacing,
+      ligatures,
       lineHeight,
       lineLength,
+      noRuby,
       paragraphIndent,
       paragraphSpacing,
       publisherStyles,
@@ -92,8 +100,10 @@ export const useEpubSettingsCache = (
     fontWeight,
     hyphens,
     letterSpacing,
+    ligatures,
     lineHeight,
     lineLength,
+    noRuby,
     paragraphIndent,
     paragraphSpacing,
     publisherStyles,

@@ -3,14 +3,12 @@
 import { useContext } from "react";
 import { ThAudioPreferencesContext } from "../ThAudioPreferencesContext";
 import { ThPreferencesContext } from "../ThPreferencesContext";
-import { ThBackLinkPref, ThDockingKeys, ThDockingPref, ThLayoutDirection } from "../models";
+import { ThBackLinkPref, ThDockingKeys, ThDockingPref } from "../models";
 import { ThemeTokens } from "./useTheming";
 import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 
 export interface SharedPreferences {
-  direction?: ThLayoutDirection;
-  locale?: string;
   shortcuts: {
     representation: UnstableShortcutRepresentation;
     joiner?: string;
@@ -58,8 +56,6 @@ export const useSharedPreferences = (): SharedPreferences => {
   const prefs = ctx.preferences;
 
   return {
-    direction: prefs.direction,
-    locale: prefs.locale,
     shortcuts: prefs.shortcuts,
     docking: prefs.docking,
     theming: {

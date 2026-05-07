@@ -7,7 +7,6 @@ import audioStyles from "./assets/styles/thorium-web.audioPlayer.module.css";
 
 import { ThPluginRegistry } from "../Plugins/PluginRegistry";
 
-import { I18nProvider } from "react-aria";
 import { ThPluginProvider } from "../Plugins/PluginProvider";
 import { NavigatorProvider } from "@/core/Navigator";
 
@@ -379,7 +378,6 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
 
   return (
     <>
-    <I18nProvider locale={ preferences.locale }>
     <NavigatorProvider mediaNavigator={ audioNavigator }>
       <main className={ audioLayoutStyles.main }>
         <StatefulDockingWrapper>
@@ -409,7 +407,6 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
         </StatefulDockingWrapper>
       </main>
     </NavigatorProvider>
-    </I18nProvider>
     </>
   );
 };

@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 
 import { ThSettingsKeys, ThSettingsRangeVariant, ThSpacingSettingsKeys } from "@/preferences";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
 
 import { StatefulSettingsItemProps } from "../models/settings";
 
@@ -40,13 +41,15 @@ export const StatefulParagraphSpacing = ({ standalone = true }: StatefulSettings
 
   const paragraphSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.paragraphSpacing);
 
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.paragraphSpacing];
+
   const updatePreference = useCallback(async (value: number | number[] | null) => {
     await submitPreferences({
-      paragraphSpacing: Array.isArray(value) ? value[0] : value
+      [prefKey]: Array.isArray(value) ? value[0] : value
     });
 
-    setParagraphSpacing(getSetting("paragraphSpacing"));
-  }, [submitPreferences, getSetting, setParagraphSpacing]);
+    setParagraphSpacing(getSetting(prefKey));
+  }, [prefKey, submitPreferences, getSetting, setParagraphSpacing]);
 
   return (
     <>

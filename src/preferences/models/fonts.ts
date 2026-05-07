@@ -222,3 +222,131 @@ export const tamilCollection = {
     }
   })
 }
+
+const sysFontDef = (id: string, name: string, family: string): FontDefinition => ({
+  id,
+  name,
+  source: { type: "system" },
+  spec: { family, fallbacks: [], weights: { type: "static", values: [400, 700] } }
+});
+
+export const arabicFarsiCollection: FontCollection = {
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&family=Noto+Naskh+Arabic:wght@400..700&family=Scheherazade+New:wght@400..700",
+    options: {
+      order: ["noto-sans-arabic", "noto-naskh-arabic", "scheherazade-new"],
+      labels: {
+        "noto-sans-arabic": "Noto Sans",
+        "noto-naskh-arabic": "Noto Naskh"
+      },
+      fallbacks: {
+        "noto-naskh-arabic": ["serif"],
+        "scheherazade-new": ["serif"]
+      }
+    }
+  })
+};
+
+export const hebrewCollection: FontCollection = {
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@100..900&family=Frank+Ruhl+Libre:wght@300..900&family=Heebo:wght@100..800",
+    options: {
+      order: ["noto-sans-hebrew", "frank-ruhl-libre", "heebo"],
+      labels: {
+        "frank-ruhl-libre": "Frank Rühl Libre"
+      },
+      fallbacks: {
+        "frank-ruhl-libre": ["serif"]
+      }
+    }
+  })
+};
+
+export const chineseSimplifiedCollection: FontCollection = {
+  "chinese-hans-sans": sysFontDef("chinese-hans-sans", "Sans-Serif", '"PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif'),
+  "chinese-hans-serif": sysFontDef("chinese-hans-serif", "Serif", '"STSong", "SimSun", "AR PL UMing CN", serif'),
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Noto+Serif+SC:wght@200..900",
+    options: {
+      labels: {
+        "noto-sans-sc": "Noto Sans SC",
+        "noto-serif-sc": "Noto Serif SC"
+      },
+      fallbacks: {
+        "noto-serif-sc": ["serif"]
+      }
+    }
+  })
+};
+
+export const chineseTraditionalCollection: FontCollection = {
+  "chinese-hant-sans": sysFontDef("chinese-hant-sans", "Sans-Serif", '"PingFang TC", "Microsoft JhengHei", "WenQuanYi Micro Hei", sans-serif'),
+  "chinese-hant-serif": sysFontDef("chinese-hant-serif", "Serif", '"MingLiU", "AR PL UMing TW", serif'),
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Noto+Serif+TC:wght@200..900",
+    options: {
+      labels: {
+        "noto-sans-tc": "Noto Sans TC",
+        "noto-serif-tc": "Noto Serif TC"
+      },
+      fallbacks: {
+        "noto-serif-tc": ["serif"]
+      }
+    }
+  })
+};
+
+export const japaneseCollection: FontCollection = {
+  "japanese-sans": sysFontDef("japanese-sans", "Sans-Serif", '"Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif'),
+  "japanese-serif": sysFontDef("japanese-serif", "Serif", '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif'),
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900",
+    options: {
+      labels: {
+        "noto-sans-jp": "Noto Sans JP",
+        "noto-serif-jp": "Noto Serif JP"
+      },
+      fallbacks: {
+        "noto-serif-jp": ["serif"]
+      }
+    }
+  })
+};
+
+export const japaneseVerticalCollection: FontCollection = {
+  "japanese-v-serif": sysFontDef("japanese-v-serif", "Serif", '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif'),
+  "japanese-v-sans": sysFontDef("japanese-v-sans", "Sans-Serif", '"Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif'),
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&family=Shippori+Mincho:wght@400..800&family=Noto+Sans+JP:wght@100..900",
+    options: {
+      order: ["noto-serif-jp", "shippori-mincho", "noto-sans-jp"],
+      labels: {
+        "noto-serif-jp": "Noto Serif JP",
+        "noto-sans-jp": "Noto Sans JP"
+      },
+      fallbacks: {
+        "noto-serif-jp": ["serif"],
+        "shippori-mincho": ["serif"]
+      }
+    }
+  })
+};
+
+export const koreanCollection: FontCollection = {
+  "korean-sans": sysFontDef("korean-sans", "Sans-Serif", '"Apple SD Gothic Neo", "Malgun Gothic", "Dotum", sans-serif'),
+  "korean-serif": sysFontDef("korean-serif", "Serif", '"Batang", "Gungsuh", "Apple Myungjo", serif'),
+  ...createDefinitionsFromGoogleFonts({
+    cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&family=Nanum+Myeongjo:wght@400;700;800",
+    options: {
+      order: ["noto-sans-kr", "noto-serif-kr", "nanum-myeongjo"],
+      labels: {
+        "noto-sans-kr": "Noto Sans KR",
+        "noto-serif-kr": "Noto Serif KR"
+      },
+      fallbacks: {
+        "noto-serif-kr": ["serif"],
+        "nanum-myeongjo": ["serif"]
+      }
+    }
+  })
+};

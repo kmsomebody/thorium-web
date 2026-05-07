@@ -14,7 +14,6 @@ import {
   ThTextSettingsKeys,
   ThSpacingSettingsKeys,
   ThThemeKeys,
-  ThLayoutDirection,
   ThSpacingPresetKeys,
   ThActionsTokens,
   ThFontFamilyPref,
@@ -31,7 +30,6 @@ import {
 } from "./models";
 import { ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility } from "@/core/Components/Actions/hooks/useCollapsibility";
-import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
 import { ContentProtectionConfig } from "./models/protection";
 import { validateObjectKeys } from "./helpers";
 
@@ -139,8 +137,6 @@ export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | 
 
 // Main preferences interface with simplified generics
 export interface ThPreferences<K extends CustomizableKeys = {}> {
-  direction?: ThLayoutDirection;
-  locale?: string;
   experiments?: {
     reflow?: Array<ExperimentKey>;
     webPub?: Array<ExperimentKey>;
@@ -259,16 +255,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
 export const createPreferences = <K extends CustomizableKeys = {}>(
   params: ThPreferences<K>
 ): ThPreferences<K> => {
-  // Validate locale preference
-  if (params.locale) {
-    // Extract language code from BCP-47 locale (e.g., "en-US" -> "en")
-    const languageCode = params.locale.split("-")[0];
-    if (!isSupportedLocale(languageCode)) {
-      console.warn(`Locale "${ params.locale }" is not supported. Supported locales: ${ supportedLocales.join(", ") }. Falling back to browser/OS language settings.`);
-      params.locale = undefined; // Let i18n fall back to browser/OS language settings
-    }
-  }
-
   // Validate actions
   if (params.actions) {
     validateObjectKeys<ActionKey<K>, ThActionsTokens>(

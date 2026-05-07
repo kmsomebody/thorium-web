@@ -4,7 +4,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { i18n, initI18n } from "./config";
 import { InitOptions } from "i18next";
-import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
+import { useGlobalPreferences } from "@/preferences/hooks/useGlobalPreferences";
 
 export type ThI18nProviderProps = {
   children: ReactNode;
@@ -14,7 +14,7 @@ export const ThI18nProvider = ({
   children,
   ...options
 }: ThI18nProviderProps) => {
-  const { locale } = useSharedPreferences();
+  const { preferences: { locale } } = useGlobalPreferences();
   const [isInitialized, setIsInitialized] = useState(i18n.isInitialized);
   
   useEffect(() => {

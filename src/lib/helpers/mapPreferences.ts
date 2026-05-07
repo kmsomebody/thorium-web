@@ -50,12 +50,8 @@ const mapPaginatedAffordance = (
   return result;
 };
 
-export const mapPreferencesToState = <T extends CustomizableKeys>(prefs: ThPreferences<T>): PreferencesReducerState => {  
+export const mapPreferencesToState = <T extends CustomizableKeys>(prefs: ThPreferences<T>): PreferencesReducerState => {
   return {
-    l10n: {
-      locale: prefs.locale,
-      direction: prefs.direction
-    },
     progressionFormat: {
       reflow: mapRenditionFormat<ThProgressionFormat | ThProgressionFormat[]>(
         prefs.theming?.progression?.format?.reflow
@@ -143,8 +139,6 @@ export const mapStateToPreferences = <T extends CustomizableKeys = CustomizableK
 
   return {
     ...currentPrefs,
-    locale: state.l10n?.locale ?? currentPrefs.locale,
-    direction: state.l10n?.direction ?? currentPrefs.direction,
     theming: {
       ...currentPrefs.theming,
       ...(state.progressionFormat && {

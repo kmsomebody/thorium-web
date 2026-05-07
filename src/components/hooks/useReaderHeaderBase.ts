@@ -12,6 +12,7 @@ import { useFocusWithin } from "react-aria";
 
 import { setHovering } from "@/lib/readerReducer";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useIsScroll } from "@/hooks";
 
 import { isPositionsListValid } from "../Actions/JumpToPosition/helpers/utils";
 import { isIOSish } from "@/core/Helpers/getPlatform";
@@ -21,9 +22,8 @@ export const useReaderHeaderBase = (actionKeys: string[]) => {
   const { t } = useI18n();
   const { actionsComponentsMap } = usePlugins();
 
-  const actionsMap = useAppSelector(state => state.actions.keys);
   const overflowMap = useAppSelector(state => state.actions.overflow);
-  const isScroll = useAppSelector(state => state.settings.scroll);
+  const isScroll = useIsScroll();
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isHovering = useAppSelector(state => state.reader.isHovering);
   const hasScrollAffordance = useAppSelector(state => state.reader.hasScrollAffordance);

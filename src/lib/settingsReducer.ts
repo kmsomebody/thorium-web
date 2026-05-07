@@ -72,8 +72,10 @@ export interface SettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineHeight: ThLineHeightOptions | null;
   lineLength: LineLengthStateObject | null;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -91,8 +93,10 @@ const initialState: SettingsReducerState = {
   fontWeight: 400,
   hyphens: null,
   letterSpacing: null,
+  ligatures: null,
   lineHeight: ThLineHeightOptions.publisher,
   lineLength: null,
+  noRuby: null,
   paragraphIndent: null,
   paragraphSpacing: null,
   publisherStyles: true,
@@ -178,6 +182,9 @@ export const settingsSlice = createSlice({
     },
     setHyphens: (state, action) => {
       state.hyphens = action.payload
+    },
+    setLigatures: (state, action) => {
+      state.ligatures = action.payload
     },
     setLetterSpacing: (state, action) => {
       handleSpacingSetting(state, action, ThSpacingSettingsKeys.letterSpacing);
@@ -275,6 +282,9 @@ export const settingsSlice = createSlice({
     setTextNormalization: (state, action) => {
       state.textNormalization = action.payload
     },
+    setNoRuby: (state, action) => {
+      state.noRuby = action.payload
+    },
     setWordSpacing: (state, action) => {
       handleSpacingSetting(state, action, ThSpacingSettingsKeys.wordSpacing);
     }
@@ -289,7 +299,8 @@ export const {
   setFontSize,
   setFontWeight, 
   setFontFamily,
-  setHyphens, 
+  setHyphens,
+  setLigatures,
   setLetterSpacing,
   setLineHeight,
   setLineLength,
@@ -299,7 +310,8 @@ export const {
   setScroll,
   setSpacingPreset,
   setTextAlign,
-  setTextNormalization, 
+  setTextNormalization,
+  setNoRuby,
   setWordSpacing
 } = settingsSlice.actions;
 

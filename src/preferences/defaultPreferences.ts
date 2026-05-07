@@ -1,6 +1,4 @@
-"use client";
-
-import { UnstableShortcutMetaKeywords, UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
+import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import {
   ThActionsKeys,
@@ -42,6 +40,14 @@ import {
   defaultTextSettingsSubpanel,
   defaultWordSpacing,
   defaultZoom,
+  // Language-specific font collections
+  arabicFarsiCollection,
+  chineseSimplifiedCollection,
+  chineseTraditionalCollection,
+  hebrewCollection,
+  japaneseCollection,
+  japaneseVerticalCollection,
+  koreanCollection,
   tamilCollection,
 } from "./models";
 import { createPreferences, ThPreferences, DefaultKeys } from "./preferences";
@@ -356,10 +362,14 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
     keys: {
       [ThSettingsKeys.fontFamily]: {
         default: defaultFontCollection,
-        tamil: {
-          supportedLanguages: ["ta"],
-          fonts: tamilCollection
-        }
+        arabic: { supportedLanguages: ["ar", "fa"], fonts: arabicFarsiCollection },
+        hebrew: { supportedLanguages: ["he"], fonts: hebrewCollection },
+        "chinese-simplified": { supportedLanguages: ["zh", "zh-hans", "zh-cn"], fonts: chineseSimplifiedCollection },
+        "chinese-traditional": { supportedLanguages: ["zh-hant", "zh-tw", "zh-hk"], fonts: chineseTraditionalCollection },
+        japanese: { supportedLanguages: ["ja"], fonts: japaneseCollection },
+        "japanese-vertical": { supportedLanguages: ["ja-v"], fonts: japaneseVerticalCollection },
+        korean: { supportedLanguages: ["ko"], fonts: koreanCollection },
+        tamil: { supportedLanguages: ["ta"], fonts: tamilCollection }
       },
       [ThSettingsKeys.letterSpacing]: defaultLetterSpacing,
       [ThSettingsKeys.lineHeight]: {

@@ -1,5 +1,3 @@
-"use client";
-
 export const validateObjectKeys = <K extends string, V>(
   orderArrays: K[][],
   keysObj: Record<string, V>,

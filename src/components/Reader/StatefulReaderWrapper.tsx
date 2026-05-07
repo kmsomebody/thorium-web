@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, useEffect } from "react";
 
 import { Publication, Locator } from "@readium/shared";
+import { getScriptMode } from "@readium/navigator";
 import { ThThemeKeys, ThemeKeyType, useTheming } from "@/preferences";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
@@ -199,7 +200,7 @@ const StatefulReaderContent = ({ profile, publication, plugins, coverUrl, ...pro
     if (!publication) return;
     const resolvedLang = resolveFontLanguage(
       publication.metadata.languages?.[0],
-      publication.metadata.effectiveReadingProgression
+      getScriptMode(publication.metadata)
     );
     dispatch(setFontLanguage(resolvedLang));
   }, [publication, resolveFontLanguage, dispatch]);

@@ -16,10 +16,12 @@ import { useAppDispatch } from "@/lib/hooks";
 import {
   setRTL,
   setFXL,
+  setScriptMode,
   setPositionsList,
   setHasDisplayTransformability,
   setTocTree,
 } from "@/lib/publicationReducer";
+import { getScriptMode } from "@readium/navigator";
 import { buildTocTree } from "@/helpers/buildTocTree";
 import { setReaderProfile, ReaderProfile } from "@/lib/readerReducer";
 import { deserializePositions } from "@/helpers/deserializePositions";
@@ -201,7 +203,9 @@ export const usePublication = ({
   useEffect(() => {
     if (!publication) return;
 
-    // RTL detection
+    // Script mode and RTL detection
+    const mode = getScriptMode(publication.metadata);
+    dispatch(setScriptMode(mode));
     const rtl = publication.metadata.effectiveReadingProgression === ReadingProgression.rtl;
     setIsRTL(rtl);
     dispatch(setRTL(rtl));

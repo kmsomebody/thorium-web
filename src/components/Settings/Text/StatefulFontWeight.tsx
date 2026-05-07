@@ -2,6 +2,9 @@
 
 import { useMemo, useCallback } from "react";
 
+import { ThSettingsKeys } from "@/preferences/models";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
+
 import { StatefulSettingsItemProps } from "../models/settings";
 
 import DefaultIcon from "./assets/icons/format_bold_wght200.svg";
@@ -13,6 +16,7 @@ import { useNavigator } from "@/core/Navigator";
 import { useI18n } from "@/i18n/useI18n";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useReaderSetting } from "../hooks/useReaderSetting";
 import { setFontWeight } from "@/lib/settingsReducer";
 import { setWebPubFontWeight } from "@/lib/webPubSettingsReducer";
 
@@ -24,11 +28,13 @@ export const UnstableStatefulFontWeight = ({ standalone = true }: StatefulSettin
   const profile = useAppSelector(state => state.reader.profile);
   const isWebPub = profile === "webPub";
   
-  const fontWeight = useAppSelector(state => isWebPub ? state.webPubSettings.fontWeight : state.settings.fontWeight) ?? 400;
+  const fontWeight = useReaderSetting("fontWeight");
 
   const dispatch = useAppDispatch();
 
   const { getSetting, submitPreferences } = useNavigator().visual;
+
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.fontWeight];
 
   const items = [
     {
@@ -56,15 +62,15 @@ export const UnstableStatefulFontWeight = ({ standalone = true }: StatefulSettin
 
   const updatePreference = useCallback(async (value: FontWeight) => {
     const fontWeightValue = value === "default" ? 400 : 700;
-    await submitPreferences({ fontWeight: fontWeightValue });
-    const effectiveSetting = getSetting("fontWeight");
+    await submitPreferences({ [prefKey]: fontWeightValue });
+    const effectiveSetting = getSetting(prefKey);
 
     if (isWebPub) {
       dispatch(setWebPubFontWeight(effectiveSetting));
     } else {
       dispatch(setFontWeight(effectiveSetting));
     }
-  }, [isWebPub, submitPreferences, getSetting, dispatch]);
+  }, [prefKey, isWebPub, submitPreferences, getSetting, dispatch]);
 
   return(
     <>

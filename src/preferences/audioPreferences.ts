@@ -1,5 +1,3 @@
-"use client";
-
 import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThemeTokens } from "@/preferences/hooks/useTheming";
@@ -8,7 +6,6 @@ import {
   ThAudioActionKeys,
   ThAudioKeys,
   ThDockingKeys,
-  ThLayoutDirection,
   ThSheetTypes,
   ThThemeKeys,
   ThActionsTokens,
@@ -123,9 +120,6 @@ export interface ThAudioActionsPref<K extends AudioCustomizableKeys = {}> {
 export type ThAudioConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover | ThSheetTypes.modal> | "cover";
 
 export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
-  direction?: ThLayoutDirection;
-  locale?: string;
-
   theming: {
     header?: {
       backLink?: ThBackLinkPref | null;

@@ -2,6 +2,104 @@
 
 This document details the preferences management system that handles user settings, theming, and layout preferences.
 
+## Global Preferences
+
+### ThGlobalPreferencesProvider
+
+App-level provider that owns `locale` and makes UI direction available everywhere via React Aria's `useLocale()`. Must be placed above all readers, inside `ThStoreProvider`.
+
+**Props:**
+```typescript
+interface Props {
+  adapter?: ThGlobalPreferencesAdapter;
+  initialPreferences?: ThGlobalPreferences;
+  children: React.ReactNode;
+}
+```
+
+**Features:**
+- Wraps React Aria's `I18nProvider` so `useLocale()` works anywhere in the tree
+- Sets `document.documentElement.dir` reactively after hydration
+- Validates the locale via `createGlobalPreferences` (unsupported locales fall back to browser default)
+
+```tsx
+import { ThGlobalPreferencesProvider } from "@edrlab/thorium-web/preferences";
+
+<ThStoreProvider>
+  <ThGlobalPreferencesProvider initialPreferences={{ locale: "ar" }}>
+    { children }
+  </ThGlobalPreferencesProvider>
+</ThStoreProvider>
+```
+
+### StatefulGlobalPreferencesProvider
+
+Redux-backed wrapper around `ThGlobalPreferencesProvider`. Reads and writes locale through `globalPreferencesReducer` so it is persisted to `localStorage` automatically.
+
+```tsx
+import { StatefulGlobalPreferencesProvider } from "@edrlab/thorium-web/components";
+
+<ThStoreProvider>
+  <StatefulGlobalPreferencesProvider initialPreferences={{ locale: "fr" }}>
+    { children }
+  </StatefulGlobalPreferencesProvider>
+</ThStoreProvider>
+```
+
+### createGlobalPreferences
+
+Server-safe factory that validates the locale and returns a `ThGlobalPreferences` object. Unsupported locales are silently discarded.
+
+```typescript
+import { createGlobalPreferences } from "@edrlab/thorium-web/preferences";
+
+const prefs = createGlobalPreferences({ locale: "ar" });
+```
+
+Can be called in Next.js Server Components and `layout.tsx` directly (no `"use client"` directive).
+
+### useGlobalPreferences
+
+Hook to read and update global preferences.
+
+```typescript
+import { useGlobalPreferences } from "@edrlab/thorium-web/preferences";
+
+const { preferences, updatePreferences } = useGlobalPreferences();
+// preferences.locale — current locale string or undefined
+
+updatePreferences({ locale: "fr" });
+```
+
+Must be used within a `ThGlobalPreferencesProvider`.
+
+### ThGlobalPreferencesAdapter
+
+Interface for implementing a custom global preferences adapter.
+
+```typescript
+interface ThGlobalPreferencesAdapter {
+  getPreferences(): ThGlobalPreferences;
+  setPreferences(prefs: ThGlobalPreferences): void;
+  subscribe(callback: (prefs: ThGlobalPreferences) => void): void;
+  unsubscribe(callback: (prefs: ThGlobalPreferences) => void): void;
+}
+```
+
+### ThGlobalMemoryPreferencesAdapter
+
+In-memory implementation of `ThGlobalPreferencesAdapter`. Used as the default adapter by `ThGlobalPreferencesProvider`.
+
+```typescript
+new ThGlobalMemoryPreferencesAdapter(initialPreferences?: ThGlobalPreferences)
+```
+
+### ThReduxGlobalPreferencesAdapter
+
+Redux-backed implementation of `ThGlobalPreferencesAdapter`. Reads `state.globalPreferences.locale` and dispatches `setLocale`. Used internally by `StatefulGlobalPreferencesProvider`.
+
+---
+
 ## Audio Preferences
 
 ### ThAudioPreferencesProvider
@@ -112,7 +210,7 @@ function usePreferences<K extends CustomizableKeys = DefaultKeys>(): {
   getFontInjectables: (options?: { language?: string } | { key?: string }, optimize?: boolean) => any;
   getFontsList: (options?: { language?: string } | { key?: string }) => FontCollection;
   getFontMetadata: (fontId: string) => any;
-  resolveFontLanguage: (bcp47Tag: string | undefined, direction: "ltr" | "rtl") => any;
+  resolveFontLanguage: (bcp47Tag: string | undefined, scriptMode: ScriptMode) => any;
 }
 ```
 
@@ -154,6 +252,45 @@ function usePreferenceKeys(): {
 - Custom key support
 - Helper functions for type assertion
 - Includes WebPub-specific keys
+
+### useFilteredPreferenceKeys
+
+Drop-in replacement for `usePreferenceKeys` that additionally filters out settings keys not applicable to the current publication's script mode (`state.publication.scriptMode`). Use this wherever settings UI is rendered to avoid showing irrelevant controls (e.g. text-align in CJK, ruby toggle in Latin).
+
+```typescript
+import { useFilteredPreferenceKeys } from "@edrlab/thorium-web/preferences";
+
+function usePreferenceKeys(): {
+  reflowSettingsKeys: string[];
+  fxlSettingsKeys: string[];
+  webPubSettingsKeys: string[];
+  mainTextSettingsKeys: string[];
+  subPanelTextSettingsKeys: string[];
+  mainSpacingSettingsKeys: string[];
+  subPanelSpacingSettingsKeys: string[];
+  // ... same shape as usePreferenceKeys
+}
+```
+
+Must be used within a `ThPreferencesProvider` and a `ThStoreProvider` (reads `scriptMode` and `isFXL` from the store).
+
+---
+
+## Helpers
+
+### SETTINGS_KEY_TO_PREFERENCE
+
+A record mapping every `ThSettingsKeys` value to the corresponding preference property name. Useful when building generic settings components that need to map a key to its underlying preference.
+
+```typescript
+import { SETTINGS_KEY_TO_PREFERENCE } from "@edrlab/thorium-web/preferences";
+
+// Example: ThSettingsKeys.ligatures → "ligatures"
+// Example: ThSettingsKeys.layout    → "scroll"
+const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.layout]; // "scroll"
+```
+
+---
 
 ### useTheming
 
