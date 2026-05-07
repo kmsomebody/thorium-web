@@ -298,13 +298,7 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       ThActionsKeys.toc,
       ThActionsKeys.fullscreen
     ],
-    collapse: {
-      // Number of partially icons to display
-      // value "all" a keyword for the length of displayOrder above
-      // Icons with visibility always are excluded from collapsing
-      [ThBreakpoints.compact]: 2,
-      [ThBreakpoints.medium]: 3
-    },
+    collapse: true,
     keys: {
       [ThActionsKeys.settings]: defaultSettingsAction,
       [ThActionsKeys.fullscreen]: defaultFullscreenAction,

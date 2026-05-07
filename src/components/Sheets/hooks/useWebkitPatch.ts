@@ -29,7 +29,7 @@ export const useWebkitPatch = (isOpen: boolean) => {
   try {
     const visual = useNavigator().visual;
     getCframes = visual.getCframes;
-  } catch (e) {
+  } catch (_e) {
     // Visual navigator not available (audio profile)
     getCframes = undefined;
   }
@@ -73,7 +73,7 @@ export const useWebkitPatch = (isOpen: boolean) => {
         try {
           frameWindow = frame?.window;
           if (!frameWindow?.document?.scrollingElement) return;
-        } catch (e) {
+        } catch (_e) {
           // Frame is not accessible (cross-origin or invalid state)
           return;
         }

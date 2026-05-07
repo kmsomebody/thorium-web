@@ -21,6 +21,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { toggleActionOpen } from "@/lib/actionsReducer";
 import { useNavigator } from "@/core/Navigator";
 
+import { isIOSish } from "@/core/Helpers/getPlatform";
+
 export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) => {
   const { t } = useI18n();
   const profile = useAppSelector(state => state.reader.profile);
@@ -44,6 +46,8 @@ export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) 
     if (volume <= (max / 3) * 2) return VolumeDownIcon;
     return VolumeUpIcon;
   }, [volume, range]);
+
+  if (isIOSish()) return null;
 
   return (
     <StatefulActionIcon

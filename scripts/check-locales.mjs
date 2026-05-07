@@ -107,7 +107,7 @@ function isKeyDefinedInReference(key, refFiles) {
           return { exists: true, sourceFile: file };
         }
       }
-    } catch (error) {
+    } catch (_error) {
       continue;
     }
   }
@@ -173,7 +173,7 @@ function processLocaleFile(locale, file, refContent) {
       total,
       percentage: total > 0 ? Math.round((translated / total) * 100) : 0
     };
-  } catch (error) {
+  } catch (_error) {
     const totalInFile = countProperties(refContent);
     return {
       file,
@@ -292,18 +292,15 @@ function isKeyTranslatedInLocale(key, locale, refFiles) {
       // Check if the base key exists in target
       let keyExistsInTarget = keyExists(targetData, key);
       let targetValue = null;
-      let refValue = null;
       
       if (keyExistsInTarget) {
         targetValue = getKeyValue(targetData, key);
-        refValue = getKeyValue(refData, key);
       } else {
         // Check plural variants
         for (const variant of pluralVariants) {
           const fullKey = key + variant;
           if (keyExists(targetData, fullKey) && keyExists(refData, fullKey)) {
             targetValue = getKeyValue(targetData, fullKey);
-            refValue = getKeyValue(refData, fullKey);
             keyExistsInTarget = true;
             break;
           }
@@ -315,7 +312,7 @@ function isKeyTranslatedInLocale(key, locale, refFiles) {
         // Don't compare with reference value as translations might be the same
         return true;
       }
-    } catch (error) {
+    } catch (_error) {
       continue;
     }
   }

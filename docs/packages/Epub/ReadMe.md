@@ -33,7 +33,8 @@ import {
   ThI18nProvider, 
   useAppSelector, 
   useAppDispatch,
-  setBreakpoint, 
+  setBreakpoint,
+  setContainerBreakpoint,
   setColorScheme, 
   setContrast, 
   setForcedColors, 
@@ -53,7 +54,9 @@ const ReaderWithTheming = ({ publication, localDataKey }) => {
   const dispatch = useAppDispatch();
 
   // Init theming (breakpoints, theme, media queries…)
-  useTheming({ 
+  // setContainerRef must be attached to the reader's root container so that
+  // container-width breakpoints are resolved independently of the viewport.
+  const { setContainerRef } = useTheming({ 
     theme: theme,
     themeKeys: preferences.theming.themes.keys,
     systemKeys: preferences.theming.themes.systemThemes,
@@ -67,6 +70,7 @@ const ReaderWithTheming = ({ publication, localDataKey }) => {
       })
     },
     onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
+    onContainerBreakpointChange: (breakpoint) => dispatch(setContainerBreakpoint(breakpoint)),
     onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
     onContrastChange: (contrast) => dispatch(setContrast(contrast)),
     onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
@@ -75,7 +79,7 @@ const ReaderWithTheming = ({ publication, localDataKey }) => {
     onReducedTransparencyChange: (reducedTransparency) => dispatch(setReducedTransparency(reducedTransparency))
   });
 
-  return <StatefulReader publication={ publication } localDataKey={ localDataKey } />;
+  return <StatefulReader ref={ setContainerRef } publication={ publication } localDataKey={ localDataKey } />;
 };
 
 const App = ({ manifestUrl }) => {
@@ -251,7 +255,8 @@ import {
   StatefulReaderProps, 
   useAppSelector, 
   useAppDispatch,
-  setBreakpoint, 
+  setBreakpoint,
+  setContainerBreakpoint,
   setColorScheme, 
   setContrast, 
   setForcedColors, 
@@ -279,7 +284,7 @@ const ReaderWithCustomPlugins = ({
   const dispatch = useAppDispatch();
 
   // Init theming (breakpoints, theme, media queries…)
-  useTheming({ 
+  const { setContainerRef } = useTheming({ 
     theme: theme,
     themeKeys: preferences.theming.themes.keys,
     systemKeys: preferences.theming.themes.systemThemes,
@@ -293,6 +298,7 @@ const ReaderWithCustomPlugins = ({
       })
     },
     onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
+    onContainerBreakpointChange: (breakpoint) => dispatch(setContainerBreakpoint(breakpoint)),
     onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
     onContrastChange: (contrast) => dispatch(setContrast(contrast)),
     onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
@@ -303,6 +309,7 @@ const ReaderWithCustomPlugins = ({
     
   return (
     <StatefulReader 
+      ref={ setContainerRef }
       publication={ publication } 
       localDataKey={ localDataKey } 
       plugins={ plugins }

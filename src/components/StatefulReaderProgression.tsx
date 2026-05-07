@@ -36,31 +36,6 @@ export const StatefulReaderProgression = ({
   const breakpoint = useAppSelector(state => state.theming.breakpoint);
 
   
-  // Create a stable string representation of progression data to prevent infinite loops
-  const progressionKey = useMemo(() => {
-    if (!unstableTimeline?.progression) return "";
-    const { 
-      currentPositions = [],
-      totalPositions,
-      relativeProgression,
-      totalProgression,
-      currentChapter,
-      positionsLeft,
-      totalItems,
-      currentIndex
-    } = unstableTimeline.progression;
-    return JSON.stringify({
-      currentPositions,
-      totalPositions,
-      relativeProgression,
-      totalProgression,
-      currentChapter,
-      positionsLeft,
-      totalItems,
-      currentIndex
-    });
-  }, [unstableTimeline?.progression]);
-  
   const fallbackFormat = useMemo(() => {
     return {
       variants: fallbackVariant,

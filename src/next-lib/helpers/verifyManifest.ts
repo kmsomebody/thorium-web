@@ -83,7 +83,7 @@ export const verifyManifestUrl = (
       url: manifestUrl
     };
     
-  } catch (error) {
+  } catch (_error) {
     return {
       allowed: false,
       url: manifestUrl,

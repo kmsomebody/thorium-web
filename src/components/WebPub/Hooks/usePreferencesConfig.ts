@@ -91,7 +91,6 @@ export const useWebPubPreferencesConfig = ({
     if (hasDisplayTransformability) {
       if (isFontFamilyUsed) preferences.fontFamily = getFontMetadata(settings.fontFamily[fontLanguage] ?? "")?.fontStack || null;
       if (isFontWeightUsed) preferences.fontWeight = settings.fontWeight;
-      if (isHyphensUsed) preferences.hyphens = settings.hyphens;
       if (isLigaturesUsed) preferences.ligatures = settings.ligatures;
       if (isNoRubyUsed) preferences.noRuby = settings.noRuby;
       if (isLetterSpacingUsed) preferences.letterSpacing = settings.letterSpacing;
@@ -101,6 +100,7 @@ export const useWebPubPreferencesConfig = ({
       if (isParagraphIndentUsed) preferences.paragraphIndent = settings.paragraphIndent;
       if (isParagraphSpacingUsed) preferences.paragraphSpacing = settings.paragraphSpacing;
       if (isTextAlignUsed) preferences.textAlign = settings.textAlign as TextAlignment | null | undefined;
+      if (isHyphensUsed && settings.textAlign !== "publisher") preferences.hyphens = settings.hyphens;
       if (isTextNormalizeUsed) preferences.textNormalization = settings.textNormalization;
       if (isWordSpacingUsed) preferences.wordSpacing = settings.wordSpacing;
     }

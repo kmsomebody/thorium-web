@@ -31,6 +31,11 @@ const eslintConfig = [
     rules: {
       // Unused imports rule
       "unused-imports/no-unused-imports": "warn",
+      "no-unused-vars": ["warn", { 
+        "argsIgnorePattern": "^_", 
+        "varsIgnorePattern": "^_", 
+        "caughtErrorsIgnorePattern": "^_" 
+      }],
 
       // Your existing rules
       "react-hooks/rules-of-hooks": "error",

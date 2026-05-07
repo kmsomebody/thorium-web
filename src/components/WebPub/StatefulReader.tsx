@@ -76,7 +76,8 @@ export const ExperimentalWebPubStatefulReader = ({
   publication,
   localDataKey,
   plugins,
-  positionStorage
+  positionStorage,
+  containerRefSetter
 }: StatefulReaderProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
@@ -98,13 +99,13 @@ export const ExperimentalWebPubStatefulReader = ({
   return (
     <>
       <ThPluginProvider>
-        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } />
+        <StatefulReaderInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } containerRefSetter={ containerRefSetter } />
       </ThPluginProvider>
     </>
   );
 };
 
-const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage }) => {
+const StatefulReaderInner = ({ publication, localDataKey, positionStorage, containerRefSetter }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage; containerRefSetter?: (el: Element | null) => void }) => {
   const { preferences, getFontMetadata, getFontInjectables } = usePreferences();
   const { t } = useI18n();
   const { getEffectiveSpacingValue } = useSpacingPresets();
@@ -136,6 +137,8 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const hasDisplayTransformability = useAppSelector(state => state.publication.hasDisplayTransformability);
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isHovering = useAppSelector(state => state.reader.isHovering);
+  const breakpoint = useAppSelector(state => state.theming.breakpoint);
+  const containerBreakpoint = useAppSelector(state => state.theming.containerBreakpoint);
 
   const cache = useWebPubSettingsCache(
     fontFamily,
@@ -301,7 +304,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
   // Initialize reader using the new composite hook
-  const { navigatorReady } = useWebPubReaderInit({
+  useWebPubReaderInit({
     container,
     publication,
     initialPosition,
@@ -333,14 +336,17 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
     <NavigatorProvider visualNavigator={ webPubNavigator }>
       <main className={ readerStyles.main }>
         <StatefulDockingWrapper>
-          <div 
-            className={ 
+          <div
+            ref={ containerRefSetter }
+            className={
               classNames(
                 getReaderClassNames({
                   isScroll: true,
                   isImmersive,
                   isHovering,
-                  layoutUI
+                  layoutUI,
+                  breakpoint,
+                  containerBreakpoint
                 })
               )
             }

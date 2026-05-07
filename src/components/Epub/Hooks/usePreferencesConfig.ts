@@ -138,7 +138,6 @@ export const useEpubPreferencesConfig = ({
       fontFamily: isFontFamilyUsed ? getFontMetadata(settings.fontFamily[fontLanguage] ?? "")?.fontStack || null : undefined,
       fontSize: isFontSizeUsed ? settings.fontSize : undefined,
       fontWeight: isFontWeightUsed ? settings.fontWeight : undefined,
-      hyphens: isHyphensUsed ? settings.hyphens : undefined,
       ligatures: isLigaturesUsed ? settings.ligatures : undefined,
       noRuby: isNoRubyUsed ? settings.noRuby : undefined,
       letterSpacing: (!isLetterSpacingUsed || settings.publisherStyles) ? undefined : settings.letterSpacing,
@@ -164,6 +163,7 @@ export const useEpubPreferencesConfig = ({
       paragraphSpacing: (!isParagraphSpacingUsed || settings.publisherStyles) ? undefined : settings.paragraphSpacing,
       scroll: isVerticalScript ? true : (!isLayoutUsed ? undefined : settings.scroll),
       textAlign: isTextAlignUsed ? settings.textAlign as unknown as TextAlignment | null | undefined : undefined,
+      hyphens: isHyphensUsed && settings.textAlign !== "publisher" ? settings.hyphens : undefined,
       textNormalization: isTextNormalizeUsed ? settings.textNormalization : undefined,
       wordSpacing: (!isWordSpacingUsed || settings.publisherStyles) ? undefined : settings.wordSpacing,
       ...themeProps

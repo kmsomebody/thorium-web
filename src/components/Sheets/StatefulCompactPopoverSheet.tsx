@@ -18,7 +18,6 @@ export interface StatefulCompactPopoverSheetProps extends StatefulSheet {
 }
 
 export const StatefulCompactPopoverSheet = ({ 
-    id,
     triggerRef,
     heading,
     className,

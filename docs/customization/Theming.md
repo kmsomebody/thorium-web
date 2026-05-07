@@ -11,7 +11,7 @@ The `theming` property is responsible for the look and feel of the app, as it al
 
 ## Breakpoints
 
-Object `breakpoints` can be used to customize the media queries that will be used to target different widths. It is taking inspiration from [Material Design’s Window-size classes](https://m3.material.io/foundations/layout/applying-layout/window-size-classes). 
+Object `breakpoints` can be used to customize the breakpoint thresholds used throughout the UI. It is taking inspiration from [Material Design’s Window-size classes](https://m3.material.io/foundations/layout/applying-layout/window-size-classes). 
 
 The property is in enum `ThBreakpoints` and the value a `number` (in `px`). This value represents the `max-width` for each breakpoint. 
 
@@ -34,9 +34,16 @@ theming: {
 
 Here we nullify the `expanded` breakpoint, which means it won’t be used. We will directly switch from `medium` to `large`. 
 
-Note that applying a number to `xLarge` will effectively constrain the Media Query to this max value. In other words, if your screen/window is larger than this value, then all breakpoints will be false. This is why it will almost always be `null`.
+Note that applying a number to `xLarge` will effectively constrain the range to this max value. In other words, if your screen/window is larger than this value, then all breakpoints will be false. This is why it will almost always be `null`.
 
-These static breakpoints will be reused for docking, collapsibility, sheets/containers, etc.
+### Window breakpoint vs. container breakpoint
+
+The same `ThBreakpoints` thresholds are evaluated in two distinct contexts and exposed separately in Redux state:
+
+- **`breakpoint`** — resolved against the **viewport (window) width** via CSS media queries. Used for layout decisions that depend on the overall screen size.
+- **`containerBreakpoint`** — resolved against the **reader container’s width** via a ResizeObserver. This is the equivalent of a CSS container query: if the reader is embedded in a panel or a smaller layout, its container breakpoint may differ from the window breakpoint.
+
+Most UI components — collapsibility (breakpoint mode), running head format, footer display, paginated arrows — consume `containerBreakpoint` rather than `breakpoint`, so that they respond to the space actually available to the reader, not to the full viewport.
 
 ## Layout
 

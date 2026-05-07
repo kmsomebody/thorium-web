@@ -103,7 +103,7 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
     });
 
     const currentLineHeight = getSetting(prefKey);
-    const currentDisplayLineHeightOption = Object.entries(lineHeightOptions).find(([key, value]) => value === currentLineHeight)?.[0] as ThLineHeightOptions;
+    const currentDisplayLineHeightOption = Object.entries(lineHeightOptions).find(([_key, value]) => value === currentLineHeight)?.[0] as ThLineHeightOptions;
 
     setLineHeight(currentDisplayLineHeightOption);
   }, [prefKey, submitPreferences, getSetting, setLineHeight, lineHeightOptions]);

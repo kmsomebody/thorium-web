@@ -29,6 +29,7 @@ export interface ThemeReducerState {
   prefersContrast: ThContrast;
   forcedColors: boolean;
   breakpoint?: ThBreakpoints;
+  containerBreakpoint?: ThBreakpoints;
 }
 
 const initialState: ThemeReducerState = {
@@ -44,7 +45,8 @@ const initialState: ThemeReducerState = {
   prefersReducedTransparency: false, 
   prefersContrast: ThContrast.none,
   forcedColors: false, 
-  breakpoint: undefined
+  breakpoint: undefined,
+  containerBreakpoint: undefined
 }
 
 export const themeSlice = createSlice({
@@ -77,6 +79,9 @@ export const themeSlice = createSlice({
     },
     setBreakpoint: (state, action) => {
       state.breakpoint = action.payload
+    },
+    setContainerBreakpoint: (state, action) => {
+      state.containerBreakpoint = action.payload
     }
   }
 })
@@ -92,6 +97,7 @@ export const {
   setContrast, 
   setForcedColors, 
   setBreakpoint,
+  setContainerBreakpoint,
 } = themeSlice.actions;
 
 export default themeSlice.reducer;

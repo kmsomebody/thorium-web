@@ -21,7 +21,7 @@ With a couple of exceptions, settings are implemented following a “one-two pun
 
 - hyphens are disabled when using publisher text-alignment
 - If hyphens are `undefined` when switching from publisher text-alignement to justify, they are automatically set to `true`, but not if switching from left/right to justify
-- **ToDo:** keep the value set automatically or by the user and re-apply it on left/right and justify – currently it is reset every time you switch back to publisher
+- hyphens value is preserved when switching text alignment modes (the local state is maintained, only the navigator preference is nullified in publisher mode)
 
 #### Text Normalization
 

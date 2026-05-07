@@ -57,23 +57,52 @@ The `useWebPubSettingsCache` hook provides a stateless cache for WebPub settings
 ```tsx
 import { 
   useBreakpoints,
+  useContainerBreakpoints,
   useMediaQuery 
 } from "@edrlab/thorium-web/core/hooks";
-
-const MyComponent = () => {
-  const isLandscape = useMediaQuery("(orientation: landscape)");
-    
-  return (
-    <div>
-      <p>Is landscape: { isLandscape ? "Yes" : "No" }</p>
-    </div>
-  );
-};
 ```
 
-These hooks are used in `useTheming` hook from `@edrlab/thorium-web/core/preferences` package. They are exposed in case they can be useful or if you want to use them in your own implementation of an app.
+These hooks are used internally by `useTheming` from `@edrlab/thorium-web/core/preferences`. They are exposed for custom implementations.
 
-TBD.
+### `useMediaQuery`
+
+Returns `true` when the given media query string matches, `false` otherwise. Responds to changes in real time.
+
+```tsx
+const isLandscape = useMediaQuery("(orientation: landscape)");
+```
+
+### `useBreakpoints`
+
+Converts the `breakpointsMap` from preferences into CSS media queries evaluated against the **viewport (window) width**. Returns a `ThBreakpointsObject` with a boolean per breakpoint and a `current` property holding the active `ThBreakpoints` key.
+
+```tsx
+const breakpoints = useBreakpoints(preferences.theming.breakpoints, (bp) => {
+  // called when the active breakpoint changes
+  console.log("window breakpoint:", bp);
+});
+
+if (breakpoints.current === ThBreakpoints.compact) { ... }
+```
+
+### `useContainerBreakpoints`
+
+Resolves the active `ThBreakpoints` value against the **width of a specific DOM element** (the reader's root container) rather than the viewport. Uses a ResizeObserver so it updates whenever the element resizes — equivalent to a CSS container query.
+
+```tsx
+const setContainerRef = useContainerBreakpoints(
+  preferences.theming.breakpoints,
+  (breakpoint) => {
+    // called each time the container crosses a breakpoint threshold
+    dispatch(setContainerBreakpoint(breakpoint));
+  }
+);
+
+// Attach to whichever element defines the reader's available width
+return <div ref={ setContainerRef } className={ styles.readerShell }>...</div>;
+```
+
+`setContainerRef` is a stable callback ref — pass it directly as a `ref` prop. You do not need to manage the element reference yourself.
 
 ## Accessibility Hooks
 

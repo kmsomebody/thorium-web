@@ -11,7 +11,6 @@ export const StatefulReaderPagination = ({
   links,
   compounds,
   children,
-  dir,
   ...props
 }: ThPaginationProps) => {
   const leftButtonRef = useRef<HTMLButtonElement>(null);

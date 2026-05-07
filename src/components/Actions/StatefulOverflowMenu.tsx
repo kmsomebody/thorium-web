@@ -2,6 +2,8 @@
 
 import React, { ReactNode, RefObject } from "react";
 
+const MENU_DEPENDENCIES = ["Trigger"];
+
 import overflowMenuStyles from "./assets/styles/thorium-web.overflow.module.css";
 
 import MenuIcon from "./assets/icons/more_vert.svg";
@@ -49,7 +51,7 @@ export const StatefulOverflowMenu = ({
         triggerRef={ triggerRef }
         selectionMode="none" 
         className={ overflowMenuStyles.menu }
-        dependencies={ ["Trigger"] }
+        dependencies={ MENU_DEPENDENCIES }
         items={ items }
         compounds={{
           menuTrigger: {

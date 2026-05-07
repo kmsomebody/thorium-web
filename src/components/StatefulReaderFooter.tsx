@@ -35,14 +35,13 @@ export const StatefulReaderFooter = ({
   const { t } = useI18n();
   const { direction } = useLocale();
   const footerRef = useRef<HTMLDivElement>(null);
-  const readerProfile = useAppSelector(state => state.reader.profile);
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isHovering = useAppSelector(state => state.reader.isHovering);
   const hasScrollAffordance = useAppSelector(state => state.reader.hasScrollAffordance);
   const isRTL = useAppSelector(state => state.publication.isRTL);
   const isFXL = useAppSelector(state => state.publication.isFXL);
   const isScroll = useIsScroll();
-  const breakpoint = useAppSelector(state => state.theming.breakpoint);
+  const breakpoint = useAppSelector(state => state.theming.containerBreakpoint);
   const reducedMotion = useAppSelector(state => state.theming.prefersReducedMotion);
   const timeline = useAppSelector(state => state.publication.unstableTimeline);
 

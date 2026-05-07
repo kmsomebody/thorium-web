@@ -310,6 +310,7 @@ interface useThemingProps<T extends string> {
   autoThemeSource?: "cover" | "system";
   onCoverThemeGenerated?: (themeTokens: ThemeTokens) => void;
   onBreakpointChange?: (breakpoint: ThBreakpoints | null) => void;
+  onContainerBreakpointChange?: (breakpoint: ThBreakpoints | null) => void;
   onColorSchemeChange?: (colorScheme: ThColorScheme) => void;
   onContrastChange?: (contrast: ThContrast) => void;
   onForcedColorsChange?: (forcedColors: boolean) => void;
@@ -322,6 +323,7 @@ function useTheming<T extends string>(props: useThemingProps<T>): {
   inferThemeAuto: () => T | undefined;
   theme?: string;
   breakpoints: ThBreakpoints | null;
+  setContainerRef: (el: Element | null) => void;
   colorScheme: ThColorScheme;
   contrast: ThContrast;
   forcedColors: boolean;
@@ -338,7 +340,8 @@ function useTheming<T extends string>(props: useThemingProps<T>): {
 - System theme detection
 - Cover-based automatic theme generation (`autoThemeSource: "cover"`)
 - CSS variable handling
-- Media query support
+- Viewport media query breakpoints (`onBreakpointChange`) and container-width breakpoints (`onContainerBreakpointChange`) via ResizeObserver
+- `setContainerRef` — callback ref to attach to the reader's root container element; drives `onContainerBreakpointChange` (see [Theming — Wiring the container breakpoint](../../../customization/Theming.md#wiring-the-container-breakpoint))
 - Automatic theme color meta tag updates
 - `themeResolved` flag to defer rendering until cover theme extraction completes
 

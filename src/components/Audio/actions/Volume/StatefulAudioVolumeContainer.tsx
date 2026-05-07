@@ -19,6 +19,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setVolume } from "@/lib/audioSettingsReducer";
 import { setActionOpen } from "@/lib/actionsReducer";
 
+import { isIOSish } from "@/core/Helpers/getPlatform";
+
 export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: StatefulActionContainerProps) => {
   const volume = useAppSelector(state => state.audioSettings.volume);
   const profile = useAppSelector(state => state.reader.profile);
@@ -51,6 +53,8 @@ export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: 
       dispatch(setActionOpen({ key: ThAudioActionKeys.volume, isOpen: open, profile }));
     }
   }, [dispatch, profile]);
+
+  if (isIOSish()) return null;
 
   return (
     <StatefulSheetWrapper

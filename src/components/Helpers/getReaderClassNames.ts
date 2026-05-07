@@ -9,12 +9,16 @@ interface ReaderStyleOptions {
   isHovering?: boolean;
   isFXL?: boolean;
   breakpoint?: string;
+  containerBreakpoint?: string;
 }
 
 const LAYOUT_CLASSES = {
   [ThLayoutUI.stacked]: "thorium_web_stackedUI",
   [ThLayoutUI.layered]: "thorium_web_layeredUI",
 } as const;
+
+const toBreakpointClass = (prefix: string, bp: string) =>
+  `${ prefix }${ bp.charAt(0).toUpperCase() + bp.slice(1) }`;
 
 export function getReaderClassNames(options: ReaderStyleOptions): string {
   const {
@@ -24,6 +28,7 @@ export function getReaderClassNames(options: ReaderStyleOptions): string {
     isHovering = false,
     isFXL = false,
     breakpoint,
+    containerBreakpoint,
   } = options;
 
   return classNames(
@@ -33,6 +38,7 @@ export function getReaderClassNames(options: ReaderStyleOptions): string {
     isHovering && "thorium_web_isHovering",
     isFXL ? "thorium_web_isFXL" : "thorium_web_isReflow",
     LAYOUT_CLASSES[layoutUI],
-    breakpoint ? `thorium_web_is${ breakpoint.charAt(0).toUpperCase() + breakpoint.slice(1) }` : undefined
+    breakpoint ? toBreakpointClass("thorium_web_is", breakpoint) : undefined,
+    containerBreakpoint ? toBreakpointClass("thorium_web_container_is", containerBreakpoint) : undefined
   );
 }

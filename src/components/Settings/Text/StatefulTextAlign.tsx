@@ -31,6 +31,7 @@ export const StatefulTextAlign = ({ standalone = true }: StatefulSettingsItemPro
 
   const isRTL = useAppSelector(state => state.publication.isRTL);
   const textAlign = useReaderSetting("textAlign");
+  const hyphens = useReaderSetting("hyphens");
   const dispatch = useAppDispatch();
 
   const { getSetting, submitPreferences } = useNavigator().visual;
@@ -67,40 +68,58 @@ export const StatefulTextAlign = ({ standalone = true }: StatefulSettingsItemPro
   ];
 
   const updatePreference = useCallback(async (value: string) => {
-    const textAlign: TextAlignment | null = value === ThTextAlignOptions.publisher
+    // Capture old textAlign value before any updates
+    const oldTextAlign = textAlign;
+
+    const navigatorTextAlign: TextAlignment | null = value === ThTextAlignOptions.publisher
       ? null
       : value === ThTextAlignOptions.start
         ? TextAlignment.start
         : TextAlignment.justify;
 
-    const currentHyphens = getSetting(hyphensPrefKey) as boolean | undefined | null;
-
-    const hyphens = textAlign === null
-      ? null
-      : (currentHyphens ?? textAlign === TextAlignment.justify);
     const preferencesToSubmit: any = {
-      [textAlignPrefKey]: textAlign
+      [textAlignPrefKey]: navigatorTextAlign
     };
-
-    // Only include hyphens if the plugin is being used
-    if (isHyphensUsed) {
-      preferencesToSubmit[hyphensPrefKey] = hyphens;
-    }
 
     await submitPreferences(preferencesToSubmit);
 
     const textAlignSetting = getSetting(textAlignPrefKey) as TextAlignment | null;
     const textAlignValue = textAlignSetting === null ? ThTextAlignOptions.publisher : textAlignSetting as unknown as ThTextAlignOptions;
-    const effectiveHyphens = getSetting(hyphensPrefKey);
 
     if (isWebPub) {
       dispatch(setWebPubTextAlign(textAlignValue));
-      dispatch(setWebPubHyphens(effectiveHyphens));
     } else {
       dispatch(setTextAlign(textAlignValue));
-      dispatch(setHyphens(effectiveHyphens));
     }
-  }, [hyphensPrefKey, textAlignPrefKey, isWebPub, getSetting, submitPreferences, dispatch, isHyphensUsed]);
+
+    // Handle hyphens after textAlign is submitted and processed
+    if (isHyphensUsed) {
+      if (navigatorTextAlign === null) {
+        // Publisher mode: nullify hyphens for navigator, do NOT update store
+        await submitPreferences({ [hyphensPrefKey]: null });
+      } else {
+        // Non-publisher: detect if transitioning from publisher
+        const wasPublisher = oldTextAlign === ThTextAlignOptions.publisher;
+        
+        let hyphensToSubmit: boolean | null;
+        if (wasPublisher && hyphens === null) {
+          // Transitioning from publisher with never-set hyphens: auto-enable for justify, disable for start
+          hyphensToSubmit = navigatorTextAlign === TextAlignment.justify;
+        } else {
+          // Not from publisher, or hyphens was already set: use stored value
+          hyphensToSubmit = hyphens;
+        }
+        
+        await submitPreferences({ [hyphensPrefKey]: hyphensToSubmit });
+        const effectiveHyphens = getSetting(hyphensPrefKey);
+        if (isWebPub) {
+          dispatch(setWebPubHyphens(effectiveHyphens));
+        } else {
+          dispatch(setHyphens(effectiveHyphens));
+        }
+      }
+    }
+  }, [hyphensPrefKey, textAlignPrefKey, isWebPub, getSetting, submitPreferences, dispatch, isHyphensUsed, hyphens, textAlign]);
 
   return (
     <>

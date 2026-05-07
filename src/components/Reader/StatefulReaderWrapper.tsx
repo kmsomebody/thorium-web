@@ -13,6 +13,7 @@ import { ThI18nProvider } from "@/i18n/ThI18nProvider";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import {
   setBreakpoint,
+  setContainerBreakpoint,
   setColorScheme,
   setContrast,
   setForcedColors,
@@ -47,6 +48,7 @@ export interface StatefulReaderProps {
   localDataKey: string | null;
   plugins?: ThPlugin[];
   positionStorage?: PositionStorage;
+  containerRefSetter?: (el: Element | null) => void;
 }
 
 export type ThPluginFactory = () => ThPlugin[] | Promise<ThPlugin[]>;
@@ -145,7 +147,7 @@ const StatefulAudioContent = ({ publication, localDataKey, positionStorage, cove
 
   const { coverBlobUrl, coverReady } = useCoverBlobUrl(coverUrl);
 
-  const { themeResolved } = useTheming<ThemeKeyType>({
+  const { themeResolved, setContainerRef } = useTheming<ThemeKeyType>({
     theme: themeObject.audio ?? "auto",
     themeKeys: preferences.theming.themes.keys,
     systemKeys: preferences.theming.themes.systemThemes,
@@ -161,6 +163,7 @@ const StatefulAudioContent = ({ publication, localDataKey, positionStorage, cove
     },
     onCoverThemeGenerated: (themeTokens) => dispatch(setCoverTheme(themeTokens)),
     onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
+    onContainerBreakpointChange: (breakpoint) => dispatch(setContainerBreakpoint(breakpoint)),
     onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
     onContrastChange: (contrast) => dispatch(setContrast(contrast)),
     onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
@@ -172,7 +175,7 @@ const StatefulAudioContent = ({ publication, localDataKey, positionStorage, cove
   return (
     <StatefulLoader isLoading={ externalLoading || !themeResolved || !coverReady }>
       <Suspense>
-        <StatefulPlayer publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverBlobUrl } />
+        <StatefulPlayer publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverBlobUrl } containerRefSetter={ setContainerRef } />
       </Suspense>
     </StatefulLoader>
   );
@@ -205,7 +208,7 @@ const StatefulReaderContent = ({ profile, publication, plugins, coverUrl, ...pro
     dispatch(setFontLanguage(resolvedLang));
   }, [publication, resolveFontLanguage, dispatch]);
 
-  useTheming<ThemeKeyType>({
+  const { setContainerRef } = useTheming<ThemeKeyType>({
     theme,
     themeKeys: preferences.theming.themes.keys,
     systemKeys: preferences.theming.themes.systemThemes,
@@ -222,6 +225,7 @@ const StatefulReaderContent = ({ profile, publication, plugins, coverUrl, ...pro
     },
     onCoverThemeGenerated: (themeTokens) => dispatch(setCoverTheme(themeTokens)),
     onBreakpointChange: (breakpoint) => dispatch(setBreakpoint(breakpoint)),
+    onContainerBreakpointChange: (breakpoint) => dispatch(setContainerBreakpoint(breakpoint)),
     onColorSchemeChange: (colorScheme) => dispatch(setColorScheme(colorScheme)),
     onContrastChange: (contrast) => dispatch(setContrast(contrast)),
     onForcedColorsChange: (forcedColors) => dispatch(setForcedColors(forcedColors)),
@@ -232,9 +236,9 @@ const StatefulReaderContent = ({ profile, publication, plugins, coverUrl, ...pro
 
   switch (profile) {
     case "epub":
-      return <Suspense><StatefulEpubReader publication={ publication } { ...props } plugins={ plugins } /></Suspense>;
+      return <Suspense><StatefulEpubReader publication={ publication } { ...props } plugins={ plugins } containerRefSetter={ setContainerRef } /></Suspense>;
     case "webPub":
     default:
-      return <Suspense><StatefulWebPubReader publication={ publication } { ...props } plugins={ plugins } /></Suspense>;
+      return <Suspense><StatefulWebPubReader publication={ publication } { ...props } plugins={ plugins } containerRefSetter={ setContainerRef } /></Suspense>;
   }
 };

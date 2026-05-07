@@ -203,7 +203,7 @@ const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
     }
     
     return state;
-  } catch (err) {
+  } catch (_err) {
     return {
       actions: undefined,
       settings: undefined,

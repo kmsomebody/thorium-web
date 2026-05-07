@@ -1,6 +1,6 @@
 Locale Completion Status
 Reference language: en
-Generated: 2026-04-23T10:03:20.953Z
+Generated: 2026-04-27T11:38:36.830Z
 
 
 Locale Completion Summary:
@@ -13,10 +13,10 @@ IT     [■■■■■■■■■■■■■■■■■■■□]  95%
 SV     [■■■■■■■■■■■■■■■■■■■□]  95%
 ET     [■■■■■■■■■■■■■■■■■■□□]  94%
 PT-PT  [■■■■■■■■■■■■■■■■■■□□]  90%
-LT     [■■■■■■■■■■■■■■■□□□□□]  77%
+LT     [■■■■■■■■■■■■■■■■□□□□]  82%
 AR     [■■■■■■■■■■■■■□□□□□□□]  68%
 PT-BR  [■■■■■■■■■■■■□□□□□□□□]  63%
-DA     [■■■■■■■■■□□□□□□□□□□□]  49%
+DA     [■■■■■■■■■■■□□□□□□□□□]  58%
 PL     [■■■■■■■■□□□□□□□□□□□□]  44%
 TA     [■■■■■■■■□□□□□□□□□□□□]  43%
 TR     [■■■■■□□□□□□□□□□□□□□□]  28%
@@ -34,9 +34,9 @@ ET     [■■■■■■■■■■■■■■■■■■■□]  98%
 IT     [■■■■■■■■■■■■■■■■■■□□]  91%
 SV     [■■■■■■■■■■■■■■■■■■□□]  91%
 PT-PT  [■■■■■■■■■■■■■■■■□□□□]  84%
-LT     [■■■■■■■■■■■■■■■□□□□□]  75%
+LT     [■■■■■■■■■■■■■■■■□□□□]  84%
+DA     [■■■■■■■■■■■■■■■■□□□□]  82%
 PT-BR  [■■■■■■■■■■■■■□□□□□□□]  69%
-DA     [■■■■■■■■■■■■■□□□□□□□]  67%
 PL     [■■■■■■■■■■■■■□□□□□□□]  67%
 AR     [■■■■■■■■■■■■□□□□□□□□]  63%
 TA     [■■■■■■■■■■■■□□□□□□□□]  63%
@@ -166,28 +166,15 @@ PT-PT (90% complete, 84% of inferred usage)
    • reader.preferences.noRuby.label
 
 
-LT (77% complete, 75% of inferred usage)
+LT (82% complete, 84% of inferred usage)
    thorium-shared.json   ■■■■■■■□□□  77%  (144/188)
-   thorium-web.json      ■■■■■■■□□□  79%  (49/62)
-   TOTAL                 ■■■■■■■□□□  77%  (193/250)
-   USED                  ■■■■■■■□□□  75%  (94/126)
+   thorium-web.json      ■■■■■■■■■■ 100%  (62/62)
+   TOTAL                 ■■■■■■■■□□  82%  (206/250)
+   USED                  ■■■■■■■■□□  84%  (106/126)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (12 keys):
-   • reader.jumpToPosition.error.notFound
-   • audio.player.coverAlt
-   • audio.remotePlayback.connected
-   • audio.remotePlayback.trigger
-   • audio.settings.sleepTimer.minutes
-   • audio.settings.sleepTimer.seconds
-   • audio.settings.sleepTimer.hours
-   • audio.settings.sleepTimer.remaining
-   • audio.settings.sleepTimer.instruction
-   • audio.settings.sleepTimer.start
-   • audio.player.controls
-   • audio.player.progress
 
    SHARED (20 keys):
    • reader.playback.preferences.audio.title
@@ -325,35 +312,15 @@ PT-BR (63% complete, 69% of inferred usage)
    • reader.preferences.noRuby.label
 
 
-DA (49% complete, 67% of inferred usage)
+DA (58% complete, 82% of inferred usage)
    thorium-shared.json   ■■■■□□□□□□  44%  (82/188)
-   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
-   TOTAL                 ■■■■□□□□□□  49%  (123/250)
-   USED                  ■■■■■■□□□□  67%  (84/126)
+   thorium-web.json      ■■■■■■■■■■ 100%  (62/62)
+   TOTAL                 ■■■■■□□□□□  58%  (144/250)
+   USED                  ■■■■■■■■□□  82%  (103/126)
 
    ----------------------------------------
    Missing Keys:
 
-   WEB (19 keys):
-   • reader.jumpToPosition.error.notFound
-   • audio.player.coverAlt
-   • audio.remotePlayback.connected
-   • audio.remotePlayback.trigger
-   • audio.settings.sleepTimer.minutes
-   • audio.settings.sleepTimer.seconds
-   • audio.settings.sleepTimer.hours
-   • audio.settings.sleepTimer.remaining
-   • audio.settings.sleepTimer.instruction
-   • audio.settings.sleepTimer.start
-   • audio.player.controls
-   • audio.player.progress
-   • reader.app.errors.notFound
-   • reader.app.errors.accessDenied
-   • reader.app.errors.network
-   • reader.app.errors.serverError
-   • reader.app.errors.clientError
-   • reader.app.errors.generic
-   • reader.app.errors.title
 
    SHARED (23 keys):
    • reader.playback.preferences.audio.title

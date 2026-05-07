@@ -16,6 +16,7 @@ import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { prefixString } from "@/core/Helpers/prefixString";
 import { extractThemeFromImage } from "../helpers/themeGeneration";
 import { proxyUrl } from "@/helpers/proxyUrl";
+import { useContainerBreakpoints } from "@/core/Hooks/useContainerBreakpoints";
 
 export interface ThemeTokens {
   background: CSSColor;
@@ -51,7 +52,8 @@ export interface useThemingProps<T extends string> {
   onForcedColorsChange?: (forcedColors: boolean) => void;
   onMonochromeChange?: (isMonochrome: boolean) => void;
   onReducedMotionChange?: (reducedMotion: boolean) => void;
-  onReducedTransparencyChange?: (reducedTransparency: boolean) => void;  
+  onReducedTransparencyChange?: (reducedTransparency: boolean) => void;
+  onContainerBreakpointChange?: (breakpoint: ThBreakpoints | null) => void;
 }
 
 // Takes care of the init of theming and side effects on :root/html
@@ -72,11 +74,13 @@ export const useTheming = <T extends string>({
   onReducedMotionChange,
   onReducedTransparencyChange,
   onCoverThemeGenerated,
+  onContainerBreakpointChange,
 }: useThemingProps<T>) => {
   const [coverThemeTokens, setCoverThemeTokens] = useState<ThemeTokens | null>(null);
   const [coverThemeFailed, setCoverThemeFailed] = useState(false);
   
   const breakpoints = useBreakpoints(breakpointsMap, onBreakpointChange);
+  const setContainerRef = useContainerBreakpoints(breakpointsMap, onContainerBreakpointChange);
   const colorScheme = useColorScheme(onColorSchemeChange);
   const colorSchemeRef = useRef(colorScheme);
   const contrast = useContrast(onContrastChange);
@@ -207,6 +211,7 @@ export const useTheming = <T extends string>({
     reducedMotion,
     reducedTransparency,
     coverThemeTokens,
-    themeResolved
+    themeResolved,
+    setContainerRef
   }
 }

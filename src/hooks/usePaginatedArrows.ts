@@ -22,7 +22,7 @@ export const usePaginatedArrows = (): UsePaginatedArrowsReturn => {
   const { preferences } = usePreferences();
   const hasArrows = useAppSelector(state => state.reader.hasArrows);
   const isFXL = useAppSelector(state => state.publication.isFXL);
-  const breakpoint = useAppSelector(state => state.theming.breakpoint);
+  const breakpoint = useAppSelector(state => state.theming.containerBreakpoint);
   
   // Get reader state transitions
   const {
