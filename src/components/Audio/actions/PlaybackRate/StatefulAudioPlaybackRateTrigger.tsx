@@ -6,7 +6,7 @@ import { ThAudioActionKeys } from "@/preferences/models";
 import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
 import { StatefulActionTriggerProps } from "../../../Actions/models/actions";
 
-import audioStyles from "../assets/styles/thorium-web.audioActions.module.css";
+import playbackStyles from "./assets/styles/thorium-web.playbackRate.module.css";
 
 import { useI18n } from "@/i18n/useI18n";
 
@@ -30,10 +30,10 @@ export const StatefulAudioPlaybackRateTrigger = ({ ref }: StatefulActionTriggerP
       placement="top"
       onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.playbackRate })) }
       isDisabled={ isDisabled }
-      className={ audioStyles.audioPlaybackRateButton }
+      className={ playbackStyles.button }
     >
       <SpeedIcon aria-hidden="true" focusable="false" />
-      <span className={ audioStyles.audioPlaybackRateLabel } aria-hidden="true">{ playbackRate }×</span>
+      <span className={ playbackStyles.label } aria-hidden="true">{ playbackRate }×</span>
     </StatefulActionIcon>
   );
 };

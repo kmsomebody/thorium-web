@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { ThLayoutUI, ThTextAlignOptions, ThLineHeightOptions } from "@/preferences/models";
 import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 import { LineLengthStateObject, FontFamilyStateObject } from "@/lib/settingsReducer";
@@ -73,28 +73,15 @@ export const useEpubStatelessCache = (
     reducedMotion,
   });
 
-  const memoizedCache = useMemo(() => ({
-    layoutUI,
-    isImmersive,
-    isHovering,
-    arrowsOccupySpace: arrowsOccupySpace || false,
-    settings: settingsCache.current.settings,
-    positionsList: positionsList,
-    colorScheme,
-    reducedMotion,
-  }), [
-    layoutUI,
-    isImmersive,
-    isHovering,
-    arrowsOccupySpace,
-    settingsCache,
-    positionsList,
-    colorScheme,
-    reducedMotion,
-  ]);
-
-  // Update synchronously to match original behavior
-  cache.current = memoizedCache;
+  // Update cache synchronously on every render to ensure fresh values
+  cache.current.layoutUI = layoutUI;
+  cache.current.isImmersive = isImmersive;
+  cache.current.isHovering = isHovering;
+  cache.current.arrowsOccupySpace = arrowsOccupySpace || false;
+  cache.current.settings = settingsCache.current.settings;
+  cache.current.positionsList = positionsList;
+  cache.current.colorScheme = colorScheme;
+  cache.current.reducedMotion = reducedMotion;
 
   return cache;
 };

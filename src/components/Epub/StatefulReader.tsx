@@ -145,6 +145,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   const arrowsWidth = useRef(2 * ((preferences.theming.arrow.size || 40) + (preferences.theming.arrow.offset || 0)));
 
   const isFXL = useAppSelector(state => state.publication.isFXL);
+  const isRTL = useAppSelector(state => state.publication.isRTL);
   const positionsList = useAppSelector(state => state.publication.positionsList);
   const fontLanguage = useAppSelector(state => state.publication.fontLanguage);
 
@@ -647,7 +648,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
             ? <nav className={ classNames(arrowStyles.container, arrowStyles.leftContainer) }>
                 <StatefulReaderArrowButton 
                   direction="left" 
-                  isDisabled={ atPublicationStart } 
+                  isDisabled={ isRTL ? atPublicationEnd : atPublicationStart } 
                   onPress={ () => {
                     const navigationCallback = () => {
                       dispatch(setUserNavigated(true));
@@ -667,7 +668,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
             ? <nav className={ classNames(arrowStyles.container, arrowStyles.rightContainer) }>
                 <StatefulReaderArrowButton 
                   direction="right" 
-                  isDisabled={ atPublicationEnd } 
+                  isDisabled={ isRTL ? atPublicationStart : atPublicationEnd } 
                   onPress={ () => {
                     const navigationCallback = () => {
                       dispatch(setUserNavigated(true));

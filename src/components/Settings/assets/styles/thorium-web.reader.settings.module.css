@@ -148,6 +148,7 @@
 
 .radio[data-focus-visible] {
   outline: 2px solid var(--th-theme-focus);
+  outline-offset: 2px;
 }
 
 .radio svg {
@@ -284,7 +285,7 @@
   max-width: 100%;
 }
 
-.sliderWithPresetsPresets {
+.sliderWithPresetsRadioGroup {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
   gap: calc(var(--th-layout-spacing) / 4);
@@ -293,32 +294,32 @@
   padding: 0;
 }
 
-.sliderWithPresetsPreset {
-  text-align: center;
-  padding: calc(var(--th-layout-spacing) / 3) calc(var(--th-layout-spacing) / 2);
+.sliderWithPresetsRadio {
+  padding: calc(var(--th-layout-spacing) / 2);
   border-radius: var(--th-layout-radius);
   box-sizing: border-box;
-  border: 2px solid var(--th-theme-subdue);
+  border: 2px solid transparent;
+  text-align: center;
   font-variant-numeric: tabular-nums;
   background: transparent;
   color: var(--th-theme-text);
 }
 
-.sliderWithPresetsPreset[data-selected] {
-  border-color: var(--th-theme-text);
-  background-color: var(--th-theme-hover);
+.sliderWithPresetsRadio[data-selected] {
+  border: 2px solid var(--th-theme-subdue);
 }
 
-.sliderWithPresetsPreset[data-hovered]:not([data-selected]) {
+.sliderWithPresetsRadio[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
-.sliderWithPresetsPreset[data-focus-visible] {
+.sliderWithPresetsRadio[data-focus-visible] {
   outline: 2px solid var(--th-theme-focus);
   outline-offset: 2px;
 }
 
-.sliderWithPresetsPreset[data-disabled] {
+.sliderWithPresetsRadio[data-disabled] {
   color: var(--th-theme-disable);
   border-color: var(--th-theme-disable);
 }
@@ -440,6 +441,7 @@
 
 .dropdownListboxItem[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .dropdownListboxItem[data-focus-visible] {

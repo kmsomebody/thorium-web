@@ -85,13 +85,13 @@ export const StatefulModalBase = ({
         }}
         compounds={{
           dialog: {
-            className: classNames(sheetStyles.dialog, dialogClassName)
+            className: classNames(sheetStyles.dialog, dialogClassName, className)
           }
         }}
         isOpen={ isOpen }
         onOpenChange={ onOpenChange }
         isDismissable={ true }
-        className={ classNames(sheetClassName, className) }
+        className={ sheetClassName }
         isKeyboardDismissDisabled={ dismissEscapeKeyClose }
       >
         <ThContainerHeader

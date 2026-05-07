@@ -108,6 +108,13 @@ interface StatefulAudioPlaybackRateProps {
 
 Sleep timer button with preset or custom duration modes. Shows a remaining-time badge when active. Automatically pauses playback when the timer expires.
 
+Supports both duration-based presets (15, 30, 45, 60, 90 minutes) and content-based presets:
+
+- **endOfResource**: Pause at the end of the current track/resource
+- **endOfFragment**: Pause at the end of the current fragment when using timeline or toc affordances
+
+When `endOfFragment` is selected, the player monitors timeline changes and pauses playback when reaching the next fragment. This works in conjunction with the `affordances.next` preference setting - when set to `"timeline"` or `"toc"`, fragment-based pausing is enabled.
+
 ```typescript
 interface StatefulSleepTimerProps {
   isDisabled?: boolean;

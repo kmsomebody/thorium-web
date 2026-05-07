@@ -18,6 +18,7 @@ import { ThNavigationButton } from "@/core/Components/Buttons/ThNavigationButton
 import { ThCloseButton } from "@/core/Components/Buttons/ThCloseButton";
 
 import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 import { useI18n } from "@/i18n";
 
 import { useAppSelector } from "@/lib/hooks";
@@ -54,6 +55,7 @@ export const StatefulBottomSheet = ({
   dismissEscapeKeyClose
 }: StatefulBottomSheetProps) => {
   const preferences = useActionsPreferences();
+  const sharedPreferences = useSharedPreferences();
   const { t } = useI18n()
   const direction = useAppSelector((state) => state.reader.direction);
   const prefersReducedMotion = useAppSelector(state => state.theming.prefersReducedMotion);
@@ -222,7 +224,7 @@ export const StatefulBottomSheet = ({
       active: false,
       override: undefined
     }
-    const scrim = preferences.actionsKeys[id].snapped?.scrim;
+    const scrim = preferences.actionsKeys[id].snapped?.scrim ?? sharedPreferences.theming.layout.defaults.scrim;
     if (scrim) {
       scrimPref.active = true;
 
@@ -232,7 +234,7 @@ export const StatefulBottomSheet = ({
     }
 
     return scrimPref;
-  }, [id, preferences]);
+  }, [id, preferences, sharedPreferences]);
 
   const detentClassName = useMemo(() => {
     let className = "";

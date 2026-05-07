@@ -27,7 +27,7 @@ import {
   defaultAudioPlaybackRate,
   defaultAudioSkipBackwardInterval,
   defaultAudioSkipForwardInterval,
-  defaultAudioSleepTimer,
+  defaultAudioSleepTimer
 } from "./models";
 import { createAudioPreferences, ThAudioPreferences, AudioDefaultKeys, ThAudioAffordance } from "./audioPreferences";
 
@@ -154,7 +154,7 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
         [ThAudioKeys.playbackRate]: defaultAudioPlaybackRate,
         [ThAudioKeys.skipBackwardInterval]: defaultAudioSkipBackwardInterval,
         [ThAudioKeys.skipForwardInterval]: defaultAudioSkipForwardInterval,
-        [ThAudioKeys.sleepTimer]: defaultAudioSleepTimer,
+        [ThAudioKeys.sleepTimer]: defaultAudioSleepTimer
       }
     },
 

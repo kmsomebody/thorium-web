@@ -26,7 +26,7 @@
 .dockerButton svg,
 .closeButton svg,
 .backButton svg {
-  fill: var(--th-theme-text);
+  fill: currentColor;
   width: var(--th-icon-size, 24px);
   height: var(--th-icon-size, 24px);
 }
@@ -48,13 +48,6 @@
 
 .backButton[data-disabled] {
   color: var(--th-theme-disable)
-}
-
-.icon[data-disabled] svg,
-.dockerButton[data-disabled] svg,
-.closeButton[data-disabled] svg,
-.backButton[data-disabled] svg {
-  fill: var(--th-theme-disable);
 }
 
 .tooltip {

@@ -134,10 +134,10 @@ export const StatefulSliderWithPresets = ({
         },
         presetsWrapper: {
           ref: presetsListRef,
-          className: settingsStyles.sliderWithPresetsPresets,
+          className: settingsStyles.sliderWithPresetsRadioGroup,
         },
         preset: {
-          className: settingsStyles.sliderWithPresetsPreset,
+          className: settingsStyles.sliderWithPresetsRadio,
           onKeyDown
         }
       }}

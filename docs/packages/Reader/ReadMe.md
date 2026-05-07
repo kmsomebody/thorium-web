@@ -58,6 +58,7 @@ The Reader expects the following props:
 - `localDataKey`: `string | null` — a unique key for storing local reading data (bookmarks, positions, etc.)
 - `positionStorage`: `PositionStorage` (optional) — an interface for persisting reading positions
 - `plugins`: `ReaderPlugins` (optional) — per-profile plugin factories (see [Plugins](#plugins))
+- `i18n`: `Partial<InitOptions>` (optional) — i18next initialization options forwarded to `ThI18nProvider`. Use this to add extra namespaces, change the backend load path, or pass any other i18next config (see [i18n configuration](#i18n-configuration))
 - `preferences`: (optional) — profile-specific preferences to pass to the underlying provider. The shape depends on `profile`:
   - For `"audio"`: `{ initialPreferences?: ThAudioPreferences; adapter?: ThAudioPreferencesAdapter }`
   - For `"epub"` / `"webPub"`: `{ initialPreferences?: ThPreferences; adapter?: ThPreferencesAdapter }`
@@ -94,6 +95,30 @@ It is critical you wrap this component in a `<ThStoreProvider>` for it to work p
 
 > [!CAUTION]
 > When using `<StatefulReaderWrapper>` and all other components from `@edrlab/thorium-web/reader`, you must use `<ThStoreProvider>` from this same path. Using a store from a different path will result in a separate context that the components cannot access.
+
+### i18n configuration
+
+`StatefulReaderWrapper` mounts `ThI18nProvider` internally. Pass an `i18n` prop to forward i18next initialization options — useful when you need extra namespaces for your own translated strings or a custom backend load path.
+
+```tsx
+<StatefulReaderWrapper
+  profile={ profile }
+  publication={ publication }
+  localDataKey={ localDataKey }
+  i18n={{
+    ns: ["thorium-shared", "thorium-web", "my-app"],
+    defaultNS: ["my-app", "thorium-web", "thorium-shared"],
+    backend: {
+      loadPath: "/locales/{{lng}}/{{ns}}.json"
+    }
+  }}
+/>
+```
+
+> [!IMPORTANT]
+> `initI18n` merges your options with the defaults using a shallow spread, so array fields like `ns` and `defaultNS` are **replaced**, not merged. Always include the built-in namespaces (`"thorium-shared"`, `"thorium-web"`) when extending them.
+
+See the [i18n documentation](../Core/i18n.md) for the full list of available options.
 
 ### Plugins
 

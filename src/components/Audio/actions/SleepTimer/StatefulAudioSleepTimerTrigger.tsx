@@ -6,7 +6,7 @@ import { ThAudioActionKeys } from "@/preferences/models";
 import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
 import { StatefulActionTriggerProps } from "../../../Actions/models/actions";
 
-import audioStyles from "../assets/styles/thorium-web.audioActions.module.css";
+import timerStyles from "./assets/styles/thorium-web.sleepTimer.module.css";
 
 import { useI18n } from "@/i18n/useI18n";
 
@@ -18,18 +18,25 @@ export const StatefulAudioSleepTimerTrigger = ({ ref }: StatefulActionTriggerPro
 
   const remainingSeconds = useAppSelector(state => state.player.sleepTimer.remainingSeconds);
   const onTrackEnd = useAppSelector(state => state.player.sleepTimer.onTrackEnd);
+  const onFragmentEnd = useAppSelector(state => state.player.sleepTimer.onFragmentEnd);
   const isTrackReady = useAppSelector(state => state.player.isTrackReady);
   const isStalled = useAppSelector(state => state.player.isStalled);
   const isDisabled = !isTrackReady || isStalled;
 
   const dispatch = useAppDispatch();
 
-  const isActive = remainingSeconds !== null || onTrackEnd;
+  const isActive = remainingSeconds !== null || onTrackEnd || onFragmentEnd;
 
   const formatBadge = (seconds: number): string => {
     if (seconds < 60) return `${ seconds }${ t("audio.settings.sleepTimer.seconds") }`;
     return `${ Math.ceil(seconds / 60) }${ t("audio.settings.sleepTimer.minutes") }`;
   };
+
+  const sleepTimerLabel = (() => {
+    if (onTrackEnd) return t("reader.playback.preferences.sleepTimer.presets.endOfResource");
+    if (onFragmentEnd) return t("reader.playback.preferences.sleepTimer.presets.endOfFragment");
+    return formatBadge(remainingSeconds!);
+  })();
 
   return (
     <StatefulActionIcon
@@ -38,12 +45,12 @@ export const StatefulAudioSleepTimerTrigger = ({ ref }: StatefulActionTriggerPro
       placement="top"
       onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.sleepTimer })) }
       isDisabled={ isDisabled }
-      className={ audioStyles.audioSleepTimerButton }
+      className={ timerStyles.button }
     >
       <SnoozeIcon aria-hidden="true" focusable="false" />
       { isActive && (
-        <span className={ audioStyles.audioSleepTimerLabel } aria-hidden="true">
-          { onTrackEnd ? t("reader.playback.preferences.sleepTimer.presets.endOfResource") : formatBadge(remainingSeconds!) }
+        <span className={ timerStyles.label } aria-hidden="true">
+          { sleepTimerLabel }
         </span>
       ) }
     </StatefulActionIcon>

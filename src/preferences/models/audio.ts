@@ -32,8 +32,8 @@ export enum ThSettingsTimerVariant {
 export type ThSettingsTimerPref =
   | {
       variant: ThSettingsTimerVariant.presetList;
-      /** Preset durations in minutes, or "endOfResource" to pause at end of track. */
-      presets: (number | "endOfResource")[];
+      /** Preset durations in minutes, or "endOfResource" to pause at end of track, or "endOfFragment" to pause at end of fragment. */
+      presets: (number | "endOfResource" | "endOfFragment")[];
     }
   | {
       variant: ThSettingsTimerVariant.durationField;
@@ -88,7 +88,7 @@ export const defaultAudioSleepTimer: ThSettingsTimerPref = {
 
 export const defaultAudioSleepTimerPresetList: ThSettingsTimerPref = {
   variant: ThSettingsTimerVariant.presetList,
-  presets: [15, 30, 45, 60, 90, "endOfResource"],
+  presets: [15, 30, 45, 60, 90, "endOfFragment", "endOfResource"],
 };
 
 // Action tokens for ThAudioActionKeys.
@@ -121,8 +121,11 @@ export const defaultAudioSleepTimerAction: ThAudioActionsTokens = {
   visibility: ThCollapsibilityVisibility.partially,
   shortcut: null,
   sheet: {
-    defaultSheet: ThSheetTypes.compactPopover,
-    breakpoints: { [ThBreakpoints.compact]: ThSheetTypes.bottomSheet }
+    defaultSheet: ThSheetTypes.modal,
+    breakpoints: { 
+      [ThBreakpoints.compact]: ThSheetTypes.bottomSheet,
+      [ThBreakpoints.medium]: ThSheetTypes.bottomSheet
+    }
   },
   snapped: {
     minHeight: "content-height"
@@ -145,5 +148,11 @@ export const defaultAudioTocAction: ThAudioActionsTokens = {
       [ThBreakpoints.medium]: ThSheetTypes.fullscreen
     }
   },
-  docked: { dockable: ThDockingTypes.both }
+  docked: {
+    dockable: ThDockingTypes.both,
+    dragIndicator: false,
+    width: 360,
+    minWidth: 320,
+    maxWidth: 450
+  }
 };

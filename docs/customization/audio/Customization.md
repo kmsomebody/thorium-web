@@ -156,7 +156,38 @@ affordances: {
 
 Available affordance types:
 - `ThAudioAffordance.timeline`: Navigate within timeline segments (chapters, sections)
+- `ThAudioAffordance.toc`: Navigate by table of contents items
 - `ThAudioAffordance.readingOrder`: Navigate by reading order (individual audio tracks)
+
+### Fragment-Based Navigation
+
+When using `timeline` or `toc` affordances, the player supports fragment-based navigation and pause behavior:
+
+- **Sleep Timer Integration**: The sleep timer's `endOfFragment` preset works with these affordances to pause playback at fragment boundaries
+- **Continuous Play Control**: When `autoPlay` is disabled, playback automatically pauses when reaching the next fragment
+- **Timeline Monitoring**: The player monitors `timelineItemChanged` events to detect fragment transitions
+
+Example configuration with fragment-based sleep timer:
+
+```typescript
+import { createAudioPreferences, ThSettingsTimerVariant } from "@edrlab/thorium-web/audio";
+
+const preferences = createAudioPreferences({
+  affordances: {
+    previous: ThAudioAffordance.toc,
+    next: ThAudioAffordance.toc
+  },
+  settings: {
+    order: ["sleepTimer"],
+    keys: {
+      sleepTimer: {
+        variant: ThSettingsTimerVariant.presetList,
+        presets: [15, 30, 45, 60, 90, "endOfFragment", "endOfResource"]
+      }
+    }
+  }
+});
+```
 
 ## Docking
 

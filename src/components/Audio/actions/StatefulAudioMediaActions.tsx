@@ -30,7 +30,7 @@ export const StatefulAudioMediaActions = () => {
   const displayOrder = preferences.actions.primary.displayOrder;
 
   return (
-    <ThActionsBar className={ audioStyles.audioMediaActions } aria-label={ t("audio.player.mediaActions") }>
+    <ThActionsBar className={ audioStyles.wrapper } aria-label={ t("audio.player.mediaActions") }>
       { displayOrder.map(key => {
         const action = primaryAudioActionsMap[key];
         if (!action) return null;

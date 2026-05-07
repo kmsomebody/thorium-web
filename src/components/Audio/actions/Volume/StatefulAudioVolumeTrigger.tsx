@@ -11,7 +11,7 @@ import { ThAudioKeys, ThAudioActionKeys } from "@/preferences/models";
 import { StatefulActionIcon } from "../../../Actions/Triggers/StatefulActionIcon";
 import { StatefulActionTriggerProps } from "../../../Actions/models/actions";
 
-import audioStyles from "../assets/styles/thorium-web.audioActions.module.css";
+import volumeStyles from "./assets/styles/thorium-web.volume.module.css";
 
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
 import { useI18n } from "@/i18n/useI18n";
@@ -51,7 +51,7 @@ export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) 
       placement="top"
       onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.volume })) }
       isDisabled={ isDisabled }
-      className={ audioStyles.audioVolumeButton }
+      className={ volumeStyles.button }
     >
       <VolumeIcon aria-hidden="true" focusable="false" />
     </StatefulActionIcon>

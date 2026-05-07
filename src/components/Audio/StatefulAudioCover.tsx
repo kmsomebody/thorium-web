@@ -1,3 +1,5 @@
+import { Ref } from "react";
+
 import styles from "./assets/styles/thorium-web.audioCover.module.css";
 
 import MusicNoteIcon from "./assets/icons/music_note.svg";
@@ -10,11 +12,12 @@ import { useAppSelector } from "@/lib/hooks";
 import { proxyUrl } from "@/helpers/proxyUrl";
 
 interface StatefulAudioCoverProps {
+  ref?: Ref<HTMLElement>;
   coverUrl?: string;
   title?: string;
 }
 
-export function StatefulAudioCover({ coverUrl, title }: StatefulAudioCoverProps) {
+export function StatefulAudioCover({ ref, coverUrl, title }: StatefulAudioCoverProps) {
   const { t } = useI18n();
   const isTrackReady = useAppSelector(state => state.player.isTrackReady);
   const isStalled = useAppSelector(state => state.player.isStalled);
@@ -22,7 +25,7 @@ export function StatefulAudioCover({ coverUrl, title }: StatefulAudioCoverProps)
   const showSyncOverlay = !isTrackReady || isStalled;
 
   return (
-    <figure className={ styles.audioCoverSection }>
+    <figure ref={ ref } className={ styles.audioCoverSection }>
       { coverUrl ? (
         <img
           src={ proxyUrl(coverUrl) }

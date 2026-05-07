@@ -10,7 +10,7 @@ import { ThNumberField } from "@/core/Components/Settings/ThNumberField";
 import { ThRadioGroup } from "@/core/Components/Settings/ThRadioGroup";
 import { StatefulActionContainerProps } from "../../../Actions/models/actions";
 
-import audioStyles from "../assets/styles/thorium-web.audioActions.module.css";
+import timerStyles from "./assets/styles/thorium-web.sleepTimer.module.css";
 
 import { useNavigator } from "@/core/Navigator";
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
@@ -20,7 +20,7 @@ import { StatefulSheetWrapper } from "@/components/Sheets/StatefulSheetWrapper";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setActionOpen } from "@/lib/actionsReducer";
-import { setSleepTimerOnTrackEnd, setSleepTimerRemainingSeconds } from "@/lib/playerReducer";
+import { setSleepTimerOnTrackEnd, setSleepTimerOnFragmentEnd, setSleepTimerRemainingSeconds } from "@/lib/playerReducer";
 
 export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top" }: StatefulActionContainerProps) => {
   const [hours, setHours] = useState(0);
@@ -29,6 +29,7 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
   const isOpen = useAppSelector(state => state.actions.keys[ThAudioActionKeys.sleepTimer]?.isOpen ?? false);
   const remainingSeconds = useAppSelector(state => state.player.sleepTimer.remainingSeconds);
   const onTrackEnd = useAppSelector(state => state.player.sleepTimer.onTrackEnd);
+  const onFragmentEnd = useAppSelector(state => state.player.sleepTimer.onFragmentEnd);
   const playerStatus = useAppSelector(state => state.player.status);
   const dispatch = useAppDispatch();
 
@@ -69,6 +70,7 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
   const handleCancel = useCallback(() => {
     dispatch(setSleepTimerRemainingSeconds(null));
     dispatch(setSleepTimerOnTrackEnd(false));
+    dispatch(setSleepTimerOnFragmentEnd(false));
     dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: false }));
   }, [dispatch]);
 
@@ -82,7 +84,15 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
   const handlePresetSelect = useCallback((value: string) => {
     if (value === "endOfResource") {
       dispatch(setSleepTimerOnTrackEnd(true));
+      dispatch(setSleepTimerOnFragmentEnd(false));
+      dispatch(setSleepTimerRemainingSeconds(null));
+    } else if (value === "endOfFragment") {
+      dispatch(setSleepTimerOnTrackEnd(false));
+      dispatch(setSleepTimerOnFragmentEnd(true));
+      dispatch(setSleepTimerRemainingSeconds(null));
     } else {
+      dispatch(setSleepTimerOnTrackEnd(false));
+      dispatch(setSleepTimerOnFragmentEnd(false));
       dispatch(setSleepTimerRemainingSeconds(Number(value) * 60));
     }
     dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: false }));
@@ -94,43 +104,54 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
     dispatch(setActionOpen({ key: ThAudioActionKeys.sleepTimer, isOpen: open }));
   }, [dispatch]);
 
-  const isActive = remainingSeconds !== null || onTrackEnd;
+  const isActive = remainingSeconds !== null || onTrackEnd || onFragmentEnd;
   const maxHours = (config.variant === ThSettingsTimerVariant.durationField ? config.maxHours : undefined) ?? 23;
 
   const renderContent = () => {
     if (variant === ThSettingsTimerVariant.presetList && config?.variant === ThSettingsTimerVariant.presetList) {
-      const items = config.presets.map(preset => preset === "endOfResource"
-        ? {
+      const items = config.presets.map(preset => {
+        if (preset === "endOfResource") {
+          return {
             id: "endOfResource",
             value: "endOfResource",
             label: t("reader.playback.preferences.sleepTimer.presets.endOfResource"),
-          }
-        : {
+          };
+        } else if (preset === "endOfFragment") {
+          return {
+            id: "endOfFragment",
+            value: "endOfFragment",
+            label: t("reader.playback.preferences.sleepTimer.presets.endOfFragment"),
+          };
+        } else {
+          return {
             id: String(preset),
             value: String(preset),
             label: `${ preset } ${ t("audio.settings.sleepTimer.minutes") }`,
-          }
-      );
+          };
+        }
+      });
 
       const activeValue = onTrackEnd
         ? "endOfResource"
+        : onFragmentEnd
+        ? "endOfFragment"
         : remainingSeconds !== null ? String(remainingSeconds / 60) : "";
 
       return (
-        <div className={ audioStyles.audioSleepTimerDurationField }>
+        <div className={ timerStyles.durationField }>
           <ThRadioGroup
             aria-label={ t("reader.playback.preferences.sleepTimer.descriptive") }
             value={ activeValue }
             onChange={ handlePresetSelect }
             items={ items }
             compounds={{
-              wrapper: { className: audioStyles.audioSleepTimerListbox },
-              radio: { className: audioStyles.audioSleepTimerListboxItem },
+              wrapper: { className: timerStyles.listbox },
+              radio: { className: timerStyles.listboxItem },
             }}
           />
           { isActive && (
             <Button
-              className={ `${ audioStyles.audioSleepTimerActionButton } ${ audioStyles.audioSleepTimerPresetCancelButton }` }
+              className={ `${ timerStyles.startButton } ${ timerStyles.cancelButton }` }
               onPress={ handleCancel }
             >
               { t("common.actions.cancel") }
@@ -143,12 +164,12 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
     // durationField variant
     if (isActive && remainingSeconds !== null) {
       return (
-        <div className={ audioStyles.audioSleepTimerDurationField }>
-          <p className={ audioStyles.audioSleepTimerRemaining }>
+        <div className={ timerStyles.durationField }>
+          <p className={ timerStyles.remaining }>
             { t("audio.settings.sleepTimer.remaining", { remaining: formatRemaining(remainingSeconds) }) }
           </p>
           <Button
-            className={ audioStyles.audioSleepTimerActionButton }
+            className={ timerStyles.startButton }
             onPress={ handleCancel }
           >
             { t("common.actions.cancel") }
@@ -158,11 +179,11 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
     }
 
     return (
-      <div className={ audioStyles.audioSleepTimerDurationField }>
-        <p className={ audioStyles.audioSleepTimerInstruction }>
+      <div className={ timerStyles.durationField }>
+        <p className={ timerStyles.instruction }>
           { t("audio.settings.sleepTimer.instruction") }
         </p>
-        <div className={ audioStyles.audioSleepTimerInputs }>
+        <div className={ timerStyles.inputs }>
           <ThNumberField
             aria-label={ t("audio.settings.sleepTimer.hours") }
             range={ [0, maxHours] }
@@ -171,11 +192,11 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
             onChange={ setHours }
             onInputChange={ (raw) => setHours(parseInt(raw) || 0) }
             compounds={{
-              group: { className: audioStyles.audioSleepTimerFieldGroup },
-              input: { className: audioStyles.audioSleepTimerFieldInput }
+              group: { className: timerStyles.fieldGroup },
+              input: { className: timerStyles.fieldInput }
             }}
           />
-          <span className={ audioStyles.audioSleepTimerUnitLabel } aria-hidden="true">
+          <span className={ timerStyles.unitLabel } aria-hidden="true">
             { t("audio.settings.sleepTimer.hours") }
           </span>
           <ThNumberField
@@ -186,16 +207,16 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
             onChange={ setMinutes }
             onInputChange={ (raw) => setMinutes(parseInt(raw) || 0) }
             compounds={{
-              group: { className: audioStyles.audioSleepTimerFieldGroup },
-              input: { className: audioStyles.audioSleepTimerFieldInput }
+              group: { className: timerStyles.fieldGroup },
+              input: { className: timerStyles.fieldInput }
             }}
           />
-          <span className={ audioStyles.audioSleepTimerUnitLabel } aria-hidden="true">
+          <span className={ timerStyles.unitLabel } aria-hidden="true">
             { t("audio.settings.sleepTimer.minutes") }
           </span>
         </div>
         <Button
-          className={ audioStyles.audioSleepTimerActionButton }
+          className={ timerStyles.startButton }
           isDisabled={ hours === 0 && minutes === 0 }
           onPress={ handleStart }
         >
@@ -212,8 +233,7 @@ export const StatefulAudioSleepTimerContainer = ({ triggerRef, placement = "top"
         id: ThAudioActionKeys.sleepTimer,
         triggerRef,
         heading: t("reader.playback.preferences.sleepTimer.descriptive"),
-        className: audioStyles.audioControlPopover,
-        headerClassName: audioStyles.audioControlPopoverHeader,
+        className: timerStyles.wrapper,
         placement,
         isOpen,
         onOpenChange: setOpen,

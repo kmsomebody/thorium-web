@@ -24,19 +24,21 @@ export const StatefulDockTransientFullscreen = ({ variant, associatedKey }: Stat
   const preferences = useActionsPreferences();
   const { t } = useI18n();
   const actionsMap = useAppSelector(state => state.actions.keys);
+  const profile = useAppSelector(state => state.reader.profile);
   const actions = useActions(actionsMap);
   const isDisabled = !actions.isDocked(associatedKey) || actions.whichDocked(associatedKey) === ThDockingKeys.transient;
   
   const dispatch = useAppDispatch();
     
   const handlePress = useCallback(() => {
-    if (associatedKey) {
+    if (associatedKey && profile) {
       dispatch(dockAction({
         key: associatedKey,
-        dockingKey: ThDockingKeys.transient
+        dockingKey: ThDockingKeys.transient,
+        profile: profile
       }))
     }
-  }, [dispatch, associatedKey]);
+  }, [dispatch, associatedKey, profile]);
   
   return(
     <>

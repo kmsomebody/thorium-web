@@ -26,6 +26,7 @@ export const StatefulDockEnd = ({ variant, associatedKey }: StatefulActionTrigge
   const { t } = useI18n();
   const direction = useAppSelector(state => state.reader.direction);
   const actionsMap = useAppSelector(state => state.actions.keys);
+  const profile = useAppSelector(state => state.reader.profile);
   const isRTL = direction === ThLayoutDirection.rtl;
   const translationKey = isRTL 
     ? "reader.app.docker.dockToLeft" 
@@ -41,13 +42,14 @@ export const StatefulDockEnd = ({ variant, associatedKey }: StatefulActionTrigge
   const dispatch = useAppDispatch();
   
   const handlePress = useCallback(() => {
-    if (associatedKey) {
+    if (associatedKey && profile) {
       dispatch(dockAction({
         key: associatedKey,
-        dockingKey: ThDockingKeys.end
+        dockingKey: ThDockingKeys.end,
+        profile: profile
       }))
     }
-  }, [dispatch, associatedKey]);
+  }, [dispatch, associatedKey, profile]);
   
   return(
     <>

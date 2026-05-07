@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 
 import { StatefulSheet } from "./models/sheets";
 
 import sheetStyles from "./assets/styles/thorium-web.sheets.module.css";
 
-import { Popover, PopoverProps, Dialog, DialogProps } from "react-aria-components";
+import { Popover, PopoverProps, Dialog } from "react-aria-components";
 
 import { useWebkitPatch } from "./hooks/useWebkitPatch";
+import { useFirstFocusable } from "@/core/Components/Containers/hooks/useFirstFocusable";
 
 import classNames from "classnames";
 
@@ -33,6 +34,20 @@ export const StatefulCompactPopoverSheet = ({
   }: StatefulCompactPopoverSheetProps) => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverBodyRef = useRef<HTMLDivElement | null>(null);
+
+  useFirstFocusable({
+    withinRef: focusWithinRef ?? popoverBodyRef,
+    trackedState: isOpen,
+    withSelector: focusSelector,
+    action: {
+      type: "focus",
+      options: {
+        preventScroll: scrollTopOnFocus ? true : false,
+        scrollContainerToTop: scrollTopOnFocus
+      }
+    },
+    updateState: resetFocus
+  });
 
   // Warning: This is a temporary fix for a bug in React Aria Components.
   useWebkitPatch(!!isOpen);

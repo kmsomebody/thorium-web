@@ -32,6 +32,12 @@ export const ThI18nProvider = ({
     }
   }, [locale, isInitialized]);
 
+  useEffect(() => {
+    if (!isInitialized) return;
+    const lang = locale || i18n.resolvedLanguage || i18n.language || "en";
+    document.documentElement.lang = lang;
+  }, [locale, isInitialized]);
+
   if (!isInitialized) {
     return null;
   }

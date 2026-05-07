@@ -1,13 +1,12 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
 import { ThAudioKeys, ThAudioActionKeys, ThSheetTypes } from "@/preferences/models";
 import { ThSlider } from "@/core/Components/Settings/ThSlider";
-import { useFirstFocusable } from "@/core/Components/Containers/hooks/useFirstFocusable";
 import { StatefulActionContainerProps } from "../../../Actions/models/actions";
 
-import audioStyles from "../assets/styles/thorium-web.audioActions.module.css";
+import volumeStyles from "./assets/styles/thorium-web.volume.module.css";
 
 import { useNavigator } from "@/core/Navigator";
 import { useAudioPreferences } from "@/preferences/hooks/useAudioPreferences";
@@ -21,8 +20,6 @@ import { setVolume } from "@/lib/audioSettingsReducer";
 import { setActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: StatefulActionContainerProps) => {
-  const contentRef = useRef<HTMLDivElement>(null);
-
   const volume = useAppSelector(state => state.audioSettings.volume);
   const isOpen = useAppSelector(state => state.actions.keys[ThAudioActionKeys.volume]?.isOpen ?? false);
 
@@ -42,12 +39,6 @@ export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: 
     dispatch(setVolume(effectiveVolume));
   }, [submitPreferences, getSetting, dispatch]);
 
-  useFirstFocusable({
-    withinRef: contentRef,
-    trackedState: isOpen,
-    action: { type: "focus" }
-  });
-
   const docking = useDocking(ThAudioActionKeys.volume);
 
   const sliderOrientation = (docking.sheetType === ThSheetTypes.popover || docking.sheetType === ThSheetTypes.compactPopover)
@@ -65,8 +56,7 @@ export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: 
         id: ThAudioActionKeys.volume,
         triggerRef,
         heading: t("reader.playback.preferences.audio.volume"),
-        className: audioStyles.audioControlPopover,
-        headerClassName: audioStyles.audioControlPopoverHeader,
+        className: volumeStyles.wrapper,
         placement,
         isOpen,
         onOpenChange: setOpen,
@@ -76,16 +66,15 @@ export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: 
     >
       <ThSlider
         aria-label={ t("reader.playback.preferences.audio.volume") }
-        className={ audioStyles.audioVolumeSlider }
+        className={ volumeStyles.slider }
         orientation={ sliderOrientation }
         range={ range }
         step={ config.step }
         value={ volume }
         onChange={ updatePreference }
         compounds={ {
-          wrapper: { ref: contentRef },
-          track: { className: audioStyles.audioVolumeSliderTrack },
-          thumb: { className: audioStyles.audioVolumeSliderThumb },
+          track: { className: volumeStyles.sliderTrack },
+          thumb: { className: volumeStyles.sliderThumb },
           output: { style: () => ({ display: "none" }) }
         } }
       />

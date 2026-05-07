@@ -1,10 +1,17 @@
 "use client";
 
-import { useMemo, useRef } from "react";
-import { AudioSettingsCache, useAudioSettingsCache } from "@/core/Hooks/Audio/useAudioSettingsCache";
+import { useRef } from "react";
+import { AudioSettings, useAudioSettingsCache } from "@/core/Hooks/Audio/useAudioSettingsCache";
+import { AdjacentTimelineItem } from "@/lib/publicationReducer";
 
-export interface AudioStatelessCache extends AudioSettingsCache {
+export interface AudioStatelessCache {
+  settings: AudioSettings;
   sleepTimerOnTrackEnd: boolean;
+  sleepTimerOnFragmentEnd: boolean;
+  adjacentTimelineItems: {
+    previous: AdjacentTimelineItem | null;
+    next: AdjacentTimelineItem | null;
+  };
 }
 
 export const useAudioStatelessCache = (
@@ -17,7 +24,12 @@ export const useAudioStatelessCache = (
   pollInterval: number,
   autoPlay: boolean,
   enableMediaSession: boolean,
-  sleepTimerOnTrackEnd: boolean
+  sleepTimerOnTrackEnd: boolean,
+  sleepTimerOnFragmentEnd: boolean,
+  adjacentTimelineItems: {
+    previous: AdjacentTimelineItem | null;
+    next: AdjacentTimelineItem | null;
+  }
 ) => {
   const settingsCache = useAudioSettingsCache(
     volume,
@@ -32,16 +44,17 @@ export const useAudioStatelessCache = (
   );
 
   const cache = useRef<AudioStatelessCache>({
-    ...settingsCache.current,
+    settings: settingsCache.current.settings,
     sleepTimerOnTrackEnd,
+    sleepTimerOnFragmentEnd,
+    adjacentTimelineItems,
   });
 
-  const memoizedCache = useMemo(() => ({
-    ...settingsCache.current,
-    sleepTimerOnTrackEnd,
-  }), [settingsCache, sleepTimerOnTrackEnd]);
-
-  cache.current = memoizedCache;
+  // Update cache synchronously on every render to ensure fresh values
+  cache.current.settings = settingsCache.current.settings;
+  cache.current.sleepTimerOnTrackEnd = sleepTimerOnTrackEnd;
+  cache.current.sleepTimerOnFragmentEnd = sleepTimerOnFragmentEnd;
+  cache.current.adjacentTimelineItems = adjacentTimelineItems;
 
   return cache;
 };

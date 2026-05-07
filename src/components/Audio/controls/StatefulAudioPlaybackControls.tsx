@@ -19,7 +19,7 @@ export const StatefulAudioPlaybackControls = () => {
   const isStalled = useAppSelector(state => state.player.isStalled);
 
   return (
-    <ThActionsBar className={ audioStyles.audioControls } aria-label={ t("audio.player.controls") }>
+    <ThActionsBar className={ audioStyles.audioControls } aria-label={ t("audio.player.controls") } dir="ltr">
       <StatefulPreviousButton isDisabled={ !isTrackReady || isStalled } />
       <StatefulSkipBackwardButton isDisabled={ !isTrackReady || isStalled } />
       <StatefulPlayPauseButton isDisabled={ !isTrackReady || isStalled } />

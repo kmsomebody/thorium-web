@@ -107,10 +107,16 @@ export const generateThemeFromColor = (color: string): ThemeTokens => {
 export const extractThemeFromImage = async (imageUrl: string): Promise<ThemeTokens> => {
   const img = new Image();
   img.crossOrigin = "anonymous";
-  
-  await new Promise((resolve, reject) => {
-    img.onload = resolve;
-    img.onerror = reject;
+
+  await new Promise<void>((resolve, reject) => {
+    img.onload = () => {
+      if (img.naturalWidth === 0) {
+        reject(new Error("Image loaded but has no content (blocked or corrupt)"));
+      } else {
+        resolve();
+      }
+    };
+    img.onerror = () => reject(new Error(`Failed to load image: ${imageUrl}`));
     img.src = imageUrl;
   });
 

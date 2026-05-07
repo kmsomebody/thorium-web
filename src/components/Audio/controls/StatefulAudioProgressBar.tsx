@@ -92,38 +92,38 @@ export const StatefulAudioProgressBar = () => {
       segments={ segments }
       compounds={{
         wrapper: {
-          className: audioStyles.audioProgressControl,
+          className: audioStyles.wrapper,
           onKeyDown: (e: React.KeyboardEvent) => {
             if (e.key === "Escape") (document.activeElement as HTMLElement)?.blur();
           }
         },
-        chapter: {
-          className: audioStyles.audioProgressChapter
+        current: {
+          className: audioStyles.current
         },
         slider: {
-          className: audioStyles.audioProgressSlider,
+          className: audioStyles.slider,
           "aria-label": t("audio.player.progress")
         },
         track: {
-          className: audioStyles.audioProgressTrack
+          className: audioStyles.track
         },
         thumb: {
-          className: audioStyles.audioProgressThumb
+          className: audioStyles.thumb
         },
         elapsedTime: {
-          className: audioStyles.audioProgressElapsedTime
+          className: audioStyles.elapsed
         },
         remainingTime: {
-          className: audioStyles.audioProgressRemainingTime
+          className: audioStyles.remaining
         },
         seekableRange: {
-          className: audioStyles.audioProgressSeekableRange
+          className: audioStyles.seekableRange
         },
-        segmentTick: {
-          className: audioStyles.audioProgressSegmentTick
+        fragmentTick: {
+          className: audioStyles.tick
         },
         tooltip: {
-          className: audioStyles.audioProgressTooltip,
+          className: audioStyles.tooltip,
           offset: preferences.theming.icon.tooltipOffset
         }
       }}

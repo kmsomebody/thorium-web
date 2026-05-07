@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ThAudioPreferences, AudioCustomizableKeys, AudioDefaultKeys } from "./audioPreferences";
+import { ThDirectionSetter } from "./ThDirectionSetter";
 import {
   ThAudioPreferencesContext,
   defaultAudioPreferencesContextValue,
@@ -67,7 +68,9 @@ export function ThAudioPreferencesProvider<K extends AudioCustomizableKeys = Aud
 
   return (
     <ThAudioPreferencesContext.Provider value={ contextValue }>
-      { children }
+      <ThDirectionSetter direction={ preferences.direction }>
+        { children }
+      </ThDirectionSetter>
     </ThAudioPreferencesContext.Provider>
   );
 }

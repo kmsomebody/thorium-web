@@ -10,6 +10,7 @@ export interface SeekableRange {
 export interface SleepTimerState {
   remainingSeconds: number | null;
   onTrackEnd: boolean;
+  onFragmentEnd: boolean;
 }
 
 export type RemotePlaybackState = "connecting" | "connected" | "disconnected" | "error";
@@ -29,7 +30,7 @@ const initialState: PlayerReducerState = {
   isSeeking: false,
   isStalled: false,
   isTrackReady: false,
-  sleepTimer: { remainingSeconds: null, onTrackEnd: false },
+  sleepTimer: { remainingSeconds: null, onTrackEnd: false, onFragmentEnd: false },
   remotePlaybackState: null,
   seekableRanges: [],
 };
@@ -56,6 +57,9 @@ export const playerSlice = createSlice({
     setSleepTimerOnTrackEnd: (state, action: { payload: boolean }) => {
       state.sleepTimer.onTrackEnd = action.payload;
     },
+    setSleepTimerOnFragmentEnd: (state, action: { payload: boolean }) => {
+      state.sleepTimer.onFragmentEnd = action.payload;
+    },
     setRemotePlaybackState: (state, action: { payload: RemotePlaybackState | null }) => {
       state.remotePlaybackState = action.payload;
     },
@@ -72,6 +76,7 @@ export const {
   setTrackReady,
   setSleepTimerRemainingSeconds,
   setSleepTimerOnTrackEnd,
+  setSleepTimerOnFragmentEnd,
   setRemotePlaybackState,
   setSeekableRanges
 } = playerSlice.actions;

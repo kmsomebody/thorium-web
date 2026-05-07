@@ -67,6 +67,27 @@ const updateActionsState = (state: ActionsReducerState) => {
   };
 };
 
+const migrateDockStateToProfileKeyed = (state: ActionsReducerState): ActionsReducerState => {
+  // Check if dock state is in old format (not profile-keyed)
+  if (state.dock && typeof state.dock === "object" && !("epub" in state.dock || "webPub" in state.dock || "audio" in state.dock)) {
+    // Old format: dock has direct start/end keys
+    const oldDock = state.dock as any;
+    if (oldDock[ThDockingKeys.start] || oldDock[ThDockingKeys.end]) {
+      // Migrate to new profile-keyed format, only for epub profile
+      const newDock: any = {};
+      newDock["epub"] = {
+        [ThDockingKeys.start]: oldDock[ThDockingKeys.start] || { actionKey: null, active: false, collapsed: false },
+        [ThDockingKeys.end]: oldDock[ThDockingKeys.end] || { actionKey: null, active: false, collapsed: false }
+      };
+      return {
+        ...state,
+        dock: newDock
+      };
+    }
+  }
+  return state;
+};
+
 const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
   try {
     const resolvedKey = storageKey || DEFAULT_STORAGE_KEY;
@@ -97,6 +118,9 @@ const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
       
       if (state.actions) {
         state.actions = updateActionsState(state.actions);
+        // Migrate dock state to profile-keyed format if needed
+        // Old dock state only applied to epub profile
+        state.actions = migrateDockStateToProfileKeyed(state.actions);
       }
     }
     

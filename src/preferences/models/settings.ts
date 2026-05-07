@@ -174,7 +174,7 @@ export const defaultLetterSpacing: ThSettingsRangePrefRequired = {
 }
 
 export const defaultLineHeights = {
-  [ThLineHeightOptions.small]: 1.3,
+  [ThLineHeightOptions.small]: 1.35,
   [ThLineHeightOptions.medium]: 1.5,
   [ThLineHeightOptions.large]: 1.75
 }
@@ -189,23 +189,23 @@ export const defaultZoom: ThSettingsRangePrefRequired = {
 export const defaultSpacingPresets = {
   [ThSpacingPresetKeys.tight]: {
     [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.small,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 0,
+    [ThSpacingSettingsKeys.paragraphSpacing]: 0.25,
     [ThSpacingSettingsKeys.paragraphIndent]: 1
   },
   [ThSpacingPresetKeys.balanced]: {
     [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.medium,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 0.75,
-    [ThSpacingSettingsKeys.paragraphIndent]: 0
+    [ThSpacingSettingsKeys.paragraphSpacing]: 1,
+    [ThSpacingSettingsKeys.paragraphIndent]: 1
   },
   [ThSpacingPresetKeys.loose]: {
     [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.large,
-    [ThSpacingSettingsKeys.paragraphSpacing]: 1.75,
-    [ThSpacingSettingsKeys.paragraphIndent]: 0
+    [ThSpacingSettingsKeys.paragraphSpacing]: 1.5,
+    [ThSpacingSettingsKeys.paragraphIndent]: 1
   },
   [ThSpacingPresetKeys.accessible]: {
     [ThSpacingSettingsKeys.lineHeight]: ThLineHeightOptions.large,
     [ThSpacingSettingsKeys.paragraphSpacing]: 2.5,
-    [ThSpacingSettingsKeys.paragraphIndent]: 0,
+    [ThSpacingSettingsKeys.paragraphIndent]: 1,
     [ThSpacingSettingsKeys.letterSpacing]: 0.1,
     [ThSpacingSettingsKeys.wordSpacing]: 0.3
   }

@@ -73,5 +73,5 @@
   flex: none;
   width: var(--th-icon-size, 24px);
   height: var(--th-icon-size, 24px);
-  fill: var(--th-theme-text);
+  fill: currentColor;
 }

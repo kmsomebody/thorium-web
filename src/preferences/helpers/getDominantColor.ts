@@ -16,7 +16,11 @@ export const getDominantColor = (img: HTMLImageElement): Promise<string> => {
       const color = getColorSync(img);
       if (color) {
         const hex = color.hex();
-        resolve(hex);
+        if (!/^#[0-9a-fA-F]{6}$/.test(hex)) {
+          reject(new Error(`Invalid color extracted: ${hex}`));
+        } else {
+          resolve(hex);
+        }
       } else {
         reject(new Error("No color extracted"));
       }
