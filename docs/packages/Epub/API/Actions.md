@@ -69,7 +69,7 @@ Navigation component for jumping to specific positions.
 
 ### Settings Action
 
-#### StatefulSettingsContainer
+#### StatefulVisualSettingsContainer
 
 Container for reader settings controls.
 

@@ -1,0 +1,31 @@
+.audioCoverSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.audioCoverImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--th-layout-radius);
+  filter: drop-shadow(var(--th-theme-elevate));
+}
+
+.audioCoverPlaceholder {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--th-theme-background);
+  border-radius: var(--th-layout-radius);
+  border: 1px solid var(--th-theme-subdue);
+  filter: drop-shadow(var(--th-theme-elevate));
+}
+
+.audioCoverPlaceholder svg {
+  width: 50%;
+  height: 50%;
+  fill: var(--th-theme-text);
+}

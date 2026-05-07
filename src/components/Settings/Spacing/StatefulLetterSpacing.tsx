@@ -28,7 +28,7 @@ export const StatefulLetterSpacing = ({ standalone = true }: StatefulSettingsIte
 
   const placeholderText = usePlaceholder(letterSpacingRangeConfig.placeholder, letterSpacingRangeConfig.range, "percent");
   
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setLetterSpacing, canBeReset } = useSpacingPresets();
 

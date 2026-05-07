@@ -30,7 +30,7 @@ export const StatefulTextAlign = ({ standalone = true }: StatefulSettingsItemPro
   const textAlign = useAppSelector(state => isWebPub ? state.webPubSettings.textAlign : state.settings.textAlign) ?? ThTextAlignOptions.publisher;
   const dispatch = useAppDispatch();
 
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const items = [
     {

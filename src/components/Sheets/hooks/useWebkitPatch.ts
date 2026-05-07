@@ -24,7 +24,7 @@ export const useWebkitPatch = (isOpen: boolean) => {
 
   const {
     getCframes
-  } = useNavigator();
+  } = useNavigator().unified;
 
   useEffect(() => {
     if (isScroll && !isOpen) {
@@ -46,7 +46,10 @@ export const useWebkitPatch = (isOpen: boolean) => {
         // even renders the content that is below the viewport…
         // We only have access to the iframe scrolling element
         // because we are on the same origin…
-        const frame = getCframes()?.[0];
+        if (!getCframes) return;
+        const frames = getCframes();
+        if (!frames || !Array.isArray(frames) || frames.length === 0) return;
+        const frame = frames[0];
         if (!frame?.window?.document?.scrollingElement) return;
 
         const currentScrollTop = frame.window.document.scrollingElement.scrollTop;

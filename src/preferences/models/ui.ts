@@ -100,3 +100,10 @@ export enum ThRunningHeadFormat {
   // titleAndChapter = "titleAndChapter",
   none = "none"
 }
+
+export enum ThAudioPlayerComponent {
+  cover = "cover",
+  playbackControls = "playbackControls",
+  progressBar = "progressBar",
+  mediaControls = "mediaControls"
+}

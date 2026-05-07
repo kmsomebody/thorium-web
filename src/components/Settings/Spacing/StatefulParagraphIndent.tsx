@@ -28,7 +28,7 @@ export const StatefulParagraphIndent = ({ standalone = true }: StatefulSettingsI
 
   const placeholderText = usePlaceholder(paragraphIndentRangeConfig.placeholder, paragraphIndentRangeConfig.range, "multiplier");
   
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setParagraphIndent, canBeReset } = useSpacingPresets();
 

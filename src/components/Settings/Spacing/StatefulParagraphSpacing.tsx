@@ -28,7 +28,7 @@ export const StatefulParagraphSpacing = ({ standalone = true }: StatefulSettings
 
   const placeholderText = usePlaceholder(paragraphSpacingRangeConfig.placeholder, paragraphSpacingRangeConfig.range, "multiplier");
   
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setParagraphSpacing, canBeReset } = useSpacingPresets();
 

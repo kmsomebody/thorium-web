@@ -15,20 +15,23 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@readium/navigator':
-        specifier: 2.4.0-alpha.16
-        version: 2.4.0-alpha.16
+        specifier: 2.4.0-beta.7
+        version: 2.4.0-beta.7
       '@readium/navigator-html-injectables':
         specifier: 2.3.1-alpha.2
         version: 2.3.1-alpha.2
       '@readium/shared':
-        specifier: 2.2.0-alpha.2
-        version: 2.2.0-alpha.2
+        specifier: 2.2.0-beta.1
+        version: 2.2.0-beta.1
       '@reduxjs/toolkit':
         specifier: ^2.11.2
         version: 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.4)(redux@5.0.1))(react@19.2.4)
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      colorthief:
+        specifier: ^3.3.1
+        version: 3.3.1(sharp@0.34.5)
       debounce:
         specifier: ^3.0.0
         version: 3.0.0
@@ -1761,12 +1764,12 @@ packages:
     resolution: {integrity: sha512-NEIKwhuc329NgmE9s46/PsmNpUxfhk834U4Pmzj3ONDMs9EZMPJUOCuPKDZz/D0a320jLdvYkMIR4vu3YQD5YA==}
     engines: {node: '>=18'}
 
-  '@readium/navigator@2.4.0-alpha.16':
-    resolution: {integrity: sha512-DRjaNtyzSVkQeDmtpcNMv/ogLiYZPZ9EQQ7NqgZz7c20oMgZ5ghmPdd8fCYi38I9NeuTlnymlLTEC14VXL4Cmg==}
+  '@readium/navigator@2.4.0-beta.7':
+    resolution: {integrity: sha512-uTRrs98cLn96+LFP4Pex7llmo7kNic+7aYnucGihvhdh7YvXGlz+Zeev1+99e0qmvGgWGRf9+1UAvSBcCfjQJg==}
     engines: {node: '>=18'}
 
-  '@readium/shared@2.2.0-alpha.2':
-    resolution: {integrity: sha512-Fu9rwAXq05YmicdDOHwwkyrb2Hvc7gaB0/9yeK9DWo9h4Rb/2u9ZRw0FW3nhfBwK9kwHqPlwmr7QH0EZ/oHcWw==}
+  '@readium/shared@2.2.0-beta.1':
+    resolution: {integrity: sha512-AKpdH5Mb4RlQNGit4p2uWxDzlrPbuAxcKd2828qfrWdxJs0ZlGBLclCT3WHgarVDGnyT9NERhgmJEcG9lS9bwA==}
     engines: {node: '>=18'}
 
   '@reduxjs/toolkit@2.11.2':
@@ -2383,6 +2386,15 @@ packages:
 
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
+  colorthief@3.3.1:
+    resolution: {integrity: sha512-a3qzYXy51h6p3725pV8rnJwUBGTtvYQge2pVhKJwL+vETUD5pCi6VKmQyu51pBHdUbu/BPEXbwFLS0GnxXNhGA==}
+    hasBin: true
+    peerDependencies:
+      sharp: '>=0.33.0'
+    peerDependenciesMeta:
+      sharp:
+        optional: true
 
   commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
@@ -3759,8 +3771,8 @@ packages:
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
 
-  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/6b11dcbe19c8378b43729d0ee8b4a2e03f59aca5:
-    resolution: {tarball: https://codeload.github.com/edrlab/thorium-locales/tar.gz/6b11dcbe19c8378b43729d0ee8b4a2e03f59aca5}
+  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/34a2891445d535c120a5cebcacd82170b37899ea:
+    resolution: {tarball: https://codeload.github.com/edrlab/thorium-locales/tar.gz/34a2891445d535c120a5cebcacd82170b37899ea}
     version: 1.0.0
 
   thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/88dacee6db0e01862b9a381e350573cc4722203a:
@@ -6095,11 +6107,11 @@ snapshots:
 
   '@readium/navigator-html-injectables@2.3.1-alpha.2': {}
 
-  '@readium/navigator@2.4.0-alpha.16': {}
+  '@readium/navigator@2.4.0-beta.7': {}
 
-  '@readium/shared@2.2.0-alpha.2':
+  '@readium/shared@2.2.0-beta.1':
     dependencies:
-      '@edrlab/thorium-locales': thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/6b11dcbe19c8378b43729d0ee8b4a2e03f59aca5
+      '@edrlab/thorium-locales': thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/34a2891445d535c120a5cebcacd82170b37899ea
 
   '@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.4)(redux@5.0.1))(react@19.2.4)':
     dependencies:
@@ -6677,6 +6689,10 @@ snapshots:
       color-name: 1.1.4
 
   color-name@1.1.4: {}
+
+  colorthief@3.3.1(sharp@0.34.5):
+    optionalDependencies:
+      sharp: 0.34.5
 
   commander@4.1.1: {}
 
@@ -8403,7 +8419,7 @@ snapshots:
     dependencies:
       any-promise: 1.3.0
 
-  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/6b11dcbe19c8378b43729d0ee8b4a2e03f59aca5: {}
+  thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/34a2891445d535c120a5cebcacd82170b37899ea: {}
 
   thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/88dacee6db0e01862b9a381e350573cc4722203a: {}
 

@@ -1,0 +1,155 @@
+.audioControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  --audio-icon-base: var(--th-icon-size, 24px);
+}
+
+.audioPreviousTrackButton,
+.audioNextTrackButton {
+  --th-icon-size: calc(var(--audio-icon-base) * (5/4));
+  padding: calc(var(--th-icon-size) * (1/5));
+}
+
+.audioSkipBackwardButton,
+.audioSkipForwardButton {
+  --th-icon-size: calc(var(--audio-icon-base) * (3/2));
+  padding: calc(var(--th-icon-size) * (1/6));
+}
+
+.audioPlayPauseButton {
+  --th-icon-size: calc(var(--audio-icon-base) * 2);
+  padding: calc(var(--th-icon-size) * (1/8));
+}
+
+.audioMediaControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  --audio-icon-base: var(--th-icon-size, 24px);
+}
+
+.audioVolumeButton,
+.audioPlaybackRateButton {
+  --th-icon-size: calc(var(--audio-icon-base) * (5/4));
+  padding: calc(var(--th-icon-size) * (1/4));
+}
+
+.audioPlaybackRateButton {
+  position: relative;
+  outline: none;
+}
+
+.audioPlaybackRateButton[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioPlaybackRateButton[data-disabled] {
+  color: var(--th-theme-disable);
+}
+
+.audioPlaybackRateLabel {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  line-height: 1;
+  font-size: calc(var(--th-icon-size, 24px) * (5/12));
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+
+.audioControlPopover {
+  background-color: var(--th-theme-background);
+  color: var(--th-theme-text);
+  border: 1px solid var(--th-theme-subdue);
+  border-radius: var(--th-layout-radius);
+  filter: drop-shadow(var(--th-theme-elevate));
+  padding: var(--th-layout-spacing);
+}
+
+.audioControlPopoverDialog {
+  outline: none;
+}
+
+/* Volume slider */
+
+.audioVolumeSliderTrack {
+  position: relative;
+  height: 150px;
+  width: 30px;
+  box-sizing: border-box;
+  margin-block: calc(1.25rem / 2);
+}
+
+.audioVolumeSliderTrack::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background: var(--th-theme-subdue);
+  width: 3px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.audioVolumeSlider[data-disabled] .audioVolumeSliderTrack::before {
+  background: var(--th-theme-disable);
+}
+
+.audioVolumeSliderThumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--th-theme-text);
+  border: 2px solid var(--th-theme-subdue);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.audioVolumeSlider[data-disabled] .audioVolumeSliderThumb {
+  background: var(--th-theme-disable);
+  border: 2px solid var(--th-theme-disable);
+}
+
+.audioVolumeSliderThumb[data-dragging] {
+  background: var(--th-theme-subdue);
+}
+
+.audioVolumeSliderThumb[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+  border: 2px solid var(--th-theme-focus);
+}
+
+/* Playback rate listbox */
+
+.audioPlaybackRateListbox {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--th-layout-spacing) / 2);
+  max-height: var(--th-layout-constraints-dropdown, 250px);
+  overflow-y: auto;
+}
+
+.audioPlaybackRateListboxItem {
+  padding: calc(var(--th-layout-spacing) / 4);
+  border-radius: var(--th-layout-radius);
+  outline: none;
+}
+
+.audioPlaybackRateListboxItem[data-selected] {
+  color: var(--th-theme-subdue);
+}
+
+.audioPlaybackRateListboxItem[data-hovered] {
+  background-color: var(--th-theme-hover);
+}
+
+.audioPlaybackRateListboxItem[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioPlaybackRateListboxItem[data-disabled] {
+  color: var(--th-theme-disable);
+}

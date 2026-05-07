@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import readerStyles from "./assets/styles/thorium-web.reader.app.module.css";
 import readerPaginationStyles from "./assets/styles/thorium-web.reader.pagination.module.css";
@@ -67,7 +67,7 @@ export const StatefulReaderFooter = ({
     }
   };
 
-  const { previousLocator, nextLocator, go } = useNavigator();
+  const { previousLocator, nextLocator, go } = useNavigator().unified;
 
   const updateLinks = useCallback(() => {
     const links: { previous?: ThPaginationLinkProps; next?: ThPaginationLinkProps } = {

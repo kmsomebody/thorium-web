@@ -76,7 +76,7 @@ export const StatefulFontFamily = ({ standalone = true }: StatefulSettingsItemPr
 
   const dispatch = useAppDispatch();
 
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const updatePreference = useCallback(async (key: Key | null) => {
     if (!key || key === fontFamily) return;

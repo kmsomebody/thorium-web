@@ -11,3 +11,5 @@ export * from "./themeReducer";
 export * from "./preferencesReducer";
 export * from "./readerReducer";
 export * from "./webPubSettingsReducer";
+export * from "./audioSettingsReducer";
+export * from "./playerReducer";

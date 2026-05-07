@@ -28,7 +28,7 @@ export const StatefulWordSpacing = ({ standalone = true }: StatefulSettingsItemP
 
   const placeholderText = usePlaceholder(wordSpacingRangeConfig.placeholder, wordSpacingRangeConfig.range, "percent");
   
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setWordSpacing, canBeReset } = useSpacingPresets();
 

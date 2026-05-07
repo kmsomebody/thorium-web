@@ -1,6 +1,7 @@
 "use client";
 
-import TuneIcon from "./assets/icons/match_case.svg";
+import LetterIcon from "./assets/icons/match_case.svg";
+import TuneIcon from "./assets/icons/instant_mix.svg";
 
 import { StatefulActionTriggerProps } from "../models/actions";
 import { ThActionsKeys } from "@/preferences/models";
@@ -20,6 +21,8 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
   const { preferences } = usePreferences();
   const { t } = useI18n();
   const actionState = useAppSelector(state => state.actions.keys[ThActionsKeys.settings]);
+  const profile = useAppSelector(state => state.reader.profile);
+  const isAudio = profile === "audio";
   const dispatch = useAppDispatch();
 
   const setOpen = (value: boolean) => {    
@@ -37,7 +40,7 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
     { (variant && variant === ThActionsTriggerVariant.menu) 
       ? <StatefulOverflowMenuItem 
           label={ t("reader.preferences.title") }
-          SVGIcon={ TuneIcon }
+          SVGIcon={ isAudio ? TuneIcon : LetterIcon }
           shortcut={ preferences.actions.keys[ThActionsKeys.settings].shortcut } 
           id={ ThActionsKeys.settings }
           onAction={ () => setOpen(!actionState?.isOpen) }
@@ -49,7 +52,10 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
           tooltipLabel={ t("reader.preferences.title") } 
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
-          <TuneIcon aria-hidden="true" focusable="false" />
+          { isAudio 
+            ? <TuneIcon aria-hidden="true" focusable="false" />
+            : <LetterIcon aria-hidden="true" focusable="false" />
+          }
         </StatefulActionIcon>
     }
     </>

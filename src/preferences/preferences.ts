@@ -3,16 +3,18 @@ import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThemeTokens } from "@/preferences/hooks/useTheming";
 import { 
   ThActionsKeys,
+  ThAudioKeys,
+  ThAudioSettingsKeys,
   ThDocumentTitleFormat,
+  ThDockingKeys,
   ThLayoutUI,
+  ThLineHeightOptions,
   ThProgressionFormat,
   ThRunningHeadFormat,
-  ThDockingKeys,
-  ThLineHeightOptions, 
   ThSettingsKeys, 
-  ThSheetTypes, 
-  ThSpacingSettingsKeys, 
+  ThSheetTypes,
   ThTextSettingsKeys, 
+  ThSpacingSettingsKeys, 
   ThThemeKeys, 
   ThLayoutDirection, 
   ThSpacingPresetKeys,
@@ -26,12 +28,13 @@ import {
   ThPaginatedAffordancePref,
   ThDockingPref,
   ThSettingsGroupPref,
-  ValidatedLanguageCollection
+  ValidatedLanguageCollection,
+  ThAudioPlayerComponent
 } from "./models";
 import { ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
-import { ContentProtectionConfig } from "./models/protection";
+import { AudioContentProtectionConfig, ContentProtectionConfig } from "./models/protection";
 
 export type CustomizableKeys = {
   action?: string;
@@ -39,6 +42,7 @@ export type CustomizableKeys = {
   settings?: string;
   text?: string;
   spacing?: string;
+  audio?: string;
 };
 
 // Default internal keys alias for convenience
@@ -48,6 +52,7 @@ export type DefaultKeys = {
   settings: ThSettingsKeys;
   text: ThTextSettingsKeys;
   spacing: ThSpacingSettingsKeys;
+  audio: ThAudioKeys;
 };
 
 // Key types to better handle custom keys for external consumers
@@ -86,6 +91,26 @@ export type SpacingSettingsKey<K extends CustomizableKeys> =
       : ThSpacingSettingsKeys
     : ThSpacingSettingsKeys;
 
+export type AudioSettingsKey<K extends CustomizableKeys> = 
+  K extends { audio: infer A } 
+    ? A extends string 
+      ? ThAudioSettingsKeys | A 
+      : ThAudioSettingsKeys
+    : ThAudioSettingsKeys;
+
+export type ThAudioKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
+  [ThAudioKeys.volume]: Required<ThSettingsRangePref>;
+  [ThAudioKeys.playbackRate]: Required<ThSettingsRangePref>;
+  [ThAudioKeys.skipBackwardInterval]: Required<ThSettingsRangePref>;
+  [ThAudioKeys.skipForwardInterval]: Required<ThSettingsRangePref>;
+} & (
+  K extends { audio: infer A } 
+    ? A extends string 
+      ? { [key in A]: any }
+      : {}
+    : {}
+);
+
 export interface ThSettingsSpacingPresets<K extends CustomizableKeys = DefaultKeys> {
   reflowOrder: Array<ThSpacingPresetKeys>;
   webPubOrder: Array<ThSpacingPresetKeys>;
@@ -112,18 +137,19 @@ export interface ThActionsPref<K extends CustomizableKeys> {
   reflowOrder: Array<ActionKey<K>>;
   fxlOrder: Array<ActionKey<K>>;
   webPubOrder: Array<ActionKey<K>>;
+  audioOrder: Array<ActionKey<K>>;
   collapse: ThCollapsibility;
   keys: Record<ActionKey<K>, ThActionsTokens>;
 };
 
 export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
   [ThSettingsKeys.fontFamily]: ThFontFamilyPref;
-  [ThSettingsKeys.letterSpacing]: ThSettingsRangePref;
+  [ThSettingsKeys.letterSpacing]: Required<ThSettingsRangePref>;
   [ThSettingsKeys.lineHeight]: ThSettingsRadioPref<Exclude<ThLineHeightOptions, ThLineHeightOptions.publisher>>;
-  [ThSettingsKeys.paragraphIndent]: ThSettingsRangePref;
-  [ThSettingsKeys.paragraphSpacing]: ThSettingsRangePref;
-  [ThSettingsKeys.wordSpacing]: ThSettingsRangePref;
-  [ThSettingsKeys.zoom]: ThSettingsRangePref;
+  [ThSettingsKeys.paragraphIndent]: Required<ThSettingsRangePref>;
+  [ThSettingsKeys.paragraphSpacing]: Required<ThSettingsRangePref>;
+  [ThSettingsKeys.wordSpacing]: Required<ThSettingsRangePref>;
+  [ThSettingsKeys.zoom]: Required<ThSettingsRangePref>;
 } & (
   K extends { settings: infer S } 
     ? S extends string 
@@ -132,7 +158,7 @@ export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
     : {}
 );
 
-export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover> | "pagination";
+export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover> | "pagination" | "dropdown";
 
 // Main preferences interface with simplified generics
 export interface ThPreferences<K extends CustomizableKeys = {}> {
@@ -162,6 +188,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
           reflow?: ThFormatPref<ThRunningHeadFormat>;
           fxl?: ThFormatPref<ThRunningHeadFormat>;
           webPub?: ThFormatPref<ThRunningHeadFormat>;
+          audio?: ThFormatPref<ThRunningHeadFormat>;
         }
       }
     };
@@ -170,6 +197,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
         reflow?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
         fxl?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
         webPub?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
+        audio?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
       };
     };
     arrow: {
@@ -186,7 +214,11 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       ui?: {
         reflow?: ThLayoutUI,
         fxl?: ThLayoutUI,
-        webPub?: ThLayoutUI
+        webPub?: ThLayoutUI,
+        audio?: ThLayoutUI
+      };
+      audio: {
+        order: Array<ThAudioPlayerComponent>;
       };
       radius: number;
       spacing: number;
@@ -202,6 +234,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     themes: {
       reflowOrder: Array<ThemeKey<K> | "auto">;
       fxlOrder: Array<ThemeKey<K> | "auto">;
+      audioOrder: Array<ThemeKey<K> | "auto">;
       systemThemes?: {
         light: ThemeKey<K>;
         dark: ThemeKey<K>;
@@ -220,6 +253,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     };
   };
   contentProtection?: ContentProtectionConfig;
+  audioContentProtection?: AudioContentProtectionConfig;
   affordances: {
     scroll: {
       hintInImmersive: boolean;
@@ -233,6 +267,10 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     }
   };
   actions: ThActionsPref<K>;
+  audio: {
+    order: Array<AudioSettingsKey<K>>;
+    keys: ThAudioKeyTypes<K>;
+  };
   shortcuts: {
     representation: UnstableShortcutRepresentation;
     joiner?: string;
@@ -315,7 +353,7 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
   // Validate themes
   if (params.theming?.themes) {
     validateObjectKeys<ThemeKey<K> | "auto", ThemeTokens>(
-      [params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">],
+      [params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.audioOrder as Array<ThemeKey<K> | "auto">],
       params.theming.themes.keys as Record<string, ThemeTokens>,
       "theming.themes",
       "auto" // Special case for themes

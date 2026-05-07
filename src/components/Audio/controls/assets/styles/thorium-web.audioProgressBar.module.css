@@ -1,0 +1,102 @@
+.audioProgressControl {
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  grid-template-areas:
+    "chapter chapter chapter"
+    "progress progress progress"
+    "elapsed . remaining";
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.audioProgressChapter {
+  grid-area: chapter;
+  text-align: center;
+}
+
+.audioProgressSlider {
+  grid-area: progress;
+}
+
+.audioProgressTrack {
+  grid-area: progress;
+  position: relative;
+  height: 30px;
+  width: auto;
+  box-sizing: border-box;
+  margin-inline: calc(var(--th-layout-spacing) / 2);
+}
+
+.audioProgressTrack::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background: var(--th-theme-subdue);
+  height: 3px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.audioProgressThumb {
+  width: 0.25rem;
+  height: 1.5rem;
+  border-radius: var(--th-layout-radius);
+  background: var(--th-theme-text);
+  border: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.audioProgressSlider[data-disabled] .audioProgressTrack::before {
+  background: var(--th-theme-disable);
+}
+
+.audioProgressSlider[data-disabled] .audioProgressThumb {
+  background: var(--th-theme-disable);
+}
+
+.audioProgressSlider[data-disabled] .audioProgressSeekableRange {
+  background: var(--th-theme-disable);
+}
+
+.audioProgressSlider[data-disabled] .audioProgressChapter,
+.audioProgressSlider[data-disabled] .audioProgressElapsedTime,
+.audioProgressSlider[data-disabled] .audioProgressRemainingTime {
+  color: var(--th-theme-disable);
+}
+
+.audioProgressThumb[data-dragging] {
+  background: var(--th-theme-subdue);
+}
+
+.audioProgressThumb[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.audioProgressSeekableRange {
+  position: absolute;
+  height: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: color-mix(in srgb, var(--th-theme-text) 55%, var(--th-theme-subdue));
+  pointer-events: none;
+  border-radius: 1px;
+  z-index: 1;
+}
+
+.audioProgressElapsedTime {
+  grid-area: elapsed;
+  justify-self: start;
+  font-size: 0.875rem;
+  color: var(--th-theme-text);
+}
+
+.audioProgressRemainingTime {
+  grid-area: remaining;
+  justify-self: end;
+  font-size: 0.875rem;
+  color: var(--th-theme-text);
+}

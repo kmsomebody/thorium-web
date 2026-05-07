@@ -104,5 +104,30 @@
         }
       }
     }
+  },
+  "audio": {
+    "player": {
+      "progress": "Playback progress",
+      "controls": "Playback controls",
+      "mediaControls": "Audio settings",
+      "coverAlt": "Audiobook cover",
+      "play": "Play",
+      "pause": "Pause",
+      "skipForward": "Skip Forward",
+      "skipBackward": "Skip Backward",
+      "nextTrack": "Next Track",
+      "previousTrack": "Previous Track"
+    },
+    "settings": {
+      "title": "Audio Settings",
+      "autoPlay": {
+        "title": "Autoplay",
+        "label": "Continuous play"
+      },
+      "playbackRate": "Playback Speed",
+      "skipBackwardInterval": "Skip Backward Interval",
+      "skipForwardInterval": "Skip Forward Interval",
+      "volume": "Volume"
+    }
   }
 }

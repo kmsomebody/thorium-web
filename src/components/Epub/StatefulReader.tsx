@@ -27,7 +27,10 @@ import { NavigatorProvider } from "@/core/Navigator";
 
 import {
   BasicTextSelection,
+  ContextMenuEvent,
   FrameClickEvent,
+  KeyboardEventData,
+  SuspiciousActivityEvent
 } from "@readium/navigator-html-injectables";
 import { 
   EpubNavigatorListeners, 
@@ -514,9 +517,9 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
       return false;
     },
     textSelected: function (_selection: BasicTextSelection): void {},
-    contentProtection: function (type: string, data: unknown) {/*TODO*/},
-    contextMenu: function (_data: unknown) {/*TODO*/},
-    peripheral: function (_data: unknown) {/*TODO*/}
+    contentProtection: function (_type: string, _data: SuspiciousActivityEvent): void {},
+    contextMenu: function (_data: ContextMenuEvent): void {},
+    peripheral: function (_data: KeyboardEventData): void {},
   }), [p, initReadingEnv, getCframes, navLayout, setLocalData, dispatch, handleTap, handleClick, cache, preferences.affordances.scroll, isScrollStart, isScrollEnd, updatePublicationNavigationState]);
   
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
@@ -614,7 +617,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   return (
     <>
     <I18nProvider locale={ preferences.locale }>
-    <NavigatorProvider navigator={ epubNavigator }>
+    <NavigatorProvider visualNavigator={ epubNavigator }>
       <main className={ readerStyles.main }>
         <StatefulDockingWrapper>
           <div 

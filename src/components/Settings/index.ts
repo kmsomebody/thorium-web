@@ -12,4 +12,5 @@ export * from "./models";
 export * from "./Spacing";
 export * from "./Text";
 export * from "./StatefulPublisherStyles";
+export * from "./StatefulTheme";
 export * from "./StatefulZoom";

@@ -22,7 +22,7 @@ The Actions components provide functionality for user interactions and controls:
 ### Action Types
 - **Fullscreen**: Toggle fullscreen mode (`StatefulFullscreenTrigger`)
 - **Jump to Position**: Navigate to specific positions (`StatefulJumpToPositionTrigger`)
-- **Settings**: Configure reader settings (`StatefulSettingsContainer`, `StatefulSettingsTrigger`)
+- **Settings**: Configure reader settings (`StatefulVisualSettingsContainer`, `StatefulSettingsTrigger`)
 - **Table of Contents**: Navigate book structure (`StatefulTocContainer`, `StatefulTocTrigger`)
 
 ### Action Triggers

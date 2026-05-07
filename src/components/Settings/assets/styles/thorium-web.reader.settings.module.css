@@ -373,10 +373,16 @@
 
 .dropdownListboxItem {
   padding: calc(var(--th-layout-spacing) / 4);
+  border-radius: var(--th-layout-radius);
+  outline: none;
 }
 
 .dropdownListboxItem[data-selected] {
   color: var(--th-theme-subdue);
+}
+
+.dropdownListboxItem[data-hovered] {
+  background-color: var(--th-theme-hover);
 }
 
 .dropdownListboxItem[data-focus-visible] {

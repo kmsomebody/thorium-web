@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { ThBreakpoints, CSSColor } from "../models";
 
@@ -14,6 +14,8 @@ import { useMonochrome } from "@/core/Hooks/useMonochrome";
 
 import { propsToCSSVars } from "@/core/Helpers/propsToCSSVars";
 import { prefixString } from "@/core/Helpers/prefixString";
+import { extractThemeFromImage } from "../helpers/themeGeneration";
+import { proxyUrl } from "@/helpers/proxyUrl";
 
 export interface ThemeTokens {
   background: CSSColor;
@@ -29,7 +31,7 @@ export interface ThemeTokens {
   focus: CSSColor;
   elevate: string;
   immerse: string;
-};
+}
 
 export interface useThemingProps<T extends string> {
   theme?: string;
@@ -40,6 +42,9 @@ export interface useThemingProps<T extends string> {
   };
   breakpointsMap: BreakpointsMap<number | null>;
   initProps?: Record<string, any>;
+  coverUrl?: string;
+  autoThemeSource?: "cover" | "system";
+  onCoverThemeGenerated?: (themeTokens: ThemeTokens) => void;
   onBreakpointChange?: (breakpoint: ThBreakpoints | null) => void;
   onColorSchemeChange?: (colorScheme: ThColorScheme) => void;
   onContrastChange?: (contrast: ThContrast) => void;
@@ -57,6 +62,8 @@ export const useTheming = <T extends string>({
   themeKeys,
   breakpointsMap,
   initProps,
+  coverUrl,
+  autoThemeSource,
   onBreakpointChange,
   onColorSchemeChange,
   onContrastChange,
@@ -64,7 +71,11 @@ export const useTheming = <T extends string>({
   onMonochromeChange,
   onReducedMotionChange,
   onReducedTransparencyChange,
+  onCoverThemeGenerated,
 }: useThemingProps<T>) => {
+  const [coverThemeTokens, setCoverThemeTokens] = useState<ThemeTokens | null>(null);
+  const [coverThemeFailed, setCoverThemeFailed] = useState(false);
+  
   const breakpoints = useBreakpoints(breakpointsMap, onBreakpointChange);
   const colorScheme = useColorScheme(onColorSchemeChange);
   const colorSchemeRef = useRef(colorScheme);
@@ -74,6 +85,24 @@ export const useTheming = <T extends string>({
   const reducedMotion = useReducedMotion(onReducedMotionChange);
   const reducedTransparency = useReducedTransparency(onReducedTransparencyChange);
   
+  // Extract theme from cover when needed
+  useEffect(() => {
+    if (autoThemeSource === "cover" && coverUrl && !coverThemeTokens) {
+      const extractTheme = async () => {
+        try {
+          const themeTokens = await extractThemeFromImage(proxyUrl(coverUrl) ?? coverUrl);
+          setCoverThemeTokens(themeTokens);
+          onCoverThemeGenerated?.(themeTokens);
+        } catch (error) {
+          console.warn("Failed to extract cover theme:", error);
+          setCoverThemeFailed(true);
+        }
+      };
+      
+      extractTheme();
+    }
+  }, [autoThemeSource, coverUrl, coverThemeTokens, onCoverThemeGenerated]);
+
   const updateThemeColorMetaTag = useCallback((color: string): void => {
     if (typeof document === "undefined") return;
     
@@ -86,15 +115,21 @@ export const useTheming = <T extends string>({
     metaTag.setAttribute("content", color);
   }, []);
 
-  const inferThemeAuto = useCallback(() => {
-    return colorSchemeRef.current === ThColorScheme.dark ? systemKeys?.dark : systemKeys?.light;
-  }, [systemKeys]);
-
   const initThemingCustomProps = useCallback(() => {
     for (let p in initProps) {
       document.documentElement.style.setProperty(p, initProps[p])
     }
   }, [initProps]);
+
+  const inferThemeAuto = useCallback(() => {
+    if (autoThemeSource === "cover") {
+      if (coverThemeTokens) return "cover" as T;
+      // Pending: hold until resolved; failed: fall back to system
+      if (!coverThemeFailed) return undefined;
+    }
+    // Default behavior: use colorScheme (system)
+    return colorSchemeRef.current === ThColorScheme.dark ? systemKeys?.dark : systemKeys?.light;
+  }, [systemKeys, autoThemeSource, coverThemeTokens, coverThemeFailed]);
 
   const setThemeCustomProps = useCallback((t?: string) => {
     if (!t) {
@@ -104,7 +139,7 @@ export const useTheming = <T extends string>({
     if (t === "auto") {
       const autoTheme = inferThemeAuto();
       if (!autoTheme) {
-        // We are not removing properties cos iframes won’t update
+        // We are not removing properties cos iframes won't update
         // Removing here would consequently create a theme inconsistency
         // between the iframe and the main window
         return;
@@ -112,9 +147,18 @@ export const useTheming = <T extends string>({
       t = autoTheme;
     }
   
-    const themeTokens = themeKeys[t as T];
+    let themeTokens: ThemeTokens | undefined;
+    
+    if (t === "cover" && coverThemeTokens) {
+      // Use the generated cover theme tokens
+      themeTokens = coverThemeTokens;
+    } else {
+      // Use predefined theme keys
+      themeTokens = themeKeys[t as T];
+    }
+    
     if (!themeTokens) {
-      // We are not removing properties cos iframes won’t update
+      // We are not removing properties cos iframes won't update
       // Removing here would consequently create a theme inconsistency
       // between the iframe and the main window
       return;
@@ -127,7 +171,7 @@ export const useTheming = <T extends string>({
     }
 
     updateThemeColorMetaTag(themeTokens.background);
-  }, [inferThemeAuto, updateThemeColorMetaTag, themeKeys]);
+  }, [inferThemeAuto, updateThemeColorMetaTag, themeKeys, coverThemeTokens]);
 
   // On mount add custom props to :root/html
   useEffect(() => {
@@ -140,6 +184,16 @@ export const useTheming = <T extends string>({
     setThemeCustomProps(theme);
   }, [setThemeCustomProps, theme, colorScheme]);
 
+  // Apply cover theme as soon as tokens are available
+  useEffect(() => {
+    if (!coverThemeTokens || theme !== "auto") return;
+    const props = propsToCSSVars(coverThemeTokens, { prefix: prefixString("theme") });
+    for (let p in props) {
+      document.documentElement.style.setProperty(p, props[p]);
+    }
+    updateThemeColorMetaTag(coverThemeTokens.background);
+  }, [coverThemeTokens, theme, updateThemeColorMetaTag]);
+
   return {
     inferThemeAuto,
     theme, 
@@ -149,6 +203,7 @@ export const useTheming = <T extends string>({
     forcedColors, 
     monochrome, 
     reducedMotion, 
-    reducedTransparency
+    reducedTransparency,
+    coverThemeTokens
   }
 }

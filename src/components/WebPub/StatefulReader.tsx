@@ -23,7 +23,10 @@ import { NavigatorProvider } from "@/core/Navigator";
 
 import {
   BasicTextSelection,
+  ContextMenuEvent,
   FrameClickEvent,
+  KeyboardEventData,
+  SuspiciousActivityEvent,
 } from "@readium/navigator-html-injectables";
 import { WebPubNavigatorListeners } from "@readium/navigator";
 import { 
@@ -287,9 +290,9 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
       return false;
     },
     textSelected: function (_selection: BasicTextSelection): void {},
-    contentProtection: function (type: string, data: unknown) {/*TODO*/},
-    contextMenu: function (_data: unknown) {/*TODO*/},
-    peripheral: function (_data: unknown) {/*TODO*/}
+    contentProtection: function (_type: string, _data: SuspiciousActivityEvent): void {},
+    contextMenu: function (_data: ContextMenuEvent): void {},
+    peripheral: function (_data: KeyboardEventData): void {},
   }), [p, setLocalData, canGoBackward, canGoForward, dispatch, toggleIsImmersive]);
 
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
@@ -325,7 +328,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
   return (
     <>
     <I18nProvider locale={ preferences.locale }>
-    <NavigatorProvider navigator={ webPubNavigator }>
+    <NavigatorProvider visualNavigator={ webPubNavigator }>
       <main className={ readerStyles.main }>
         <StatefulDockingWrapper>
           <div 

@@ -17,13 +17,16 @@ export const usePreferenceKeys = () => {
   const reflowActionKeys = preferences.actions.reflowOrder;
   const fxlActionKeys = preferences.actions.fxlOrder;
   const webPubActionKeys = preferences.actions.webPubOrder;
+  const audioActionKeys = preferences.actions.audioOrder;
 
   const reflowThemeKeys = preferences.theming.themes.reflowOrder;
   const fxlThemeKeys = preferences.theming.themes.fxlOrder;
+  const audioThemeKeys = preferences.theming.themes.audioOrder;
 
   const reflowSettingsKeys = preferences.settings.reflowOrder;
   const fxlSettingsKeys = preferences.settings.fxlOrder;
   const webPubSettingsKeys = preferences.settings.webPubOrder;
+  const audioSettingsKeys = preferences.audio?.order ?? [];
 
   const mainTextSettingsKeys = preferences.settings.text?.main ?? defaultTextSettingsMain;
   const subPanelTextSettingsKeys = preferences.settings.text?.subPanel ?? defaultTextSettingsSubpanel;
@@ -38,11 +41,14 @@ export const usePreferenceKeys = () => {
     reflowActionKeys,
     fxlActionKeys,
     webPubActionKeys,
+    audioActionKeys,
     reflowThemeKeys,
     fxlThemeKeys,
+    audioThemeKeys,
     reflowSettingsKeys,
     fxlSettingsKeys,
     webPubSettingsKeys,
+    audioSettingsKeys,
     mainTextSettingsKeys,
     subPanelTextSettingsKeys,
     mainSpacingSettingsKeys,

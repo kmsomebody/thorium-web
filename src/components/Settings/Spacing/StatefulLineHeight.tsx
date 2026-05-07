@@ -30,7 +30,7 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
 
   const publisherStyles = useAppSelector(state => isWebPub ? state.webPubSettings.publisherStyles : state.settings.publisherStyles) ?? true;
 
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const { getEffectiveSpacingValue, setLineHeight } = useSpacingPresets();
 

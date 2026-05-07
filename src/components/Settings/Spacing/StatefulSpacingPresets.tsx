@@ -50,7 +50,7 @@ export const StatefulSpacingPresets = ({ standalone }: StatefulSettingsItemProps
 
   const dispatch = useAppDispatch();
 
-  const { submitPreferences } = useNavigator();
+  const { submitPreferences } = useNavigator().visual;
 
   const lineHeightOptions = useLineHeight();
 

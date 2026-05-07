@@ -47,8 +47,7 @@ export const StatefulTocContainer = ({ triggerRef }: StatefulActionContainerProp
   const actionState = useAppSelector(state => state.actions.keys[ThActionsKeys.toc]);
   const dispatch = useAppDispatch();
 
-  const { goLink } = useNavigator();
-
+  const { goLink } = useNavigator().unified;
   const docking = useDocking(ThActionsKeys.toc);
   const sheetType = docking.sheetType;
 

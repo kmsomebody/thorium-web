@@ -5,7 +5,7 @@ import { StatefulFullscreenTrigger } from "../../Actions/Fullscreen/StatefulFull
 import { StatefulJumpToPositionTrigger } from "../../Actions/JumpToPosition/StatefulJumpToPositionTrigger";
 import { StatefulJumpToPositionContainer } from "../../Actions/JumpToPosition/StatefulJumpToPositionContainer";
 import { StatefulSettingsTrigger } from "../../Actions/Settings/StatefulSettingsTrigger";
-import { StatefulSettingsContainer } from "../../Actions/Settings/StatefulSettingsContainer";
+import { StatefulVisualSettingsContainer } from "../../Actions/Settings/StatefulVisualSettingsContainer";
 import { StatefulTocTrigger } from "../../Actions/Toc/StatefulTocTrigger";
 import { StatefulTocContainer } from "../../Actions/Toc/StatefulTocContainer";
 
@@ -24,7 +24,7 @@ import { StatefulSpacingPresets } from "../../Settings/Spacing/StatefulSpacingPr
 import { StatefulTextAlign } from "../../Settings/Text/StatefulTextAlign";
 import { StatefulTextGroup } from "../../Settings/Text/StatefulTextGroup";
 import { StatefulTextNormalize } from "../../Settings/Text/StatefulTextNormalize";
-import { StatefulTheme } from "../../Epub/Settings/StatefulTheme";
+import { StatefulTheme } from "../../Settings/StatefulTheme";
 import { StatefulWordSpacing } from "../../Settings/Spacing/StatefulWordSpacing";
 import { StatefulZoom } from "../../Settings/StatefulZoom";
 
@@ -45,7 +45,7 @@ export const createDefaultPlugin = (): ThPlugin => {
         },
         [ThActionsKeys.settings]: {
           Trigger: StatefulSettingsTrigger,
-          Target: StatefulSettingsContainer
+          Target: StatefulVisualSettingsContainer
         },
         [ThActionsKeys.toc]: {
           Trigger: StatefulTocTrigger,

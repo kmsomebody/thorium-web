@@ -29,7 +29,7 @@ export const StatefulPublisherStyles = ({ standalone = true }: StatefulSettingsI
 
   const lineHeightOptions = useLineHeight();
 
-  const { submitPreferences } = useNavigator();
+  const { submitPreferences } = useNavigator().visual;
 
   const updatePreference = useCallback(async (isSelected: boolean) => {
     const values = isSelected ? 

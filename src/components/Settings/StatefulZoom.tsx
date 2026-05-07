@@ -20,6 +20,7 @@ import { usePlaceholder } from "./hooks/usePlaceholder";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setFontSize } from "@/lib/settingsReducer";
 import { setWebPubZoom } from "@/lib/webPubSettingsReducer";
+import { EpubPreferencesEditor, WebPubPreferencesEditor } from "@readium/navigator";
 
 export const StatefulZoom = () => {
   const { preferences } = usePreferences();
@@ -37,13 +38,17 @@ export const StatefulZoom = () => {
     getSetting, 
     submitPreferences,
     preferencesEditor 
-  } = useNavigator();
+  } = useNavigator().visual;
 
+  // Somewhat wrong to cast here, although we control this
+  // because we have a component that is relying on two different things
+  // so TypeScript has a very hard time with this.
+  // TODO: FIX root cause of the issue
   const preferenceEditorProperty = readerProfile === "webPub" 
-    ? preferencesEditor?.zoom 
+    ? (preferencesEditor as WebPubPreferencesEditor)?.zoom 
     : isFXL 
-      ? preferencesEditor?.zoom 
-      : preferencesEditor?.fontSize;
+      ? (preferencesEditor as any)?.zoom 
+      : (preferencesEditor as EpubPreferencesEditor)?.fontSize;
 
   const updatePreference = useCallback(async (value: number | number[]) => {
     if (readerProfile === "webPub") {

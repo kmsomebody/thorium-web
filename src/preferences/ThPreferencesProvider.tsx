@@ -31,23 +31,25 @@ export function ThPreferencesProvider<K extends CustomizableKeys = DefaultKeys>(
     if (devMode && !initialPreferences) {
       fallbackPreferences = {
         ...fallbackPreferences,
-        contentProtection: devContentProtectionConfig
+        contentProtection: devContentProtectionConfig,
+        audioContentProtection: devContentProtectionConfig,
       };
     }
-    
+
     return adapter || new ThMemoryPreferencesAdapter<K>(
       (initialPreferences as ThPreferences<K>) || fallbackPreferences
     );
   }, [adapter, initialPreferences, devMode]);
-  
+
   const [preferences, setPreferences] = useState<ThPreferences<K>>(
     (() => {
       let fallbackPreferences = defaultPreferencesContextValue.preferences as ThPreferences<K>;
-      
+
       if (devMode && !initialPreferences) {
         fallbackPreferences = {
           ...fallbackPreferences,
-          contentProtection: devContentProtectionConfig
+          contentProtection: devContentProtectionConfig,
+          audioContentProtection: devContentProtectionConfig,
         };
       }
       

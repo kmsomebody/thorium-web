@@ -31,7 +31,8 @@ export default defineConfig({
   bundle: true,
   noExternal: [
     "classNames", 
-    "debounce"
+    "debounce",
+    "colorthief"
   ],
   external: [
     "react", 

@@ -26,7 +26,7 @@ export const StatefulHyphens = ({ standalone = true }: StatefulSettingsItemProps
 
   const dispatch = useAppDispatch();
   
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
   
   const updatePreference = useCallback(async (value: boolean) => {
     await submitPreferences({ hyphens: value });

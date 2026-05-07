@@ -67,6 +67,16 @@ const webPublications = [
   }
 ];
 
+const audiobooks = [
+  {
+    title: "Flatland",
+    author: "Edwin Abbott Abbott",
+    cover: "https://www.archive.org/download/LibrivoxCdCoverArt12/Flatland_1109.jpg",
+    url: "/read/flatland",
+    rendition: "Audiobook"
+  }
+]
+
 export default function Home() {
   const [isManifestEnabled, setIsManifestEnabled] = useState<boolean>(true);
 
@@ -93,7 +103,7 @@ export default function Home() {
       </header>
 
       <PublicationGrid
-        publications={ [...books, ...webPublications] }
+        publications={ [...books, ...webPublications, ...audiobooks] }
         renderCover={ (publication) => (
           <Image
             src={ publication.cover }

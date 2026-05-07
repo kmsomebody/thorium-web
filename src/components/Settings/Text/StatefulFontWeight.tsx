@@ -28,7 +28,7 @@ export const UnstableStatefulFontWeight = ({ standalone = true }: StatefulSettin
 
   const dispatch = useAppDispatch();
 
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
 
   const items = [
     {
