@@ -26,10 +26,11 @@ import { Selection } from "react-aria-components";
 
 export const StatefulAudioTocContainer = ({ triggerRef }: StatefulActionContainerProps) => {
   const { t } = useI18n();
+  const profile = useAppSelector(state => state.reader.profile);
   const { goLink } = useNavigator().unified;
   const dispatch = useAppDispatch();
 
-  const isOpen = useAppSelector(state => state.actions.keys[ThAudioActionKeys.toc]?.isOpen ?? false);
+  const isOpen = useAppSelector(state => profile ? state.actions.keys[profile][ThAudioActionKeys.toc]?.isOpen ?? false : false);
   const unstableTimeline = useAppSelector(state => state.publication.unstableTimeline);
   const tocEntry = unstableTimeline?.toc?.currentEntry ?? undefined;
   const tocEntryId = tocEntry?.id;
@@ -42,8 +43,10 @@ export const StatefulAudioTocContainer = ({ triggerRef }: StatefulActionContaine
   const sheetType = docking.sheetType;
 
   const setOpen = useCallback((value: boolean) => {
-    dispatch(setActionOpen({ key: ThAudioActionKeys.toc, isOpen: value }));
-  }, [dispatch]);
+    if (profile) {
+      dispatch(setActionOpen({ key: ThAudioActionKeys.toc, isOpen: value, profile }));
+    }
+  }, [dispatch, profile]);
 
   const { expandedKeys, setExpandedKeys, filterValue, setFilterValue, displayedTocTree, treeRef, searchInputRef } =
     useTocContent({ isOpen, tocTree, tocEntry: tocEntryId });

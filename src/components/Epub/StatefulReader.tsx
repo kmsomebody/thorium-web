@@ -431,7 +431,8 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
         case ThActionsKeys.settings:
         case ThActionsKeys.toc:
           dispatch(toggleActionOpen({
-            key: actionKey
+            key: actionKey,
+            profile: "epub"
           }))
           break;
       //  case ThActionsKeys.jumpToPosition:
@@ -585,7 +586,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage }: { p
       cache.current.colorScheme = colorScheme;
     }
 
-    const theme = isFXL ? themeObject.fxl : themeObject.reflow;
+    const theme = isFXL ? (themeObject.fxl ?? "auto") : (themeObject.reflow ?? "auto");
 
     // Protecting against re-applying on theme change
     if (theme !== "auto" && previousTheme !== theme) return;

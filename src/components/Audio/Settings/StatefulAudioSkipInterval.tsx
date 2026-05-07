@@ -32,6 +32,7 @@ export const StatefulAudioSkipInterval = ({
   const { t } = useI18n();
   const { preferences } = useAudioPreferences();
 
+  const profile = useAppSelector(state => state.reader.profile);
   const skipInterval = useAppSelector(state => state.audioSettings.skipInterval);
   const dispatch = useAppDispatch();
 
@@ -89,7 +90,11 @@ export const StatefulAudioSkipInterval = ({
         label={ t("reader.playback.preferences.audio.skipInterval") }
         presets={ presets || [] }
         formatOptions={{ style: "unit", unit: "second" }}
-        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
+        onEscape={ () => {
+          if (profile) {
+            dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false, profile }));
+          }
+        } }
         value={ skipInterval }
         onChange={ (v) => updatePreference(v) }
       />
@@ -104,7 +109,11 @@ export const StatefulAudioSkipInterval = ({
         placeholder={ placeholderText }
         presets={ presets || [] }
         formatOptions={{ style: "unit", unit: "second" }}
-        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
+        onEscape={ () => {
+          if (profile) {
+            dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false, profile }));
+          }
+        } }
         value={ skipInterval }
         onChange={ updatePreference }
         range={ skipIntervalRangeConfig.range }

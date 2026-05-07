@@ -15,6 +15,7 @@ import { toggleActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioTocTrigger = ({ ref }: StatefulActionTriggerProps) => {
   const { t } = useI18n();
+  const profile = useAppSelector(state => state.reader.profile);
 
   const isTrackReady = useAppSelector(state => state.player.isTrackReady);
   const isStalled = useAppSelector(state => state.player.isStalled);
@@ -27,7 +28,11 @@ export const StatefulAudioTocTrigger = ({ ref }: StatefulActionTriggerProps) => 
       ref={ ref }
       tooltipLabel={ t("reader.tableOfContents.title") }
       placement="top"
-      onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.toc })) }
+      onPress={ () => {
+        if (profile) {
+          dispatch(toggleActionOpen({ key: ThAudioActionKeys.toc, profile }));
+        }
+      } }
       isDisabled={ isDisabled }
       className={ audioTocStyles.button }
     >

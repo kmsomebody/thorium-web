@@ -21,7 +21,8 @@ import { setActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: StatefulActionContainerProps) => {
   const volume = useAppSelector(state => state.audioSettings.volume);
-  const isOpen = useAppSelector(state => state.actions.keys[ThAudioActionKeys.volume]?.isOpen ?? false);
+  const profile = useAppSelector(state => state.reader.profile);
+  const isOpen = useAppSelector(state => profile ? state.actions.keys[profile][ThAudioActionKeys.volume]?.isOpen ?? false : false);
 
   const { t } = useI18n();
   const { preferences } = useAudioPreferences();
@@ -46,8 +47,10 @@ export const StatefulAudioVolumeContainer = ({ triggerRef, placement = "top" }: 
     : "horizontal";
 
   const setOpen = useCallback((open: boolean) => {
-    dispatch(setActionOpen({ key: ThAudioActionKeys.volume, isOpen: open }));
-  }, [dispatch]);
+    if (profile) {
+      dispatch(setActionOpen({ key: ThAudioActionKeys.volume, isOpen: open, profile }));
+    }
+  }, [dispatch, profile]);
 
   return (
     <StatefulSheetWrapper

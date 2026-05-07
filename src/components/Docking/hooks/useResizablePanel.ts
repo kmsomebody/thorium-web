@@ -22,25 +22,19 @@ import { useAppSelector } from "@/lib/hooks";
 // it requires using a utility method: getPanelGroupElement(id)
 // See https://github.com/bvaughn/react-resizable-panels/tree/main/packages/react-resizable-panels#can-a-attach-a-ref-to-the-dom-elements
 export const useResizablePanel = (panel: DockStateObject | undefined) => {
-  const defaultPanel: DockStateObject = {
-    actionKey: null,
-    active: false,
-    collapsed: false
-  };
-  
-  const safePanel = panel || defaultPanel;
   const preferences = useActionsPreferences();
   const { theming } = useSharedPreferences();
   const defaultWidth = theming.layout.defaults.dockingWidth;
   const [pref, setPref] = useState<ThActionsDockedPref | null>(
-    safePanel.actionKey ? preferences.actionsKeys[safePanel.actionKey]?.docked || null : null
+    panel?.actionKey ? preferences.actionsKeys[panel.actionKey]?.docked || null : null
   );
 
-  const actionsMap = useAppSelector(state => state.actions.keys);
-  const actions = useActions(actionsMap);
-  const previouslyCollapsed = usePrevious(safePanel.collapsed);
+  const profile = useAppSelector(state => state.reader.profile);
+  const actionsMap = useAppSelector(state => profile ? state.actions.keys[profile] : undefined);
+  const actions = useActions(actionsMap || {});
+  const previouslyCollapsed = usePrevious(panel?.collapsed);
 
-  const previousWidth = actions.getDockedWidth(safePanel.actionKey) || null;
+  const previousWidth = actions.getDockedWidth(panel?.actionKey) || null;
   const width = pref?.width || defaultWidth;
   const minWidth = pref?.minWidth && pref.minWidth < width 
     ? pref.minWidth 
@@ -54,19 +48,19 @@ export const useResizablePanel = (panel: DockStateObject | undefined) => {
       : width;
 
   const isPopulated = () => {
-    return safePanel.active && actions.isOpen(safePanel.actionKey);
+    return !!(panel?.active && actions.isOpen(panel?.actionKey));
   };
 
   const isCollapsed = () => {
-    return safePanel.collapsed;
+    return !!panel?.collapsed;
   }
 
   const forceExpand = () => {
-    return !!(isPopulated() && previouslyCollapsed && !safePanel.collapsed);
+    return !!(isPopulated() && previouslyCollapsed && !panel?.collapsed);
   }
 
   const currentKey = () => {
-    return safePanel.actionKey;
+    return panel?.actionKey ?? null;
   };
 
   const isResizable = () => {
@@ -107,8 +101,8 @@ export const useResizablePanel = (panel: DockStateObject | undefined) => {
 
   // When the docked action changes, we need to update its preferences 
   useEffect(() => {
-    setPref(safePanel.actionKey ? preferences.actionsKeys[safePanel.actionKey]?.docked || null : null);
-  }, [safePanel.actionKey, preferences]);
+    setPref(panel?.actionKey ? preferences.actionsKeys[panel.actionKey]?.docked || null : null);
+  }, [panel?.actionKey, preferences]);
 
   return {
     currentKey, 

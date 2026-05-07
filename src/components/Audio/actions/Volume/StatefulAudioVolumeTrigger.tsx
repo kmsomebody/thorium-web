@@ -23,6 +23,7 @@ import { useNavigator } from "@/core/Navigator";
 
 export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) => {
   const { t } = useI18n();
+  const profile = useAppSelector(state => state.reader.profile);
   const { preferences } = useAudioPreferences();
   const { preferencesEditor } = useNavigator().media;
 
@@ -49,7 +50,11 @@ export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) 
       ref={ ref }
       tooltipLabel={ t("reader.playback.preferences.audio.volume") }
       placement="top"
-      onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.volume })) }
+      onPress={ () => {
+        if (profile) {
+          dispatch(toggleActionOpen({ key: ThAudioActionKeys.volume, profile }));
+        }
+      } }
       isDisabled={ isDisabled }
       className={ volumeStyles.button }
     >

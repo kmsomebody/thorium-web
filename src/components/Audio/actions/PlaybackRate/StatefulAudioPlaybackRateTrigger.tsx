@@ -15,6 +15,7 @@ import { toggleActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioPlaybackRateTrigger = ({ ref }: StatefulActionTriggerProps) => {
   const { t } = useI18n();
+  const profile = useAppSelector(state => state.reader.profile);
 
   const playbackRate = useAppSelector(state => state.audioSettings.playbackRate);
   const isTrackReady = useAppSelector(state => state.player.isTrackReady);
@@ -28,7 +29,11 @@ export const StatefulAudioPlaybackRateTrigger = ({ ref }: StatefulActionTriggerP
       ref={ ref }
       tooltipLabel={ t("reader.playback.preferences.playbackRate.descriptive") }
       placement="top"
-      onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.playbackRate })) }
+      onPress={ () => {
+        if (profile) {
+          dispatch(toggleActionOpen({ key: ThAudioActionKeys.playbackRate, profile }));
+        }
+      } }
       isDisabled={ isDisabled }
       className={ playbackStyles.button }
     >

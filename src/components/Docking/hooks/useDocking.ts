@@ -19,13 +19,13 @@ let dockingMap: Required<BreakpointsMap<ThDockingTypes>> | null = null;
 export const useDocking = <T extends string>(key: T) => {
   const preferences = useActionsPreferences();
   const breakpoint = useAppSelector(state => state.theming.breakpoint);
-  const actionsMap = useAppSelector(state => state.actions.keys);
-  const actionState = actionsMap[key];
   const profile = useAppSelector(state => state.reader.profile);
+  const actionsMap = useAppSelector(state => profile ? state.actions.keys[profile] : undefined);
+  const actionState = actionsMap?.[key];
   const dock = useAppSelector(state => profile ? state.actions.dock[profile] : undefined);
   const dispatch = useAppDispatch();
 
-  const actions = useActions(actionsMap);
+  const actions = useActions(actionsMap || {});
   
   // Check if docked actions still exist in plugin registry
   const startActionKey = dock?.[ThDockingKeys.start]?.actionKey;
@@ -209,13 +209,16 @@ export const useDocking = <T extends string>(key: T) => {
 
     if (sheetType !== ThSheetTypes.dockedStart && sheetType !== ThSheetTypes.dockedEnd) {
       if (previousSheetType === ThSheetTypes.dockedStart || previousSheetType === ThSheetTypes.dockedEnd) {
-        dispatch(setActionOpen({
-          key: key,
-          isOpen: false
-        }));
+        if (profile) {
+          dispatch(setActionOpen({
+            key: key,
+            isOpen: false,
+            profile
+          }));
+        }
       }
     }
-  }, [dispatch, key, sheetType, previousSheetType, actionState?.docking]);
+  }, [dispatch, key, sheetType, previousSheetType, actionState?.docking, profile]);
 
   // on mount, check whether we should update states for docked sheets from pref
   useEffect(() => {
@@ -228,7 +231,8 @@ export const useDocking = <T extends string>(key: T) => {
         }));
         dispatch(setActionOpen({
           key: key,
-          isOpen: true
+          isOpen: true,
+          profile
         }));
       } else if (sheetType === ThSheetTypes.dockedEnd) {
         dispatch(dockAction({
@@ -238,7 +242,8 @@ export const useDocking = <T extends string>(key: T) => {
         }));
         dispatch(setActionOpen({
           key: key,
-          isOpen: true
+          isOpen: true,
+          profile
         }));
       }
     }
@@ -300,7 +305,8 @@ export const useDocking = <T extends string>(key: T) => {
         if (actionState?.isOpen === false) {
           dispatch(setActionOpen({
             key: key,
-            isOpen: true
+            isOpen: true,
+            profile
           }));
         }
       } else if (isDockedInEnd && actionState?.docking !== ThDockingKeys.end) {
@@ -313,7 +319,8 @@ export const useDocking = <T extends string>(key: T) => {
         if (actionState?.isOpen === false) {
           dispatch(setActionOpen({
             key: key,
-            isOpen: true
+            isOpen: true,
+            profile
           }));
         }
       }

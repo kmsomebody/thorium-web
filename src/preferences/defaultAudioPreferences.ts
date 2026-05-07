@@ -10,6 +10,7 @@ import {
   ThAudioProgressBarVariant,
   ThAudioPublicationMetadataComponent,
   ThBreakpoints,
+  ThDockingTypes,
   ThDockingKeys,
   ThSheetTypes,
   ThThemeKeys,
@@ -177,7 +178,14 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
         ThDockingKeys.end
       ],
       // Only toc is dockable; others have dockable:none so dock panels are TOC-only
-      dock: {},
+      // Matches EPUB config: no docking on compact/medium (mobile/tablet portrait)
+      dock: {
+        [ThBreakpoints.compact]: ThDockingTypes.none,
+        [ThBreakpoints.medium]: ThDockingTypes.none,
+        [ThBreakpoints.expanded]: ThDockingTypes.start,
+        [ThBreakpoints.large]: ThDockingTypes.both,
+        [ThBreakpoints.xLarge]: ThDockingTypes.both
+      },
       collapse: true,
       keys: {
         [ThDockingKeys.start]: { visibility: ThCollapsibilityVisibility.overflow, shortcut: null },

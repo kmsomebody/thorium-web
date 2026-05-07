@@ -36,13 +36,15 @@ export interface ActionStateOpenPayload {
   payload: {
     key: ActionsStateKeys;
     isOpen: boolean;
+    profile: string;
   }
 }
 
 export interface ActionStateTogglePayload {
   type: string;
   payload: {
-    key: ActionsStateKeys
+    key: ActionsStateKeys;
+    profile: string;
   }
 }
 
@@ -91,10 +93,14 @@ export interface DockState {
   }
 }
 
-export type ActionsReducerState = {
-  keys: {
+export interface ActionKeysState {
+  [profile: string]: {
     [key in ActionsStateKeys]?: ActionStateObject;
   };
+}
+
+export type ActionsReducerState = {
+  keys: ActionKeysState;
   dock: DockState,
   overflow: {
     [key in OverflowStateKeys]?: OverflowStateObject;
@@ -102,8 +108,49 @@ export type ActionsReducerState = {
 }
 
 const initialState: ActionsReducerState = {
-  dock: {},
-  keys: {},
+  dock: {
+    epub: {
+      [ThDockingKeys.start]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      },
+      [ThDockingKeys.end]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      }
+    },
+    webPub: {
+      [ThDockingKeys.start]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      },
+      [ThDockingKeys.end]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      }
+    },
+    audio: {
+      [ThDockingKeys.start]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      },
+      [ThDockingKeys.end]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      }
+    }
+  },
+  keys: {
+    epub: {},
+    webPub: {},
+    audio: {}
+  },
   overflow: {}
 }
 
@@ -124,6 +171,12 @@ const initializeProfileDock = (state: ActionsReducerState, profile: string) => {
   }
 };
 
+const initializeProfileKeys = (state: ActionsReducerState, profile: string) => {
+  if (!state.keys[profile]) {
+    state.keys[profile] = {};
+  }
+};
+
 export const actionsSlice = createSlice({
   name: "actions",
   initialState,
@@ -131,10 +184,12 @@ export const actionsSlice = createSlice({
     dockAction: (state, action: ActionStateDockPayload) => {
       const { key, dockingKey, profile } = action.payload;
       
-      // Initialize dock state for profile if it doesn't exist
+      // Initialize dock and keys state for profile if they don't exist
       initializeProfileDock(state, profile);
+      initializeProfileKeys(state, profile);
       
       const profileDock = state.dock[profile];
+      const profileKeys = state.keys[profile];
       
       // The user should be able to override the dock slot
       // so we override the previous value, and sync 
@@ -144,10 +199,10 @@ export const actionsSlice = createSlice({
           // We need to find if any other action has the same docking key. 
           // If it does, we also have to close it so that its transient sheet 
           // doesn’t pop over on the screen when it’s replaced
-          for (const k in state.keys) {
-            if (state.keys[k as ActionsStateKeys]?.docking === dockingKey) {
-              state.keys[k as ActionsStateKeys] = { 
-                ...state.keys[k as ActionsStateKeys],
+          for (const k in profileKeys) {
+            if (profileKeys[k as ActionsStateKeys]?.docking === dockingKey) {
+              profileKeys[k as ActionsStateKeys] = { 
+                ...profileKeys[k as ActionsStateKeys],
                 docking: ThDockingKeys.transient,
                 isOpen: false
               };
@@ -172,10 +227,10 @@ export const actionsSlice = createSlice({
           // We need to find if any other action has the same docking key. 
           // If it does, we also have to close it so that its transient sheet 
           // doesn’t pop over on the screen when it’s replaced
-          for (const k in state.keys) {
-            if (state.keys[k as ActionsStateKeys]?.docking === dockingKey) {
-              state.keys[k as ActionsStateKeys] = { 
-                ...state.keys[k as ActionsStateKeys],
+          for (const k in profileKeys) {
+            if (profileKeys[k as ActionsStateKeys]?.docking === dockingKey) {
+              profileKeys[k as ActionsStateKeys] = { 
+                ...profileKeys[k as ActionsStateKeys],
                 docking: ThDockingKeys.transient,
                 isOpen: false
               };
@@ -215,21 +270,30 @@ export const actionsSlice = createSlice({
           break;
       }
 
-      state.keys[key] = { 
-        ...state.keys[key],
+      profileKeys[key] = { 
+        ...profileKeys[key],
         docking: dockingKey 
       };
     },
     setActionOpen: (state, action: ActionStateOpenPayload) => {      
-      state.keys[action.payload.key] = {
-        ...state.keys[action.payload.key],
-        isOpen: action.payload.isOpen 
+      const { key, isOpen, profile } = action.payload;
+      
+      initializeProfileKeys(state, profile);
+      
+      state.keys[profile][key] = {
+        ...state.keys[profile][key],
+        isOpen 
       };
     },
     toggleActionOpen: (state, action: ActionStateTogglePayload) => {
+      const { key, profile } = action.payload;
+      
+      initializeProfileKeys(state, profile);
+      
       const payload = {
-        key: action.payload.key,
-        isOpen: state.keys[action.payload.key]?.isOpen ? !state.keys[action.payload.key]?.isOpen : true
+        key,
+        isOpen: state.keys[profile][key]?.isOpen ? !state.keys[profile][key]?.isOpen : true,
+        profile
       };
       actionsSlice.caseReducers.setActionOpen(state, {
         type: "toggleActionOpen",
@@ -278,14 +342,15 @@ export const actionsSlice = createSlice({
       const { key, width, profile } = action.payload;
       
       initializeProfileDock(state, profile);
+      initializeProfileKeys(state, profile);
       
       // Copy the value in the action state 
       // in case we do something with it later.
 
       const dockKey: ActionsStateKeys | null = state.dock[profile][key].actionKey;
       if (dockKey) {
-        state.keys[dockKey] = {
-          ...state.keys[dockKey],
+        state.keys[profile][dockKey] = {
+          ...state.keys[profile][dockKey],
           dockedWidth: width
         }
       }

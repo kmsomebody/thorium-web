@@ -12,7 +12,7 @@ import { usePlugins } from "@/components/Plugins/PluginProvider";
 import { useI18n } from "@/i18n/useI18n";
 
 import { setHovering } from "@/lib/readerReducer";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { setActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioSettingsContainer = ({
@@ -23,11 +23,14 @@ export const StatefulAudioSettingsContainer = ({
   const { settingsComponentsMap } = usePlugins();
   const { t } = useI18n();
   const dispatch = useAppDispatch();
+  const profile = useAppSelector(state => state.reader.profile);
 
   const close = useCallback(() => {
-    dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false }));
+    if (profile) {
+      dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false, profile }));
+    }
     dispatch(setHovering(false));
-  }, [dispatch]);
+  }, [dispatch, profile]);
 
   return (
     <StatefulSettingsWrapper

@@ -32,6 +32,7 @@ export const StatefulAudioSkipForwardInterval = ({
   const { t } = useI18n();
   const { preferences } = useAudioPreferences();
 
+  const profile = useAppSelector(state => state.reader.profile);
   const skipForwardInterval = useAppSelector(state => state.audioSettings.skipForwardInterval);
   const dispatch = useAppDispatch();
   const { submitPreferences, getSetting, preferencesEditor } = useNavigator().media;
@@ -86,7 +87,11 @@ export const StatefulAudioSkipForwardInterval = ({
         label={ t("reader.playback.preferences.audio.skipForwardInterval") }
         presets={ presets || [] }
         formatOptions={{ style: "unit", unit: "second" }}
-        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
+        onEscape={ () => {
+          if (profile) {
+            dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false, profile }));
+          }
+        } }
         value={ skipForwardInterval }
         onChange={ (v) => updatePreference(v) }
       />
@@ -101,7 +106,11 @@ export const StatefulAudioSkipForwardInterval = ({
         placeholder={ placeholderText }
         presets={ presets || [] }
         formatOptions={{ style: "unit", unit: "second" }}
-        onEscape={ () => dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false })) }
+        onEscape={ () => {
+          if (profile) {
+            dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false, profile }));
+          }
+        } }
         value={ skipForwardInterval }
         onChange={ updatePreference }
         range={ skipForwardIntervalRangeConfig.range }

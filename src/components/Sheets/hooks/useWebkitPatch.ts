@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 
 import { useNavigator } from "@/core/Navigator";
+import { usePrevious } from "@/core/Hooks/usePrevious";
+import { FXLFrameManager, FrameManager, WebPubFrameManager } from "@readium/navigator";
 
 import { useAppSelector } from "@/lib";
 
@@ -22,12 +24,19 @@ export const useWebkitPatch = (isOpen: boolean) => {
   const isFXL = useAppSelector(state => state.publication.isFXL);
   const isScroll = isWebPub || (scroll && !isFXL);
 
-  const {
-    getCframes
-  } = useNavigator().unified;
+  const prevIsOpen = usePrevious(isOpen);
+
+  let getCframes: (() => (FXLFrameManager | FrameManager | WebPubFrameManager | undefined)[] | undefined) | undefined;
+  try {
+    const visual = useNavigator().visual;
+    getCframes = visual.getCframes;
+  } catch (e) {
+    // Visual navigator not available (audio profile)
+    getCframes = undefined;
+  }
 
   useEffect(() => {
-    if (isScroll && !isOpen) {
+    if (isScroll && prevIsOpen && !isOpen && getCframes) {
       // We have to force a reflow on the iframe container to fix the issue.
       // Using the infamous Recalc technique (adding a style element with *{}) 
       // in the iframe contentDocument does not work.
@@ -50,18 +59,27 @@ export const useWebkitPatch = (isOpen: boolean) => {
         const frames = getCframes();
         if (!frames || !Array.isArray(frames) || frames.length === 0) return;
         const frame = frames[0];
-        if (!frame?.window?.document?.scrollingElement) return;
-
-        const currentScrollTop = frame.window.document.scrollingElement.scrollTop;
-
-        if (currentScrollTop > 1) {
-          frame.window.document.scrollingElement.scrollTop = currentScrollTop - 1;
-        } else {
-          frame.window.document.scrollingElement.scrollTop = currentScrollTop + 1;
+        
+        // Safely check if frame window is accessible
+        let frameWindow;
+        try {
+          frameWindow = frame?.window;
+          if (!frameWindow?.document?.scrollingElement) return;
+        } catch (e) {
+          // Frame is not accessible (cross-origin or invalid state)
+          return;
         }
 
-        frame.window.document.scrollingElement.scrollTop = currentScrollTop;
+        const currentScrollTop = frameWindow.document.scrollingElement.scrollTop;
+
+        if (currentScrollTop > 1) {
+          frameWindow.document.scrollingElement.scrollTop = currentScrollTop - 1;
+        } else {
+          frameWindow.document.scrollingElement.scrollTop = currentScrollTop + 1;
+        }
+
+        frameWindow.document.scrollingElement.scrollTop = currentScrollTop;
       }, 0);
     }
-  }, [isScroll, isOpen, getCframes]);
+  }, [isScroll, isOpen, prevIsOpen, getCframes]);
 };

@@ -23,9 +23,9 @@ import { dockAction } from "@/lib/actionsReducer";
 export const StatefulDockTransientPopover = ({ variant, associatedKey }: StatefulActionTriggerProps) => {
   const preferences = useActionsPreferences();
   const { t } = useI18n();
-  const actionsMap = useAppSelector(state => state.actions.keys);
   const profile = useAppSelector(state => state.reader.profile);
-  const actions = useActions(actionsMap);
+  const actionsMap = useAppSelector(state => profile ? state.actions.keys[profile] : undefined);
+  const actions = useActions(actionsMap || {});
   const isDisabled = !actions.isDocked(associatedKey) || actions.whichDocked(associatedKey) === ThDockingKeys.transient;
     
   const dispatch = useAppDispatch();

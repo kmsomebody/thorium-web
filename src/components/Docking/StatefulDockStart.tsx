@@ -25,8 +25,9 @@ export const StatefulDockStart = ({ variant, associatedKey }: StatefulActionTrig
   const preferences = useActionsPreferences();
   const { t } = useI18n();
   const direction = useAppSelector(state => state.reader.direction);
-  const actionsMap = useAppSelector(state => state.actions.keys);
   const profile = useAppSelector(state => state.reader.profile);
+  const actionsMap = useAppSelector(state => profile ? state.actions.keys[profile] : undefined);
+  const actions = useActions(actionsMap || {});
   const isRTL = direction === ThLayoutDirection.rtl;
   const translationKey = isRTL 
     ? "reader.app.docker.dockToRight" 
@@ -36,7 +37,6 @@ export const StatefulDockStart = ({ variant, associatedKey }: StatefulActionTrig
     tooltip: t(`${ translationKey }.tooltip`)
   };
 
-  const actions = useActions(actionsMap);
   const isDisabled = actions.whichDocked(associatedKey) === ThDockingKeys.start;
   
   const dispatch = useAppDispatch();

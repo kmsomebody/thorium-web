@@ -66,9 +66,11 @@ export const StatefulVisualSettingsContainer = ({
   }, [dispatch]);
 
   const close = useCallback(() => {
-    dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false }));
+    if (profile) {
+      dispatch(setActionOpen({ key: ThActionsKeys.settings, isOpen: false, profile }));
+    }
     dispatch(setHovering(false));
-  }, [dispatch]);
+  }, [dispatch, profile]);
 
   const isTextNested = useCallback((key: string) => {
     const textSettings = [

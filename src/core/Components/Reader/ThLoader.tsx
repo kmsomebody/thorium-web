@@ -21,14 +21,19 @@ export const ThLoader = ({
  }: ThLoaderProps) => {
   return (
     <>
-    <div 
+    <div
       ref={ ref }
       { ...props }
-      aria-busy={ isLoading } 
+      style={{ position: "relative", ...props.style }}
+      aria-busy={ isLoading }
       aria-live="polite"
     >
-      { isLoading && loader }
       { children }
+      { isLoading && (
+        <div style={{ position: "absolute", inset: 0, zIndex: 10000 }}>
+          { loader }
+        </div>
+      )}
     </div>
     </>
   )

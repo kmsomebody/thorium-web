@@ -145,7 +145,7 @@ const StatefulAudioContent = ({ publication, localDataKey, positionStorage, cove
   const { coverBlobUrl, coverReady } = useCoverBlobUrl(coverUrl);
 
   const { themeResolved } = useTheming<ThemeKeyType>({
-    theme: themeObject.audio,
+    theme: themeObject.audio ?? "auto",
     themeKeys: preferences.theming.themes.keys,
     systemKeys: preferences.theming.themes.systemThemes,
     breakpointsMap: preferences.theming.breakpoints,

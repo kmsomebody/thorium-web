@@ -5,7 +5,7 @@ import { configureStore, Reducer } from "@reduxjs/toolkit";
 import readerReducer, { ReaderReducerState } from "@/lib/readerReducer";
 import settingsReducer, { SettingsReducerState } from "@/lib/settingsReducer";
 import themeReducer, { ThemeReducerState } from "@/lib/themeReducer";
-import actionsReducer, { ActionsReducerState } from "@/lib/actionsReducer";
+import actionsReducer, { ActionsReducerState, ActionStateObject } from "@/lib/actionsReducer";
 import publicationReducer, { PublicationReducerState } from "./publicationReducer";
 import preferencesReducer, { PreferencesReducerState } from "./preferencesReducer";
 import webPubSettingsReducer, { WebPubSettingsReducerState } from "./webPubSettingsReducer";
@@ -50,21 +50,55 @@ const migrateFontFamily = (stateSlice: SettingsReducerState | WebPubSettingsRedu
 
 
 const updateActionsState = (state: ActionsReducerState) => {
-  const updatedKeys = Object.fromEntries(
-    Object.entries(state.keys).map(([key, value]) => [
-      key,
-      {
-        ...value,
-        isOpen: value?.docking === ThDockingKeys.transient || value?.docking == null && value?.isOpen === true ? false : value?.isOpen,
-      },
-    ])
-  );
-
-  return {
-    ...state,
-    keys: updatedKeys,
-    overflow: {}
-  };
+  // Check if keys are already profile-keyed
+  if (state.keys && typeof state.keys === "object" && ("epub" in state.keys || "webPub" in state.keys || "audio" in state.keys)) {
+    // Keys are already profile-keyed, update each profile
+    const updatedKeys: any = {};
+    for (const profile in state.keys) {
+      updatedKeys[profile] = Object.fromEntries(
+        Object.entries(state.keys[profile]).map(([key, value]: [string, ActionStateObject | undefined]) => [
+          key,
+          {
+            ...value,
+            // Transient/undocked actions should never re-open on load
+            // Docked actions reset to null so useDocking re-establishes open state
+            // based on the actual breakpoint at load time (avoids opening docked
+            // sheets in fullscreen/compact where docking is unavailable)
+            isOpen: (value?.docking === ThDockingKeys.transient || value?.docking == null)
+              ? false
+              : (value?.docking === ThDockingKeys.start || value?.docking === ThDockingKeys.end)
+                ? null
+                : value?.isOpen,
+          },
+        ])
+      );
+    }
+    return {
+      ...state,
+      keys: updatedKeys,
+      overflow: {}
+    };
+  } else {
+    // Keys are still flat, update them
+    const updatedKeys = Object.fromEntries(
+      Object.entries(state.keys).map(([key, value]: [string, ActionStateObject | undefined]) => [
+        key,
+        {
+          ...value,
+          isOpen: (value?.docking === ThDockingKeys.transient || value?.docking == null)
+            ? false
+            : (value?.docking === ThDockingKeys.start || value?.docking === ThDockingKeys.end)
+              ? null
+              : value?.isOpen,
+        },
+      ])
+    );
+    return {
+      ...state,
+      keys: updatedKeys,
+      overflow: {}
+    };
+  }
 };
 
 const migrateDockStateToProfileKeyed = (state: ActionsReducerState): ActionsReducerState => {
@@ -88,6 +122,44 @@ const migrateDockStateToProfileKeyed = (state: ActionsReducerState): ActionsRedu
   return state;
 };
 
+const migrateKeysStateToProfileKeyed = (state: ActionsReducerState): ActionsReducerState => {
+  // If keys is not profile-keyed, migrate to profile-keyed format
+  // Old format: keys is a flat object like { [key]: ActionStateObject }
+  // New format: keys is profile-keyed like { epub: { [key]: ActionStateObject }, webPub: { ... }, audio: { ... } }
+  if (!state.keys) {
+    return state;
+  }
+  
+  // Check if keys is already profile-keyed by looking for known profile keys
+  const isProfileKeyed = "epub" in state.keys || "webPub" in state.keys || "audio" in state.keys;
+  
+  if (!isProfileKeyed) {
+    // Old flat format - migrate to epub profile
+    const oldKeys = state.keys as any;
+    const newKeys: any = {
+      epub: { ...oldKeys },
+      webPub: {},
+      audio: {}
+    };
+    return {
+      ...state,
+      keys: newKeys
+    };
+  }
+  
+  // Ensure all profile keys exist even if some are missing
+  const migratedKeys: any = {
+    epub: state.keys.epub || {},
+    webPub: state.keys.webPub || {},
+    audio: state.keys.audio || {}
+  };
+  
+  return {
+    ...state,
+    keys: migratedKeys
+  };
+};
+
 const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
   try {
     const resolvedKey = storageKey || DEFAULT_STORAGE_KEY;
@@ -107,15 +179,18 @@ const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
     let state = JSON.parse(serializedState);
     
     // Apply migrations
+    if (state && state.actions) {
+      state.actions = migrateDockStateToProfileKeyed(state.actions);
+      state.actions = migrateKeysStateToProfileKeyed(state.actions);
+      state.actions = updateActionsState(state.actions);
+    }
     if (state) {
-      // Migrate font family state
       if (state.settings) {
         state.settings = migrateFontFamily(state.settings);
       }
       if (state.webPubSettings) {
         state.webPubSettings = migrateFontFamily(state.webPubSettings);
       }
-      
       if (state.actions) {
         state.actions = updateActionsState(state.actions);
         // Migrate dock state to profile-keyed format if needed

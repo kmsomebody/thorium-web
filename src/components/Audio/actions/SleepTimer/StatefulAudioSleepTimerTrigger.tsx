@@ -15,6 +15,7 @@ import { toggleActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioSleepTimerTrigger = ({ ref }: StatefulActionTriggerProps) => {
   const { t } = useI18n();
+  const profile = useAppSelector(state => state.reader.profile);
 
   const remainingSeconds = useAppSelector(state => state.player.sleepTimer.remainingSeconds);
   const onTrackEnd = useAppSelector(state => state.player.sleepTimer.onTrackEnd);
@@ -43,7 +44,11 @@ export const StatefulAudioSleepTimerTrigger = ({ ref }: StatefulActionTriggerPro
       ref={ ref }
       tooltipLabel={ t("reader.playback.preferences.sleepTimer.descriptive") }
       placement="top"
-      onPress={ () => dispatch(toggleActionOpen({ key: ThAudioActionKeys.sleepTimer })) }
+      onPress={ () => {
+        if (profile) {
+          dispatch(toggleActionOpen({ key: ThAudioActionKeys.sleepTimer, profile }));
+        }
+      } }
       isDisabled={ isDisabled }
       className={ timerStyles.button }
     >

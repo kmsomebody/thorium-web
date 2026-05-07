@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { ThActionsTokens, ThAudioActionsTokens, ThDockingKeys, ThDockingPref } from "../models";
 import { ThAudioPreferencesContext } from "../ThAudioPreferencesContext";
 import { ThPreferencesContext } from "../ThPreferencesContext";
@@ -26,22 +26,30 @@ export const useActionsPreferences = (): ActionsPreferences => {
   const audioCtx = useContext(ThAudioPreferencesContext);
   const readerCtx = useContext(ThPreferencesContext);
 
-  if (audioCtx) {
-    return {
-      docking: audioCtx.preferences.docking,
-      actionsKeys: {
-        ...audioCtx.preferences.actions.primary.keys,
-        ...audioCtx.preferences.actions.secondary.keys,
-      },
-    };
-  }
+  const audioPrimaryKeys = audioCtx?.preferences.actions.primary.keys;
+  const audioSecondaryKeys = audioCtx?.preferences.actions.secondary.keys;
+  const audioDocking = audioCtx?.preferences.docking;
 
-  if (readerCtx) {
+  const audioActionsKeys = useMemo(() => {
+    if (!audioPrimaryKeys && !audioSecondaryKeys) return null;
+    return { ...audioPrimaryKeys, ...audioSecondaryKeys };
+  }, [audioPrimaryKeys, audioSecondaryKeys]);
+
+  const audioResult = useMemo(() => {
+    if (!audioCtx || !audioActionsKeys || !audioDocking) return null;
+    return { docking: audioDocking, actionsKeys: audioActionsKeys };
+  }, [audioCtx, audioDocking, audioActionsKeys]);
+
+  const readerResult = useMemo(() => {
+    if (!readerCtx) return null;
     return {
       docking: readerCtx.preferences.docking,
       actionsKeys: readerCtx.preferences.actions.keys as Record<string, ThActionsTokens>,
     };
-  }
+  }, [readerCtx]);
+
+  if (audioResult) return audioResult;
+  if (readerResult) return readerResult;
 
   throw new Error("useActionsPreferences must be used within a ThPreferencesProvider or ThAudioPreferencesProvider");
 };

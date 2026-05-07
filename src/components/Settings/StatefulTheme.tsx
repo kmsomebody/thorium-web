@@ -45,7 +45,7 @@ export const StatefulTheme = () => {
         : ((reflowThemeOrder ?? []) as (ThemeKeyType | "auto")[]));
 
   const themeObject = useAppSelector(state => state.theming.theme);
-  const theme = profile === "audio" ? themeObject.audio : (isFXL ? themeObject.fxl : themeObject.reflow);
+  const theme = profile === "audio" ? (themeObject.audio ?? "auto") : (isFXL ? (themeObject.fxl ?? "auto") : (themeObject.reflow ?? "auto"));
   const colorScheme = useAppSelector(state => state.theming.colorScheme);
   const coverTheme = useAppSelector(state => state.theming.coverTheme);
 
@@ -71,10 +71,15 @@ export const StatefulTheme = () => {
     currentValue: theme,
     onChange: async (val) => await updatePreference(val as ThemeKeyType),
     isRTL,
-    onEscape: () => dispatch(setActionOpen({
-      key: ThActionsKeys.settings,
-      isOpen: false
-    })),
+    onEscape: () => {
+      if (profile) {
+        dispatch(setActionOpen({
+          key: ThActionsKeys.settings,
+          isOpen: false,
+          profile
+        }));
+      }
+    },
     onFocus: (id) => {
       const element = radioGroupWrapperRef.current?.querySelector(`[id="${ id }"]`);
     if (element) (element as HTMLElement).focus();

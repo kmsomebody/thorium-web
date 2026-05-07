@@ -34,6 +34,7 @@ export const StatefulRadioGroup = ({
 }: StatefulRadioGroupProps) => {
   const itemsRef = useRef(items || []);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const profile = useAppSelector(state => state.reader.profile);
   const direction = useAppSelector(state => state.reader.direction);
   const isRTL = direction === ThLayoutDirection.rtl;
   const settingsContainer = useAppSelector(state => state.reader.settingsContainer);
@@ -47,12 +48,15 @@ export const StatefulRadioGroup = ({
       dispatch(setSettingsContainer(ThSettingsContainerKeys.initial));
     } else {
       // In main panel - close settings
-      dispatch(setActionOpen({
-        key: ThActionsKeys.settings,
-        isOpen: false
-      }));
+      if (profile) {
+        dispatch(setActionOpen({
+          key: ThActionsKeys.settings,
+          isOpen: false,
+          profile
+        }));
+      }
     }
-  }, [dispatch, settingsContainer]);
+  }, [dispatch, settingsContainer, profile]);
 
   // Default focus handler that focuses elements by value within the container only
   const onFocusCallback = useCallback((value: string) => {

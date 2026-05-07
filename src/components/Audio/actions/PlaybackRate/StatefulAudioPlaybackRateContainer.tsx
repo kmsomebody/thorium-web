@@ -22,7 +22,8 @@ import { setPlaybackRate } from "@/lib/audioSettingsReducer";
 import { setActionOpen } from "@/lib/actionsReducer";
 
 export const StatefulAudioPlaybackRateContainer = ({ triggerRef, placement = "top" }: StatefulActionContainerProps) => {
-  const isOpen = useAppSelector(state => state.actions.keys[ThAudioActionKeys.playbackRate]?.isOpen ?? false);
+  const profile = useAppSelector(state => state.reader.profile);
+  const isOpen = useAppSelector(state => profile ? state.actions.keys[profile][ThAudioActionKeys.playbackRate]?.isOpen ?? false : false);
 
   const { t } = useI18n();
   const { preferences } = useAudioPreferences();
@@ -41,8 +42,10 @@ export const StatefulAudioPlaybackRateContainer = ({ triggerRef, placement = "to
   const docking = useDocking(ThAudioActionKeys.playbackRate);
 
   const setOpen = useCallback((open: boolean) => {
-    dispatch(setActionOpen({ key: ThAudioActionKeys.playbackRate, isOpen: open }));
-  }, [dispatch]);
+    if (profile) {
+      dispatch(setActionOpen({ key: ThAudioActionKeys.playbackRate, isOpen: open, profile }));
+    }
+  }, [dispatch, profile]);
 
   const renderContent = () => {
     if (config.variant === ThSettingsRangeVariant.slider) {

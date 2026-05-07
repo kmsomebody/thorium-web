@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo } from "react";
 import { ActionStateObject } from "@/lib/actionsReducer";
 import { ThDockingKeys } from "@/preferences/models";
 
@@ -8,7 +9,7 @@ export interface ThActionMap {
 }
 
 export const useActions = <K extends string | number | symbol>(actionMap: ThActionMap) => {
-  const findOpen = () => {
+  const findOpen = useCallback(() => {
     const open: K[] = [];
 
     Object.entries(actionMap).forEach(([key, value]) => {
@@ -16,13 +17,13 @@ export const useActions = <K extends string | number | symbol>(actionMap: ThActi
     });
 
     return open;
-  };
+  }, [actionMap]);
 
-  const anyOpen = () => {
+  const anyOpen = useCallback(() => {
     return Object.values(actionMap).some((value) => value?.isOpen);
-  };
+  }, [actionMap]);
 
-  const isOpen = (key?: K | null) => {
+  const isOpen = useCallback((key?: K | null) => {
     if (key) {
       if (actionMap[key]?.isOpen == null) {
         return false;
@@ -31,9 +32,9 @@ export const useActions = <K extends string | number | symbol>(actionMap: ThActi
       }
     }
     return false;
-  };
+  }, [actionMap]);
 
-  const findDocked = () => {
+  const findDocked = useCallback(() => {
     const docked: K[] = [];
 
     Object.entries(actionMap).forEach(([key, value]) => {
@@ -44,38 +45,38 @@ export const useActions = <K extends string | number | symbol>(actionMap: ThActi
     });
 
     return docked;
-  };
+  }, [actionMap]);
 
-  const anyDocked = () => {
+  const anyDocked = useCallback(() => {
     return Object.values(actionMap).some((value) => {
       const docking = value?.docking;
       return docking === ThDockingKeys.start || docking === ThDockingKeys.end;
     });
-  };
+  }, [actionMap]);
 
-  const isDocked = (key?: K | null) => {
+  const isDocked = useCallback((key?: K | null) => {
     if (!key) return false;
     const docking = actionMap[key]?.docking;
     return docking === ThDockingKeys.start || docking === ThDockingKeys.end;
-  };
+  }, [actionMap]);
 
-  const whichDocked = (key?: K | null) => {
+  const whichDocked = useCallback((key?: K | null) => {
     return key ? actionMap[key]?.docking : null;
-  };
+  }, [actionMap]);
 
-  const getDockedWidth = (key?: K | null) => {
-    return key && actionMap[key]?.dockedWidth || undefined;
-  };
+  const getDockedWidth = useCallback((key?: K | null) => {
+    return key ? actionMap[key]?.dockedWidth : undefined;
+  }, [actionMap]);
 
-  const everyOpenDocked = () => {
+  const everyOpenDocked = useCallback(() => {
     const opens = findOpen();
 
     return opens.every((key) => {
       return isDocked(key);
     });
-  };
+  }, [findOpen, isDocked]);
 
-  return {
+  return useMemo(() => ({
     findOpen,
     anyOpen,
     isOpen,
@@ -85,5 +86,5 @@ export const useActions = <K extends string | number | symbol>(actionMap: ThActi
     whichDocked,
     getDockedWidth,
     everyOpenDocked,
-  };
+  }), [findOpen, anyOpen, isOpen, findDocked, anyDocked, isDocked, whichDocked, getDockedWidth, everyOpenDocked]);
 };
