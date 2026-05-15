@@ -211,6 +211,7 @@ const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher, initialPositi
   const arrowsWidth = useRef(2 * ((preferences.theming.arrow.size || 40) + (preferences.theming.arrow.offset || 0)));
 
   const isFXL = useAppSelector(state => state.publication.isFXL);
+  const isRTL = useAppSelector(state => state.publication.isRTL);
   const positionsList = useAppSelector(state => state.publication.positionsList);
 
   // Check if font family component is being used
@@ -941,9 +942,9 @@ const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher, initialPositi
 
           { !isScroll 
             ? <nav className={ classNames(arrowStyles.container, arrowStyles.leftContainer) }>
-                <StatefulReaderArrowButton 
-                  direction="left" 
-                  isDisabled={ atPublicationStart } 
+                <StatefulReaderArrowButton
+                  direction="left"
+                  isDisabled={ isRTL ? atPublicationEnd : atPublicationStart }
                   onPress={ () => {
                     const navigationCallback = () => {
                       dispatch(setUserNavigated(true));
@@ -961,9 +962,9 @@ const StatefulReaderInner = ({ rawManifest, selfHref, httpFetcher, initialPositi
 
           { !isScroll 
             ? <nav className={ classNames(arrowStyles.container, arrowStyles.rightContainer) }>
-                <StatefulReaderArrowButton 
-                  direction="right" 
-                  isDisabled={ atPublicationEnd } 
+                <StatefulReaderArrowButton
+                  direction="right"
+                  isDisabled={ isRTL ? atPublicationStart : atPublicationEnd }
                   onPress={ () => {
                     const navigationCallback = () => {
                       dispatch(setUserNavigated(true));
