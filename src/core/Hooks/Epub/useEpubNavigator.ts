@@ -39,7 +39,7 @@ export interface EpubNavigatorLoadProps {
 }
 
 // Only allow 1 navigation per x milliseconds
-const throttle = 750;
+const throttle = 300;
 let navigationBlocked = false;
 let nextNavigation: null | (() => void) = null;
 const throttleNavigation = (navigate: () => void) => {

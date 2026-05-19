@@ -654,9 +654,9 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
 
           { !isScroll 
             ? <nav className={ classNames(arrowStyles.container, arrowStyles.leftContainer) }>
-                <StatefulReaderArrowButton 
-                  direction="left" 
-                  isDisabled={ isRTL ? atPublicationEnd : atPublicationStart } 
+                <StatefulReaderArrowButton
+                  direction="left"
+                  isDisabled={ isRTL ? atPublicationEnd : atPublicationStart }
                   onPress={ () => {
                     const navigationCallback = () => {
                       dispatch(setUserNavigated(true));
@@ -674,9 +674,9 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
 
           { !isScroll 
             ? <nav className={ classNames(arrowStyles.container, arrowStyles.rightContainer) }>
-                <StatefulReaderArrowButton 
-                  direction="right" 
-                  isDisabled={ isRTL ? atPublicationStart : atPublicationEnd } 
+                <StatefulReaderArrowButton
+                  direction="right"
+                  isDisabled={ isRTL ? atPublicationStart : atPublicationEnd }
                   onPress={ () => {
                     const navigationCallback = () => {
                       dispatch(setUserNavigated(true));
