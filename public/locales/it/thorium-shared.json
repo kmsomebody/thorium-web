@@ -93,10 +93,10 @@
             },
             "sort": {
                 "lastAdded": {
-                    "compact": "Ultimo aggiunto"
+                    "compact": "Ultima aggiunta"
                 },
                 "lastEdited": {
-                    "compact": "Ultimo modificato"
+                    "compact": "Ultima modificata"
                 },
                 "progression": {
                     "compact": "Progressione"
