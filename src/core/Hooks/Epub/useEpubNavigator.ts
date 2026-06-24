@@ -112,27 +112,32 @@ export const useEpubNavigator = () => {
         FXLPositionChangedCallbackRef.current = fxlCallback;
       }
 
-      navigatorInstance = new EpubNavigator(
-        config.container, 
-        config.publication, 
-        config.listeners, 
-        config.positionsList, 
-        config.initialPosition, 
-        { 
-          preferences: config.preferences || {}, 
-          defaults: config.defaults || {}, 
+      const instance = new EpubNavigator(
+        config.container,
+        config.publication,
+        config.listeners,
+        config.positionsList,
+        config.initialPosition,
+        {
+          preferences: config.preferences || {},
+          defaults: config.defaults || {},
           injectables: config.injectables || undefined,
           contentProtection: config.contentProtection || undefined
         }
       );
+      navigatorInstance = instance;
 
-      navigatorInstance.load().then(() => {
+      instance.load().then(() => {
+        // Bail out if a remount may have replaced or destroyed this instance
+        // while load() was in flight.
+        if (navigatorInstance !== instance) return;
+
         cb();
 
-        if (navigatorInstance?.layout === Layout.fixed) {
+        if (instance.layout === Layout.fixed) {
           // @ts-ignore
-          FXLPositionChanged.observe((navigatorInstance?.pool.spineElement as HTMLElement), {
-            attributeFilter: ["style"], 
+          FXLPositionChanged.observe((instance.pool.spineElement as HTMLElement), {
+            attributeFilter: ["style"],
             attributeOldValue: true
           });
         }
@@ -143,11 +148,13 @@ export const useEpubNavigator = () => {
   const EpubNavigatorDestroy = useCallback((cb: Function) => {
     cb();
 
-    if (navigatorInstance?.layout === Layout.fixed) {
+    const instance = navigatorInstance;
+    if (instance?.layout === Layout.fixed) {
       FXLPositionChanged.disconnect();
     }
-    navigatorInstance?.destroy().then(() => {
-      navigatorInstance = null; // Clear the singleton reference
+    instance?.destroy().then(() => {
+      // Don't clear a newer instance created by a remount
+      if (navigatorInstance === instance) navigatorInstance = null;
     });
   }, [FXLPositionChanged]);
 
