@@ -14,7 +14,7 @@ import {
   ThActionsKeys,
   ThLayoutDirection,
   ThLayoutUI,
-  ThDocumentTitleFormat,
+  //ThDocumentTitleFormat,
   ThSpacingSettingsKeys,
   ThProgressionFormat,
   ThSettingsKeys
@@ -60,7 +60,7 @@ import { usePrevious } from "@/core/Hooks/usePrevious";
 import { useI18n } from "@/i18n/useI18n";
 import { useTimeline } from "@/core/Hooks/useTimeline";
 import { useIsScroll, usePositionStorage } from "@/hooks";
-import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
+//import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useSpacingPresets } from "../Settings/Spacing/hooks/useSpacingPresets";
 import { useLineHeight } from "../Settings/Spacing/hooks/useLineHeight";
 import { usePaginatedArrows } from "@/hooks/usePaginatedArrows";
@@ -255,7 +255,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
 
   const { setLocalData, getLocalData, localData } = usePositionStorage(localDataKey, positionStorage);
 
-  const timeline = useTimeline({
+  /*const timeline =*/ useTimeline({
     publication: publication,
     currentLocation: localData,
     currentPositions: currentPositions() || [],
@@ -266,7 +266,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
   });
 
   const lineHeightOptions = useLineHeight();
-
+  /*
   const documentTitleFormat = preferences.metadata?.documentTitle?.format;
   
   let documentTitle: string | undefined;
@@ -300,7 +300,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
     }
   }
 
-  //useDocumentTitle(documentTitle);
+  useDocumentTitle(documentTitle);*/
 
   const activateImmersiveOnAction = useCallback(() => {
     if (!cache.current.isImmersive) dispatch(setImmersive(true));
