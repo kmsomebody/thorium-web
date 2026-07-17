@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { Locator } from "@readium/shared";
+import { ThemeTokens } from "@/preferences/hooks/useTheming";
 import { ScriptMode } from "@readium/navigator";
 import { UnstableTimeline } from "@/core/Hooks/useTimeline";
 import { TocItem, toEntryRef } from "@/helpers/buildTocTree";
@@ -24,6 +25,7 @@ export interface PublicationReducerState {
     previous: AdjacentTimelineItem | null;
     next: AdjacentTimelineItem | null;
   };
+  coverTheme?: ThemeTokens;
 }
 
 const initialState: PublicationReducerState = {
@@ -36,7 +38,8 @@ const initialState: PublicationReducerState = {
   atPublicationStart: false,
   atPublicationEnd: false,
   unstableTimeline: undefined,
-  adjacentTimelineItems: { previous: null, next: null }
+  adjacentTimelineItems: { previous: null, next: null },
+  coverTheme: undefined,
 }
 
 export const publicationSlice = createSlice({
@@ -87,6 +90,9 @@ export const publicationSlice = createSlice({
     setAdjacentTimelineItems: (state, action: { payload: { previous: AdjacentTimelineItem | null; next: AdjacentTimelineItem | null } }) => {
       state.adjacentTimelineItems = action.payload;
     },
+    setCoverTheme: (state, action: { payload: ThemeTokens | undefined }) => {
+      state.coverTheme = action.payload;
+    },
     setTocEntry: (state, action: { payload: TocItem | null }) => {
       const entry = action.payload ? toEntryRef(action.payload) : null;
       if (!state.unstableTimeline) {
@@ -116,6 +122,7 @@ export const {
   setTocTree,
   setTocEntry,
   setAdjacentTimelineItems,
+  setCoverTheme,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;

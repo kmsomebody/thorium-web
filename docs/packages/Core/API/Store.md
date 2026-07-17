@@ -143,6 +143,8 @@ interface PublicationReducerState {
   atPublicationStart: boolean;
   atPublicationEnd: boolean;
   unstableTimeline?: UnstableTimeline;
+  adjacentTimelineItems: { previous: AdjacentTimelineItem | null; next: AdjacentTimelineItem | null };
+  coverTheme?: ThemeTokens;
 }
 ```
 
@@ -158,6 +160,8 @@ interface PublicationReducerState {
 - `setTimeline`: Set timeline data
 - `setTocTree`: Set table of contents tree
 - `setTocEntry`: Set current TOC entry
+- `setAdjacentTimelineItems`: Set adjacent timeline items (previous/next)
+- `setCoverTheme`: Set the cover-extracted theme tokens (runtime only, not persisted)
 
 > [!IMPORTANT]
 > `isRTL` reflects the **publication content direction** (set from the manifest). For UI direction (driven by the user's locale preference), use `useLocale().direction` from `react-aria` instead.
@@ -260,6 +264,7 @@ interface ThemeReducerState {
   prefersContrast: ThContrast;
   forcedColors: boolean;
   breakpoint?: ThBreakpoints;
+  containerBreakpoint?: ThBreakpoints;
 }
 ```
 
@@ -272,6 +277,7 @@ interface ThemeReducerState {
 - `setContrast`: Set contrast preference
 - `setForcedColors`: Set forced colors mode
 - `setBreakpoint`: Set current breakpoint
+- `setContainerBreakpoint`: Set current container breakpoint
 
 ### Preferences Reducer
 
