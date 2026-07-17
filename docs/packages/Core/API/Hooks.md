@@ -332,6 +332,14 @@ function useReducedTransparency(
 
 ## Utility Hooks
 
+### useObservableCondition
+
+Converts React boolean state to ObservableCondition objects required by Readium Navigator peripherals API, enabling dynamic conditional behavior for keyboard and input peripherals.
+
+```typescript
+function useObservableCondition(value: boolean): ObservableCondition
+```
+
 ### useDocumentTitle
 
 Manages document title.
@@ -354,6 +362,7 @@ function useFullscreen(
   onChange?: (isFullscreen: boolean) => void
 ): {
   isFullscreen: boolean;
+  isSupported: boolean;
   handleFullscreen: () => void;
 }
 ```
@@ -362,20 +371,23 @@ function useFullscreen(
 - Toggles fullscreen mode
 - Provides current fullscreen state
 - Handles fullscreen change events
-- Client-side only functionality
+- No-op on iOS (Fullscreen API not supported)
 
 ### useIsClient
 
 Determines if code is running on client side.
 
 ```typescript
-function useIsClient(): boolean
+function useIsClient(): {
+  isClient: boolean;
+  isClientRef: React.MutableRefObject<boolean>;
+}
 ```
 
 **Features:**
-- Safe hydration handling
-- Uses useLayoutEffect for immediate detection
-- Returns false during SSR
+- Safe hydration handling — `isClient` is `false` during SSR, `true` after mount
+- `isClient` state for conditional rendering of client-only UI
+- `isClientRef` for reading inside stable callbacks without adding a reactive dep (ref identity is stable; `.current` always reflects the latest value)
 
 ### useLocalStorage
 

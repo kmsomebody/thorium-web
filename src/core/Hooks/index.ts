@@ -10,6 +10,7 @@ export * from "./useLocalStorage";
 export * from "./useMediaQuery"
 export * from "./useMonochrome";
 export * from "./useIsClient";
+export * from "./useObservableCondition";
 export * from "./usePrevious";
 export * from "./useReducedMotion";
 export * from "./useReducedTransparency";

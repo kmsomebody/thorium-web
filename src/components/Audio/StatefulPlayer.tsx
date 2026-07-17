@@ -12,7 +12,7 @@ import { NavigatorProvider } from "@/core/Navigator";
 
 import { Publication } from "@readium/shared";
 import { ContextMenuEvent, SuspiciousActivityEvent } from "@readium/navigator-html-injectables";
-import { fromActionPeripheralType } from "@/helpers/peripherals";
+import { fromActionPeripheralType, fromDockingPeripheralType } from "@/helpers/peripherals";
 import { AudioNavigatorListeners, KeyboardPeripheralEventData } from "@readium/navigator";
 import { PositionStorage } from "../Reader/StatefulReaderWrapper";
 import { ThAudioPlayerComponent } from "@/preferences/models";
@@ -35,11 +35,14 @@ import { usePositionStorage } from "@/hooks/usePositionStorage";
 import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useAudioPlayerInit } from "./Hooks/useAudioPlayerInit";
 import { useAudioKeyboardPeripherals } from "./Hooks/useAudioKeyboardPeripherals";
+import { useFocusedDockableKey } from "../Docking/hooks/useFocusedDockableKey";
+
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import {
   setLoading
 } from "@/lib/readerReducer";
-import { toggleActionOpen } from "@/lib/actionsReducer";
+import { toggleActionOpen, dockAction } from "@/lib/actionsReducer";
+import { ThDockingKeys } from "@/preferences/models";
 import {
   setPublicationStart,
   setPublicationEnd,
@@ -144,6 +147,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   );
 
   const dispatch = useAppDispatch();
+  const getFocusedDockableKey = useFocusedDockableKey();
 
   const audioNavigator = useAudioNavigator();
   const { canGoBackward, canGoForward, submitPreferences, pause, isPlaying } = audioNavigator;
@@ -286,10 +290,23 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     contentProtection: (_type: string, _detail: SuspiciousActivityEvent) => {},
     peripheral: (data: KeyboardPeripheralEventData) => {
       const actionKey = fromActionPeripheralType(data.type);
-      if (actionKey && profile) dispatch(toggleActionOpen({ key: actionKey, profile }));
+
+      if (actionKey && profile) {
+        dispatch(toggleActionOpen({ key: actionKey, profile }));
+        return;
+      }
+
+      const dockingKey = fromDockingPeripheralType(data.type);
+
+      if (dockingKey && profile) {
+        const actionKey = getFocusedDockableKey(dockingKey as ThDockingKeys);
+        if (actionKey) {
+          dispatch(dockAction({ key: actionKey, dockingKey: dockingKey as ThDockingKeys, profile }));
+        }
+      }
     },
     contextMenu: (_data: ContextMenuEvent) => {}
-  }), [setLocalData, canGoBackward, canGoForward, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay, profile]);
+  }), [setLocalData, canGoBackward, canGoForward, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay, profile, getFocusedDockableKey]);
 
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
@@ -401,7 +418,6 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
             <article
               ref={ wrapperRef }
               className={ isExpanded ? audioStyles.audioPlayerWrapperExpanded : audioStyles.audioPlayerWrapper }
-              aria-label={ t("reader.app.publicationWrapper") }
             >
               { isExpanded ? (
                 <>

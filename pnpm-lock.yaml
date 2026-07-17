@@ -12,7 +12,7 @@ importers:
         specifier: github:edrlab/thorium-locales
         version: thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/9210d2dd6f0941833bf9de39659029a5e060e9c3
       '@readium/css':
-        specifier: ^2.0.4
+        specifier: '>=2.0.5'
         version: 2.0.5
       '@readium/navigator':
         specifier: file:../ts-toolkit/navigator

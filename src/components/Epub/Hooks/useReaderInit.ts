@@ -38,7 +38,6 @@ interface UseEpubReaderInitProps {
   onNavigatorReady?: () => void;
   onNavigatorLoaded?: () => void;
   onCleanup?: () => void;
-  fxlProgressionCallback?: (locator: Locator) => void;
 }
 
 export const useEpubReaderInit = ({
@@ -66,7 +65,6 @@ export const useEpubReaderInit = ({
   onNavigatorReady,
   onNavigatorLoaded,
   onCleanup,
-  fxlProgressionCallback,
 }: UseEpubReaderInitProps) => {
   const [navigatorReady, setNavigatorReady] = useState(false);
 
@@ -134,7 +132,7 @@ export const useEpubReaderInit = ({
       // Set navigatorReady to true only after navigator actually loads
       setNavigatorReady(true);
       onNavigatorLoaded?.();
-    }, fxlProgressionCallback);
+    });
 
     return () => {
       if (isNavigatorLoadedEpub.current) {
