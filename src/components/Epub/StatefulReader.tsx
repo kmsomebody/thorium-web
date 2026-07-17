@@ -263,7 +263,6 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
     }
   });
 
-  const lineHeightOptions = useLineHeight();
   /*
   const documentTitleFormat = preferences.metadata?.documentTitle?.format;
   

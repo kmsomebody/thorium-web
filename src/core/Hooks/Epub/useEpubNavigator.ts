@@ -113,6 +113,7 @@ export const useEpubNavigator = () => {
   const EpubNavigatorDestroy = useCallback((cb: Function) => {
     cb();
 
+    const instance = navigatorInstance;
     instance?.destroy().then(() => {
       // Don't clear a newer instance created by a remount
       if (navigatorInstance === instance) navigatorInstance = null;
