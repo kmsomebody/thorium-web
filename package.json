@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/edrlab/thorium-web/issues"
   },
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": false,
   "files": [
     "./dist"
@@ -64,7 +64,7 @@
     "increment": "node scripts/increment.mjs"
   },
   "peerDependencies": {
-    "@readium/css": "2.0.2",
+    "@readium/css": "^2.0.4",
     "@readium/shared": "*",
     "@readium/navigator-html-injectables": "*",
     "@readium/navigator": "*",
@@ -85,7 +85,7 @@
   },
   "dependencies": {
     "@edrlab/thorium-locales": "github:edrlab/thorium-locales",
-    "@readium/css": "2.0.2",
+    "@readium/css": "^2.0.4",
     "@readium/shared": "file:../ts-toolkit/shared",
     "@readium/navigator-html-injectables": "file:../ts-toolkit/navigator-html-injectables",
     "@readium/navigator": "file:../ts-toolkit/navigator",

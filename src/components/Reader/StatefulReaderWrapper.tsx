@@ -99,7 +99,7 @@ export const StatefulReaderWrapper = ({ profile, plugins, isLoading, preferences
 
   if (pendingFactory && resolvedPlugins === undefined) return null;
 
-  const coverUrl = props.publication?.getCover()?.href;
+  const coverUrl = props.publication?.getCover()?.toURL(props.publication.baseURL);
 
   if (profile === "audio") {
     return (

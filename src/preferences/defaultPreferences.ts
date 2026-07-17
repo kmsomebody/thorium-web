@@ -1,4 +1,4 @@
-import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
+import { ShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import {
   ThActionsKeys,
@@ -277,8 +277,9 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
     }
   },
   shortcuts: {
-    representation: UnstableShortcutRepresentation.symbol,
-    joiner: "+"
+    representation: ShortcutRepresentation.symbol,
+    joiner: "+",
+    displayIn: ["tooltip", "menuItem"]
   },
   actions: {
     reflowOrder: [

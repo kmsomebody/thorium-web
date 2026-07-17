@@ -20,6 +20,7 @@ import { useEffectiveRange } from "../../../Settings/hooks/useEffectiveRange";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { toggleActionOpen } from "@/lib/actionsReducer";
 import { useNavigator } from "@/core/Navigator";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 
 import { isIOSish } from "@/core/Helpers/getPlatform";
 
@@ -27,6 +28,9 @@ export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) 
   const { t } = useI18n();
   const profile = useAppSelector(state => state.reader.profile);
   const { preferences } = useAudioPreferences();
+  const { actionsKeys } = useActionsPreferences();
+  
+  const shortcut = actionsKeys[ThAudioActionKeys.volume]?.shortcut;
   const { preferencesEditor } = useNavigator().media;
 
   const volume = useAppSelector(state => state.audioSettings.volume);
@@ -53,6 +57,7 @@ export const StatefulAudioVolumeTrigger = ({ ref }: StatefulActionTriggerProps) 
     <StatefulActionIcon
       ref={ ref }
       tooltipLabel={ t("reader.playback.preferences.audio.volume") }
+      shortcut={ shortcut }
       placement="top"
       onPress={ () => {
         if (profile) {

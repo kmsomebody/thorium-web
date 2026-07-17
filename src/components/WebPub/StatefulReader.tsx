@@ -6,8 +6,7 @@ import readerStyles from "../assets/styles/thorium-web.reader.app.module.css";
 
 import { StatefulReaderProps } from "../Reader/StatefulReaderWrapper";
 
-import { 
-  ThActionsKeys, 
+import {
   ThLayoutUI,
   ThDocumentTitleFormat,
   ThProgressionFormat, 
@@ -24,7 +23,6 @@ import {
   BasicTextSelection,
   ContextMenuEvent,
   FrameClickEvent,
-  KeyboardEventData,
   SuspiciousActivityEvent,
 } from "@readium/navigator-html-injectables";
 import { WebPubNavigatorListeners } from "@readium/navigator";
@@ -43,17 +41,16 @@ import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSetti
 import { useWebPubNavigator } from "@/core/Hooks/WebPub";
 import { useWebPubSettingsCache } from "@/core/Hooks/WebPub/useWebPubSettingsCache";
 import { useWebPubReaderInit } from "./Hooks/useReaderInit";
+import { useWebPubKeyboardPeripherals } from "./Hooks/useWebPubKeyboardPeripherals";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { useI18n } from "@/i18n/useI18n";
 import { useTimeline } from "@/core/Hooks/useTimeline";
 import { usePositionStorage } from "@/hooks/usePositionStorage";
 import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useSpacingPresets } from "../Settings/Spacing/hooks/useSpacingPresets";
-import { useLineHeight } from "../Settings/Spacing/hooks/useLineHeight";
 import { useFonts } from "@/core/Hooks/fonts/useFonts";
 
-import { toggleActionOpen } from "@/lib/actionsReducer";
-import { useAppSelector, useAppDispatch, useAppStore } from "@/lib/hooks";
+import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { 
   setLoading,
   setHovering, 
@@ -68,9 +65,11 @@ import {
 
 import classNames from "classnames";
 import { createDefaultPlugin } from "../Plugins/helpers/createDefaultPlugin";
-import Peripherals from "../../helpers/peripherals";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
 import { resolveContentProtectionConfig } from "@/preferences/models/protection";
+import { NavPeripheralType, fromActionPeripheralType } from "@/helpers/peripherals";
+import { toggleActionOpen } from "@/lib/actionsReducer";
+import { useZoomCallbacks } from "@/components/Settings/hooks/useZoomCallbacks";
 
 export const ExperimentalWebPubStatefulReader = ({
   publication,
@@ -160,11 +159,14 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
   const layoutUI = preferences.theming.layout.ui?.webPub || ThLayoutUI.stacked;
 
   const dispatch = useAppDispatch();
+  const profile = useAppSelector(state => state.reader.profile);
+  const keyboardPeripherals = useWebPubKeyboardPeripherals();
 
   const onFsChange = useCallback((isFullscreen: boolean) => {
     dispatch(setFullscreen(isFullscreen));
   }, [dispatch]);
-  const fs = useFullscreen(onFsChange);
+  
+  useFullscreen(onFsChange);
 
   const webPubNavigator = useWebPubNavigator();
   const { 
@@ -184,8 +186,6 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
       dispatch(setTimeline(timeline));
     }
   });
-
-  const lineHeightOptions = useLineHeight();
 
   const documentTitleFormat = preferences.metadata?.documentTitle?.format;
 
@@ -223,38 +223,15 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
   //useDocumentTitle(documentTitle);
 
   const toggleIsImmersive = useCallback(() => {
-    // If tap/click in iframe, then header/footer no longer hoovering 
+    // If tap/click in iframe, then header/footer no longer hoovering
     dispatch(setHovering(false));
     dispatch(toggleImmersive());
   }, [dispatch]);
 
-  const appStore = useAppStore();
-
-  const p = useMemo(() => new Peripherals(appStore, preferences.actions, {
-    moveTo: () => {},
-    goProgression: () => {},
-    toggleAction: (actionKey) => {
-      switch (actionKey) {
-        case ThActionsKeys.fullscreen:
-          fs.handleFullscreen();
-          break;
-        case ThActionsKeys.settings:
-        case ThActionsKeys.toc:
-          dispatch(toggleActionOpen({
-            key: actionKey,
-            profile: "webPub"
-          }))
-          break;
-        default:
-          break
-      }
-    }
-  }), [appStore, preferences.actions, fs, dispatch]);
+  const { zoomIn, zoomOut } = useZoomCallbacks(webPubNavigator);
 
   const listeners: WebPubNavigatorListeners = useMemo(() => ({
-    frameLoaded: async function (_wnd: Window): Promise<void> {
-      p.observe(window);
-    },
+    frameLoaded: async function (_wnd: Window): Promise<void> {},
     positionChanged: async function (locator: Locator): Promise<void> {
       setLocalData(locator);
 
@@ -298,8 +275,17 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
     textSelected: function (_selection: BasicTextSelection): void {},
     contentProtection: function (_type: string, _data: SuspiciousActivityEvent): void {},
     contextMenu: function (_data: ContextMenuEvent): void {},
-    peripheral: function (_data: KeyboardEventData): void {},
-  }), [p, setLocalData, canGoBackward, canGoForward, dispatch, toggleIsImmersive]);
+    peripheral: function (data): void {
+      switch (data.type) {
+        case NavPeripheralType.zoomIn:  zoomIn();  break;
+        case NavPeripheralType.zoomOut: zoomOut(); break;
+        default: {
+          const actionKey = fromActionPeripheralType(data.type);
+          if (actionKey && profile) dispatch(toggleActionOpen({ key: actionKey, profile }));
+        }
+      }
+    },
+  }), [setLocalData, canGoBackward, canGoForward, dispatch, toggleIsImmersive, zoomIn, zoomOut, profile]);
 
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
@@ -318,16 +304,10 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
     injectFontResources,
     removeFontResources,
     getFontInjectables,
-    lineHeightOptions,
     contentProtectionConfig: resolveContentProtectionConfig(preferences.contentProtection, t),
+    keyboardPeripherals,
     onNavigatorReady: () => {
       dispatch(setLoading(false));
-    },
-    onNavigatorLoaded: () => {
-      p.observe(window);
-    },
-    onCleanup: () => {
-      p.destroy();
     },
   });
 

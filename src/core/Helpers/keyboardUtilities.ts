@@ -26,39 +26,11 @@ export interface UnstableMetaKeys {
   shiftKey: UnstableMetaKey;
 }
 
-export enum UnstableShortcutMetaKeywords {
-  alt = "altKey",
-  ctrl = "ctrlKey",
-  meta = "metaKey",
-  platform = "platformKey",
-  shift = "shiftKey"
-}
-
-export enum UnstableShortcutRepresentation {
+export enum ShortcutRepresentation {
   symbol = "symbol",
   short = "shortform",
   long = "longform"
 };
-
-export interface UnstableShortcut {
-  className?: string;
-  rawForm: string;
-  representation?: UnstableShortcutRepresentation; 
-  joiner?: string;
-}
-
-export interface UnstablePShortcut {
-  key?: string;
-  char?: string;
-  modifiers: {
-    [key: string]: boolean;
-    altKey: boolean;
-    ctrlKey: boolean;
-    metaKey: boolean;
-    platformKey: boolean;
-    shiftKey: boolean;
-  }
-}
 
 const altModifier: UnstableMetaKey = {
   longform: "Option",
@@ -112,32 +84,4 @@ export const getPlatformModifier = (): UnstablePlatformModifier => {
   } else {
     return ctrlModifier;
   }
-}
-
-export const buildShortcut = (str: string) => {
-  let shortcutObj: UnstablePShortcut = {
-    key: "",
-    char: "",
-    modifiers: {
-      altKey: false,
-      ctrlKey: false,
-      metaKey: false,
-      platformKey: false,
-      shiftKey: false
-    }
-  }
-  
-  const shortcutArray = str.split(/\s*?[+-]\s*?/);
-
-  shortcutArray.filter((val) => {
-    if ((Object.values(UnstableShortcutMetaKeywords) as string[]).includes(val)) {
-      const trimmedKey = val.trim();
-      shortcutObj.modifiers[trimmedKey] = true;
-    } else {
-      shortcutObj.char = val.trim().toUpperCase();
-      shortcutObj.key = `Key${ val.trim().toUpperCase() }`;
-    }
-  });
-
-  return shortcutObj.key ? shortcutObj : null;
 }

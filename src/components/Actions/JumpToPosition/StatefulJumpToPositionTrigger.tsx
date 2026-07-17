@@ -47,10 +47,11 @@ export const StatefulJumpToPositionTrigger = ({ variant }: StatefulActionTrigger
           onAction={ () => setOpen(!actionState?.isOpen) }
         />
       : <StatefulActionIcon
-          visibility={ preferences.actionsKeys[ThActionsKeys.jumpToPosition].visibility } 
+          visibility={ preferences.actionsKeys[ThActionsKeys.jumpToPosition].visibility }
           aria-label={ t("reader.actions.goToPosition.descriptive") }
-          placement="bottom" 
+          placement="bottom"
           tooltipLabel={ t("reader.actions.goToPosition.compact") }
+          shortcut={ preferences.actionsKeys[ThActionsKeys.jumpToPosition].shortcut }
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           <TargetIcon aria-hidden="true" focusable="false" />

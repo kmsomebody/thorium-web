@@ -14,7 +14,8 @@ import {
   AudioPreferences,
   IAudioPreferences,
   IAudioDefaults,
-  IContentProtectionConfig
+  IContentProtectionConfig,
+  IKeyboardPeripheralsConfig,
 } from "@readium/navigator";
 import { AudioSettings } from "./useAudioSettingsCache";
 
@@ -30,6 +31,7 @@ export interface AudioNavigatorLoadProps {
   preferences?: IAudioPreferences;
   defaults?: IAudioDefaults;
   contentProtection?: IContentProtectionConfig;
+  keyboardPeripherals?: IKeyboardPeripheralsConfig;
   audioContext?: AudioContext;
 }
 
@@ -55,6 +57,7 @@ export const useAudioNavigator = () => {
         preferences: config.preferences || {},
         defaults: config.defaults || {},
         contentProtection: config.contentProtection,
+        keyboardPeripherals: config.keyboardPeripherals,
       }
     );
 

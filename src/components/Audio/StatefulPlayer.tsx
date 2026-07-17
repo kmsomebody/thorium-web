@@ -11,8 +11,9 @@ import { ThPluginProvider } from "../Plugins/PluginProvider";
 import { NavigatorProvider } from "@/core/Navigator";
 
 import { Publication } from "@readium/shared";
-import { ContextMenuEvent, KeyboardEventData, SuspiciousActivityEvent } from "@readium/navigator-html-injectables";
-import { AudioNavigatorListeners } from "@readium/navigator";
+import { ContextMenuEvent, SuspiciousActivityEvent } from "@readium/navigator-html-injectables";
+import { fromActionPeripheralType } from "@/helpers/peripherals";
+import { AudioNavigatorListeners, KeyboardPeripheralEventData } from "@readium/navigator";
 import { PositionStorage } from "../Reader/StatefulReaderWrapper";
 import { ThAudioPlayerComponent } from "@/preferences/models";
 
@@ -33,10 +34,12 @@ import { resolveAudioContentProtectionConfig } from "@/preferences/models/protec
 import { usePositionStorage } from "@/hooks/usePositionStorage";
 import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
 import { useAudioPlayerInit } from "./Hooks/useAudioPlayerInit";
+import { useAudioKeyboardPeripherals } from "./Hooks/useAudioKeyboardPeripherals";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import {
   setLoading
 } from "@/lib/readerReducer";
+import { toggleActionOpen } from "@/lib/actionsReducer";
 import {
   setPublicationStart,
   setPublicationEnd,
@@ -104,6 +107,8 @@ export const StatefulPlayer = ({
 const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, coverUrl, containerRefSetter }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage; coverUrl?: string; containerRefSetter?: (el: Element | null) => void }) => {
   const { preferences } = useAudioPreferences();
   const { t } = useI18n();
+  const profile = useAppSelector(state => state.reader.profile);
+  const keyboardPeripherals = useAudioKeyboardPeripherals();
 
   const wrapperRef = useRef<HTMLElement>(null);
   const coverSectionRef = useRef<HTMLElement>(null);
@@ -279,9 +284,12 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       dispatch(setRemotePlaybackState(state));
     },
     contentProtection: (_type: string, _detail: SuspiciousActivityEvent) => {},
-    peripheral: (_data: KeyboardEventData) => {},
+    peripheral: (data: KeyboardPeripheralEventData) => {
+      const actionKey = fromActionPeripheralType(data.type);
+      if (actionKey && profile) dispatch(toggleActionOpen({ key: actionKey, profile }));
+    },
     contextMenu: (_data: ContextMenuEvent) => {}
-  }), [setLocalData, canGoBackward, canGoForward, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay]);
+  }), [setLocalData, canGoBackward, canGoForward, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay, profile]);
 
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
@@ -292,6 +300,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     preferences,
     cache,
     contentProtectionConfig: resolveAudioContentProtectionConfig(preferences.contentProtection, t),
+    keyboardPeripherals,
     onNavigatorLoaded: () => dispatch(setLoading(false)),
   });
 

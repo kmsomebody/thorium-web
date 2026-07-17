@@ -7,13 +7,13 @@ import { ThLineHeightOptions, ThSettingsKeys } from "@/preferences/models";
 import { FontMetadata } from "@/preferences/services/fonts";
 import { WebPubCSSSettings } from "@/core/Hooks/WebPub/useWebPubSettingsCache";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
+import { useLineHeight } from "@/components/Settings/Spacing/hooks/useLineHeight";
 
 interface UseWebPubPreferencesConfigProps {
   settings: WebPubCSSSettings;
   fontLanguage: string;
   hasDisplayTransformability: boolean;
   getFontMetadata: (fontFamily: string) => FontMetadata;
-  lineHeightOptions: Record<ThLineHeightOptions, number | null>;
 }
 
 export const useWebPubPreferencesConfig = ({
@@ -21,8 +21,8 @@ export const useWebPubPreferencesConfig = ({
   fontLanguage,
   hasDisplayTransformability,
   getFontMetadata,
-  lineHeightOptions,
 }: UseWebPubPreferencesConfigProps) => {
+  const { processedValues: lineHeightOptions } = useLineHeight();
   const { isComponentUsed: isFontFamilyUsed } = useSettingsComponentStatus({
     settingsKey: ThSettingsKeys.fontFamily,
     publicationType: "webpub",
@@ -96,7 +96,7 @@ export const useWebPubPreferencesConfig = ({
       if (isLetterSpacingUsed) preferences.letterSpacing = settings.letterSpacing;
       if (isLineHeightUsed) preferences.lineHeight = settings.lineHeight === null
         ? null
-        : lineHeightOptions[settings.lineHeight];
+        : lineHeightOptions[settings.lineHeight as ThLineHeightOptions.small | ThLineHeightOptions.medium | ThLineHeightOptions.large];
       if (isParagraphIndentUsed) preferences.paragraphIndent = settings.paragraphIndent;
       if (isParagraphSpacingUsed) preferences.paragraphSpacing = settings.paragraphSpacing;
       if (isTextAlignUsed) preferences.textAlign = settings.textAlign as TextAlignment | null | undefined;
@@ -111,7 +111,6 @@ export const useWebPubPreferencesConfig = ({
     fontLanguage,
     hasDisplayTransformability,
     getFontMetadata,
-    lineHeightOptions,
     isFontFamilyUsed,
     isFontWeightUsed,
     isHyphensUsed,
@@ -124,6 +123,7 @@ export const useWebPubPreferencesConfig = ({
     isTextAlignUsed,
     isTextNormalizeUsed,
     isWordSpacingUsed,
+    lineHeightOptions
   ]);
 
   return { webPubPreferences };

@@ -1,25 +1,18 @@
 "use client";
 
 import { useContext } from "react";
+import { ThIconPref, ThLayoutDefaultsPref, ThShortcutsPref } from "../preferences";
 import { ThAudioPreferencesContext } from "../ThAudioPreferencesContext";
 import { ThPreferencesContext } from "../ThPreferencesContext";
 import { ThBackLinkPref, ThDockingKeys, ThDockingPref } from "../models";
 import { ThemeTokens } from "./useTheming";
-import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 
 export interface SharedPreferences {
-  shortcuts: {
-    representation: UnstableShortcutRepresentation;
-    joiner?: string;
-  };
+  shortcuts: ThShortcutsPref;
   docking: ThDockingPref<ThDockingKeys>;
   theming: {
-    icon: {
-      size: number;
-      tooltipOffset: number;
-      tooltipDelay?: number;
-    };
+    icon: ThIconPref;
     header?: {
       backLink?: ThBackLinkPref | null;
     };
@@ -31,10 +24,7 @@ export interface SharedPreferences {
       fxlOrder?: Array<string>;
     };
     layout: {
-      defaults: {
-        dockingWidth: number;
-        scrim: string;
-      };
+      defaults: ThLayoutDefaultsPref;
     };
     breakpoints: BreakpointsMap<number | null>;
   };

@@ -6,10 +6,12 @@ import { useObjectRef } from "react-aria";
 
 import { TooltipProps } from "react-aria-components";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
+import { ThShortcutConfig } from "@/preferences/models/actions";
 
 import readerSharedUI from "../../assets/styles/thorium-web.button.module.css";
 
 import { ThActionButton, ThActionButtonProps } from "@/core/Components/Buttons/ThActionButton";
+import { StatefulShortcut } from "./StatefulShortcut";
 
 import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 
@@ -17,13 +19,13 @@ import { useAppDispatch } from "@/lib/hooks";
 import { setImmersive } from "@/lib/readerReducer";
 
 import { isActiveElement, isKeyboardTriggered } from "@/core/Helpers/focusUtilities";
-
 import classNames from "classnames";
 
 export interface StatefulActionIconProps extends ThActionButtonProps {
   visibility?: ThCollapsibilityVisibility;
   placement?: TooltipProps["placement"];
   tooltipLabel?: string;
+  shortcut?: ThShortcutConfig | null;
 }
 
 export const StatefulActionIcon = ({
@@ -31,10 +33,11 @@ export const StatefulActionIcon = ({
   visibility,
   placement,
   tooltipLabel,
+  shortcut,
   children,
   ...props
 }: StatefulActionIconProps) => {
-  const { theming } = useSharedPreferences();
+  const { theming, shortcuts } = useSharedPreferences();
 
   const triggerRef = useObjectRef(externalRef ?? null);
 
@@ -42,7 +45,7 @@ export const StatefulActionIcon = ({
 
   const handleClassNameFromState = () => {
     let className = "";
-    
+
     switch(visibility) {
       case ThCollapsibilityVisibility.always:
         className = readerSharedUI.alwaysVisible;
@@ -80,9 +83,9 @@ export const StatefulActionIcon = ({
   return (
     <ThActionButton
       ref={ triggerRef }
-      className={ classNames(readerSharedUI.icon, handleClassNameFromState(), props.className) } 
+      className={ classNames(readerSharedUI.icon, handleClassNameFromState(), props.className) }
       onPress={ props.onPress || defaultOnPressFunc }
-      onKeyDown={ blurOnEsc } 
+      onKeyDown={ blurOnEsc }
       onFocus={ handleImmersive }
       compounds={ tooltipLabel ? {
         tooltipTrigger: {
@@ -94,7 +97,12 @@ export const StatefulActionIcon = ({
           placement: placement,
           offset: theming.icon.tooltipOffset || 0
         },
-        label: tooltipLabel
+        label: (
+          <>
+            { tooltipLabel }
+            { shortcut && shortcuts.displayIn?.includes("tooltip") && <StatefulShortcut className={ readerSharedUI.tooltipShortcut } combo={ shortcut } /> }
+          </>
+        )
       } : undefined }
       { ...Object.fromEntries(Object.entries(props).filter(([key]) => key !== "className")) }
     >

@@ -1,4 +1,4 @@
-import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
+import { ShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThemeTokens } from "@/preferences/hooks/useTheming";
 import {
@@ -135,6 +135,25 @@ export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
 
 export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover | ThSheetTypes.modal> | "pagination" | "dropdown";
 
+export type ThShortcutsDisplayIn = "tooltip" | "menuItem";
+
+export interface ThShortcutsPref {
+  representation: ShortcutRepresentation;
+  joiner?: string;
+  displayIn?: ThShortcutsDisplayIn[];
+}
+
+export interface ThIconPref {
+  size: number;
+  tooltipOffset: number;
+  tooltipDelay?: number;
+}
+
+export interface ThLayoutDefaultsPref {
+  dockingWidth: number;
+  scrim: string;
+}
+
 // Main preferences interface with simplified generics
 export interface ThPreferences<K extends CustomizableKeys = {}> {
   experiments?: {
@@ -176,11 +195,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       offset: number;
       tooltipDelay?: number;
     };
-    icon: {
-      size: number;
-      tooltipOffset: number;
-      tooltipDelay?: number;
-    };
+    icon: ThIconPref;
     layout: {
       ui?: {
         reflow?: ThLayoutUI,
@@ -189,10 +204,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       };
       radius: number;
       spacing: number;
-      defaults: {
-        dockingWidth: number;
-        scrim: string;
-      };
+      defaults: ThLayoutDefaultsPref;
       constraints?: {
         [key in ThConstraintKeys]?: number | null
       }
@@ -232,10 +244,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     }
   };
   actions: ThActionsPref<K>;
-  shortcuts: {
-    representation: UnstableShortcutRepresentation;
-    joiner?: string;
-  };
+  shortcuts: ThShortcutsPref;
   docking: ThDockingPref<ThDockingKeys>;
   settings: {
     reflowOrder: Array<SettingsKey<K>>;

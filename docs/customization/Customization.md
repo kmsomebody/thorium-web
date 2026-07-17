@@ -182,28 +182,43 @@ You can configure `breakpoints`, that are re-used multiple times throughout pref
 
 This document also explains in depth how you can add your own themes, customize, or remove existing ones. Without having to add or modify any component.
 
-## Shortcuts (WIP)
+## Shortcuts
 
-TBD.
+Action shortcuts are powered by the Readium Navigator's keyboard peripheral system. Each action that has a shortcut configured is registered as a peripheral and fires when the matching key combination is pressed inside the reader iframe.
 
-**Please note support for shortcuts is very basic at the moment, and is consequently limited.** Any contribution to improve it will be greatly appreciated.
+### Display format
 
-You can set the `representation` of the special keys displayed in the shortcut component with enum `ThShortcutRepresentation` (`symbol`, `short`, `long`).
+You can set the `representation` of the modifier keys displayed in the shortcut component with enum `ShortcutRepresentation` (`symbol`, `short`, `long`).
 
-For instance, for key `Option` on Mac, `symbol` is `⌥`, `short` is `alt`, and `long` is `Option`.
+For instance, for the Option key on Mac: `symbol` → `⌥`, `short` → `Alt`, `long` → `Option`.
 
-You can also configure an optional `joiner` string that will be added between keys.
+You can also configure an optional `joiner` string placed between key labels.
 
-For instance:
-
-```
+```typescript
 shortcuts: {
-  representation: ThShortcutRepresentation.short,
+  representation: ShortcutRepresentation.short,
   joiner: "+"
 }
 ```
 
 Will display shortcuts as `Alt+Shift+{ Key }`.
+
+### Display locations
+
+Use `displayIn` to control where keyboard shortcuts are rendered. It accepts an array of location strings:
+
+- `"tooltip"` — shows the shortcut inside the action icon's tooltip, alongside the label.
+- `"menuItem"` — shows the shortcut in the overflow menu item.
+
+```typescript
+shortcuts: {
+  representation: ShortcutRepresentation.symbol,
+  joiner: "+",
+  displayIn: ["tooltip", "menuItem"]
+}
+```
+
+Omit a location to hide shortcuts there, or pass an empty array to suppress them entirely. Shortcuts use the same `representation` and `joiner` settings as elsewhere. Actions with no shortcut configured are unaffected.
 
 ## Actions
 
@@ -261,37 +276,80 @@ keys: {
 
 This means a bottom sheet will be used when the breakpoint is `compact`, and a popover in all other breakpoints.
 
-### Shortcut (WIP)
+### Shortcut
 
-TBD.
+You can configure a shortcut for each action by setting property `shortcut` to a `ThShortcutConfig` object, or `null` to disable it.
 
-**Please note support for shortcuts is very basic at the moment, and is consequently limited.** Any contribution to improve it will be greatly appreciated.
-
-You can configure a shortcut for each action by setting property `shortcut`.
-
-Its value can be:
-
-- `null`, if you don’t want to assign a shortcut to the action;
-- a `string` that must meet several requirements due to current limitations.
-
-These limitations are:
-
-- modifier keys must use a value in the `ThShortcutMetaKeywords` enum to be recognized;
-- keys must be separated by `+` or `-`;
-- only a single alpha character is allowed in addition to modifier keys.
-
-For instance:
-
+```typescript
+import type { ThShortcutConfig } from "@edrlab/thorium-web/preferences";
+import type { KeyCombo } from "@readium/navigator-html-injectables";
 ```
-[ThActionKeys.toc]: {
-  ...
-  shortcut: `${ ThShortcutMetaKeywords.shift }+${ ThShortcutMetaKeywords.alt }+T`
+
+`ThShortcutConfig` has two fields:
+
+- `keyCombos: KeyCombo[]` — one or more key combinations. Multiple entries allow platform variants (e.g. one with `ctrl: true` for Windows, one with `meta: true` for Mac).
+- `label?: I18nValue<string>` — optional display label for the main key (e.g. `"T"`). Supports i18n via `{ key: string; fallback?: string }`. Falls back to deriving the label from `keyCode` for A–Z and digit keys.
+
+`KeyCombo` comes from Readium’s injectables package and has these fields:
+
+```typescript
+interface KeyCombo {
+  keyCode: number;                              // stable numeric keyCode
+  ctrl?: boolean;
+  shift?: boolean;
+  alt?: boolean;
+  meta?: boolean;
+  suppressOnInteractiveElement?: boolean | string[];
+  condition?: ObservableCondition;
 }
 ```
 
-Will toggle the Table of contents’ container when combination `Shift, Option, T` is pressed.
+Be cautious with your key combinations. Some modifier+letter combinations produce special characters on certain systems — for instance, Option+letter on macOS yields characters like ∏, †, ∆. If your shortcut could conflict with character input, use `suppressOnInteractiveElement` to prevent it from firing when the user is typing.
 
-Note `ThShortcutMetaKeywords.platform` is provided as an alias mapping to the Command/Meta Key on MacOS, and Control Key on other platforms.
+`suppressOnInteractiveElement` accepts `true` (suppress on all interactive elements) or an array of CSS selectors for finer control. The built-in shortcuts use `TEXT_INPUT_SELECTORS` (exported from `@edrlab/thorium-web/preferences`), which targets text inputs, textareas, and contenteditable elements — but the right value depends on your combination and your content.
+
+**Example — single cross-platform combo:**
+
+```typescript
+[ThActionKeys.toc]: {
+  shortcut: {
+    label: "T",
+    keyCombos: [{ keyCode: 84, shift: true, alt: true, suppressOnInteractiveElement: true }]
+  }
+}
+```
+
+Will toggle the Table of Contents when Shift+Alt+T (Shift+Option+T on Mac) is pressed.
+
+**Example — platform-specific combos:**
+
+```typescript
+[ThActionKeys.settings]: {
+  shortcut: {
+    label: "D",
+    keyCombos: [
+      { keyCode: 68, ctrl: true, suppressOnInteractiveElement: true },  // Ctrl+D on Windows/Linux
+      { keyCode: 68, meta: true, suppressOnInteractiveElement: true },  // Cmd+D on Mac
+    ]
+  }
+}
+```
+
+The display component automatically picks the combo matching the current platform.
+
+**Custom action keys** also support shortcuts — any key in the `actionsKeys` map that has a non-null `shortcut` is automatically registered as a peripheral. No changes to the reader components are needed.
+
+#### Avoiding conflicts with built-in peripherals
+
+The Readium Navigator reserves some key combinations internally. When choosing shortcuts, avoid:
+
+| Reserved for | Keys to avoid |
+|---|---|
+| Print | keyCode 80 (P) with any Ctrl/Cmd/Shift/Alt combination |
+| Save | keyCode 83 (S) with Ctrl or Meta |
+| Select all | keyCode 65 (A) with Ctrl or Meta |
+| Dev tools | keyCodes 73 (I), 74 (J), 85 (U), 67 (C), 65 (A), 84 (T) with Meta+Alt or Ctrl+Shift; also Shift+Alt+C and F12 |
+| Navigation | Space (32), arrow keys (37–40), PgUp (33), PgDn (34), Home (36), End (35) |
 
 ## Docking
 

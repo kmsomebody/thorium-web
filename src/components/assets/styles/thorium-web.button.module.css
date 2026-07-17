@@ -51,10 +51,21 @@
 }
 
 .tooltip {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
   background-color: var(--th-theme-text);
   color: var(--th-theme-background);
+  padding: 5px 10px;
+  border-radius: var(--th-layout-radius);
+}
+
+.tooltipShortcut {
+  font-family: monospace;
+  font-weight: bold;
   padding: 5px;
   border-radius: var(--th-layout-radius);
+  border: 1px solid currentColor;
 }
 
 /* Visibility + Immersive */

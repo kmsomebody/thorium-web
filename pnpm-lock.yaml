@@ -12,8 +12,8 @@ importers:
         specifier: github:edrlab/thorium-locales
         version: thorium-locales@https://codeload.github.com/edrlab/thorium-locales/tar.gz/9210d2dd6f0941833bf9de39659029a5e060e9c3
       '@readium/css':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: ^2.0.4
+        version: 2.0.5
       '@readium/navigator':
         specifier: file:../ts-toolkit/navigator
         version: file:../ts-toolkit/navigator
@@ -1170,8 +1170,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  '@readium/css@2.0.2':
-    resolution: {integrity: sha512-2cLkU3NPzLlVxVWPlyxoFTCFE2y5521cQ+sgHnPBAKnOdCh3SltQwd7XodvB+xTGgS4TdVbQmxfr3x1Ke6nZWA==}
+  '@readium/css@2.0.5':
+    resolution: {integrity: sha512-rQWeDFSS9UfRTFFdWIhlko0jtkL9dOfNTqFjgMumlguromsyHC9/lGmbWDde7deEeE5ns+yBOSGKixMU0wqZ4A==}
 
   '@readium/navigator-html-injectables@file:../ts-toolkit/navigator-html-injectables':
     resolution: {directory: ../ts-toolkit/navigator-html-injectables, type: directory}
@@ -4430,7 +4430,7 @@ snapshots:
     dependencies:
       react: 19.2.6
 
-  '@readium/css@2.0.2': {}
+  '@readium/css@2.0.5': {}
 
   '@readium/navigator-html-injectables@file:../ts-toolkit/navigator-html-injectables': {}
 

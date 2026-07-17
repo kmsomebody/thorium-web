@@ -17,6 +17,7 @@ import {
   IEpubDefaults,
   IEpubPreferences,
   IInjectablesConfig,
+  IKeyboardPeripheralsConfig,
   getScriptMode,
   ScriptMode
 } from "@readium/navigator";
@@ -36,6 +37,7 @@ export interface EpubNavigatorLoadProps {
   defaults?: IEpubDefaults;
   injectables?: IInjectablesConfig;
   contentProtection?: IContentProtectionConfig;
+  keyboardPeripherals?: IKeyboardPeripheralsConfig;
 }
 
 // Only allow 1 navigation per x milliseconds
@@ -122,7 +124,8 @@ export const useEpubNavigator = () => {
           preferences: config.preferences || {},
           defaults: config.defaults || {},
           injectables: config.injectables || undefined,
-          contentProtection: config.contentProtection || undefined
+          contentProtection: config.contentProtection || undefined,
+          keyboardPeripherals: config.keyboardPeripherals || [],
         }
       );
       navigatorInstance = instance;

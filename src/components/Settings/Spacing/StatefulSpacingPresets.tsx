@@ -62,7 +62,7 @@ export const StatefulSpacingPresets = ({ standalone }: StatefulSettingsItemProps
   const paragraphSpacingPrefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.paragraphSpacing];
   const wordSpacingPrefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.wordSpacing];
 
-  const lineHeightOptions = useLineHeight();
+  const { values: lineHeightOptions, compensate: compensateLineHeight } = useLineHeight();
 
   const { getPresetValues } = useSpacingPresets();
 
@@ -104,10 +104,10 @@ export const StatefulSpacingPresets = ({ standalone }: StatefulSettingsItemProps
       [ThSpacingSettingsKeys.wordSpacing]: presetValues?.[ThSpacingSettingsKeys.wordSpacing] ?? null,
     };
   
-    // Convert lineHeight for preferences API (enum to number)
+    // Convert lineHeight for preferences API (enum to compensated number)
     const lineHeightValue = reduxValues[ThSpacingSettingsKeys.lineHeight];
     const lineHeightValueNumber = lineHeightValue && lineHeightValue !== ThLineHeightOptions.publisher
-      ? lineHeightOptions[lineHeightValue as ThLineHeightOptions]
+      ? compensateLineHeight(lineHeightOptions[lineHeightValue as ThLineHeightOptions])
       : null;
 
     // Only include spacing settings if their plugins are being used
@@ -141,7 +141,7 @@ export const StatefulSpacingPresets = ({ standalone }: StatefulSettingsItemProps
         values: reduxValues,
       }));
     }
-  }, [isWebPub, dispatch, submitPreferences, getPresetValues, lineHeightOptions, letterSpacingPrefKey, lineHeightPrefKey, paragraphIndentPrefKey, paragraphSpacingPrefKey, wordSpacingPrefKey, isLetterSpacingUsed, isLineHeightUsed, isParagraphIndentUsed, isParagraphSpacingUsed, isWordSpacingUsed]);
+  }, [isWebPub, dispatch, submitPreferences, getPresetValues, lineHeightOptions, compensateLineHeight, letterSpacingPrefKey, lineHeightPrefKey, paragraphIndentPrefKey, paragraphSpacingPrefKey, wordSpacingPrefKey, isLetterSpacingUsed, isLineHeightUsed, isParagraphIndentUsed, isParagraphSpacingUsed, isWordSpacingUsed]);
 
   // Use appropriate spacing keys based on layout
   const spacingKeys = useMemo(() => {

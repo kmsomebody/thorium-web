@@ -11,14 +11,14 @@ export enum ThThemeKeys {
 }
 
 export const lightTheme = {
-  background: ReadiumCSSColors.RS__backgroundColor, // Color of background
-  text: ReadiumCSSColors.RS__textColor,    // Color of text
+  background: ReadiumCSSColors.backgroundColor, // Color of background
+  text: ReadiumCSSColors.textColor,    // Color of text
   link: "#0000ee",                // Color of links
   visited: "#551a8b",             // Color of visited links
   subdue: "#808080",              // Color of subdued elements
   disable: "#808080",             // color for :disabled
   hover: "#d9d9d9",               // color of background for :hover
-  onHover: ReadiumCSSColors.RS__textColor, // color of text for :hover
+  onHover: ReadiumCSSColors.textColor, // color of text for :hover
   select: "#b4d8fe",              // color of selected background
   onSelect: "inherit",            // color of selected text
   focus: "#0067f4",               // color of :focus-visible

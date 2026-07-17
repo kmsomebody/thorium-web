@@ -98,7 +98,7 @@ export const readiumCSSFontCollection: FontCollection = {
     label: "reader.preferences.fontFamily.oldStyle.descriptive",
     source: { type: "system" },
     spec: {
-      family: fontStacks.RS__oldStyleTf,
+      family: fontStacks.oldStyleTf,
       weights: { type: "static", values: [400, 700] },
       fallbacks: []
     }
@@ -109,7 +109,7 @@ export const readiumCSSFontCollection: FontCollection = {
     label: "reader.preferences.fontFamily.modern.descriptive",
     source: { type: "system" },
     spec: {
-      family: fontStacks.RS__modernTf,
+      family: fontStacks.modernTf,
       weights: { type: "static", values: [400, 700] },
       fallbacks: []
     }
@@ -120,7 +120,7 @@ export const readiumCSSFontCollection: FontCollection = {
     label: "reader.preferences.fontFamily.sans",
     source: { type: "system" },
     spec: {
-      family: fontStacks.RS__sansTf,
+      family: fontStacks.sansTf,
       weights: { type: "static", values: [400, 700] },
       fallbacks: []
     }
@@ -131,7 +131,7 @@ export const readiumCSSFontCollection: FontCollection = {
     label: "reader.preferences.fontFamily.humanist.descriptive",
     source: { type: "system" },
     spec: {
-      family: fontStacks.RS__humanistTf,
+      family: fontStacks.humanistTf,
       weights: { type: "static", values: [400, 700] },
       fallbacks: []
     }
@@ -142,7 +142,7 @@ export const readiumCSSFontCollection: FontCollection = {
     label: "reader.preferences.fontFamily.monospace",
     source: { type: "system" },
     spec: {
-      family: fontStacks.RS__monospaceTf,
+      family: fontStacks.monospaceTf,
       weights: { type: "static", values: [400, 700] },
       fallbacks: []
     }
@@ -297,8 +297,8 @@ export const chineseTraditionalCollection: FontCollection = {
 };
 
 export const japaneseCollection: FontCollection = {
-  "japanese-sans": sysFontDef("japanese-sans", "Sans-Serif", '"Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif'),
-  "japanese-serif": sysFontDef("japanese-serif", "Serif", '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif'),
+  "japanese-sans": sysFontDef("japanese-sans", "Sans-Serif", fontStacks["sans-serif-ja"]),
+  "japanese-serif": sysFontDef("japanese-serif", "Serif", fontStacks["serif-ja"]),
   ...createDefinitionsFromGoogleFonts({
     cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Serif+JP:wght@200..900",
     options: {
@@ -314,8 +314,8 @@ export const japaneseCollection: FontCollection = {
 };
 
 export const japaneseVerticalCollection: FontCollection = {
-  "japanese-v-serif": sysFontDef("japanese-v-serif", "Serif", '"Hiragino Mincho ProN", "Yu Mincho", "MS PMincho", serif'),
-  "japanese-v-sans": sysFontDef("japanese-v-sans", "Sans-Serif", '"Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif'),
+  "japanese-v-sans": sysFontDef("japanese-v-sans", "Sans-Serif", fontStacks["sans-serif-ja-v"]),
+  "japanese-v-serif": sysFontDef("japanese-v-serif", "Serif", fontStacks["serif-ja-v"]),
   ...createDefinitionsFromGoogleFonts({
     cssUrl: "https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&family=Shippori+Mincho:wght@400..800&family=Noto+Sans+JP:wght@100..900",
     options: {

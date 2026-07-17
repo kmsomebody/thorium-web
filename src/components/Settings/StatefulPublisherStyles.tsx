@@ -51,7 +51,7 @@ export const StatefulPublisherStyles = ({ standalone = true }: StatefulSettingsI
   const letterSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.letterSpacing);
   const wordSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.wordSpacing);
 
-  const lineHeightOptions = useLineHeight();
+  const { compensatedValues: lineHeightOptions } = useLineHeight();
 
   const { submitPreferences } = useNavigator().visual;
 

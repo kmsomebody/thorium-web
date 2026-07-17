@@ -1,5 +1,5 @@
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
-import { ThActionsTokens, ThAudioActionsTokens, ThDockingTypes, ThSheetTypes } from "./actions";
+import { ThActionsTokens, ThAudioActionsTokens, ThDockingTypes, ThSheetTypes, TEXT_INPUT_SELECTORS } from "./actions";
 import { ThBreakpoints } from "./ui";
 import { ThSettingsRangePrefRequired, ThSettingsRangeVariant, ThSettingsRangePlaceholder } from "./settings";
 
@@ -104,7 +104,10 @@ export const defaultAudioVolumeAction: ThAudioActionsTokens = {
 
 export const defaultAudioPlaybackRateAction: ThAudioActionsTokens = {
   visibility: ThCollapsibilityVisibility.always,
-  shortcut: null,
+  shortcut: {
+    label: "R",
+    keyCombos: [{ keyCode: 82, shift: true, alt: true, suppressOnInteractiveElement: TEXT_INPUT_SELECTORS }]
+  },
   sheet: {
     defaultSheet: ThSheetTypes.compactPopover,
     breakpoints: { [ThBreakpoints.compact]: ThSheetTypes.bottomSheet }
@@ -117,7 +120,10 @@ export const defaultAudioPlaybackRateAction: ThAudioActionsTokens = {
 
 export const defaultAudioSleepTimerAction: ThAudioActionsTokens = {
   visibility: ThCollapsibilityVisibility.partially,
-  shortcut: null,
+  shortcut: {
+    label: "S",
+    keyCombos: [{ keyCode: 83, shift: true, alt: true, suppressOnInteractiveElement: TEXT_INPUT_SELECTORS }]
+  },
   sheet: {
     defaultSheet: ThSheetTypes.modal,
     breakpoints: { 
@@ -138,7 +144,10 @@ export const defaultAudioRemotePlaybackAction: ThActionsTokens = {
 
 export const defaultAudioTocAction: ThAudioActionsTokens = {
   visibility: ThCollapsibilityVisibility.partially,
-  shortcut: null,
+  shortcut: {
+    label: "T",
+    keyCombos: [{ keyCode: 84, shift: true, alt: true, suppressOnInteractiveElement: TEXT_INPUT_SELECTORS }]
+  },
   sheet: {
     defaultSheet: ThSheetTypes.modal,
     breakpoints: {

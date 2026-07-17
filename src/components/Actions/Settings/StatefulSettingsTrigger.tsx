@@ -52,6 +52,7 @@ export const StatefulSettingsTrigger = ({ variant }: StatefulActionTriggerProps)
           aria-label={ isAudio ? t("reader.playback.preferences.audio.title") : t("reader.preferences.title") }
           placement="bottom"
           tooltipLabel={ isAudio ? t("reader.playback.preferences.audio.title") : t("reader.preferences.title") }
+          shortcut={ preferences.actionsKeys[ThActionsKeys.settings].shortcut }
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           { isAudio 

@@ -12,10 +12,14 @@ import { useI18n } from "@/i18n/useI18n";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { toggleActionOpen } from "@/lib/actionsReducer";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 
 export const StatefulAudioPlaybackRateTrigger = ({ ref }: StatefulActionTriggerProps) => {
   const { t } = useI18n();
   const profile = useAppSelector(state => state.reader.profile);
+  const { actionsKeys } = useActionsPreferences();
+  
+  const shortcut = actionsKeys[ThAudioActionKeys.playbackRate]?.shortcut;
 
   const playbackRate = useAppSelector(state => state.audioSettings.playbackRate);
   const isTrackReady = useAppSelector(state => state.player.isTrackReady);
@@ -28,6 +32,7 @@ export const StatefulAudioPlaybackRateTrigger = ({ ref }: StatefulActionTriggerP
     <StatefulActionIcon
       ref={ ref }
       tooltipLabel={ t("reader.playback.preferences.playbackRate.descriptive") }
+      shortcut={ shortcut }
       placement="top"
       onPress={ () => {
         if (profile) {

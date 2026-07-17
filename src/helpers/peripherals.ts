@@ -1,148 +1,39 @@
-// Peripherals based on XBReader
-import { ThActionsPref, DefaultKeys } from "@/preferences";
+export const NavPeripheralType = {
+  progressForward:  "th_nav_progress_forward",
+  progressBackward: "th_nav_progress_backward",
+  moveRight:        "th_nav_move_right",
+  moveLeft:         "th_nav_move_left",
+  moveUp:           "th_nav_move_up",
+  moveDown:         "th_nav_move_down",
+  moveHome:         "th_nav_move_home",
+  moveEnd:          "th_nav_move_end",
+  zoomIn:           "th_nav_zoom_in",
+  zoomOut:          "th_nav_zoom_out",
+} as const;
 
-import { ThActionsKeys } from "@/preferences/models";
+// Ctrl/Cmd + = or Numpad+, covering Blink (187) and Gecko (61) key codes
+export const ZOOM_IN_KEY_COMBOS = [
+  { keyCode: 187, ctrl: true  },
+  { keyCode: 61,  ctrl: true  },
+  { keyCode: 107, ctrl: true  },
+  { keyCode: 187, meta: true  },
+  { keyCode: 61,  meta: true  },
+  { keyCode: 107, meta: true  },
+] as const;
 
-import { buildShortcut, UnstablePShortcut } from "@/core/Helpers/keyboardUtilities";
-import { isInteractiveElement } from "@/core/Helpers/focusUtilities";
+// Ctrl/Cmd + - or Numpad-, covering Blink (189) and Gecko (173) key codes
+export const ZOOM_OUT_KEY_COMBOS = [
+  { keyCode: 189, ctrl: true  },
+  { keyCode: 173, ctrl: true  },
+  { keyCode: 109, ctrl: true  },
+  { keyCode: 189, meta: true  },
+  { keyCode: 173, meta: true  },
+  { keyCode: 109, meta: true  },
+] as const;
 
-import { useAppStore } from "@/lib/hooks";
+export const ACTION_PERIPHERAL_PREFIX = "th_action_" as const;
 
-export interface PCallbacks {
-  moveTo: (direction: "left" | "right" | "up" | "down" | "home" | "end") => void;
-  goProgression: (shiftKey?: boolean) => void;
-  toggleAction: (action: ThActionsKeys) => void;
-}
+export const toActionPeripheralType = (key: string) => `${ ACTION_PERIPHERAL_PREFIX }${ key }`;
 
-export interface PShortcuts {
-  [key: string]: {
-    actionKey: ThActionsKeys;
-    modifiers: UnstablePShortcut["modifiers"];
-  }
-}
-
-export default class Peripherals {
-  private readonly observers = ["keydown"];
-  private targets: EventTarget[] = [];
-  private readonly callbacks: PCallbacks;
-  private readonly store: ReturnType<typeof useAppStore>;
-  private readonly actionsPref: ThActionsPref<DefaultKeys> | undefined;
-  private readonly shortcuts: PShortcuts;
-
-  constructor(store: ReturnType<typeof useAppStore>, actionsPref: ThActionsPref<DefaultKeys> | undefined, callbacks: PCallbacks) {
-    this.observers.forEach((method) => {
-      (this as any)["on" + method] = (this as any)["on" + method].bind(this);
-    });
-    this.store = store;
-    this.actionsPref = actionsPref;
-    this.callbacks = callbacks;
-    this.shortcuts = this.retrieveShortcuts();
-  }
-
-  private getPlatformModifier(): "ctrlKey" | "metaKey" {
-    return this.store.getState().reader.platformModifier.modifier;
-  }
-
-  private retrieveShortcuts() {
-    if (!this.actionsPref) return {};
-
-    const shortcutsObj: PShortcuts = {};
-
-    const displayOrder = this.store.getState().publication.isFXL
-      ? this.actionsPref.fxlOrder
-      : this.actionsPref.reflowOrder;
-
-    for (const actionKey of displayOrder) {
-      const shortcutString = this.actionsPref.keys[actionKey].shortcut;
-      
-      if (shortcutString) {
-        const shortcutObj = buildShortcut(shortcutString);
-
-        if (shortcutObj?.key) {
-          Object.defineProperty(shortcutsObj, shortcutObj.key, {
-            value: {
-              actionKey: actionKey,
-              modifiers: shortcutObj.modifiers
-            },
-            writable: false,
-            enumerable: true
-          });
-        }
-      }
-    };
-    
-    return shortcutsObj;
-  }
-
-  destroy() {
-    this.targets.forEach((t) => this.unobserve(t));
-  }
-
-  unobserve(item: EventTarget) {
-    if (!item) return;
-    this.observers.forEach((EventName) => {
-      item.removeEventListener(
-        EventName,
-        (this as any)["on" + EventName],
-        false
-      );
-    });
-    this.targets = this.targets.filter((t) => t !== item);
-  }
-
-  observe(item: EventTarget) {
-    if (!item) return;
-    if (this.targets.includes(item)) return;
-    this.observers.forEach((EventName) => {
-      item.addEventListener(EventName, (this as any)["on" + EventName], false);
-    });
-    this.targets.push(item);
-  }
-
-  onkeydown(e: KeyboardEvent) {
-    const focusIsSafe = !isInteractiveElement(document.activeElement);
-    
-    switch(e.code) {
-      case "Space":
-        focusIsSafe && this.callbacks.goProgression(e.shiftKey);
-        break;
-      case "ArrowRight":
-        focusIsSafe && this.callbacks.moveTo("right");
-        break;
-      case "ArrowLeft":
-        focusIsSafe && this.callbacks.moveTo("left");
-        break;
-      case "ArrowUp":
-      case "PageUp":
-        focusIsSafe && this.callbacks.moveTo("up");
-        break;
-      case "ArrowDown":
-      case "PageDown":
-        focusIsSafe && this.callbacks.moveTo("down");
-        break;
-      case "Home":
-        focusIsSafe && this.callbacks.moveTo("home");
-        break;
-      case "End":
-        focusIsSafe && this.callbacks.moveTo("end");
-        break;
-      default:
-        if (this.shortcuts.hasOwnProperty(e.code)) {
-          const customShortcutObj = this.shortcuts[e.code];
-          const sendCallback = Object.entries(customShortcutObj.modifiers).every(( [modifier, value] ) => {
-            if (modifier === "platformKey") {
-              return e[this.getPlatformModifier()] === value;
-            } else {
-              return e[modifier as "altKey" | "ctrlKey" | "metaKey" | "shiftKey"] === value;
-            }
-          })
-            
-          if (sendCallback) {
-            e.preventDefault();
-            this.callbacks.toggleAction(customShortcutObj.actionKey)
-          };
-        }
-        break;
-    }
-  }
-}
+export const fromActionPeripheralType = (type: string): string | null =>
+  type.startsWith(ACTION_PERIPHERAL_PREFIX) ? type.slice(ACTION_PERIPHERAL_PREFIX.length) : null;

@@ -16,6 +16,7 @@ import {
   IWebPubPreferences,
   IInjectablesConfig,
   IContentProtectionConfig,
+  IKeyboardPeripheralsConfig,
   getScriptMode,
   ScriptMode
 } from "@readium/navigator";
@@ -34,6 +35,7 @@ export interface WebPubNavigatorLoadProps {
   defaults?: IWebPubDefaults;
   injectables?: IInjectablesConfig;
   contentProtection?: IContentProtectionConfig;
+  keyboardPeripherals?: IKeyboardPeripheralsConfig;
 }
 
 export const useWebPubNavigator = () => {
@@ -61,11 +63,12 @@ export const useWebPubNavigator = () => {
         config.publication, 
         config.listeners, 
         config.initialPosition, 
-        { 
-          preferences: config.preferences || {}, 
-          defaults: config.defaults || {}, 
+        {
+          preferences: config.preferences || {},
+          defaults: config.defaults || {},
           injectables: config.injectables || undefined,
-          contentProtection: config.contentProtection || undefined
+          contentProtection: config.contentProtection || undefined,
+          keyboardPeripherals: config.keyboardPeripherals || []
         }
       );
 

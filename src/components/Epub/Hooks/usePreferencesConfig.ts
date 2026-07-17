@@ -9,6 +9,7 @@ import { FontMetadata } from "@/preferences/services/fonts";
 import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 import { ReadiumCSSSettings } from "@/core/Hooks/Epub/useEpubSettingsCache";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
+import { useLineHeight } from "@/components/Settings/Spacing/hooks/useLineHeight";
 
 import { useAppSelector } from "@/lib/hooks";
 
@@ -23,7 +24,6 @@ interface UseEpubPreferencesConfigProps {
   arrowsWidth: React.RefObject<number>;
   preferences: ThPreferences;
   getFontMetadata: (fontFamily: string) => FontMetadata;
-  lineHeightOptions: Record<ThLineHeightOptions, number | null>;
   fxlThemeKeys: string[];
   reflowThemeKeys: string[];
 }
@@ -37,10 +37,10 @@ export const useEpubPreferencesConfig = ({
   arrowsWidth,
   preferences,
   getFontMetadata,
-  lineHeightOptions,
   fxlThemeKeys,
   reflowThemeKeys,
 }: UseEpubPreferencesConfigProps) => {
+  const { processedValues: lineHeightOptions } = useLineHeight();
   const scriptMode = useAppSelector(state => state.publication.scriptMode);
   const isVerticalScript = scriptMode === "cjk-vertical" || scriptMode === "mongolian-vertical";
 
@@ -145,7 +145,7 @@ export const useEpubPreferencesConfig = ({
         ? undefined
         : settings.lineHeight === null
           ? null
-          : lineHeightOptions[settings.lineHeight],
+          : lineHeightOptions[settings.lineHeight as ThLineHeightOptions.small | ThLineHeightOptions.medium | ThLineHeightOptions.large],
       optimalLineLength: settings.lineLength?.optimal != null
         ? settings.lineLength.optimal
         : undefined,
@@ -178,7 +178,6 @@ export const useEpubPreferencesConfig = ({
     preferences.theming.themes.keys,
     preferences.theming.themes.systemThemes,
     getFontMetadata,
-    lineHeightOptions,
     fxlThemeKeys,
     reflowThemeKeys,
     isVerticalScript,
@@ -197,6 +196,7 @@ export const useEpubPreferencesConfig = ({
     isTextAlignUsed,
     isTextNormalizeUsed,
     isWordSpacingUsed,
+    lineHeightOptions
   ]);
 
   const epubDefaults = useMemo(() => {

@@ -137,7 +137,7 @@ Menu item component for overflow actions.
 **Props:**
 - `label`: Item label
 - `SVGIcon`: Icon component
-- `shortcut`: Keyboard shortcut
+- `shortcut`: `ThShortcutConfig | null` — shortcut to display alongside the label
 - `onAction`: Action handler
 - `id`: Unique identifier
 - `isDisabled`: Disable state
@@ -147,11 +147,17 @@ Menu item component for overflow actions.
 - Keyboard shortcuts
 - Accessibility labels
 
-### UnstableStatefulShortcut
+### StatefulShortcut
 
-Keyboard shortcut handling component.
+Renders a keyboard shortcut read from a `ThShortcutConfig`. Used internally by `StatefulOverflowMenuItem`.
 
-TBD.
+**Props:**
+- `combo`: `ThShortcutConfig` — the shortcut to display
+- `className`: optional CSS class
+- `representation`: optional `ShortcutRepresentation` override (defaults to `shortcuts.representation` from preferences)
+- `joiner`: optional string placed between keys (defaults to `shortcuts.joiner` from preferences)
+
+When `combo.keyCombos` contains multiple entries (e.g. platform variants), the component picks the one matching the current platform modifier (Cmd on Mac, Ctrl elsewhere).
 
 ## Common Features
 

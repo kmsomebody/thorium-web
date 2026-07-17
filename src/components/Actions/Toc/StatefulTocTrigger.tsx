@@ -43,11 +43,12 @@ export const StatefulTocTrigger = ({ variant }: StatefulActionTriggerProps) => {
           id={ ThActionsKeys.toc }
           onAction={ () => setOpen(!actionState?.isOpen) }
         />
-      : <StatefulActionIcon 
+      : <StatefulActionIcon
           visibility={ preferences.actionsKeys[ThActionsKeys.toc].visibility }
-          aria-label={ t("reader.tableOfContents.title") } 
+          aria-label={ t("reader.tableOfContents.title") }
           placement="bottom"
-          tooltipLabel={ t("reader.tableOfContents.title") } 
+          tooltipLabel={ t("reader.tableOfContents.title") }
+          shortcut={ preferences.actionsKeys[ThActionsKeys.toc].shortcut }
           onPress={ () => setOpen(!actionState?.isOpen) }
         >
           <TocIcon aria-hidden="true" focusable="false" />

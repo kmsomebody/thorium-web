@@ -1,4 +1,4 @@
-import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
+import { ShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import {
   ThActionsKeys,
@@ -165,8 +165,9 @@ export const defaultAudioPreferences: ThAudioPreferences<AudioDefaultKeys> =
     },
 
     shortcuts: {
-      representation: UnstableShortcutRepresentation.symbol,
-      joiner: "+"
+      representation: ShortcutRepresentation.symbol,
+      joiner: "+",
+      displayIn: ["tooltip", "menuItem"]
     },
 
     docking: {

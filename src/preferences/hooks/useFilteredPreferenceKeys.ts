@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { ScriptMode } from "@readium/navigator";
+import { ScriptMode, RCSSSettingsEntry } from "@readium/navigator";
 import { useAppSelector } from "@/lib/hooks";
 import {
   ThSettingsKeys,
@@ -10,30 +10,51 @@ import {
   ThSpacingSettingsKeys
 } from "@/preferences/models";
 import { usePreferenceKeys } from "./usePreferenceKeys";
+import ReadiumCSSSettings from "@readium/css/css/vars/settings.json";
 
-const EXCLUDED_CJK = [
-  ThTextSettingsKeys.textAlign,
-  ThTextSettingsKeys.hyphens,
-  ThTextSettingsKeys.ligatures,
-  ThSpacingSettingsKeys.paragraphIndent,
-  ThSpacingSettingsKeys.wordSpacing,
-  ThTextSettingsKeys.textNormalize,
-];
+// Translates ReadiumCSS property names to ThSettingsKeys.
+// colCount is intentionally omitted — it's handled separately with the !isFXL guard below.
+const READIUM_CSS_TO_SETTINGS_KEY: Record<string, string | undefined> = {
+  bodyHyphens: ThTextSettingsKeys.hyphens,
+  a11yNormalize: ThTextSettingsKeys.textNormalize,
+  letterSpacing: ThSpacingSettingsKeys.letterSpacing,
+  textAlign: ThTextSettingsKeys.textAlign,
+  paraIndent: ThSpacingSettingsKeys.paragraphIndent,
+  wordSpacing: ThSpacingSettingsKeys.wordSpacing,
+  ligatures: ThTextSettingsKeys.ligatures,
+  noRuby: ThTextSettingsKeys.noRuby
+};
 
-// Keys that are not applicable for each script mode and should be hidden from settings UI
+// Keys appearing in any mode's `added` are mode-specific — they should be excluded
+// from every mode that does not explicitly list them in `added`.
+const globallyAdded = new Set(
+  Object.values(ReadiumCSSSettings).flatMap(entry => entry.added)
+);
+
+const deriveExcluded = (entry: RCSSSettingsEntry): string[] => {
+  const fromDisabled = entry.disabled
+    .map(k => READIUM_CSS_TO_SETTINGS_KEY[k])
+    .filter((k): k is string => k !== undefined);
+
+  const fromAddedInversion = [...globallyAdded]
+    .filter(k => !entry.added.includes(k))
+    .map(k => READIUM_CSS_TO_SETTINGS_KEY[k])
+    .filter((k): k is string => k !== undefined);
+
+  return [...fromDisabled, ...fromAddedInversion];
+};
+
+// ThSettingsKeys.layout is excluded for vertical modes but is not tracked in the JSON.
+const CJK_VERTICAL_EXCLUDED = [...deriveExcluded(ReadiumCSSSettings["cjk-vertical"]), ThSettingsKeys.layout];
+
+// Keys that are not applicable for each script mode and should be hidden from settings UI.
+// Derived from @readium/css settings.json; mongolian-vertical follows cjk-vertical.
 const EXCLUDED_BY_SCRIPT_MODE: Record<ScriptMode, string[]> = {
-  "ltr": [
-    ThTextSettingsKeys.noRuby,
-  ],
-  "rtl": [
-    ThTextSettingsKeys.hyphens,
-    ThSpacingSettingsKeys.letterSpacing,
-    ThTextSettingsKeys.textNormalize,
-    ThTextSettingsKeys.noRuby,
-  ],
-  "cjk-horizontal": EXCLUDED_CJK,
-  "cjk-vertical": [...EXCLUDED_CJK, ThSettingsKeys.layout],
-  "mongolian-vertical": [...EXCLUDED_CJK, ThSettingsKeys.layout],
+  "ltr":              deriveExcluded(ReadiumCSSSettings["default"]),
+  "rtl":              deriveExcluded(ReadiumCSSSettings["rtl"]),
+  "cjk-horizontal":   deriveExcluded(ReadiumCSSSettings["cjk-horizontal"]),
+  "cjk-vertical":       CJK_VERTICAL_EXCLUDED,
+  "mongolian-vertical": CJK_VERTICAL_EXCLUDED,
 };
 
 /**
