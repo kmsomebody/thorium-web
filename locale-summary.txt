@@ -1,6 +1,6 @@
 Locale Completion Status
 Reference language: en
-Generated: 2026-05-21T12:31:16.513Z
+Generated: 2026-05-27T16:06:23.047Z
 
 
 Locale Completion Summary:
@@ -8,16 +8,16 @@ Locale Completion Summary:
 DA     [■■■■■■■■■■■■■■■■■■■■] 100%
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
 ES     [■■■■■■■■■■■■■■■■■■■■] 100%
+ET     [■■■■■■■■■■■■■■■■■■■■] 100%
 FI     [■■■■■■■■■■■■■■■■■■■■] 100%
 FR     [■■■■■■■■■■■■■■■■■■■■] 100%
 IT     [■■■■■■■■■■■■■■■■■■■■] 100%
 SV     [■■■■■■■■■■■■■■■■■■■■] 100%
 LT     [■■■■■■■■■■■■■■■■■■■□]  96%
-ET     [■■■■■■■■■■■■■■■■■■□□]  94%
+PL     [■■■■■■■■■■■■■■■■■■■□]  96%
 PT-PT  [■■■■■■■■■■■■■■■■■■□□]  90%
 AR     [■■■■■■■■■■■■■□□□□□□□]  68%
 PT-BR  [■■■■■■■■■■■■□□□□□□□□]  63%
-PL     [■■■■■■■■□□□□□□□□□□□□]  44%
 TA     [■■■■■■■■□□□□□□□□□□□□]  43%
 TR     [■■■■■□□□□□□□□□□□□□□□]  28%
 EL     [■■■□□□□□□□□□□□□□□□□□]  16%
@@ -30,15 +30,15 @@ Inferred Usage Summary:
 DA     [■■■■■■■■■■■■■■■■■■■■] 100%
 EN     [■■■■■■■■■■■■■■■■■■■■] 100%
 ES     [■■■■■■■■■■■■■■■■■■■■] 100%
+ET     [■■■■■■■■■■■■■■■■■■■■] 100%
 FI     [■■■■■■■■■■■■■■■■■■■■] 100%
 FR     [■■■■■■■■■■■■■■■■■■■■] 100%
 IT     [■■■■■■■■■■■■■■■■■■■■] 100%
 SV     [■■■■■■■■■■■■■■■■■■■■] 100%
-ET     [■■■■■■■■■■■■■■■■■■■□]  98%
+PL     [■■■■■■■■■■■■■■■■■■■■] 100%
 LT     [■■■■■■■■■■■■■■■■■■■□]  96%
 PT-PT  [■■■■■■■■■■■■■■■■□□□□]  84%
 PT-BR  [■■■■■■■■■■■■■□□□□□□□]  69%
-PL     [■■■■■■■■■■■■■□□□□□□□]  67%
 AR     [■■■■■■■■■■■■□□□□□□□□]  63%
 TA     [■■■■■■■■■■■■□□□□□□□□]  63%
 EL     [■■■■■□□□□□□□□□□□□□□□]  27%
@@ -62,6 +62,12 @@ EN (100% complete, 100% of inferred usage)
    USED                  ■■■■■■■■■■ 100%  (126/126)
 
 ES (100% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■■ 100%  (188/188)
+   thorium-web.json      ■■■■■■■■■■ 100%  (62/62)
+   TOTAL                 ■■■■■■■■■■ 100%  (250/250)
+   USED                  ■■■■■■■■■■ 100%  (126/126)
+
+ET (100% complete, 100% of inferred usage)
    thorium-shared.json   ■■■■■■■■■■ 100%  (188/188)
    thorium-web.json      ■■■■■■■■■■ 100%  (62/62)
    TOTAL                 ■■■■■■■■■■ 100%  (250/250)
@@ -109,20 +115,11 @@ LT (96% complete, 96% of inferred usage)
    • reader.playback.actions.skipForward.descriptive
 
 
-ET (94% complete, 98% of inferred usage)
-   thorium-shared.json   ■■■■■■■■■□  92%  (173/188)
+PL (96% complete, 100% of inferred usage)
+   thorium-shared.json   ■■■■■■■■■□  95%  (178/188)
    thorium-web.json      ■■■■■■■■■■ 100%  (62/62)
-   TOTAL                 ■■■■■■■■■□  94%  (235/250)
-   USED                  ■■■■■■■■■□  98%  (124/126)
-
-   ----------------------------------------
-   Missing Keys:
-
-
-   SHARED (2 keys):
-   • reader.progression.xOfY.compact
-   • reader.progression.xOfY.descriptive
-
+   TOTAL                 ■■■■■■■■■□  96%  (240/250)
+   USED                  ■■■■■■■■■■ 100%  (126/126)
 
 PT-PT (90% complete, 84% of inferred usage)
    thorium-shared.json   ■■■■■■■■■□  94%  (176/188)
@@ -265,62 +262,6 @@ PT-BR (63% complete, 69% of inferred usage)
    • reader.actions.goToPreviousResource.descriptive
    • reader.playback.actions.skipBackward.descriptive
    • reader.playback.actions.skipForward.descriptive
-   • reader.preferences.ligatures.title
-   • reader.preferences.ligatures.label
-   • reader.preferences.noRuby.title
-   • reader.preferences.noRuby.label
-
-
-PL (44% complete, 67% of inferred usage)
-   thorium-shared.json   ■■■□□□□□□□  36%  (68/188)
-   thorium-web.json      ■■■■■■□□□□  66%  (41/62)
-   TOTAL                 ■■■■□□□□□□  44%  (109/250)
-   USED                  ■■■■■■□□□□  67%  (84/126)
-
-   ----------------------------------------
-   Missing Keys:
-
-   WEB (19 keys):
-   • reader.jumpToPosition.error.notFound
-   • audio.player.coverAlt
-   • audio.remotePlayback.connected
-   • audio.remotePlayback.trigger
-   • audio.settings.sleepTimer.minutes
-   • audio.settings.sleepTimer.seconds
-   • audio.settings.sleepTimer.hours
-   • audio.settings.sleepTimer.remaining
-   • audio.settings.sleepTimer.instruction
-   • audio.settings.sleepTimer.start
-   • audio.player.controls
-   • audio.player.progress
-   • reader.app.errors.notFound
-   • reader.app.errors.accessDenied
-   • reader.app.errors.network
-   • reader.app.errors.serverError
-   • reader.app.errors.clientError
-   • reader.app.errors.generic
-   • reader.app.errors.title
-
-   SHARED (23 keys):
-   • reader.playback.preferences.audio.title
-   • reader.playback.preferences.autoPlay.title
-   • reader.playback.preferences.autoPlay.label
-   • reader.playback.preferences.audio.skipBackwardInterval
-   • reader.playback.preferences.audio.skipForwardInterval
-   • reader.playback.preferences.audio.skipInterval
-   • reader.playback.preferences.playbackRate.descriptive
-   • reader.playback.preferences.sleepTimer.presets.endOfResource
-   • reader.playback.preferences.sleepTimer.descriptive
-   • common.actions.cancel
-   • reader.playback.preferences.audio.volume
-   • reader.actions.goToNextResource.descriptive
-   • reader.playback.actions.pause
-   • reader.playback.actions.play
-   • reader.actions.goToPreviousResource.descriptive
-   • reader.playback.actions.skipBackward.descriptive
-   • reader.playback.actions.skipForward.descriptive
-   • reader.preferences.spacing.presets.title
-   • common.actions.reset
    • reader.preferences.ligatures.title
    • reader.preferences.ligatures.label
    • reader.preferences.noRuby.title
