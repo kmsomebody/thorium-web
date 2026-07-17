@@ -37,9 +37,57 @@ export type RootState = {
 
 const DEFAULT_STORAGE_KEY = "thorium-web-state";
 
+// Schema version of the persisted blob. Bump this whenever a persisted slice
+// changes shape in a way a default-backfill cannot recover — a renamed or
+// retyped field, or a removed field that must be dropped — and add a matching
+// version-gated migration in loadState. Purely additive fields need no bump:
+// mergeWithDefaults backfills them from the reducer defaults.
+const PERSIST_VERSION = 2;
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * Reconciles a persisted value against the current default shape. Plain
+ * objects merge recursively, with the persisted side keeping keys absent from
+ * the default (slices such as `actions.keys` are open-ended maps); fields the
+ * persisted side is missing fall back to the default. When the two disagree on
+ * shape — an object where a primitive is expected, or a swapped array — the
+ * default wins, since that kind of change needs an explicit migration rather
+ * than a silent merge.
+ */
+const mergeWithDefaults = (defaults: unknown, persisted: unknown): unknown => {
+  if (persisted === undefined) {
+    return defaults;
+  }
+
+  if (isPlainObject(defaults) && isPlainObject(persisted)) {
+    const merged: Record<string, unknown> = { ...defaults };
+    for (const key of Object.keys(persisted)) {
+      merged[key] = key in defaults
+        ? mergeWithDefaults(defaults[key], persisted[key])
+        : persisted[key];
+    }
+    return merged;
+  }
+
+  if (isPlainObject(defaults) !== isPlainObject(persisted)) {
+    return defaults;
+  }
+  if (Array.isArray(defaults) !== Array.isArray(persisted)) {
+    return defaults;
+  }
+
+  return persisted;
+};
+
+// Probes a reducer for its initial state without dispatching a real action.
+const getReducerDefaults = (reducer: Reducer): unknown =>
+  reducer(undefined, { type: "@@thorium/probe-defaults" });
+
 // Migrate font family state
-const migrateFontFamily = (stateSlice: SettingsReducerState | WebPubSettingsReducerState) => {
-  if (stateSlice?.fontFamily && typeof stateSlice.fontFamily === "string") {
+const migrateFontFamily = (stateSlice: Record<string, unknown>) => {
+  if (stateSlice.fontFamily && typeof stateSlice.fontFamily === "string") {
     return {
       ...stateSlice,
       fontFamily: {
@@ -51,14 +99,15 @@ const migrateFontFamily = (stateSlice: SettingsReducerState | WebPubSettingsRedu
 };
 
 
-const updateActionsState = (state: ActionsReducerState) => {
+const updateActionsState = (state: Record<string, unknown>) : ActionsReducerState => {
   // Check if keys are already profile-keyed
   if (state.keys && typeof state.keys === "object" && ("epub" in state.keys || "webPub" in state.keys || "audio" in state.keys)) {
     // Keys are already profile-keyed, update each profile
     const updatedKeys: any = {};
-    for (const profile in state.keys) {
+    for (const profile in state.keys as Record<string, Record<string, ActionStateObject | undefined>>) {
+      const keys = state.keys as Record<string, Record<string, ActionStateObject | undefined>>;
       updatedKeys[profile] = Object.fromEntries(
-        Object.entries(state.keys[profile]).map(([key, value]: [string, ActionStateObject | undefined]) => [
+        Object.entries(keys[profile]).map(([key, value]: [string, ActionStateObject | undefined]) => [
           key,
           {
             ...value,
@@ -79,11 +128,12 @@ const updateActionsState = (state: ActionsReducerState) => {
       ...state,
       keys: updatedKeys,
       overflow: {}
-    };
+    } as ActionsReducerState;
   } else {
     // Keys are still flat, update them
+    const keys = state.keys as Record<string, Record<string, ActionStateObject | undefined>>;
     const updatedKeys = Object.fromEntries(
-      Object.entries(state.keys).map(([key, value]: [string, ActionStateObject | undefined]) => [
+      Object.entries(keys).map(([key, value]: [string, ActionStateObject | undefined]) => [
         key,
         {
           ...value,
@@ -97,13 +147,13 @@ const updateActionsState = (state: ActionsReducerState) => {
     );
     return {
       ...state,
-      keys: updatedKeys,
+      keys: updatedKeys as any,
       overflow: {}
-    };
+    } as ActionsReducerState;
   }
 };
 
-const migrateDockStateToProfileKeyed = (state: ActionsReducerState): ActionsReducerState => {
+const migrateDockStateToProfileKeyed = (state: Record<string, unknown>): ActionsReducerState => {
   // Check if dock state is in old format (not profile-keyed)
   if (state.dock && typeof state.dock === "object" && !("epub" in state.dock || "webPub" in state.dock || "audio" in state.dock)) {
     // Old format: dock has direct start/end keys
@@ -118,18 +168,18 @@ const migrateDockStateToProfileKeyed = (state: ActionsReducerState): ActionsRedu
       return {
         ...state,
         dock: newDock
-      };
+      } as ActionsReducerState;
     }
   }
-  return state;
+  return state as ActionsReducerState;
 };
 
-const migrateKeysStateToProfileKeyed = (state: ActionsReducerState): ActionsReducerState => {
+const migrateKeysStateToProfileKeyed = (state: Record<string, unknown>): ActionsReducerState => {
   // If keys is not profile-keyed, migrate to profile-keyed format
   // Old format: keys is a flat object like { [key]: ActionStateObject }
   // New format: keys is profile-keyed like { epub: { [key]: ActionStateObject }, webPub: { ... }, audio: { ... } }
-  if (!state.keys) {
-    return state;
+  if (!state.keys || typeof state.keys !== "object") {
+    return state as ActionsReducerState;
   }
   
   // Check if keys is already profile-keyed by looking for known profile keys
@@ -146,72 +196,82 @@ const migrateKeysStateToProfileKeyed = (state: ActionsReducerState): ActionsRedu
     return {
       ...state,
       keys: newKeys
-    };
+    } as ActionsReducerState;
   }
   
   // Ensure all profile keys exist even if some are missing
   const migratedKeys: any = {
-    epub: state.keys.epub || {},
-    webPub: state.keys.webPub || {},
-    audio: state.keys.audio || {}
+    epub: "epub" in state.keys ? state.keys.epub : {},
+    webPub: "webPub" in state.keys ? state.keys.webPub : {},
+    audio: "audio" in state.keys ? state.keys.audio : {}
   };
   
   return {
     ...state,
     keys: migratedKeys
-  };
+  } as ActionsReducerState;
 };
 
-const loadState = (storageKey: string = DEFAULT_STORAGE_KEY) => {
+const loadState = (storageKey: string = DEFAULT_STORAGE_KEY): Record<string, unknown> => {
   try {
     const resolvedKey = storageKey || DEFAULT_STORAGE_KEY;
     const serializedState = localStorage.getItem(resolvedKey);
     if (serializedState === null) {
-      return {
-        actions: undefined,
-        settings: undefined,
-        theming: undefined,
-        preferences: undefined,
-        globalPreferences: undefined,
-        webPubSettings: undefined,
-        audioSettings: undefined
-      };
+      return {};
     }
     
     // Parse the state
-    let state = JSON.parse(serializedState);
-    
+    let state: Record<string, unknown> | undefined = undefined;
+    try {
+      state = JSON.parse(serializedState);
+    } finally {
+      if (!isPlainObject(state)) {
+        return {};
+      }
+    }    
+
     // Apply migrations
-    if (state && state.actions) {
-      state.actions = migrateDockStateToProfileKeyed(state.actions);
-      state.actions = migrateKeysStateToProfileKeyed(state.actions);
-      state.actions = updateActionsState(state.actions);
-    }
-    if (state) {
-      if (state.settings) {
-        state.settings = migrateFontFamily(state.settings);
-      }
-      if (state.webPubSettings) {
-        state.webPubSettings = migrateFontFamily(state.webPubSettings);
-      }
-      if (state.actions) {
-        state.actions = updateActionsState(state.actions);
-        // Migrate dock state to profile-keyed format if needed
-        // Old dock state only applied to epub profile
-        state.actions = migrateDockStateToProfileKeyed(state.actions);
-      }
+    if ("actions" in state && isPlainObject(state.actions)) {
+      let actions = migrateDockStateToProfileKeyed(state.actions);
+      actions = migrateKeysStateToProfileKeyed(actions);
+      state.actions = updateActionsState(actions);
     }
     
+    if ("settings" in state && isPlainObject(state.settings)) {
+      state.settings = migrateFontFamily(state.settings);
+    }
+
+    if ("webPubSettings" in state && isPlainObject(state.webPubSettings)) {
+      state.webPubSettings = migrateFontFamily(state.webPubSettings);
+    }
+
+    if ("actions" in state && isPlainObject(state.actions)) {
+      let actions = updateActionsState(state.actions);
+      // Migrate dock state to profile-keyed format if needed
+      // Old dock state only applied to epub profile
+      state.actions = migrateDockStateToProfileKeyed(actions);
+    }
+
+    // Version-gated schema migrations slot in here as the persisted shape
+    // evolves, keyed off `state.__version` (absent === legacy v0), e.g.
+    //   if (version < 2) state = migrateV1ToV2(state);
+    // Additive fields need no migration — makeStore backfills them from the
+    // reducer defaults via mergeWithDefaults.
+
+    // Load-time normalization, applied on every load regardless of version.
+    if (isPlainObject(state.settings)) {
+      state.settings = migrateFontFamily(state.settings);
+    }
+    if (isPlainObject(state.webPubSettings)) {
+      state.webPubSettings = migrateFontFamily(state.webPubSettings);
+    }
+    if (isPlainObject(state.actions)) {
+      state.actions = updateActionsState(state.actions as ActionsReducerState);
+    }
+
     return state;
-  } catch (_err) {
-    return {
-      actions: undefined,
-      settings: undefined,
-      theming: undefined,
-      preferences: undefined,
-      globalPreferences: undefined,
-      webPubSettings: undefined
-    };
+  } catch {
+    return {};
   }
 };
 
@@ -238,7 +298,10 @@ const saveState = (state: any, storageKey?: string, externalReducers: Record<str
       }
     });
     
-    const serializedState = JSON.stringify(stateToPersist);
+    const serializedState = JSON.stringify({
+      __version: PERSIST_VERSION,
+      ...stateToPersist
+    });
     localStorage.setItem(resolvedKey, serializedState);
   } catch (err) {
     console.error(err);
@@ -266,20 +329,31 @@ export const makeStore = (storageKey?: string, externalReducers: Record<string, 
 
   // Get persisted state for internal reducers
   const persistedState = loadState(storageKey);
-  
+
+  // Reconcile a persisted slice against its reducer's current default shape so
+  // fields added since the blob was written are backfilled with defaults
+  // instead of surfacing as `undefined` and crashing the reader.
+  const hydrateSlice = (key: string, reducer: Reducer): unknown => {
+    const persistedSlice = persistedState[key];
+    if (persistedSlice === undefined) {
+      return undefined;
+    }
+    return mergeWithDefaults(getReducerDefaults(reducer), persistedSlice);
+  };
+
   // Create preloaded state with persisted values
   const preloadedState: any = {
-    actions: persistedState.actions,
-    settings: persistedState.settings,
-    theming: persistedState.theming,
-    preferences: persistedState.preferences,
-    globalPreferences: persistedState.globalPreferences,
-    webPubSettings: persistedState.webPubSettings,
-    audioSettings: persistedState.audioSettings,
+    actions: hydrateSlice("actions", actionsReducer),
+    settings: hydrateSlice("settings", settingsReducer),
+    theming: hydrateSlice("theming", themeReducer),
+    preferences: hydrateSlice("preferences", preferencesReducer),
+    globalPreferences: hydrateSlice("globalPreferences", globalPreferencesReducer),
+    webPubSettings: hydrateSlice("webPubSettings", webPubSettingsReducer),
+    audioSettings: hydrateSlice("audioSettings", audioSettingsReducer),
     // Include persisted state for external reducers that have it
     ...Object.entries(externalReducers).reduce((acc, [key, config]) => {
       if (config.persist && persistedState[key] !== undefined) {
-        return { ...acc, [key]: persistedState[key] };
+        return { ...acc, [key]: hydrateSlice(key, config.reducer) };
       }
       return acc;
     }, {})
@@ -295,6 +369,13 @@ export const makeStore = (storageKey?: string, externalReducers: Record<string, 
   }, 250);
 
   store.subscribe(saveStateDebounced);
+
+  // If the loaded blob predates the current schema (or there was none), rewrite
+  // it now so it is upgraded to the versioned, reconciled shape even if the
+  // user never triggers a state change this session.
+  if (persistedState.__version !== PERSIST_VERSION) {
+    saveState(store.getState(), storageKey, externalReducers);
+  }
 
   return store;
 }
