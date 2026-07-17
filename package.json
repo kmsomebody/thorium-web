@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/edrlab/thorium-web/issues"
   },
-  "version": "1.5.3",
+  "version": "1.5.4",
   "private": false,
   "files": [
     "./dist"
@@ -99,14 +99,14 @@
     "motion": "^12.34.3",
     "next": "16.1.6",
     "react": "^19.2.4",
-    "react-aria": "^3.46.0",
-    "react-aria-components": "^1.15.1",
+    "react-aria": "^3.49.0",
+    "react-aria-components": "^1.18.0",
     "react-dom": "^19.2.4",
     "react-i18next": "^16.5.4",
     "react-modal-sheet": "5.2.1",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^3.0.6",
-    "react-stately": "^3.44.0"
+    "react-stately": "^3.47.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
