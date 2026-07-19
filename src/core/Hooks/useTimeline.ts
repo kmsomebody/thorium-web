@@ -176,7 +176,7 @@ export const useTimeline = ({
       ? publication.toc.items
       : publication?.readingOrder?.items || [];
     const flatToc = toc.flatMap(t => [t, ...(t.children?.items || [])]);
-  
+
     // Helper function to get URL base (without params and fragment)
     const getBaseUrl = (url: string): string => {
       const [base] = url.split("#");
@@ -184,48 +184,53 @@ export const useTimeline = ({
       return path;
     };
 
-    // Function to find the first non-empty title by searching backward 
-    // in flatToc from the current item"s position
+    // Index the flat TOC by base href once. Per-item linear filters made this
+    // cubic overall for publications with a large reading order and no TOC
+    // (e.g. divina with hundreds of images), taking seconds to build.
+    const tocByBase = new Map<string, typeof flatToc>();
+    for (const t of flatToc) {
+      const key = getBaseUrl(t.href);
+      const bucket = tocByBase.get(key);
+      bucket ? bucket.push(t) : tocByBase.set(key, [t]);
+    }
+
+    // Index positions by href once
+    const positionsByHref = new Map<string, Locator[]>();
+    if (positionsList) {
+      for (const p of positionsList) {
+        const bucket = positionsByHref.get(p.href);
+        bucket ? bucket.push(p) : positionsByHref.set(p.href, [p]);
+      }
+    }
+
+    // Nearest preceding non-empty TOC title, computed as a running memo over
+    // the reading order (replaces a backward scan per item).
     // The issue with this fallback is that for progressionOfResource
     // the progression is effectively scoped to the reading order item
-    // so we have to differentiate using the index 
-    const findNearestTitle = (currentHref: string): string => {
-      const currentIndex = readingOrder.findIndex(item => getBaseUrl(item.href) === getBaseUrl(currentHref));
-    
-      if (currentIndex === -1) return "";
-      
-      for (let i = currentIndex; i >= 0; i--) {
-        const item = readingOrder[i];
-        // Find matching TOC items for this reading order item
-        const matchingTocItems = flatToc.filter(t => 
-          getBaseUrl(t.href) === getBaseUrl(item.href)
-        );
-        
-        // If we have a matching TOC item with a title, return it with the difference in indices
-        const title = matchingTocItems[0]?.title?.trim();
-        if (title) {
-          const diff = currentIndex - i;
-          return diff > 0 ? `${ title } (${ diff + 1 })` : title;
-        }
-      }
-      
-      return "";
-    };
+    // so we have to differentiate using the index
+    let nearestTitle = "";
+    let nearestTitleIndex = -1;
 
     // Process reading order items
     readingOrder.forEach((item, index) => {
       // Find all matching TOC items (with or without fragment)
-      const matchingTocItems = flatToc.filter(t => {
-        const baseHref = getBaseUrl(t.href);
-        const baseItemHref = getBaseUrl(item.href);
-        return baseHref === baseItemHref;
-      });
+      const matchingTocItems = tocByBase.get(getBaseUrl(item.href)) || [];
+
+      const tocTitle = matchingTocItems[0]?.title?.trim();
+      if (tocTitle) {
+        nearestTitle = tocTitle;
+        nearestTitleIndex = index;
+      }
+      const diff = index - nearestTitleIndex;
+      const fallbackTitle = nearestTitle
+        ? (diff > 0 ? `${ nearestTitle } (${ diff + 1 })` : nearestTitle)
+        : "";
 
       // Create timeline item with all matching titles
       const timelineItem: TimelineItem = {
         href: item.href,
         readingOrderIndex: index,
-        title: item.title || matchingTocItems[0]?.title || findNearestTitle(item.href),
+        title: item.title || matchingTocItems[0]?.title || fallbackTitle,
         fragments: matchingTocItems
           .map(t => t.href.split("#")[1])
           .filter(Boolean),
@@ -239,18 +244,16 @@ export const useTimeline = ({
 
       timelineItems[item.href] = timelineItem;
     });
-  
+
     // Then add position and progression information from positionsList
     for (const item of readingOrder) {
       const timelineItem = timelineItems[item.href];
       if (!timelineItem) continue;
 
-      const positions = positionsList
-        ? positionsList
-          .filter(p => p.href === item.href)
-          .sort((a, b) => (a.locations.position || 0) - (b.locations.position || 0))
-        : [];
-  
+      const positions = (positionsByHref.get(item.href) || [])
+        .slice()
+        .sort((a, b) => (a.locations.position || 0) - (b.locations.position || 0));
+
       if (positions.length > 0) {
         const start = positions[0].locations;
         // For single position, use the same location for start and end

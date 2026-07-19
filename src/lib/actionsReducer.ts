@@ -56,6 +56,13 @@ export interface ActionOverflowOpenPayload {
   }
 }
 
+export interface ActionProfilePayload {
+  type: string;
+  payload: {
+    profile: string;
+  }
+}
+
 export interface ActionStateDockedPayload {
   type: string;
   payload: { 
@@ -144,12 +151,25 @@ const initialState: ActionsReducerState = {
         active: false,
         collapsed: false
       }
+    },
+    divina: {
+      [ThDockingKeys.start]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      },
+      [ThDockingKeys.end]: {
+        actionKey: null,
+        active: false,
+        collapsed: false
+      }
     }
   },
   keys: {
     epub: {},
     webPub: {},
-    audio: {}
+    audio: {},
+    divina: {}
   },
   overflow: {}
 }
@@ -181,6 +201,14 @@ export const actionsSlice = createSlice({
   name: "actions",
   initialState,
   reducers: {
+    // Ensures the dock/keys buckets exist for a profile. Needed when the
+    // persisted state predates a profile (e.g. divina) being added to
+    // initialState, since rehydration replaces the whole slice.
+    ensureProfileActions: (state, action: ActionProfilePayload) => {
+      const { profile } = action.payload;
+      initializeProfileDock(state, profile);
+      initializeProfileKeys(state, profile);
+    },
     dockAction: (state, action: ActionStateDockPayload) => {
       const { key, dockingKey, profile } = action.payload;
       
@@ -364,9 +392,10 @@ export const actionsSlice = createSlice({
   }
 })
 
-export const { 
-  dockAction, 
-  setActionOpen, 
+export const {
+  ensureProfileActions,
+  dockAction,
+  setActionOpen,
   toggleActionOpen, 
   setOverflow, 
   activateDockPanel, 

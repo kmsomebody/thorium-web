@@ -10,6 +10,7 @@ import publicationReducer, { PublicationReducerState } from "./publicationReduce
 import preferencesReducer, { PreferencesReducerState } from "./preferencesReducer";
 import globalPreferencesReducer, { GlobalPreferencesReducerState } from "./globalPreferencesReducer";
 import webPubSettingsReducer, { WebPubSettingsReducerState } from "./webPubSettingsReducer";
+import divinaSettingsReducer, { DivinaSettingsReducerState } from "./divinaSettingsReducer";
 import audioSettingsReducer, { AudioSettingsState } from "./audioSettingsReducer";
 import playerReducer, { PlayerReducerState } from "./playerReducer";
 
@@ -30,6 +31,7 @@ export type RootState = {
   preferences: PreferencesReducerState;
   globalPreferences: GlobalPreferencesReducerState;
   webPubSettings: WebPubSettingsReducerState;
+  divinaSettings: DivinaSettingsReducerState;
   audioSettings: AudioSettingsState;
   player: PlayerReducerState;
   [key: string]: any; // For external reducers
@@ -101,7 +103,7 @@ const migrateFontFamily = (stateSlice: Record<string, unknown>) => {
 
 const updateActionsState = (state: Record<string, unknown>) : ActionsReducerState => {
   // Check if keys are already profile-keyed
-  if (state.keys && typeof state.keys === "object" && ("epub" in state.keys || "webPub" in state.keys || "audio" in state.keys)) {
+  if (state.keys && typeof state.keys === "object" && ("epub" in state.keys || "webPub" in state.keys || "audio" in state.keys || "divina" in state.keys)) {
     // Keys are already profile-keyed, update each profile
     const updatedKeys: any = {};
     for (const profile in state.keys as Record<string, Record<string, ActionStateObject | undefined>>) {
@@ -155,7 +157,7 @@ const updateActionsState = (state: Record<string, unknown>) : ActionsReducerStat
 
 const migrateDockStateToProfileKeyed = (state: Record<string, unknown>): ActionsReducerState => {
   // Check if dock state is in old format (not profile-keyed)
-  if (state.dock && typeof state.dock === "object" && !("epub" in state.dock || "webPub" in state.dock || "audio" in state.dock)) {
+  if (state.dock && typeof state.dock === "object" && !("epub" in state.dock || "webPub" in state.dock || "audio" in state.dock || "divina" in state.dock)) {
     // Old format: dock has direct start/end keys
     const oldDock = state.dock as any;
     if (oldDock[ThDockingKeys.start] || oldDock[ThDockingKeys.end]) {
@@ -183,27 +185,29 @@ const migrateKeysStateToProfileKeyed = (state: Record<string, unknown>): Actions
   }
   
   // Check if keys is already profile-keyed by looking for known profile keys
-  const isProfileKeyed = "epub" in state.keys || "webPub" in state.keys || "audio" in state.keys;
-  
+  const isProfileKeyed = "epub" in state.keys || "webPub" in state.keys || "audio" in state.keys || "divina" in state.keys;
+
   if (!isProfileKeyed) {
     // Old flat format - migrate to epub profile
     const oldKeys = state.keys as any;
     const newKeys: any = {
       epub: { ...oldKeys },
       webPub: {},
-      audio: {}
+      audio: {},
+      divina: {}
     };
     return {
       ...state,
       keys: newKeys
     } as ActionsReducerState;
   }
-  
+
   // Ensure all profile keys exist even if some are missing
   const migratedKeys: any = {
     epub: "epub" in state.keys ? state.keys.epub : {},
     webPub: "webPub" in state.keys ? state.keys.webPub : {},
-    audio: "audio" in state.keys ? state.keys.audio : {}
+    audio: "audio" in state.keys ? state.keys.audio : {},
+    divina: "divina" in state.keys ? state.keys.divina : {}
   };
   
   return {
@@ -289,6 +293,7 @@ const saveState = (state: any, storageKey?: string, externalReducers: Record<str
     if (state.preferences) stateToPersist.preferences = state.preferences;
     if (state.globalPreferences) stateToPersist.globalPreferences = state.globalPreferences;
     if (state.webPubSettings) stateToPersist.webPubSettings = state.webPubSettings;
+    if (state.divinaSettings) stateToPersist.divinaSettings = state.divinaSettings;
     if (state.audioSettings) stateToPersist.audioSettings = state.audioSettings;
     
     // External reducers to persist
@@ -319,6 +324,7 @@ export const makeStore = (storageKey?: string, externalReducers: Record<string, 
     preferences: preferencesReducer,
     globalPreferences: globalPreferencesReducer,
     webPubSettings: webPubSettingsReducer,
+    divinaSettings: divinaSettingsReducer,
     audioSettings: audioSettingsReducer,
     player: playerReducer,
     ...Object.entries(externalReducers).reduce((acc, [key, config]) => ({
@@ -349,6 +355,7 @@ export const makeStore = (storageKey?: string, externalReducers: Record<string, 
     preferences: hydrateSlice("preferences", preferencesReducer),
     globalPreferences: hydrateSlice("globalPreferences", globalPreferencesReducer),
     webPubSettings: hydrateSlice("webPubSettings", webPubSettingsReducer),
+    divinaSettings: hydrateSlice("divinaSettings", divinaSettingsReducer),
     audioSettings: hydrateSlice("audioSettings", audioSettingsReducer),
     // Include persisted state for external reducers that have it
     ...Object.entries(externalReducers).reduce((acc, [key, config]) => {

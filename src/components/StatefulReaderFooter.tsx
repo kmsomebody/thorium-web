@@ -40,6 +40,7 @@ export const StatefulReaderFooter = ({
   const hasScrollAffordance = useAppSelector(state => state.reader.hasScrollAffordance);
   const isRTL = useAppSelector(state => state.publication.isRTL);
   const isFXL = useAppSelector(state => state.publication.isFXL);
+  const profile = useAppSelector(state => state.reader.profile);
   const isScroll = useIsScroll();
   const breakpoint = useAppSelector(state => state.theming.containerBreakpoint);
   const reducedMotion = useAppSelector(state => state.theming.prefersReducedMotion);
@@ -92,12 +93,14 @@ export const StatefulReaderFooter = ({
     const previous = previousLocator();
     const next = nextLocator();
 
+    // Divina resources are pages regardless of layout, like FXL
+    const pageBased = isFXL || profile === "divina";
     const previousLink: ThPaginationLinkProps | undefined = previous ? {
       node: buildNode(
         previous,
         timeline?.previousItem?.title,
-        isFXL ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact",
-        isFXL ? "reader.actions.goToPreviousPage.descriptive" : "reader.actions.goToPreviousChapter.descriptive"
+        pageBased ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact",
+        pageBased ? "reader.actions.goToPreviousPage.descriptive" : "reader.actions.goToPreviousChapter.descriptive"
       ),
       onPress: () => go(previous, !reducedMotion, () => {})
     } : undefined;
@@ -106,8 +109,8 @@ export const StatefulReaderFooter = ({
       node: buildNode(
         next,
         timeline?.nextItem?.title,
-        isFXL ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact",
-        isFXL ? "reader.actions.goToNextPage.descriptive" : "reader.actions.goToNextChapter.descriptive"
+        pageBased ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact",
+        pageBased ? "reader.actions.goToNextPage.descriptive" : "reader.actions.goToNextChapter.descriptive"
       ),
       onPress: () => go(next, !reducedMotion, () => {})
     } : undefined;
@@ -115,7 +118,7 @@ export const StatefulReaderFooter = ({
     return isRTL
       ? { left: nextLink, right: previousLink }
       : { left: previousLink, right: nextLink };
-  }, [go, previousLocator, nextLocator, buildNode, timeline, reducedMotion, isFXL, isRTL]);
+  }, [go, previousLocator, nextLocator, buildNode, timeline, reducedMotion, isFXL, isRTL, profile]);
 
   useEffect(() => {
     updateLinks();

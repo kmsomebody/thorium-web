@@ -18,6 +18,25 @@ export const buildTocTree = (
   positionsList?: Locator[],
   publicationTitle?: string
 ): TocItem[] => {
+  // Index positions by href once: a per-link linear search is quadratic for
+  // large reading orders (e.g. divina publications with hundreds of images)
+  const positionByHref = new Map<string, number | undefined>();
+  if (positionsList) {
+    for (const position of positionsList) {
+      if (!positionByHref.has(position.href)) {
+        positionByHref.set(position.href, position.locations.position);
+      }
+    }
+  }
+  return buildTocTreeInner(links, idGenerator, positionByHref, publicationTitle);
+};
+
+const buildTocTreeInner = (
+  links: Link[],
+  idGenerator: () => string,
+  positionByHref: Map<string, number | undefined>,
+  publicationTitle?: string
+): TocItem[] => {
   return links.map((link) => {
     const newId = idGenerator();
 
@@ -41,11 +60,11 @@ export const buildTocTree = (
           ? `${ publicationTitle } ${ counter }`
           : newId
       ),
-      position: positionsList?.find((position) => position.href === href)?.locations.position
+      position: positionByHref.get(href)
     };
 
     if (link.children) {
-      treeNode.children = buildTocTree(link.children.items, idGenerator, positionsList, publicationTitle);
+      treeNode.children = buildTocTreeInner(link.children.items, idGenerator, positionByHref, publicationTitle);
     }
 
     return treeNode;
