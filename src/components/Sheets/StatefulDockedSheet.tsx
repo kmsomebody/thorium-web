@@ -37,8 +37,7 @@ export const StatefulDockedSheet = ({
     children,
     resetFocus,
     focusSelector,
-    focusWithinRef,
-    scrollTopOnFocus
+    focusWithinRef
   }: StatefulDockedSheetProps) => {
   const { t } = useI18n()
   const dockPortal = flow && document.getElementById(flow);
@@ -71,6 +70,7 @@ export const StatefulDockedSheet = ({
     return(
       <>
       <ThDockedPanel
+        id={ id }
         ref={ dockedSheetRef }
         isOpen={ isOpen }
         portal={ dockPortal }

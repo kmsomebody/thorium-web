@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
-import { 
-  defaultTextSettingsMain, 
-  defaultTextSettingsSubpanel, 
-  ThSettingsContainerKeys, 
-  ThTextSettingsKeys 
+import {
+  defaultTextSettingsMain,
+  defaultTextSettingsSubpanel,
+  ThSettingsContainerKeys,
+  ThTextSettingsKeys
 } from "@/preferences";
 
 import { StatefulGroupWrapper } from "../StatefulGroupWrapper";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useFilteredPreferenceKeys } from "@/preferences/hooks/useFilteredPreferenceKeys";
 import { usePlugins } from "../../Plugins/PluginProvider";
 import { useI18n } from "@/i18n/useI18n";
 
@@ -22,6 +23,7 @@ export const StatefulTextGroup = () => {
   const { preferences } = usePreferences();
   const { t } = useI18n();
   const { textSettingsComponentsMap } = usePlugins();
+  const { mainTextSettingsKeys, subPanelTextSettingsKeys } = useFilteredPreferenceKeys();
 
   const dispatch = useAppDispatch();
 
@@ -31,15 +33,19 @@ export const StatefulTextGroup = () => {
 
   return(
     <>
-    <StatefulGroupWrapper<ThTextSettingsKeys> 
+    <StatefulGroupWrapper<ThTextSettingsKeys>
       label={ t("reader.preferences.text") }
       moreLabel={ t("reader.settings.text.advanced.trigger") }
       moreTooltip={ t("reader.settings.text.advanced.tooltip") }
       onPressMore={ setTextContainer }
       componentsMap={ textSettingsComponentsMap }
-      prefs={ preferences.settings.text }
+      prefs={ {
+        main: mainTextSettingsKeys,
+        subPanel: preferences.settings.text?.subPanel === null ? null : subPanelTextSettingsKeys,
+        header: preferences.settings.text?.header
+      } }
       defaultPrefs={ {
-        main: defaultTextSettingsMain, 
+        main: defaultTextSettingsMain,
         subPanel: defaultTextSettingsSubpanel
       }}
     />
@@ -48,13 +54,12 @@ export const StatefulTextGroup = () => {
 }
 
 export const StatefulTextGroupContainer = () => {
-  const { preferences } = usePreferences();
-  const displayOrder = preferences.settings.text?.subPanel as ThTextSettingsKeys[] | null | undefined || defaultTextSettingsSubpanel;
+  const { subPanelTextSettingsKeys } = useFilteredPreferenceKeys();
   const { textSettingsComponentsMap } = usePlugins();
 
   return(
     <>
-    { displayOrder.map((key: ThTextSettingsKeys) => {
+    { subPanelTextSettingsKeys.map((key: ThTextSettingsKeys) => {
       const match = textSettingsComponentsMap[key];
       if (!match) {
         console.warn(`Action key "${ key }" not found in the plugin registry while present in preferences.`);

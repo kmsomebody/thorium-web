@@ -1,22 +1,24 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useRef } from "react";
 
-import { 
-  Layout, 
-  Link, 
-  Locator, 
-  Publication 
+import {
+  Link,
+  Locator,
+  Publication
 } from "@readium/shared";
-import { 
-  EpubNavigator, 
-  EpubNavigatorListeners, 
-  EpubPreferences, 
-  EpubSettings, 
-  IContentProtectionConfig, 
-  IEpubDefaults, 
+import {
+  EpubNavigator,
+  EpubNavigatorListeners,
+  EpubPreferences,
+  EpubSettings,
+  IContentProtectionConfig,
+  IEpubDefaults,
   IEpubPreferences,
-  IInjectablesConfig
+  IInjectablesConfig,
+  IKeyboardPeripheralsConfig,
+  getScriptMode,
+  ScriptMode
 } from "@readium/navigator";
 
 type cbb = (ok: boolean) => void;
@@ -34,6 +36,7 @@ export interface EpubNavigatorLoadProps {
   defaults?: IEpubDefaults;
   injectables?: IInjectablesConfig;
   contentProtection?: IContentProtectionConfig;
+  keyboardPeripherals?: IKeyboardPeripheralsConfig;
 }
 
 // Only allow 1 navigation per x milliseconds
@@ -74,30 +77,6 @@ export const useEpubNavigator = () => {
     return navigatorInstance?.settings[settingKey] as EpubSettings[K];
   }, []);
 
-  // [TMP] Working around positionChanged not firing consistently for FXL
-  // We’re observing the FXLFramePoolManager spine div element’s style
-  // and checking whether its translate3d has changed.
-  // Sure IntersectionObserver should be the obvious one to use here,
-  // observing iframes instead of the style attribute on the spine element
-  // but there’s additional complexity to handle as a spread = 2 iframes
-  // And keeping in sync while the FramePool is re-aligning on resize can be suboptimal
-  let FXLPositionChangedCallback: ((locator: Locator) => void) | undefined;
-  const FXLPositionChanged = useMemo(() => {  
-    return new MutationObserver((mutationsList: MutationRecord[]) => {
-      for (const mutation of mutationsList) {
-        const re = /translate3d\(([^)]+)\)/;
-        const newVal = (mutation.target as HTMLElement).getAttribute(mutation.attributeName as string);
-        const oldVal = mutation.oldValue;
-        if (newVal?.split(re)[1] !== oldVal?.split(re)[1]) {
-          const locator = navigatorInstance?.currentLocator;
-          if (locator) {
-            FXLPositionChangedCallback?.(locator);
-          }
-        }
-      }
-    });
-  }, [FXLPositionChangedCallback]);
-
   const EpubNavigatorLoad = useCallback((config: EpubNavigatorLoadProps, cb: Function) => {
     if (config.container) {
       container.current = config.container;
@@ -105,44 +84,41 @@ export const useEpubNavigator = () => {
       
       publication.current = config.publication;
 
-      navigatorInstance = new EpubNavigator(
-        config.container, 
-        config.publication, 
-        config.listeners, 
-        config.positionsList, 
-        config.initialPosition, 
-        { 
-          preferences: config.preferences || {}, 
-          defaults: config.defaults || {}, 
+      const instance = new EpubNavigator(
+        config.container,
+        config.publication,
+        config.listeners,
+        config.positionsList,
+        config.initialPosition,
+        {
+          preferences: config.preferences || {},
+          defaults: config.defaults || {},
           injectables: config.injectables || undefined,
-          contentProtection: config.contentProtection || undefined
+          contentProtection: config.contentProtection || undefined,
+          keyboardPeripherals: config.keyboardPeripherals || [],
         }
       );
+      navigatorInstance = instance;
 
-      navigatorInstance.load().then(() => {
+      instance.load().then(() => {
+        // Bail out if a remount may have replaced or destroyed this instance
+        // while load() was in flight.
+        if (navigatorInstance !== instance) return;
+
         cb();
-
-        if (navigatorInstance?.layout === Layout.fixed) {
-          // @ts-ignore
-          FXLPositionChanged.observe((navigatorInstance?.pool.spineElement as HTMLElement), {
-            attributeFilter: ["style"], 
-            attributeOldValue: true
-          });
-        }
       });
     }
-  }, [FXLPositionChanged]);
+  }, []);
 
   const EpubNavigatorDestroy = useCallback((cb: Function) => {
     cb();
 
-    if (navigatorInstance?.layout === Layout.fixed) {
-      FXLPositionChanged.disconnect();
-    }
-    navigatorInstance?.destroy().then(() => {
-      navigatorInstance = null; // Clear the singleton reference
+    const instance = navigatorInstance;
+    instance?.destroy().then(() => {
+      // Don't clear a newer instance created by a remount
+      if (navigatorInstance === instance) navigatorInstance = null;
     });
-  }, [FXLPositionChanged]);
+  }, []);
 
   const goRight = useCallback((animated: boolean, callback: cbb) => {
     throttleNavigation(() => {
@@ -242,6 +218,12 @@ export const useEpubNavigator = () => {
     return navigatorInstance?._cframes;
   }, []);
 
+  const currentScriptMode = useCallback((): ScriptMode | undefined => {
+    const metadata = navigatorInstance?.publication?.metadata;
+    if (!metadata) return undefined;
+    return getScriptMode(metadata);
+  }, []);
+
   return { 
     EpubNavigatorLoad, 
     EpubNavigatorDestroy, 
@@ -264,8 +246,6 @@ export const useEpubNavigator = () => {
     getSetting,
     submitPreferences,
     getCframes,
-    onFXLPositionChange: (cb: (locator: Locator) => void) => {
-      FXLPositionChangedCallback = cb;
-    }
+    getScriptMode: currentScriptMode,
   }
 }

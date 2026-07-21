@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_CONFIG } from "./config";
 
@@ -17,7 +18,7 @@ export const useI18n = (ns?: string | string[]) => {
   };
 
   // Enhanced t function that searches both namespaces only when using defaults
-  const t = (key: string, options?: any): string => {
+  const t = useCallback((key: string, options?: any): string => {
     if (ns) {
       // If custom namespace provided, use it directly (no fallback)
       return tRaw(key, options) as string;
@@ -29,7 +30,7 @@ export const useI18n = (ns?: string | string[]) => {
       }
       return key;
     }
-  };
+  }, [ns, tRaw]);
 
   return {
     // Translation function

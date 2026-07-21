@@ -1,5 +1,6 @@
 import { useAppSelector } from "@/lib/hooks";
 import { usePrevious } from "@/core/Hooks/usePrevious";
+import { useIsScroll } from "./useIsScroll";
 
 export interface ReaderTransitions {
   // Current states
@@ -30,10 +31,7 @@ export const useReaderTransitions = (): ReaderTransitions => {
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isFullscreen = useAppSelector(state => state.reader.isFullscreen);
   const hasUserNavigated = useAppSelector(state => state.reader.hasUserNavigated);
-  const scroll = useAppSelector(state => state.settings.scroll);
-  const isFXL = useAppSelector(state => state.publication.isFXL);
-  
-  const isScroll = scroll && !isFXL;
+  const isScroll = useIsScroll();
   
   // Previous states
   const wasImmersive = usePrevious(isImmersive) ?? false;

@@ -5,10 +5,14 @@ import { configureStore, Reducer } from "@reduxjs/toolkit";
 import readerReducer, { ReaderReducerState } from "@/lib/readerReducer";
 import settingsReducer, { SettingsReducerState } from "@/lib/settingsReducer";
 import themeReducer, { ThemeReducerState } from "@/lib/themeReducer";
-import actionsReducer, { ActionsReducerState } from "@/lib/actionsReducer";
+import actionsReducer, { ActionsReducerState, ActionStateObject } from "@/lib/actionsReducer";
 import publicationReducer, { PublicationReducerState } from "./publicationReducer";
 import preferencesReducer, { PreferencesReducerState } from "./preferencesReducer";
+import globalPreferencesReducer, { GlobalPreferencesReducerState } from "./globalPreferencesReducer";
 import webPubSettingsReducer, { WebPubSettingsReducerState } from "./webPubSettingsReducer";
+import divinaSettingsReducer, { DivinaSettingsReducerState } from "./divinaSettingsReducer";
+import audioSettingsReducer, { AudioSettingsState } from "./audioSettingsReducer";
+import playerReducer, { PlayerReducerState } from "./playerReducer";
 
 import debounce from "debounce";
 
@@ -25,7 +29,11 @@ export type RootState = {
   actions: ActionsReducerState;
   publication: PublicationReducerState;
   preferences: PreferencesReducerState;
+  globalPreferences: GlobalPreferencesReducerState;
   webPubSettings: WebPubSettingsReducerState;
+  divinaSettings: DivinaSettingsReducerState;
+  audioSettings: AudioSettingsState;
+  player: PlayerReducerState;
   [key: string]: any; // For external reducers
 };
 
@@ -36,7 +44,7 @@ const DEFAULT_STORAGE_KEY = "thorium-web-state";
 // retyped field, or a removed field that must be dropped — and add a matching
 // version-gated migration in loadState. Purely additive fields need no bump:
 // mergeWithDefaults backfills them from the reducer defaults.
-const PERSIST_VERSION = 1;
+const PERSIST_VERSION = 2;
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -93,22 +101,119 @@ const migrateFontFamily = (stateSlice: Record<string, unknown>) => {
 };
 
 
-const updateActionsState = (state: ActionsReducerState) => {
-  const updatedKeys = Object.fromEntries(
-    Object.entries(state.keys || {}).map(([key, value]) => [
-      key,
-      {
-        ...value,
-        isOpen: value?.docking === ThDockingKeys.transient || value?.docking == null && value?.isOpen === true ? false : value?.isOpen,
-      },
-    ])
-  );
+const updateActionsState = (state: Record<string, unknown>) : ActionsReducerState => {
+  // Check if keys are already profile-keyed
+  if (state.keys && typeof state.keys === "object" && ("epub" in state.keys || "webPub" in state.keys || "audio" in state.keys || "divina" in state.keys)) {
+    // Keys are already profile-keyed, update each profile
+    const updatedKeys: any = {};
+    for (const profile in state.keys as Record<string, Record<string, ActionStateObject | undefined>>) {
+      const keys = state.keys as Record<string, Record<string, ActionStateObject | undefined>>;
+      updatedKeys[profile] = Object.fromEntries(
+        Object.entries(keys[profile]).map(([key, value]: [string, ActionStateObject | undefined]) => [
+          key,
+          {
+            ...value,
+            // Transient/undocked actions should never re-open on load
+            // Docked actions reset to null so useDocking re-establishes open state
+            // based on the actual breakpoint at load time (avoids opening docked
+            // sheets in fullscreen/compact where docking is unavailable)
+            isOpen: (value?.docking === ThDockingKeys.transient || value?.docking == null)
+              ? false
+              : (value?.docking === ThDockingKeys.start || value?.docking === ThDockingKeys.end)
+                ? null
+                : value?.isOpen,
+          },
+        ])
+      );
+    }
+    return {
+      ...state,
+      keys: updatedKeys,
+      overflow: {}
+    } as ActionsReducerState;
+  } else {
+    // Keys are still flat, update them
+    const keys = state.keys as Record<string, Record<string, ActionStateObject | undefined>>;
+    const updatedKeys = Object.fromEntries(
+      Object.entries(keys).map(([key, value]: [string, ActionStateObject | undefined]) => [
+        key,
+        {
+          ...value,
+          isOpen: (value?.docking === ThDockingKeys.transient || value?.docking == null)
+            ? false
+            : (value?.docking === ThDockingKeys.start || value?.docking === ThDockingKeys.end)
+              ? null
+              : value?.isOpen,
+        },
+      ])
+    );
+    return {
+      ...state,
+      keys: updatedKeys as any,
+      overflow: {}
+    } as ActionsReducerState;
+  }
+};
 
+const migrateDockStateToProfileKeyed = (state: Record<string, unknown>): ActionsReducerState => {
+  // Check if dock state is in old format (not profile-keyed)
+  if (state.dock && typeof state.dock === "object" && !("epub" in state.dock || "webPub" in state.dock || "audio" in state.dock || "divina" in state.dock)) {
+    // Old format: dock has direct start/end keys
+    const oldDock = state.dock as any;
+    if (oldDock[ThDockingKeys.start] || oldDock[ThDockingKeys.end]) {
+      // Migrate to new profile-keyed format, only for epub profile
+      const newDock: any = {};
+      newDock["epub"] = {
+        [ThDockingKeys.start]: oldDock[ThDockingKeys.start] || { actionKey: null, active: false, collapsed: false },
+        [ThDockingKeys.end]: oldDock[ThDockingKeys.end] || { actionKey: null, active: false, collapsed: false }
+      };
+      return {
+        ...state,
+        dock: newDock
+      } as ActionsReducerState;
+    }
+  }
+  return state as ActionsReducerState;
+};
+
+const migrateKeysStateToProfileKeyed = (state: Record<string, unknown>): ActionsReducerState => {
+  // If keys is not profile-keyed, migrate to profile-keyed format
+  // Old format: keys is a flat object like { [key]: ActionStateObject }
+  // New format: keys is profile-keyed like { epub: { [key]: ActionStateObject }, webPub: { ... }, audio: { ... } }
+  if (!state.keys || typeof state.keys !== "object") {
+    return state as ActionsReducerState;
+  }
+  
+  // Check if keys is already profile-keyed by looking for known profile keys
+  const isProfileKeyed = "epub" in state.keys || "webPub" in state.keys || "audio" in state.keys || "divina" in state.keys;
+
+  if (!isProfileKeyed) {
+    // Old flat format - migrate to epub profile
+    const oldKeys = state.keys as any;
+    const newKeys: any = {
+      epub: { ...oldKeys },
+      webPub: {},
+      audio: {},
+      divina: {}
+    };
+    return {
+      ...state,
+      keys: newKeys
+    } as ActionsReducerState;
+  }
+
+  // Ensure all profile keys exist even if some are missing
+  const migratedKeys: any = {
+    epub: "epub" in state.keys ? state.keys.epub : {},
+    webPub: "webPub" in state.keys ? state.keys.webPub : {},
+    audio: "audio" in state.keys ? state.keys.audio : {},
+    divina: "divina" in state.keys ? state.keys.divina : {}
+  };
+  
   return {
     ...state,
-    keys: updatedKeys,
-    overflow: {}
-  };
+    keys: migratedKeys
+  } as ActionsReducerState;
 };
 
 const loadState = (storageKey: string = DEFAULT_STORAGE_KEY): Record<string, unknown> => {
@@ -118,13 +223,38 @@ const loadState = (storageKey: string = DEFAULT_STORAGE_KEY): Record<string, unk
     if (serializedState === null) {
       return {};
     }
+    
+    // Parse the state
+    let state: Record<string, unknown> | undefined = undefined;
+    try {
+      state = JSON.parse(serializedState);
+    } finally {
+      if (!isPlainObject(state)) {
+        return {};
+      }
+    }    
 
-    const parsed = JSON.parse(serializedState);
-    if (!isPlainObject(parsed)) {
-      return {};
+    // Apply migrations
+    if ("actions" in state && isPlainObject(state.actions)) {
+      let actions = migrateDockStateToProfileKeyed(state.actions);
+      actions = migrateKeysStateToProfileKeyed(actions);
+      state.actions = updateActionsState(actions);
+    }
+    
+    if ("settings" in state && isPlainObject(state.settings)) {
+      state.settings = migrateFontFamily(state.settings);
     }
 
-    const state: Record<string, unknown> = { ...parsed };
+    if ("webPubSettings" in state && isPlainObject(state.webPubSettings)) {
+      state.webPubSettings = migrateFontFamily(state.webPubSettings);
+    }
+
+    if ("actions" in state && isPlainObject(state.actions)) {
+      let actions = updateActionsState(state.actions);
+      // Migrate dock state to profile-keyed format if needed
+      // Old dock state only applied to epub profile
+      state.actions = migrateDockStateToProfileKeyed(actions);
+    }
 
     // Version-gated schema migrations slot in here as the persisted shape
     // evolves, keyed off `state.__version` (absent === legacy v0), e.g.
@@ -144,7 +274,7 @@ const loadState = (storageKey: string = DEFAULT_STORAGE_KEY): Record<string, unk
     }
 
     return state;
-  } catch (err) {
+  } catch {
     return {};
   }
 };
@@ -161,7 +291,10 @@ const saveState = (state: any, storageKey?: string, externalReducers: Record<str
     if (state.settings) stateToPersist.settings = state.settings;
     if (state.theming) stateToPersist.theming = state.theming;
     if (state.preferences) stateToPersist.preferences = state.preferences;
+    if (state.globalPreferences) stateToPersist.globalPreferences = state.globalPreferences;
     if (state.webPubSettings) stateToPersist.webPubSettings = state.webPubSettings;
+    if (state.divinaSettings) stateToPersist.divinaSettings = state.divinaSettings;
+    if (state.audioSettings) stateToPersist.audioSettings = state.audioSettings;
     
     // External reducers to persist
     Object.entries(externalReducers).forEach(([key, config]) => {
@@ -189,7 +322,11 @@ export const makeStore = (storageKey?: string, externalReducers: Record<string, 
     actions: actionsReducer,
     publication: publicationReducer,
     preferences: preferencesReducer,
+    globalPreferences: globalPreferencesReducer,
     webPubSettings: webPubSettingsReducer,
+    divinaSettings: divinaSettingsReducer,
+    audioSettings: audioSettingsReducer,
+    player: playerReducer,
     ...Object.entries(externalReducers).reduce((acc, [key, config]) => ({
       ...acc,
       [key]: config.reducer
@@ -216,7 +353,10 @@ export const makeStore = (storageKey?: string, externalReducers: Record<string, 
     settings: hydrateSlice("settings", settingsReducer),
     theming: hydrateSlice("theming", themeReducer),
     preferences: hydrateSlice("preferences", preferencesReducer),
+    globalPreferences: hydrateSlice("globalPreferences", globalPreferencesReducer),
     webPubSettings: hydrateSlice("webPubSettings", webPubSettingsReducer),
+    divinaSettings: hydrateSlice("divinaSettings", divinaSettingsReducer),
+    audioSettings: hydrateSlice("audioSettings", audioSettingsReducer),
     // Include persisted state for external reducers that have it
     ...Object.entries(externalReducers).reduce((acc, [key, config]) => {
       if (config.persist && persistedState[key] !== undefined) {

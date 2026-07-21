@@ -100,3 +100,27 @@ export enum ThRunningHeadFormat {
   // titleAndChapter = "titleAndChapter",
   none = "none"
 }
+
+export enum ThAudioPlayerComponent {
+  cover = "cover",
+  metadata = "metadata",
+  playbackControls = "playbackControls",
+  progressBar = "progressBar",
+  mediaActions = "mediaActions"
+}
+
+export enum ThAudioProgressBarVariant {
+  normal = "normal",
+  segmented = "segmented"
+}
+
+export enum ThAudioPublicationMetadataComponent {
+  title = "title",
+  titleWithSubtitle = "titleWithSubtitle",
+  subtitleWithTitle = "subtitleWithTitle",
+  authors = "authors"
+}
+
+type TitleVariant = ThAudioPublicationMetadataComponent.title | ThAudioPublicationMetadataComponent.titleWithSubtitle | ThAudioPublicationMetadataComponent.subtitleWithTitle;
+
+export type ThPublicationMetadataOrder = [TitleVariant] | [TitleVariant, ThAudioPublicationMetadataComponent.authors] | [ThAudioPublicationMetadataComponent.authors, TitleVariant];

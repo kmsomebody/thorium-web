@@ -1,15 +1,14 @@
-"use client";
-
-import { UnstableShortcutMetaKeywords, UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
+import { DivinaQuality } from "@readium/navigator";
+import { ShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
-import { 
-  ThActionsKeys, 
-  ThBreakpoints, 
-  ThDockingTypes, 
-  ThDockingKeys, 
-  ThSettingsKeys, 
-  ThSheetTypes, 
-  ThThemeKeys,  
+import {
+  ThActionsKeys,
+  ThBreakpoints,
+  ThDockingTypes,
+  ThDockingKeys,
+  ThSettingsKeys,
+  ThSheetTypes,
+  ThThemeKeys,
   ThSheetHeaderVariant,
   ThLayoutUI,
   ThBackLinkVariant,
@@ -30,19 +29,27 @@ import {
   defaultJumpToPositionAction,
   defaultContentProtectionConfig,
   defaultFontCollection,
-  defaultLetterSpacing, 
-  defaultLineHeights, 
-  defaultParagraphIndent, 
-  defaultParagraphSpacing, 
-  defaultSpacingPresets, 
-  defaultSpacingPresetsOrder, 
-  defaultSpacingSettingsMain, 
-  defaultSpacingSettingsSubpanel, 
-  defaultTextSettingsMain, 
-  defaultTextSettingsSubpanel, 
-  defaultWordSpacing, 
+  defaultLetterSpacing,
+  defaultLineHeights,
+  defaultParagraphIndent,
+  defaultParagraphSpacing,
+  defaultSpacingPresets,
+  defaultSpacingPresetsOrder,
+  defaultSpacingSettingsMain,
+  defaultSpacingSettingsSubpanel,
+  defaultTextSettingsMain,
+  defaultTextSettingsSubpanel,
+  defaultWordSpacing,
   defaultZoom,
-  tamilCollection
+  // Language-specific font collections
+  arabicFarsiCollection,
+  chineseSimplifiedCollection,
+  chineseTraditionalCollection,
+  hebrewCollection,
+  japaneseCollection,
+  japaneseVerticalCollection,
+  koreanCollection,
+  tamilCollection,
 } from "./models";
 import { createPreferences, ThPreferences, DefaultKeys } from "./preferences";
 
@@ -107,6 +114,20 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
               displayInImmersive: true,
               displayInFullscreen: true
             }
+          },
+          divina: {
+            default: {
+              variants: ThRunningHeadFormat.title,
+              displayInImmersive: true,
+              displayInFullscreen: true
+            },
+            breakpoints: {
+              [ThBreakpoints.compact]: {
+                variants: ThRunningHeadFormat.title,
+                displayInImmersive: false,
+                displayInFullscreen: true
+              }
+            }
           }
         }
       }
@@ -158,11 +179,33 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         webPub: {
           default: {
             variants: [
-              ThProgressionFormat.readingOrderIndex, 
+              ThProgressionFormat.readingOrderIndex,
               ThProgressionFormat.none
             ],
             displayInImmersive: true,
             displayInFullscreen: true
+          }
+        },
+        divina: {
+          default: {
+            variants: [
+              ThProgressionFormat.positionsOfTotal,
+              ThProgressionFormat.overallProgression,
+              ThProgressionFormat.none
+            ],
+            displayInImmersive: true,
+            displayInFullscreen: true
+          },
+          breakpoints: {
+            [ThBreakpoints.compact]: {
+              variants: [
+                ThProgressionFormat.positions,
+                ThProgressionFormat.overallProgression,
+                ThProgressionFormat.none
+              ],
+              displayInImmersive: false,
+              displayInFullscreen: true
+            }
           }
         }
       }
@@ -179,7 +222,8 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       ui: {
         reflow: ThLayoutUI.layered,
         fxl: ThLayoutUI.layered,
-        webPub: ThLayoutUI.stacked
+        webPub: ThLayoutUI.stacked,
+        divina: ThLayoutUI.layered,
       },
       radius: 5, // border-radius of containers
       spacing: 20, // padding of containers/sheets
@@ -190,7 +234,9 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       constraints: {
         [ThSheetTypes.bottomSheet]: 600, // Max-width of all bottom sheets
         [ThSheetTypes.popover]: 600, // Max-width of all popover sheets
-        pagination: 1024 // Max-width of pagination component
+        [ThSheetTypes.modal]: 600, // Max-width of all modal sheets
+        pagination: 1024, // Max-width of pagination component
+        dropdown: 250 // Max-height of main UI dropdowns
       }
     },
     breakpoints: {
@@ -213,6 +259,11 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         ThThemeKeys.contrast3
       ],
       fxlOrder: [
+        "auto",
+        ThThemeKeys.light,
+        ThThemeKeys.dark
+      ],
+      divinaOrder: [
         "auto",
         ThThemeKeys.light,
         ThThemeKeys.dark
@@ -269,8 +320,9 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
     }
   },
   shortcuts: {
-    representation: UnstableShortcutRepresentation.symbol,
-    joiner: "+"
+    representation: ShortcutRepresentation.symbol,
+    joiner: "+",
+    displayIn: ["tooltip", "menuItem"]
   },
   actions: {
     reflowOrder: [
@@ -290,18 +342,18 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       ThActionsKeys.toc,
       ThActionsKeys.fullscreen
     ],
-    collapse: {
-      // Number of partially icons to display
-      // value "all" a keyword for the length of displayOrder above
-      // Icons with visibility always are excluded from collapsing
-      [ThBreakpoints.compact]: 2,
-      [ThBreakpoints.medium]: 3
-    }, 
+    divinaOrder: [
+      ThActionsKeys.settings,
+      ThActionsKeys.toc,
+      ThActionsKeys.fullscreen,
+      ThActionsKeys.jumpToPosition
+    ],
+    collapse: true,
     keys: {
       [ThActionsKeys.settings]: defaultSettingsAction,
       [ThActionsKeys.fullscreen]: defaultFullscreenAction,
       [ThActionsKeys.toc]: defaultTocAction,
-      [ThActionsKeys.jumpToPosition]: defaultJumpToPositionAction
+      [ThActionsKeys.jumpToPosition]: defaultJumpToPositionAction,
     }
   },
   docking: {
@@ -351,13 +403,24 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       ThSettingsKeys.textGroup,
       ThSettingsKeys.spacingGroup
     ],
+    divinaOrder: [
+      ThSettingsKeys.theme,
+      ThSettingsKeys.divinaLayout,
+      ThSettingsKeys.divinaSpreads,
+      ThSettingsKeys.divinaStripWidth,
+      ThSettingsKeys.divinaQuality
+    ],
     keys: {
       [ThSettingsKeys.fontFamily]: {
         default: defaultFontCollection,
-        tamil: {
-          supportedLanguages: ["ta"],
-          fonts: tamilCollection
-        }
+        arabic: { supportedLanguages: ["ar", "fa"], fonts: arabicFarsiCollection },
+        hebrew: { supportedLanguages: ["he"], fonts: hebrewCollection },
+        "chinese-simplified": { supportedLanguages: ["zh", "zh-hans", "zh-cn"], fonts: chineseSimplifiedCollection },
+        "chinese-traditional": { supportedLanguages: ["zh-hant", "zh-tw", "zh-hk"], fonts: chineseTraditionalCollection },
+        japanese: { supportedLanguages: ["ja"], fonts: japaneseCollection },
+        "japanese-vertical": { supportedLanguages: ["ja-v"], fonts: japaneseVerticalCollection },
+        korean: { supportedLanguages: ["ko"], fonts: koreanCollection },
+        tamil: { supportedLanguages: ["ta"], fonts: tamilCollection }
       },
       [ThSettingsKeys.letterSpacing]: defaultLetterSpacing,
       [ThSettingsKeys.lineHeight]: {
@@ -367,7 +430,10 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
       [ThSettingsKeys.paragraphIndent]: defaultParagraphIndent,
       [ThSettingsKeys.paragraphSpacing]: defaultParagraphSpacing,
       [ThSettingsKeys.wordSpacing]: defaultWordSpacing,
-      [ThSettingsKeys.zoom]: defaultZoom
+      [ThSettingsKeys.zoom]: defaultZoom,
+      [ThSettingsKeys.divinaQuality]: {
+        choices: [DivinaQuality.auto, DivinaQuality.low, DivinaQuality.high, DivinaQuality.max]
+      }
     },
     text: {
       header: ThSheetHeaderVariant.previous,

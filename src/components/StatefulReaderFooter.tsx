@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import readerStyles from "./assets/styles/thorium-web.reader.app.module.css";
 import readerPaginationStyles from "./assets/styles/thorium-web.reader.pagination.module.css";
@@ -14,11 +14,12 @@ import { StatefulReaderPagination } from "./StatefulReaderPagination";
 import { ThPaginationLinkProps } from "@/core/Components/Reader/ThPagination";
 
 import { useNavigator } from "@/core/Navigator";
-import { useFocusWithin } from "react-aria";
+import { useFocusWithin, useLocale } from "react-aria";
 import { useI18n } from "@/i18n/useI18n";
 
 import { setHovering } from "@/lib/readerReducer";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useIsScroll } from "@/hooks";
 
 import classNames from "classnames";
 
@@ -32,15 +33,16 @@ export const StatefulReaderFooter = ({
   progressionFormatFallback: ThProgressionFormat | ThProgressionFormat[];
 }) => {
   const { t } = useI18n();
+  const { direction } = useLocale();
   const footerRef = useRef<HTMLDivElement>(null);
-  const readerProfile = useAppSelector(state => state.reader.profile);
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isHovering = useAppSelector(state => state.reader.isHovering);
   const hasScrollAffordance = useAppSelector(state => state.reader.hasScrollAffordance);
-  const scroll = useAppSelector(state => state.settings.scroll);
+  const isRTL = useAppSelector(state => state.publication.isRTL);
   const isFXL = useAppSelector(state => state.publication.isFXL);
-  const isScroll = scroll && !isFXL;
-  const breakpoint = useAppSelector(state => state.theming.breakpoint);
+  const profile = useAppSelector(state => state.reader.profile);
+  const isScroll = useIsScroll();
+  const breakpoint = useAppSelector(state => state.theming.containerBreakpoint);
   const reducedMotion = useAppSelector(state => state.theming.prefersReducedMotion);
   const timeline = useAppSelector(state => state.publication.unstableTimeline);
 
@@ -67,51 +69,56 @@ export const StatefulReaderFooter = ({
     }
   };
 
-  const { previousLocator, nextLocator, go } = useNavigator();
+  const { previousLocator, nextLocator, go } = useNavigator().unified;
+
+  const buildNode = useCallback((
+    locator: ReturnType<typeof previousLocator>,
+    title: string | undefined,
+    compactKey: string,
+    descriptiveKey: string
+  ) => {
+    if (!locator) return undefined;
+
+    return breakpoint !== ThBreakpoints.compact && breakpoint !== ThBreakpoints.medium ? (
+      <>
+        <span className={ readerStyles.srOnly }>{ t(descriptiveKey) }</span>
+        <span className={ readerPaginationStyles.label }>{ title || locator.title || t(compactKey) }</span>
+      </>
+    ) : (
+      <span className={ readerPaginationStyles.label }>{ t(compactKey) }</span>
+    );
+  }, [t, breakpoint]);
 
   const updateLinks = useCallback(() => {
-    const links: { previous?: ThPaginationLinkProps; next?: ThPaginationLinkProps } = {
-      previous: undefined,
-      next: undefined
-    };
-
     const previous = previousLocator();
     const next = nextLocator();
 
-    if (previous) {
-      links.previous = {
-        node: breakpoint !== ThBreakpoints.compact && breakpoint !== ThBreakpoints.medium ? (
-          <>
-            <span className={ readerStyles.srOnly }>{ t(isFXL ? "reader.actions.goToPreviousPage.descriptive" : "reader.actions.goToPreviousChapter.descriptive") }</span>
-            <span className={ readerPaginationStyles.label }>{ timeline?.previousItem?.title || previous.title || t(isFXL ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact") }</span>
-          </>
-        ) : (
-          <>
-            <span className={ readerPaginationStyles.label }>{ t(isFXL ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact") }</span>
-          </>
-        ),
-        onPress: () => go(previous, !reducedMotion, () => {})
-      }
-    }
+    // Divina resources are pages regardless of layout, like FXL
+    const pageBased = isFXL || profile === "divina";
+    const previousLink: ThPaginationLinkProps | undefined = previous ? {
+      node: buildNode(
+        previous,
+        timeline?.previousItem?.title,
+        pageBased ? "reader.actions.goToPreviousPage.compact" : "reader.actions.goToPreviousChapter.compact",
+        pageBased ? "reader.actions.goToPreviousPage.descriptive" : "reader.actions.goToPreviousChapter.descriptive"
+      ),
+      onPress: () => go(previous, !reducedMotion, () => {})
+    } : undefined;
 
-    if (next) {
-      links.next = {
-        node: breakpoint !== ThBreakpoints.compact && breakpoint !== ThBreakpoints.medium ? (
-          <>
-            <span className={ readerStyles.srOnly }>{ t(isFXL ? "reader.actions.goToNextPage.descriptive" : "reader.actions.goToNextChapter.descriptive") }</span>
-            <span className={ readerPaginationStyles.label }>{ timeline?.nextItem?.title || next.title || t(isFXL ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact") }</span>
-          </>
-        ) : ( 
-          <>
-            <span className={ readerPaginationStyles.label }>{ t(isFXL ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact") }</span>
-          </>
-        ),
-        onPress: () => go(next, !reducedMotion, () => {})
-      }
-    }
+    const nextLink: ThPaginationLinkProps | undefined = next ? {
+      node: buildNode(
+        next,
+        timeline?.nextItem?.title,
+        pageBased ? "reader.actions.goToNextPage.compact" : "reader.actions.goToNextChapter.compact",
+        pageBased ? "reader.actions.goToNextPage.descriptive" : "reader.actions.goToNextChapter.descriptive"
+      ),
+      onPress: () => go(next, !reducedMotion, () => {})
+    } : undefined;
 
-    return links;
-  }, [go, previousLocator, nextLocator, t, timeline, breakpoint, reducedMotion, isFXL]);
+    return isRTL
+      ? { left: nextLink, right: previousLink }
+      : { left: previousLink, right: nextLink };
+  }, [go, previousLocator, nextLocator, buildNode, timeline, reducedMotion, isFXL, isRTL, profile]);
 
   useEffect(() => {
     updateLinks();
@@ -129,46 +136,47 @@ export const StatefulReaderFooter = ({
 
   return(
     <>
-    <ThInteractiveOverlay 
+    <ThInteractiveOverlay
       className={ classNames(readerStyles.barOverlay, readerStyles.footerOverlay) }
       isActive={ layout === ThLayoutUI.layered && isImmersive && !isHovering }
       onMouseEnter={ setHover }
       onMouseLeave={ removeHover }
     />
-    
-    <ThFooter 
+
+    <ThFooter
       ref={ footerRef }
       className={ readerStyles.bottomBar }
-      aria-label={ t("reader.app.footer.label") } 
-      onMouseEnter={ setHover } 
+      aria-label={ t("reader.app.footer.label") }
+      onMouseEnter={ setHover }
       onMouseLeave={ removeHover }
       { ...focusWithinProps }
     >
-      { (isScroll || readerProfile === "webPub")
-        ? <StatefulReaderPagination 
+      { (isScroll)
+        ? <StatefulReaderPagination
             aria-label={ t("reader.navigation.scroll.wrapper") }
-            links={ updateLinks() } 
+            links={ updateLinks() }
+            dir={ direction }
             compounds={ {
               listItem: {
                 className: readerPaginationStyles.listItem
               },
-              previousButton: {
-                className: readerPaginationStyles.previousButton,
+              leftButton: {
+                className: readerPaginationStyles.leftButton,
                 preventFocusOnPress: true
               },
-              nextButton: {
-                className: readerPaginationStyles.nextButton,
+              rightButton: {
+                className: readerPaginationStyles.rightButton,
                 preventFocusOnPress: true
               }
-            } } 
+            } }
           >
-            <StatefulReaderProgression 
-              className={ readerPaginationStyles.progression } 
+            <StatefulReaderProgression
+              className={ readerPaginationStyles.progression }
               formatPref={ progressionFormatPref }
               fallbackVariant={ progressionFormatFallback }
             />
-          </StatefulReaderPagination> 
-        : <StatefulReaderProgression 
+          </StatefulReaderPagination>
+        : <StatefulReaderProgression
             formatPref={ progressionFormatPref }
             fallbackVariant={ progressionFormatFallback }
           /> }

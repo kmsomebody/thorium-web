@@ -1,0 +1,139 @@
+.wrapper {
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  grid-template-areas:
+    "chapter chapter chapter"
+    "progress progress progress"
+    "elapsed . remaining";
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  container-type: inline-size;
+}
+
+.current {
+  grid-area: chapter;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slider {
+  grid-area: progress;
+}
+
+.track {
+  grid-area: progress;
+  position: relative;
+  height: 30px;
+  width: auto;
+  box-sizing: border-box;
+  margin-inline: calc(var(--th-layout-spacing) / 2);
+}
+
+.track::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background: var(--th-theme-subdue);
+  height: 3px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.thumb {
+  z-index: 2;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: var(--th-theme-text);
+  border: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.slider[data-disabled] .track::before {
+  background: var(--th-theme-disable);
+}
+
+.slider[data-disabled] .thumb {
+  background: var(--th-theme-disable);
+}
+
+.slider[data-disabled] .seekableRange {
+  background: var(--th-theme-disable);
+}
+
+.slider[data-disabled] .current,
+.slider[data-disabled] .elapsed,
+.slider[data-disabled] .remaining {
+  color: var(--th-theme-disable);
+}
+
+.thumb[data-dragging] {
+  background: var(--th-theme-subdue);
+}
+
+.thumb[data-focus-visible] {
+  outline: 2px solid var(--th-theme-focus);
+}
+
+.seekableRange {
+  position: absolute;
+  height: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: color-mix(in srgb, var(--th-theme-text) 55%, var(--th-theme-subdue));
+  pointer-events: none;
+  border-radius: 1px;
+  z-index: 1;
+}
+
+.tick {
+  position: absolute;
+  width: 1px;
+  height: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--th-theme-text);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tooltip {
+  background-color: var(--th-theme-text);
+  color: var(--th-theme-background);
+  border-radius: var(--th-layout-radius);
+  padding: calc(var(--th-layout-spacing) / 2);
+  font-size: 0.75rem;
+  pointer-events: none;
+  max-width: 320px;
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.elapsed {
+  grid-area: elapsed;
+  justify-self: start;
+  font-size: 0.875rem;
+  color: var(--th-theme-text);
+}
+
+.remaining {
+  grid-area: remaining;
+  justify-self: end;
+  font-size: 0.875rem;
+  color: var(--th-theme-text);
+}
+
+@container (max-width: 300px) {
+  .current {
+    font-size: 0.875rem;
+  }
+}

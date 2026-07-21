@@ -19,13 +19,14 @@ export interface ThPopoverProps extends Omit<PopoverProps, "children">, ThContai
   }
 }
 
-export const ThPopover = ({ 
+export const ThPopover = ({
   ref,
+  id,
   triggerRef,
   focusOptions,
   compounds,
   maxHeight,
-  children, 
+  children,
   className,
   ...props
 }: ThPopoverProps) => {
@@ -57,7 +58,7 @@ export const ThPopover = ({
       }}
       { ...props }
     >
-      <Dialog { ...compounds?.dialog }>
+      <Dialog id={ id } { ...compounds?.dialog }>
         { children }
       </Dialog>
     </Popover>

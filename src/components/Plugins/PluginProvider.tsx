@@ -8,6 +8,7 @@ interface ThPluginContextType {
   settingsComponentsMap: Record<string, SettingComponent>;
   textSettingsComponentsMap: Record<string, SettingComponent>;
   spacingSettingsComponentsMap: Record<string, SettingComponent>;
+  primaryAudioActionsMap: Record<string, ActionComponent>;
   registerPlugin: typeof ThPluginRegistry.register;
   unregisterPlugin: typeof ThPluginRegistry.unregister;
 }
@@ -17,6 +18,7 @@ const ThPluginContext = createContext<ThPluginContextType>({
   settingsComponentsMap: {} as Record<string, SettingComponent>,
   textSettingsComponentsMap: {} as Record<string, SettingComponent>,
   spacingSettingsComponentsMap: {} as Record<string, SettingComponent>,
+  primaryAudioActionsMap: {} as Record<string, ActionComponent>,
   registerPlugin: ThPluginRegistry.register.bind(ThPluginRegistry),
   unregisterPlugin: ThPluginRegistry.unregister.bind(ThPluginRegistry)
 });
@@ -29,6 +31,7 @@ export const ThPluginProvider = ({ children }: { children: React.ReactNode }) =>
     settingsComponentsMap: Record<string, SettingComponent>;
     textSettingsComponentsMap: Record<string, SettingComponent>;
     spacingSettingsComponentsMap: Record<string, SettingComponent>;
+    primaryAudioActionsMap: Record<string, ActionComponent>;
   }>(() => {
     // Force a fresh retrieval of component maps
     const maps = ThPluginRegistry.getComponentMaps();
@@ -59,7 +62,7 @@ export const ThPluginProvider = ({ children }: { children: React.ReactNode }) =>
       setComponentMaps({
         ...maps,
         textSettingsComponentsMap: getTypedSettingsComponents(maps.settingsComponentsMap, "text"),
-        spacingSettingsComponentsMap: getTypedSettingsComponents(maps.settingsComponentsMap, "spacing")
+        spacingSettingsComponentsMap: getTypedSettingsComponents(maps.settingsComponentsMap, "spacing"),
       });
     };
         

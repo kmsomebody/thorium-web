@@ -46,7 +46,7 @@ export const isIpadOS = () => {
         && navigator.userAgent.includes("Intel"));
 }
 
-// Stopgap measure for fullscreen on iPadOS, do not use elsewhere
+// Covers all iOS/iPadOS: iPhone/iPod/iPad by platform string + desktop-class iPadOS by UA sniff
 export const isIOSish = () => {
   const AppleMobilePattern = /ipod|iphone|ipad/i;
   const platform = getPlatform();

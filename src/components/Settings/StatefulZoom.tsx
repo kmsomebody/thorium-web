@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 
 import { ThSettingsKeys, ThSettingsRangeVariant } from "@/preferences";
+import { SETTINGS_KEY_TO_PREFERENCE } from "./helpers/settingsKeyMapping";
 
 import Decrease from "./assets/icons/text_decrease.svg";
 import Increase from "./assets/icons/text_increase.svg";
@@ -16,10 +17,13 @@ import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useNavigator } from "@/core/Navigator/hooks";
 import { useI18n } from "@/i18n/useI18n";
 import { usePlaceholder } from "./hooks/usePlaceholder";
+import { useEffectiveRange } from "./hooks/useEffectiveRange";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useReaderSetting } from "./hooks/useReaderSetting";
 import { setFontSize } from "@/lib/settingsReducer";
 import { setWebPubZoom } from "@/lib/webPubSettingsReducer";
+import { EpubPreferencesEditor, WebPubPreferencesEditor } from "@readium/navigator";
 
 export const StatefulZoom = () => {
   const { preferences } = usePreferences();
@@ -27,9 +31,7 @@ export const StatefulZoom = () => {
 
   const readerProfile = useAppSelector((state) => state.reader.profile);
   const isFXL = useAppSelector((state) => state.publication.isFXL);
-  const fontSize = useAppSelector((state) => state.settings.fontSize) || 1;
-  const webPubZoom = useAppSelector((state) => state.webPubSettings.zoom) || 1;
-  const derivedState = readerProfile === "webPub" ? webPubZoom : fontSize;
+  const derivedState = useReaderSetting("zoom");
   
   const dispatch = useAppDispatch();
   
@@ -37,46 +39,40 @@ export const StatefulZoom = () => {
     getSetting, 
     submitPreferences,
     preferencesEditor 
-  } = useNavigator();
+  } = useNavigator().visual;
 
+  // Somewhat wrong to cast here, although we control this
+  // because we have a component that is relying on two different things
+  // so TypeScript has a very hard time with this.
+  // TODO: FIX root cause of the issue
   const preferenceEditorProperty = readerProfile === "webPub" 
-    ? preferencesEditor?.zoom 
+    ? (preferencesEditor as WebPubPreferencesEditor)?.zoom 
     : isFXL 
-      ? preferencesEditor?.zoom 
-      : preferencesEditor?.fontSize;
+      ? (preferencesEditor as any)?.zoom 
+      : (preferencesEditor as EpubPreferencesEditor)?.fontSize;
+
+  const prefKey = readerProfile === "webPub"
+    ? SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.zoom]
+    : "fontSize" as const;
 
   const updatePreference = useCallback(async (value: number | number[]) => {
+    const normalizedValue = Array.isArray(value) ? value[0] : value;
+    await submitPreferences({ [prefKey]: normalizedValue });
     if (readerProfile === "webPub") {
-      await submitPreferences({ zoom: Array.isArray(value) ? value[0] : value });
-      dispatch(setWebPubZoom(getSetting("zoom")));
+      dispatch(setWebPubZoom(getSetting(prefKey)));
     } else {
-      await submitPreferences({ fontSize: Array.isArray(value) ? value[0] : value });
-      dispatch(setFontSize(getSetting("fontSize")));
+      dispatch(setFontSize(getSetting(prefKey)));
     }
-  }, [readerProfile, submitPreferences, getSetting, dispatch]);
+  }, [readerProfile, prefKey, submitPreferences, getSetting, dispatch]);
 
-  const getEffectiveRange = (preferred: [number, number], supportedRange: [number, number] | undefined): [number, number] => {
-    if (!supportedRange) {
-      return preferred
-    }
-    if (preferred && isRangeWithinSupportedRange(preferred, supportedRange)) {
-      return preferred;
-    }
-    return supportedRange;
-  }
-  
-  const isRangeWithinSupportedRange = (range: [number, number], supportedRange: [number, number]): boolean => {
-    return Math.min(range[0], range[1]) >= Math.min(supportedRange[0], supportedRange[1]) &&
-           Math.max(range[0], range[1]) <= Math.max(supportedRange[0], supportedRange[1]);
-  }
+  const zoomConfig = preferences.settings.keys[ThSettingsKeys.zoom];
+  const { range: effectiveRange } = useEffectiveRange(zoomConfig.range, preferenceEditorProperty?.supportedRange);
 
   const zoomRangeConfig = {
-    variant: preferences.settings.keys[ThSettingsKeys.zoom].variant,
-    placeholder: preferences.settings.keys[ThSettingsKeys.zoom].placeholder,
-    range: preferenceEditorProperty?.supportedRange
-      ? getEffectiveRange(preferences.settings.keys[ThSettingsKeys.zoom].range, preferenceEditorProperty.supportedRange)
-      : preferences.settings.keys[ThSettingsKeys.zoom].range,
-    step: preferences.settings.keys[ThSettingsKeys.zoom].step
+    variant: zoomConfig.variant,
+    placeholder: zoomConfig.placeholder,
+    range: effectiveRange,
+    step: zoomConfig.step
   }
 
   const placeholderText = usePlaceholder(zoomRangeConfig.placeholder, zoomRangeConfig.range);

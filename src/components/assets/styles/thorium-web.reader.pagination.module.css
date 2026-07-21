@@ -16,7 +16,7 @@
   list-style: none;
 }
 
-.listItem:has(.previousButton) {
+.listItem:has(.leftButton) {
   grid-area: pagination-start;
   justify-self: start;
 }
@@ -26,10 +26,11 @@
   justify-self: center;
 }
 
-.listItem:has(.nextButton) {
+.listItem:has(.rightButton) {
   grid-area: pagination-end;
   justify-self: end;
 }
+
 
 .listItem button {
   box-sizing: border-box;
@@ -42,13 +43,14 @@
   align-items: center;
 }
 
-.nextButton {
+.rightButton {
   margin-inline-start: auto;
   text-align: end;
 }
 
 .listItem button[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
 }
 
 .listItem button[data-focus-visible] {
@@ -72,5 +74,5 @@
   flex: none;
   width: var(--th-icon-size, 24px);
   height: var(--th-icon-size, 24px);
-  fill: var(--th-theme-text);
+  fill: currentColor;
 }

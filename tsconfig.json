@@ -34,6 +34,7 @@
   "include": [
     "svgr.d.ts",
     "react.d.ts",
+    "css.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",

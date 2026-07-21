@@ -47,6 +47,7 @@ const MySwitch = () => {
 The Core package provides various UI components organized into categories:
 
 - `Actions`: Components that are used for actions (collapsible toolbar).
+- `Audio`: Components for building audio player interfaces.
 - `Buttons`: Components that are used for buttons, with default icons.
 - `Containers`: Components that are used for modals, popovers, etc.
 - `Forms`: Components that are used for collecting user input.
@@ -54,6 +55,18 @@ The Core package provides various UI components organized into categories:
 - `Reader`: Components for the general interface of the reader.
 - `Settings`: Components for settings (switche, slider, numberfield, etc.).
 
+
+## Audio Components
+
+A core primitive for building audio player interfaces.
+
+```tsx
+import { ThAudioProgress } from "@edrlab/thorium-web/core/components";
+```
+
+- `ThAudioProgress`: A seekable progress bar displaying elapsed time, remaining time, an optional chapter label, and seekable range overlays.
+
+Please refer to the [Audio Components API documentation](./API/Components/Audio.md) for more information.
 
 ## Actions Components
 

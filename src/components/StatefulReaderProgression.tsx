@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 
 import progressionStyles from "./assets/styles/thorium-web.reader.progression.module.css";
 
@@ -35,7 +35,6 @@ export const StatefulReaderProgression = ({
   const isHovering = useAppSelector(state => state.reader.isHovering);
   const breakpoint = useAppSelector(state => state.theming.breakpoint);
 
-  const [displayText, setDisplayText] = useState("");
   
   const fallbackFormat = useMemo(() => {
     return {
@@ -84,11 +83,10 @@ export const StatefulReaderProgression = ({
     return variants;
   }, [variants, unstableTimeline?.progression, fallbackFormat, isImmersive, isHovering, isFullscreen, displayInImmersive, displayInFullscreen]);
 
-  // Update display text based on current position and timeline
-  useEffect(() => {
+  // Compute display text based on current position and timeline
+  const displayText = useMemo(() => {
     if (displayFormat === ThProgressionFormat.none || !unstableTimeline?.progression) {
-      setDisplayText("");
-      return;
+      return "";
     }
 
     const { 
@@ -181,8 +179,8 @@ export const StatefulReaderProgression = ({
         break;
     }
     
-    setDisplayText(text);
-  }, [displayFormat, unstableTimeline?.progression, t]);
+    return text;
+  }, [displayFormat, unstableTimeline, t]);
 
   if (!displayText || displayFormat === ThProgressionFormat.none) {
     return null;

@@ -21,7 +21,8 @@ export const DEFAULT_CONFIG: InitOptions = {
     loadPath: "/locales/{{lng}}/{{ns}}.json"
   },
   ns: ["thorium-shared", "thorium-web"],
-  defaultNS: ["thorium-web", "thorium-shared"]
+  defaultNS: ["thorium-web", "thorium-shared"],
+  returnEmptyString: false
 };
 
 export const initI18n = async (options: Partial<InitOptions> = {}) => {

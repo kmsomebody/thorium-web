@@ -10,9 +10,12 @@ export * from "./useLocalStorage";
 export * from "./useMediaQuery"
 export * from "./useMonochrome";
 export * from "./useIsClient";
+export * from "./useObservableCondition";
 export * from "./usePrevious";
 export * from "./useReducedMotion";
 export * from "./useReducedTransparency";
 export * from "./useTimeline";
+export * from "./Audio";
+export * from "./Divina";
 export * from "./Epub";
 export * from "./WebPub";

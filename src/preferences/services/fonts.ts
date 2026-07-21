@@ -1,6 +1,6 @@
 import { FontDefinition, VariableFontRangeConfig, WeightConfig, ThFontFamilyPref, FontCollection, ValidatedLanguageCollection } from "../models";
 
-import { ILinkInjectable, IUrlInjectable, IBlobInjectable } from "@readium/navigator";
+import { ILinkInjectable, IUrlInjectable, IBlobInjectable, ScriptMode } from "@readium/navigator";
 
 import { createBunnyFontResources } from "./createBunnyFontResources";
 import { createGoogleFontResources } from "./createGoogleFontResources";
@@ -25,7 +25,7 @@ export interface FontService {
   getInjectables: (options?: { language?: string } | { key?: string }, optimize?: boolean) => InjectableFontResources | null;
   getFontMetadata: (fontId: string) => FontMetadata;
   getFontCollection: (options?: { language?: string } | { key?: string }) => FontCollection;
-  resolveFontLanguage: (bcp47Tag: string | undefined, direction: "ltr" | "rtl") => string;
+  resolveFontLanguage: (bcp47Tag: string | undefined, scriptMode: ScriptMode) => string;
 }
 
 export const createFontService = (fontFamilyPref: ThFontFamilyPref): FontService => {
@@ -38,38 +38,38 @@ export const createFontService = (fontFamilyPref: ThFontFamilyPref): FontService
   
   /**
    * Resolves a BCP47 language tag to a supported language format based on specific rules and available font collections.
-   * 
+   *
    * Rules:
    * - First checks if the full BCP47 tag exists in supportedLanguages
    * - If not found, checks for { language }-{ scriptOrRegion } format
    * - Special case for Japanese (ja):
-   *   - For RTL direction, checks if "ja-v" is supported
+   *   - For cjk-vertical script mode, checks if "ja-v" is supported
    *   - Otherwise falls back to "ja" if supported
    * - Filters out specific language-script combinations:
    *   - Mongolian: "mn-mong" and "mn-cyrl"
    *   - Chinese: "zh-hant", "zh-tw", "zh-hk"
    * - If not filtered, falls back to { language } if supported
    * - Returns "default" if no match is found
-   * 
+   *
    * @param bcp47Tag - The BCP47 language tag to resolve
-   * @param direction - Text direction ("ltr" or "rtl")
+   * @param scriptMode - Script mode of the publication
    * @returns The resolved language tag or "default" if no match found
    */
   const resolveFontLanguage = (
-    bcp47Tag: string | undefined, 
-    direction: "ltr" | "rtl" = "ltr"
+    bcp47Tag: string | undefined,
+    scriptMode: ScriptMode = "ltr"
   ): string => {
     if (!bcp47Tag) return "default";
-    
+
     // Check direct match of full BCP47 tag
     if (allSupportedLanguages.includes(bcp47Tag)) {
       return bcp47Tag;
     }
-    
+
     const parts = bcp47Tag.split(/[-_]/);
     const language = parts[0].toLowerCase();
     const scriptOrRegion = parts[1]?.toLowerCase();
-    
+
     // Check { language }-{ scriptOrRegion } format
     if (scriptOrRegion) {
       const langScriptOrRegion = `${ language }-${ scriptOrRegion }`;
@@ -77,27 +77,27 @@ export const createFontService = (fontFamilyPref: ThFontFamilyPref): FontService
         return langScriptOrRegion;
       }
     }
-    
+
     // Special case for Japanese
     if (language === "ja" && !scriptOrRegion) {
-      if (direction === "rtl" && allSupportedLanguages.includes("ja-v")) {
+      if (scriptMode === "cjk-vertical" && allSupportedLanguages.includes("ja-v")) {
         return "ja-v";
       }
       if (allSupportedLanguages.includes("ja")) {
         return "ja";
       }
     }
-    
+
     // Special cases that should be filtered out
-    const shouldFilter = 
+    const shouldFilter =
       (language === "mn" && (scriptOrRegion === "mong" || scriptOrRegion === "cyrl")) ||
       (language === "zh" && (scriptOrRegion === "hant" || scriptOrRegion === "tw" || scriptOrRegion === "hk"));
-    
+
     // If not filtered, check if just the language is supported
     if (!shouldFilter && allSupportedLanguages.includes(language)) {
       return language;
     }
-    
+
     return "default";
   };
 

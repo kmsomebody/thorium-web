@@ -1,5 +1,88 @@
 # Core Hooks API Documentation
 
+## Audio Navigator Hook
+
+Manages audio publication playback and navigation.
+
+```typescript
+interface AudioNavigatorLoadProps {
+  publication: Publication;
+  listeners: AudioNavigatorListeners;
+  initialPosition?: Locator;
+  preferences?: IAudioPreferences;
+  defaults?: IAudioDefaults;
+  contentProtection?: IContentProtectionConfig;
+  audioContext?: AudioContext;
+}
+
+function useAudioNavigator(): {
+  AudioNavigatorLoad: (config: AudioNavigatorLoadProps, cb: Function) => void;
+  AudioNavigatorDestroy: (cb: Function) => void;
+  play: () => void;
+  pause: () => void;
+  stop: () => void;
+  seek: (time: number) => void;
+  jump: (seconds: number) => void;
+  skipForward: () => void;
+  skipBackward: () => void;
+  go: (locator: Locator, animated: boolean, callback: (ok: boolean) => void) => void;
+  goLink: (link: Link, animated: boolean, callback: (ok: boolean) => void) => void;
+  goForward: (animated: boolean, callback: (ok: boolean) => void) => void;
+  goBackward: (animated: boolean, callback: (ok: boolean) => void) => void;
+  currentLocator: () => Locator | undefined;
+  canGoBackward: () => boolean;
+  canGoForward: () => boolean;
+  isTrackStart: () => boolean;
+  isTrackEnd: () => boolean;
+  isPlaying: () => boolean;
+  isPaused: () => boolean;
+  duration: () => number;
+  currentTime: () => number;
+  preferencesEditor: PreferencesEditor | undefined;
+  getSetting: <K extends keyof AudioSettings>(settingKey: K) => AudioSettings[K] | undefined;
+  submitPreferences: (preferences: IAudioPreferences) => Promise<void>;
+};
+```
+
+**Features:**
+- Audio playback control (play, pause, stop, seek, jump)
+- Chapter and track navigation
+- Position tracking and locator management
+- Preferences and settings management
+
+> [!IMPORTANT]
+> When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/audio` package so that they all share the same instance, not from `@edrlab/thorium-web/core`.
+
+## Audio Settings Cache Hook
+
+Provides a stateless cache for audio settings, mapping React state to mutable refs. Values never go stale and do not trigger navigator re-initialization.
+
+```typescript
+interface AudioSettings {
+  volume: number;
+  playbackRate: number;
+  preservePitch: boolean;
+  skipBackwardInterval: number;
+  skipForwardInterval: number;
+  skipInterval: number;
+  pollInterval: number;
+  autoPlay: boolean;
+  enableMediaSession: boolean;
+}
+
+function useAudioSettingsCache(
+  volume: number,
+  playbackRate: number,
+  preservePitch: boolean,
+  skipBackwardInterval: number,
+  skipForwardInterval: number,
+  skipInterval: number,
+  pollInterval: number,
+  autoPlay: boolean,
+  enableMediaSession: boolean
+): React.MutableRefObject<{ settings: AudioSettings }>
+```
+
 ## Epub Navigator Hook
 
 Manages EPUB navigation and rendering.
@@ -14,6 +97,7 @@ interface EpubNavigatorLoadProps {
   preferences?: IEpubPreferences;
   defaults?: IEpubDefaults;
   injectables?: IInjectablesConfig;
+  contentProtection?: IContentProtectionConfig;
 }
 
 function useEpubNavigator(): {
@@ -50,8 +134,8 @@ function useEpubNavigator(): {
 
 **Example:**
 ```typescript
-const MyEpubReader = (rawManifest, selfHref) => {
-  const { 
+const MyEpubReader = ({ publication }) => {
+  const {
     EpubNavigatorLoad,
     EpubNavigatorDestroy,
     goLeft,
@@ -60,13 +144,17 @@ const MyEpubReader = (rawManifest, selfHref) => {
 
   useEffect(() => {
     EpubNavigatorLoad({
-      ...props
+      container: containerRef.current,
+      publication: publication,
+      listeners: {
+        // Your listeners here
+      }
     }, () => console.log("Navigator loaded"));
 
     return () => {
       EpubNavigatorDestroy(() => console.log("Navigator destroyed"));
     };
-  }, [rawManifest, selfHref]);
+  }, [publication]);
 
   return (
     <button onClick={() => goLeft(true, () => {})}>
@@ -93,6 +181,7 @@ interface WebPubNavigatorLoadProps {
   preferences?: IWebPubPreferences;
   defaults?: IWebPubDefaults;
   injectables?: IInjectablesConfig;
+  contentProtection?: IContentProtectionConfig;
 }
 
 function useWebPubNavigator(): {
@@ -243,6 +332,14 @@ function useReducedTransparency(
 
 ## Utility Hooks
 
+### useObservableCondition
+
+Converts React boolean state to ObservableCondition objects required by Readium Navigator peripherals API, enabling dynamic conditional behavior for keyboard and input peripherals.
+
+```typescript
+function useObservableCondition(value: boolean): ObservableCondition
+```
+
 ### useDocumentTitle
 
 Manages document title.
@@ -265,6 +362,7 @@ function useFullscreen(
   onChange?: (isFullscreen: boolean) => void
 ): {
   isFullscreen: boolean;
+  isSupported: boolean;
   handleFullscreen: () => void;
 }
 ```
@@ -273,20 +371,23 @@ function useFullscreen(
 - Toggles fullscreen mode
 - Provides current fullscreen state
 - Handles fullscreen change events
-- Client-side only functionality
+- No-op on iOS (Fullscreen API not supported)
 
 ### useIsClient
 
 Determines if code is running on client side.
 
 ```typescript
-function useIsClient(): boolean
+function useIsClient(): {
+  isClient: boolean;
+  isClientRef: React.MutableRefObject<boolean>;
+}
 ```
 
 **Features:**
-- Safe hydration handling
-- Uses useLayoutEffect for immediate detection
-- Returns false during SSR
+- Safe hydration handling — `isClient` is `false` during SSR, `true` after mount
+- `isClient` state for conditional rendering of client-only UI
+- `isClientRef` for reading inside stable callbacks without adding a reactive dep (ref identity is stable; `.current` always reflects the latest value)
 
 ### useLocalStorage
 

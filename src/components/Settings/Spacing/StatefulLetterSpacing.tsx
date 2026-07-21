@@ -3,6 +3,7 @@
 import { useCallback } from "react";
 
 import { ThSettingsKeys, ThSettingsRangeVariant, ThSpacingSettingsKeys } from "@/preferences";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
 
 import { StatefulSettingsItemProps } from "../models/settings";
 
@@ -11,36 +12,44 @@ import { StatefulSlider } from "../StatefulSlider";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useNavigator } from "@/core/Navigator";
+import { EpubPreferencesEditor } from "@readium/navigator";
 import { useI18n } from "@/i18n/useI18n";
 import { useSpacingPresets } from "./hooks/useSpacingPresets";
 import { usePlaceholder } from "../hooks/usePlaceholder";
+import { useEffectiveRange } from "../hooks/useEffectiveRange";
 
 export const StatefulLetterSpacing = ({ standalone = true }: StatefulSettingsItemProps) => {
   const { preferences } = usePreferences();
   const { t } = useI18n();
 
+  const config = preferences.settings.keys[ThSettingsKeys.letterSpacing];
+
+  const { getSetting, submitPreferences, preferencesEditor } = useNavigator().visual;
+
+  const { range } = useEffectiveRange(config.range, (preferencesEditor as EpubPreferencesEditor | undefined)?.letterSpacing?.supportedRange);
+
   const letterSpacingRangeConfig = {
-    variant: preferences.settings.keys[ThSettingsKeys.letterSpacing].variant,
-    placeholder: preferences.settings.keys[ThSettingsKeys.letterSpacing].placeholder,
-    range: preferences.settings.keys[ThSettingsKeys.letterSpacing].range,
-    step: preferences.settings.keys[ThSettingsKeys.letterSpacing].step
+    variant: config.variant,
+    placeholder: config.placeholder,
+    range,
+    step: config.step
   };
 
   const placeholderText = usePlaceholder(letterSpacingRangeConfig.placeholder, letterSpacingRangeConfig.range, "percent");
-  
-  const { getSetting, submitPreferences } = useNavigator();
 
   const { getEffectiveSpacingValue, setLetterSpacing, canBeReset } = useSpacingPresets();
 
   const letterSpacing = getEffectiveSpacingValue(ThSpacingSettingsKeys.letterSpacing);
 
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.letterSpacing];
+
   const updatePreference = useCallback(async (value: number | number[] | null) => {
     await submitPreferences({
-      letterSpacing: Array.isArray(value) ? value[0] : value
+      [prefKey]: Array.isArray(value) ? value[0] : value
     });
 
-    setLetterSpacing(getSetting("letterSpacing"));
-  }, [submitPreferences, getSetting, setLetterSpacing]);
+    setLetterSpacing(getSetting(prefKey));
+  }, [prefKey, submitPreferences, getSetting, setLetterSpacing]);
 
   return (
     <>

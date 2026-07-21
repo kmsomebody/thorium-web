@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  --audio-icon-base: var(--th-icon-size, 24px);
+}
+
+@container (max-width: 300px) {
+  .wrapper {
+    --th-icon-size: 18px;
+  }
+}
+
+.popover {
+  /* Override the default popover width — audio controls are more compact */
+  width: auto;
+  max-width: 95%;
+}

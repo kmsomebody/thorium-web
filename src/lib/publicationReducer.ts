@@ -1,28 +1,48 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { Locator } from "@readium/shared";
+import { ThemeTokens } from "@/preferences/hooks/useTheming";
+import { ScriptMode } from "@readium/navigator";
 import { UnstableTimeline } from "@/core/Hooks/useTimeline";
+import { TocItem, toEntryRef } from "@/helpers/buildTocTree";
+
+export interface AdjacentTimelineItem {
+  title: string;
+  href: string;
+}
 
 export interface PublicationReducerState {
   fontLanguage: string;
   isFXL: boolean;
+  /** The manifest itself declares layout: scrolled (e.g. webtoon divina) */
+  isManifestScrolled: boolean;
   isRTL: boolean;
+  scriptMode: ScriptMode;
   hasDisplayTransformability: boolean;
   positionsList: Locator[],
   atPublicationStart: boolean;
   atPublicationEnd: boolean;
   unstableTimeline?: UnstableTimeline;
+  adjacentTimelineItems: {
+    previous: AdjacentTimelineItem | null;
+    next: AdjacentTimelineItem | null;
+  };
+  coverTheme?: ThemeTokens;
 }
 
 const initialState: PublicationReducerState = {
   fontLanguage: "default",
   isFXL: false,
+  isManifestScrolled: false,
   isRTL: false,
+  scriptMode: "ltr",
   hasDisplayTransformability: false,
   positionsList: [],
   atPublicationStart: false,
   atPublicationEnd: false,
-  unstableTimeline: undefined
+  unstableTimeline: undefined,
+  adjacentTimelineItems: { previous: null, next: null },
+  coverTheme: undefined,
 }
 
 export const publicationSlice = createSlice({
@@ -35,8 +55,14 @@ export const publicationSlice = createSlice({
     setFXL: (state, action) => {
       state.isFXL = action.payload
     },
+    setManifestScrolled: (state, action) => {
+      state.isManifestScrolled = action.payload
+    },
     setRTL: (state, action) => {
       state.isRTL = action.payload
+    },
+    setScriptMode: (state, action) => {
+      state.scriptMode = action.payload
     },
     setHasDisplayTransformability: (state, action) => {
       state.hasDisplayTransformability = action.payload
@@ -67,32 +93,43 @@ export const publicationSlice = createSlice({
         state.unstableTimeline.toc = { tree: action.payload, currentEntry: undefined };
       }
     },
-    setTocEntry: (state, action) => {
+    setAdjacentTimelineItems: (state, action: { payload: { previous: AdjacentTimelineItem | null; next: AdjacentTimelineItem | null } }) => {
+      state.adjacentTimelineItems = action.payload;
+    },
+    setCoverTheme: (state, action: { payload: ThemeTokens | undefined }) => {
+      state.coverTheme = action.payload;
+    },
+    setTocEntry: (state, action: { payload: TocItem | null }) => {
+      const entry = action.payload ? toEntryRef(action.payload) : null;
       if (!state.unstableTimeline) {
         state.unstableTimeline = {
-          toc: { tree: undefined, currentEntry: action.payload }
+          toc: { tree: undefined, currentEntry: entry }
         };
       } else if (state.unstableTimeline.toc) {
-        state.unstableTimeline.toc.currentEntry = action.payload;
+        state.unstableTimeline.toc.currentEntry = entry;
       } else {
-        state.unstableTimeline.toc = { tree: undefined, currentEntry: action.payload };
+        state.unstableTimeline.toc = { tree: undefined, currentEntry: entry };
       }
     }
   }
 });
 
 // Action creators are generated for each case reducer function
-export const { 
+export const {
   setFontLanguage,
   setFXL,
+  setManifestScrolled,
   setRTL,
+  setScriptMode,
   setHasDisplayTransformability,
   setPositionsList,
   setPublicationStart,
   setPublicationEnd,
   setTimeline,
-  setTocTree, 
+  setTocTree,
   setTocEntry,
+  setAdjacentTimelineItems,
+  setCoverTheme,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;

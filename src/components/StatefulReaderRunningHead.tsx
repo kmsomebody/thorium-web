@@ -23,7 +23,7 @@ export const StatefulReaderRunningHead = ({
   const isImmersive = useAppSelector(state => state.reader.isImmersive);
   const isHovering = useAppSelector(state => state.reader.isHovering);
   const isFullscreen = useAppSelector(state => state.reader.isFullscreen);
-  const breakpoint = useAppSelector(state => state.theming.breakpoint);
+  const breakpoint = useAppSelector(state => state.theming.containerBreakpoint);
 
   // Get the fallback format based on isFXL
   const fallbackFormat = useMemo<ThFormatPrefValue<ThRunningHeadFormat>>(() => ({

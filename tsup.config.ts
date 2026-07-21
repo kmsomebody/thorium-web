@@ -11,8 +11,11 @@ export default defineConfig({
     "src/core/Helpers/index.ts",
     "src/core/Hooks/index.ts", 
     "src/components/Misc/index.ts",
+    "src/components/Audio/index.ts",
+    "src/components/Divina/index.ts",
     "src/components/Epub/index.ts",
     "src/components/WebPub/index.ts",
+    "src/components/Reader/index.ts",
     "src/i18n/index.ts",
     "src/lib/index.ts",
     "src/preferences/index.ts",
@@ -30,7 +33,8 @@ export default defineConfig({
   bundle: true,
   noExternal: [
     "classNames", 
-    "debounce"
+    "debounce",
+    "colorthief"
   ],
   external: [
     "react", 

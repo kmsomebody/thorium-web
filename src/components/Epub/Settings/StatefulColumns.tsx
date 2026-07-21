@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { ThSettingsKeys } from "@/preferences/models";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../../Settings/helpers/settingsKeyMapping";
 
 import AutoLayoutIcon from "./assets/icons/document_scanner.svg";
 import OneColIcon from "./assets/icons/article.svg";
@@ -13,14 +16,13 @@ import { useI18n } from "@/i18n/useI18n";
 
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { setColumnCount } from "@/lib/settingsReducer";
+import { useIsScroll } from "@/hooks";
 
 import debounce from "debounce";
 
 export const StatefulColumns = () => {
   const { t } = useI18n();
-  const scroll = useAppSelector(state => state.settings.scroll);
-  const isFXL = useAppSelector(state => state.publication.isFXL);
-  const isScroll = scroll && !isFXL;
+  const isScroll = useIsScroll();
 
   const columnCount = useAppSelector(state => state.settings.columnCount) || "auto";
   const [effectiveValue, setEffectiveValue] = useState(columnCount);
@@ -44,6 +46,8 @@ export const StatefulColumns = () => {
   const dispatch = useAppDispatch();
 
   const { submitPreferences, getSetting } = useEpubNavigator();
+
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.columns];
 
   const items = useMemo(() => [
     {
@@ -77,13 +81,13 @@ export const StatefulColumns = () => {
 
   const updatePreference = useCallback(async (value: string) => {
     const colCount = value === "auto" ? null : Number(value);
-    await submitPreferences({ columnCount: colCount });
-    updateEffectiveValue(value, getSetting("columnCount"));
+    await submitPreferences({ [prefKey]: colCount });
+    updateEffectiveValue(value, getSetting(prefKey));
     dispatch(setColumnCount(value));
-  }, [submitPreferences, getSetting, updateEffectiveValue, dispatch]);
+  }, [prefKey, submitPreferences, getSetting, updateEffectiveValue, dispatch]);
 
   const debouncedUpdate = useCallback(() => {
-    const update = () => updateEffectiveValue(columnCount, getSetting("columnCount"));
+    const update = () => updateEffectiveValue(columnCount, getSetting(prefKey));
     debounce(update, 50)();
 
     // layoutSettings is required as a dependency because it contains all the settings

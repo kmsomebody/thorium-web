@@ -16,89 +16,69 @@ export interface ThPaginationLinkProps {
 
 export interface ThPaginationProps extends React.HTMLAttributes<HTMLDivElement> {
   ref?: React.RefObject<HTMLDivElement>;
-  direction?: "left" | "right";
   children?: React.ReactNode;
   links?: {
-    previous?: ThPaginationLinkProps;
-    next?: ThPaginationLinkProps;
+    left?: ThPaginationLinkProps;
+    right?: ThPaginationLinkProps;
   };
   compounds?: {
-    /**
-     * Props for the list item element wrapping links and children
-     */
     listItem?: React.HTMLAttributes<HTMLLIElement>;
-    /**
-     * Props for the previous button element
-     */
-    previousButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type">;
-    /**
-     * Props for the next button element
-     */
-    nextButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type">;
+    leftButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type">;
+    rightButton?: Exclude<WithRef<ButtonProps, HTMLButtonElement>, "type">;
   };
 }
 
 export const ThPagination = ({
   ref,
-  direction = "left",
   links,
   compounds,
   children,
-  ...props
+  dir,
+  ...restProps
 }: ThPaginationProps) => {
   if (!links) {
     return null;
   }
 
-  const { previous, next } = links;
+  const { left, right } = links;
 
   return (
     <nav
       ref={ ref }
-      { ...props }
+      dir="ltr"
+      { ...restProps }
     >
-      { previous && (
+      { left && (
         <li { ...compounds?.listItem }>
           <Button
-            { ...compounds?.previousButton }
+            { ...compounds?.leftButton }
             type="button"
-            onPress={ previous.onPress }
+            onPress={ left.onPress }
           >
-            { previous.icon 
-              ? <previous.icon aria-hidden="true" focusable="false" /> 
-              : direction === "left"
-                ? <ArrowBack aria-hidden="true" focusable="false" />
-                : <ArrowForward aria-hidden="true" focusable="false" />
-            }
-            { previous.node }
+            { left.icon ? <left.icon aria-hidden="true" focusable="false" /> : <ArrowBack aria-hidden="true" focusable="false" /> }
+            { left.node }
           </Button>
         </li>
-      )}
+      ) }
 
       { children && (
-        <li { ...compounds?.listItem }>
+        <li { ...compounds?.listItem } dir={ dir }>
           { children }
         </li>
-      )}
+      ) }
 
-      { next && (
+      { right && (
         <li { ...compounds?.listItem }>
           <Button
-            { ...compounds?.nextButton }
+            { ...compounds?.rightButton }
             type="button"
-            onPress={ next.onPress }
+            onPress={ right.onPress }
           >
-            { next.node }
-            
-            { next.icon 
-              ? <next.icon aria-hidden="true" focusable="false" /> 
-              : direction === "left"
-                ? <ArrowForward aria-hidden="true" focusable="false" />
-                : <ArrowBack aria-hidden="true" focusable="false" />
-            }
+            { right.node }
+            { right.icon ? <right.icon aria-hidden="true" focusable="false" /> : <ArrowForward aria-hidden="true" focusable="false" /> }
           </Button>
         </li>
-      )}
+      ) }
     </nav>
   );
 };

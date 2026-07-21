@@ -10,7 +10,8 @@ Context provider component for the Redux store.
 
 **Props:**
 - `children`: Child components
-- `initialState`: Optional initial state
+- `storageKey`: Optional key for localStorage persistence (defaults to `thorium-web-state`)
+- `store`: Optional custom Redux store — use this when extending the default store
 
 **Features:**
 - Global state management
@@ -19,6 +20,65 @@ Context provider component for the Redux store.
 - State selectors
 
 ## Reducers
+
+### AudioSettings Reducer
+
+Manages audio playback settings state.
+
+**State Interface:**
+```typescript
+interface AudioSettingsState {
+  volume: number;
+  playbackRate: number;
+  preservePitch: boolean;
+  skipBackwardInterval: number;
+  skipForwardInterval: number;
+  skipInterval: number;
+  pollInterval: number;
+  autoPlay: boolean;
+  enableMediaSession: boolean;
+}
+```
+
+**Actions:**
+- `setVolume`: Set playback volume
+- `setPlaybackRate`: Set playback rate
+- `setPreservePitch`: Set preserve pitch flag
+- `setSkipBackwardInterval`: Set skip backward interval in seconds
+- `setSkipForwardInterval`: Set skip forward interval in seconds
+- `setSkipInterval`: Set unified skip interval in seconds
+- `setPollInterval`: Set position polling interval in milliseconds
+- `setAutoPlay`: Set auto-play flag
+- `setEnableMediaSession`: Set Media Session API flag
+
+### Player Reducer
+
+Manages audio player runtime state.
+
+**State Interface:**
+```typescript
+type PlayerStatus = "idle" | "playing" | "paused";
+
+interface SeekableRange {
+  start: number;
+  end: number;
+}
+
+interface PlayerReducerState {
+  status: PlayerStatus;
+  isSeeking: boolean;
+  isStalled: boolean;
+  isTrackReady: boolean;
+  seekableRanges: SeekableRange[];
+}
+```
+
+**Actions:**
+- `setStatus`: Set player status (`idle`, `playing`, or `paused`)
+- `setSeeking`: Set seeking state
+- `setStalled`: Set stalled state
+- `setTrackReady`: Set track-ready flag
+- `setSeekableRanges`: Update seekable time ranges
 
 ### Actions Reducer
 
@@ -77,11 +137,14 @@ interface PublicationReducerState {
   fontLanguage: string;
   isFXL: boolean;
   isRTL: boolean;
+  scriptMode: ScriptMode; // "ltr" | "rtl" | "cjk-horizontal" | "cjk-vertical"
   hasDisplayTransformability: boolean;
   positionsList: Locator[];
   atPublicationStart: boolean;
   atPublicationEnd: boolean;
   unstableTimeline?: UnstableTimeline;
+  adjacentTimelineItems: { previous: AdjacentTimelineItem | null; next: AdjacentTimelineItem | null };
+  coverTheme?: ThemeTokens;
 }
 ```
 
@@ -89,6 +152,7 @@ interface PublicationReducerState {
 - `setFontLanguage`: Set font language
 - `setFXL`: Set publication as fixed layout
 - `setRTL`: Set publication as right-to-left
+- `setScriptMode`: Set the publication's script mode (`ScriptMode` from `@readium/navigator`)
 - `setHasDisplayTransformability`: Set display transformability flag
 - `setPositionsList`: Update positions list
 - `setPublicationStart`: Set at publication start state
@@ -96,6 +160,11 @@ interface PublicationReducerState {
 - `setTimeline`: Set timeline data
 - `setTocTree`: Set table of contents tree
 - `setTocEntry`: Set current TOC entry
+- `setAdjacentTimelineItems`: Set adjacent timeline items (previous/next)
+- `setCoverTheme`: Set the cover-extracted theme tokens (runtime only, not persisted)
+
+> [!IMPORTANT]
+> `isRTL` reflects the **publication content direction** (set from the manifest). For UI direction (driven by the user's locale preference), use `useLocale().direction` from `react-aria` instead.
 
 ### Reader Reducer
 
@@ -145,8 +214,10 @@ interface SettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineHeight: ThLineHeightOptions;
   lineLength: LineLengthStateObject | null;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -165,8 +236,10 @@ interface SettingsReducerState {
 - `setFontWeight`: Set font weight
 - `setHyphens`: Set hyphenation
 - `setLetterSpacing`: Set letter spacing
+- `setLigatures`: Set ligatures
 - `setLineHeight`: Set line height
 - `setLineLength`: Set one or several line lengths (optimal, min, max)
+- `setNoRuby`: Set no-ruby (suppress ruby annotations)
 - `setParagraphIndent`: Set paragraph indent
 - `setParagraphSpacing`: Set paragraph spacing
 - `setPublisherStyles`: Set publisher styles
@@ -191,6 +264,7 @@ interface ThemeReducerState {
   prefersContrast: ThContrast;
   forcedColors: boolean;
   breakpoint?: ThBreakpoints;
+  containerBreakpoint?: ThBreakpoints;
 }
 ```
 
@@ -203,6 +277,7 @@ interface ThemeReducerState {
 - `setContrast`: Set contrast preference
 - `setForcedColors`: Set forced colors mode
 - `setBreakpoint`: Set current breakpoint
+- `setContainerBreakpoint`: Set current container breakpoint
 
 ### Preferences Reducer
 
@@ -211,10 +286,6 @@ Manages state for reader preferences.
 **State Interface:**
 ```typescript
 interface PreferencesReducerState {
-  l10n?: {
-    locale?: string;
-    direction?: ThLayoutDirection;
-  };
   progressionFormat?: RenditionObject<ThProgressionFormat | Array<ThProgressionFormat>>;
   runningHeadFormat?: RenditionObject<ThRunningHeadFormat>;
   paginatedAffordances?: PaginatedAffordanceObject;
@@ -233,13 +304,31 @@ interface PreferencesReducerState {
 ```
 
 **Actions:**
-- `setL10n`: Update localization settings (locale and direction)
 - `setProgressionFormat`: Update progression format for reflow or FXL modes
 - `setRunningHeadFormat`: Update running head format
 - `setUI`: Update UI settings
 - `setScrollAffordances`: Configure scroll behavior
 - `setPaginatedAffordance`: Update paginated affordance settings
 - `updateFromPreferences`: Bulk update from a preferences object
+
+> [!NOTE]
+> `l10n`, `setL10n`, and `L10nObject` were removed in 1.4.0. Locale is now managed by `globalPreferencesReducer` — see below.
+
+### Global Preferences Reducer
+
+Manages locale state independently of reader preferences. Added in 1.4.0.
+
+**State Interface:**
+```typescript
+interface GlobalPreferencesReducerState {
+  locale?: string;
+}
+```
+
+**Actions:**
+- `setLocale`: Set the UI locale (`string | undefined`). Unsupported locales should be validated by `createGlobalPreferences` before dispatching.
+
+The locale is persisted to `localStorage` alongside the rest of the app state. Use `StatefulGlobalPreferencesProvider` to wire it automatically, or dispatch `setLocale` directly.
 
 ### WebPubSettings Reducer
 
@@ -252,7 +341,9 @@ interface WebPubSettingsReducerState {
   fontWeight: number;
   hyphens: boolean | null;
   letterSpacing: number | null;
+  ligatures: boolean | null;
   lineHeight: ThLineHeightOptions;
+  noRuby: boolean | null;
   paragraphIndent: number | null;
   paragraphSpacing: number | null;
   publisherStyles: boolean;
@@ -269,7 +360,9 @@ interface WebPubSettingsReducerState {
 - `setWebPubFontWeight`: Set font weight for WebPub
 - `setWebPubHyphens`: Set hyphenation for WebPub
 - `setWebPubLetterSpacing`: Set letter spacing for WebPub
+- `setWebPubLigatures`: Set ligatures for WebPub
 - `setWebPubLineHeight`: Set line height for WebPub
+- `setWebPubNoRuby`: Set no-ruby for WebPub
 - `setWebPubParagraphIndent`: Set paragraph indent for WebPub
 - `setWebPubParagraphSpacing`: Set paragraph spacing for WebPub
 - `setWebPubPublisherStyles`: Set publisher styles for WebPub

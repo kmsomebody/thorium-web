@@ -16,7 +16,8 @@ import { StatefulDockStart } from "./StatefulDockStart";
 import { StatefulDockEnd } from "./StatefulDockEnd";
 import { StatefulDockTransientPopover } from "./StatefulDockTransientPopover";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 import { useI18n } from "@/i18n/useI18n";
 
 import { ThActionEntry } from "@/core/Components/Actions/ThActionsBar";
@@ -47,7 +48,8 @@ export const StatefulDocker = ({
   ref,
   onClose
 }: StatefulDockerProps) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
+  const { theming } = useSharedPreferences();
   const { t } = useI18n();
   
   const listActionItems = useCallback(() => {
@@ -83,8 +85,8 @@ export const StatefulDocker = ({
         onPress={ onClose }
         compounds={ {
           tooltipTrigger: {
-            delay: preferences.theming.icon.tooltipDelay,
-            closeDelay: preferences.theming.icon.tooltipDelay
+            delay: theming.icon.tooltipDelay,
+            closeDelay: theming.icon.tooltipDelay
           },
           tooltip: {
             className: readerSharedUI.tooltip

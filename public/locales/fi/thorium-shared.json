@@ -21,7 +21,7 @@
             "search": "Hae",
             "show": "Näytä",
             "showAll": "Näytä kaikki",
-            "sortBy": "Lajittelutapa",
+            "sortBy": "Luokittele",
             "toggle": "Vaihda"
         }
     },
@@ -36,6 +36,10 @@
             "goToNextPage": {
                 "compact": "Seuraava",
                 "descriptive": "Seuraava sivu"
+            },
+            "goToNextResource": {
+                "compact": "Seuraava",
+                "descriptive": "Seuraava resurssi"
             },
             "goToNextSentence": {
                 "compact": "Seuraava",
@@ -53,9 +57,89 @@
                 "compact": "Edellinen",
                 "descriptive": "Edellinen sivu"
             },
+            "goToPreviousResource": {
+                "compact": "Edellinen",
+                "descriptive": "Edellinen resurssi"
+            },
             "goToPreviousSentence": {
                 "compact": "Edellinen",
                 "descriptive": "Edellinen lause"
+            }
+        },
+        "annotations": {
+            "actions": {
+                "editNote": {
+                    "compact": "Muokkaa muistiinpanoa"
+                }
+            },
+            "bookmarks": {
+                "actions": {
+                    "add": {
+                        "compact": "Lisää kirjanmerkki"
+                    },
+                    "delete": {
+                        "compact": "Poista kirjanmerkki",
+                        "confirmation": "Haluatko varmasti poistaa tämän kirjanmerkin?"
+                    }
+                },
+                "emptyState": {
+                    "description": "Lukemisen aikana lisätyt kirjanmerkit näytetään tässä listassa.",
+                    "title": "Ei kirjanmerkkejä"
+                },
+                "title": "Kirjanmerkit"
+            },
+            "note": {
+                "title": "Muistiinpano"
+            },
+            "sort": {
+                "lastAdded": {
+                    "compact": "Viimeksi lisätty"
+                },
+                "lastEdited": {
+                    "compact": "Viimeksi muokattu"
+                },
+                "progression": {
+                    "compact": "Edistyminen"
+                }
+            }
+        },
+        "playback": {
+            "actions": {
+                "pause": "Pysäytä",
+                "play": "Toista",
+                "skipBackward": {
+                    "compact": "Pikakelaa",
+                    "descriptive": "Ohita taaksepäin"
+                },
+                "skipForward": {
+                    "compact": "Eteenpäin",
+                    "descriptive": "Ohita eteenpäin"
+                }
+            },
+            "preferences": {
+                "audio": {
+                    "skipBackwardInterval": "Taaksepäin ohittamisen väli",
+                    "skipForwardInterval": "Eteenpäin ohittamisen väli",
+                    "skipInterval": "Ohita väli",
+                    "title": "Ääniasetukset",
+                    "volume": "Äänenvoimakkuus"
+                },
+                "autoPlay": {
+                    "label": "Jatkuva toisto",
+                    "title": "Automaattinen toisto"
+                },
+                "playbackRate": {
+                    "compact": "Nopeus",
+                    "descriptive": "Toistonopeus"
+                },
+                "sleepTimer": {
+                    "compact": "Ajastin",
+                    "descriptive": "Uniajastin",
+                    "presets": {
+                        "endOfChapter": "Luvun loppu",
+                        "endOfResource": "Resurssin loppu"
+                    }
+                }
             }
         },
         "preferences": {
@@ -118,12 +202,20 @@
                 "title": "Asettelu"
             },
             "letterSpacing": "Kirjainväli",
+            "ligatures": {
+                "label": "Salli ligatuurit",
+                "title": "Ligatuurit"
+            },
             "lineHeight": {
                 "default": "Oletus",
                 "large": "Väljä",
                 "medium": "Tasapainoinen",
                 "small": "Tiivis",
                 "title": "Riviväli"
+            },
+            "noRuby": {
+                "label": "Piilota rubi-merkinnät",
+                "title": "Rubi-merkinnät"
             },
             "offsetFirstPage": "Näytä ensimmäinen sivu erikseen",
             "paragraphIndent": "Kappaleiden sisennys",
@@ -237,9 +329,23 @@
                 "descriptive": "{{ x }} / {{ y }} ({{ z }})"
             }
         },
+        "search": {
+            "actions": {
+                "next": {
+                    "compact": "Seuraava tulos"
+                },
+                "previous": {
+                    "compact": "Edellinen tulos"
+                }
+            },
+            "placeholder": "Hae avainsanoja tai lauseita",
+            "result_one": "{{ current }} / {{ count }} tulosta",
+            "result_other": "{{ current }} / {{ count }} tulosta",
+            "title": "Hae"
+        },
         "tableOfContents": {
             "emptyState": {
-                "description": "Tässä julkaisussa ei ole sisällysluetteloa.",
+                "description": "Tekijä ei ole toimittanut sisällysluetteloa.",
                 "title": "Ei sisällysluetteloa"
             },
             "title": "Sisällysluettelo"

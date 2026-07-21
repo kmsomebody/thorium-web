@@ -3,6 +3,7 @@
   --th-color-text-secondary: #666;
   --th-color-background: #fff;
   --th-color-primary: #e0e0e0;
+  --th-color-secondary: #fafafa;
 
   padding: 1rem;
   width: 100%;
@@ -29,12 +30,13 @@
   height: 180px;
   flex-shrink: 0;
   margin: 0;
+  background-color: var(--th-color-secondary);
 }
 
 .image {
   width: 120px;
   height: 180px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .info {

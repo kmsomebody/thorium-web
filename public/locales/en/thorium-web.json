@@ -3,7 +3,16 @@
     "app": {
       "loading": "Loading",
       "printingDisabled": "Printing has been disabled",
-      "publicationWrapper": "You’re now in the publication.",
+      "publicationWrapper": "You're now in the publication.",
+      "errors": {
+        "title": "Error",
+        "notFound": "Publication not found.",
+        "accessDenied": "Access denied.",
+        "network": "Server unavailable - please try again later.",
+        "serverError": "Server error - please try again later.",
+        "clientError": "Invalid request.",
+        "generic": "Unable to load publication."
+      },
       "docking": {
         "dockingLeft": "Docked panel left",
         "dockingRight": "Docked panel right",
@@ -59,14 +68,17 @@
     "fullscreen": {
       "tooltip": "Fullscreen",
       "trigger": "Toggle fullscreen mode",
-      "close": "Exit fullscreen mode"    
+      "close": "Exit fullscreen mode"
     },
     "toc": {
       "entries": "Entries in the table"
     },
     "jumpToPosition": {
       "go": "Go",
-      "label": "Select a position from {{ positionStart }} to {{ positionEnd }}:"
+      "label": "Select a position from {{ positionStart }} to {{ positionEnd }}:",
+      "error": {
+        "notFound": "Position not found."
+      }
     },
     "overflowMenu": {
       "active": {
@@ -90,6 +102,42 @@
           "tooltip": "More options",
           "trigger": "More spacing options"
         }
+      }
+    },
+    "preferences": {
+      "divinaSpreads": {
+        "title": "Spread",
+        "label": "Display two pages side-by-side"
+      },
+      "divinaStripWidth": "Strip width",
+      "divinaQuality": {
+        "title": "Image quality",
+        "auto": "Auto",
+        "low": "Low",
+        "high": "High",
+        "max": "Max"
+      }
+    }
+  },
+  "audio": {
+    "player": {
+      "progress": "Playback progress",
+      "controls": "Playback controls",
+      "mediaControls": "Audio settings",
+      "coverAlt": "Audiobook cover"
+    },
+    "remotePlayback": {
+      "trigger": "Remote Playback",
+      "connected": "Remote connected"
+    },
+    "settings": {
+      "sleepTimer": {
+        "hours": "h",
+        "minutes": "min",
+        "seconds": "s",
+        "start": "Start",
+        "instruction": "Playback will pause after the set duration.",
+        "remaining": "Pausing in {{ remaining }}"
       }
     }
   }

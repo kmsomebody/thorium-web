@@ -1,37 +1,38 @@
-import { UnstableShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
+import { ShortcutRepresentation } from "@/core/Helpers/keyboardUtilities";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThemeTokens } from "@/preferences/hooks/useTheming";
-import { 
+import {
   ThActionsKeys,
   ThDocumentTitleFormat,
+  ThDockingKeys,
   ThLayoutUI,
+  ThLineHeightOptions,
   ThProgressionFormat,
   ThRunningHeadFormat,
-  ThDockingKeys,
-  ThLineHeightOptions, 
-  ThSettingsKeys, 
-  ThSheetTypes, 
-  ThSpacingSettingsKeys, 
-  ThTextSettingsKeys, 
-  ThThemeKeys, 
-  ThLayoutDirection, 
+  ThSettingsKeys,
+  ThSheetTypes,
+  ThTextSettingsKeys,
+  ThSpacingSettingsKeys,
+  ThThemeKeys,
   ThSpacingPresetKeys,
   ThActionsTokens,
   ThFontFamilyPref,
-  ThSettingsRangePref,
+  ThSettingsRangePrefRequired,
+  ThSettingsRangeVariant,
   ThSettingsRadioPref,
+  ThSettingsChoicesPref,
   I18nValue,
   ThBackLinkPref,
   ThFormatPref,
   ThPaginatedAffordancePref,
   ThDockingPref,
   ThSettingsGroupPref,
-  ValidatedLanguageCollection
+  ValidatedLanguageCollection,
 } from "./models";
-import { ExperimentKey } from "@readium/navigator";
+import { DivinaQuality, ExperimentKey } from "@readium/navigator";
 import { ThCollapsibility } from "@/core/Components/Actions/hooks/useCollapsibility";
-import { supportedLocales, isSupportedLocale } from "@/i18n/supported-locales";
 import { ContentProtectionConfig } from "./models/protection";
+import { validateObjectKeys } from "./helpers";
 
 export type CustomizableKeys = {
   action?: string;
@@ -51,14 +52,14 @@ export type DefaultKeys = {
 };
 
 // Key types to better handle custom keys for external consumers
-export type ActionKey<K extends CustomizableKeys> = 
-  K extends { action: infer A } 
-    ? A extends string 
-      ? ThActionsKeys | A 
+export type ActionKey<K extends CustomizableKeys> =
+  K extends { action: infer A }
+    ? A extends string
+      ? ThActionsKeys | A
       : ThActionsKeys
     : ThActionsKeys;
 
-export type ThemeKey<K extends CustomizableKeys> = 
+export type ThemeKey<K extends CustomizableKeys> =
   K extends { theme: infer T } 
     ? T extends string 
       ? ThThemeKeys | T 
@@ -86,6 +87,7 @@ export type SpacingSettingsKey<K extends CustomizableKeys> =
       : ThSpacingSettingsKeys
     : ThSpacingSettingsKeys;
 
+
 export interface ThSettingsSpacingPresets<K extends CustomizableKeys = DefaultKeys> {
   reflowOrder: Array<ThSpacingPresetKeys>;
   webPubOrder: Array<ThSpacingPresetKeys>;
@@ -112,18 +114,20 @@ export interface ThActionsPref<K extends CustomizableKeys> {
   reflowOrder: Array<ActionKey<K>>;
   fxlOrder: Array<ActionKey<K>>;
   webPubOrder: Array<ActionKey<K>>;
+  divinaOrder?: Array<ActionKey<K>>;
   collapse: ThCollapsibility;
   keys: Record<ActionKey<K>, ThActionsTokens>;
 };
 
 export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
   [ThSettingsKeys.fontFamily]: ThFontFamilyPref;
-  [ThSettingsKeys.letterSpacing]: ThSettingsRangePref;
+  [ThSettingsKeys.letterSpacing]: ThSettingsRangePrefRequired;
   [ThSettingsKeys.lineHeight]: ThSettingsRadioPref<Exclude<ThLineHeightOptions, ThLineHeightOptions.publisher>>;
-  [ThSettingsKeys.paragraphIndent]: ThSettingsRangePref;
-  [ThSettingsKeys.paragraphSpacing]: ThSettingsRangePref;
-  [ThSettingsKeys.wordSpacing]: ThSettingsRangePref;
-  [ThSettingsKeys.zoom]: ThSettingsRangePref;
+  [ThSettingsKeys.paragraphIndent]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.paragraphSpacing]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.wordSpacing]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.zoom]: ThSettingsRangePrefRequired;
+  [ThSettingsKeys.divinaQuality]: ThSettingsChoicesPref<DivinaQuality>;
 } & (
   K extends { settings: infer S } 
     ? S extends string 
@@ -132,12 +136,29 @@ export type ThSettingsKeyTypes<K extends CustomizableKeys = DefaultKeys> = {
     : {}
 );
 
-export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover> | "pagination";
+export type ThConstraintKeys = Extract<ThSheetTypes, ThSheetTypes.bottomSheet | ThSheetTypes.popover | ThSheetTypes.modal> | "pagination" | "dropdown";
+
+export type ThShortcutsDisplayIn = "tooltip" | "menuItem";
+
+export interface ThShortcutsPref {
+  representation: ShortcutRepresentation;
+  joiner?: string;
+  displayIn?: ThShortcutsDisplayIn[];
+}
+
+export interface ThIconPref {
+  size: number;
+  tooltipOffset: number;
+  tooltipDelay?: number;
+}
+
+export interface ThLayoutDefaultsPref {
+  dockingWidth: number;
+  scrim: string;
+}
 
 // Main preferences interface with simplified generics
 export interface ThPreferences<K extends CustomizableKeys = {}> {
-  direction?: ThLayoutDirection;
-  locale?: string;
   experiments?: {
     reflow?: Array<ExperimentKey>;
     webPub?: Array<ExperimentKey>;
@@ -162,6 +183,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
           reflow?: ThFormatPref<ThRunningHeadFormat>;
           fxl?: ThFormatPref<ThRunningHeadFormat>;
           webPub?: ThFormatPref<ThRunningHeadFormat>;
+          divina?: ThFormatPref<ThRunningHeadFormat>;
         }
       }
     };
@@ -170,6 +192,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
         reflow?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
         fxl?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
         webPub?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
+        divina?: ThFormatPref<ThProgressionFormat | Array<ThProgressionFormat>>;
       };
     };
     arrow: {
@@ -177,23 +200,17 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       offset: number;
       tooltipDelay?: number;
     };
-    icon: {
-      size: number;
-      tooltipOffset: number;
-      tooltipDelay?: number;
-    };
+    icon: ThIconPref;
     layout: {
       ui?: {
         reflow?: ThLayoutUI,
         fxl?: ThLayoutUI,
-        webPub?: ThLayoutUI
+        webPub?: ThLayoutUI,
+        divina?: ThLayoutUI,
       };
       radius: number;
       spacing: number;
-      defaults: {
-        dockingWidth: number;
-        scrim: string;
-      };
+      defaults: ThLayoutDefaultsPref;
       constraints?: {
         [key in ThConstraintKeys]?: number | null
       }
@@ -202,6 +219,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     themes: {
       reflowOrder: Array<ThemeKey<K> | "auto">;
       fxlOrder: Array<ThemeKey<K> | "auto">;
+      divinaOrder?: Array<ThemeKey<K> | "auto">;
       systemThemes?: {
         light: ThemeKey<K>;
         dark: ThemeKey<K>;
@@ -233,15 +251,13 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     }
   };
   actions: ThActionsPref<K>;
-  shortcuts: {
-    representation: UnstableShortcutRepresentation;
-    joiner?: string;
-  };
+  shortcuts: ThShortcutsPref;
   docking: ThDockingPref<ThDockingKeys>;
   settings: {
     reflowOrder: Array<SettingsKey<K>>;
     fxlOrder: Array<SettingsKey<K>>;
     webPubOrder: Array<SettingsKey<K>>;
+    divinaOrder?: Array<SettingsKey<K>>;
     keys: ThSettingsKeyTypes<K>;
     text: ThSettingsGroupPref<TextSettingsKey<K>>;
     spacing: ThSettingsGroupPref<SpacingSettingsKey<K>> & { presets?: ThSettingsSpacingPresets<K> };
@@ -256,66 +272,28 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
 export const createPreferences = <K extends CustomizableKeys = {}>(
   params: ThPreferences<K>
 ): ThPreferences<K> => {
-  // Validate locale preference
-  if (params.locale) {
-    // Extract language code from BCP-47 locale (e.g., "en-US" -> "en")
-    const languageCode = params.locale.split("-")[0];
-    if (!isSupportedLocale(languageCode)) {
-      console.warn(`Locale "${ params.locale }" is not supported. Supported locales: ${ supportedLocales.join(", ") }. Falling back to browser/OS language settings.`);
-      params.locale = undefined; // Let i18n fall back to browser/OS language settings
-    }
-  }
-
-  // Helper function to validate keys against the provided order arrays
-  const validateObjectKeys = <K extends string, V>(
-    orderArrays: K[][],
-    keysObj: Record<string, V>,
-    context: string,
-    specialCase?: string | string[],
-    fallback?: V
-  ): void => {
-    // Combine all arrays and filter out special cases if needed
-    const allOrders = new Set<K>(
-      orderArrays.flatMap(arr => {
-        if (!specialCase) return arr;
-        return arr.filter(k => {
-          if (Array.isArray(specialCase)) {
-            return !specialCase.includes(k);
-          } else {
-            return k !== specialCase;
-          }
-        });
-      })
-    );
-    
-    // Get available keys
-    const availableKeys = Object.keys(keysObj);
-    
-    // Check that all keys exist and add from fallback if available
-    allOrders.forEach(key => {
-      if (!availableKeys.includes(key)) {
-        if (fallback) {
-          // Add the missing key from fallback to the params object
-          keysObj[key] = fallback;
-        }
-        console.warn(`Key "${ key }" in ${ context } order arrays not found in ${ context }.keys.${ fallback ? `\nUsing fallback: ${ JSON.stringify(fallback) }` : "" }`);
-      }
-    });
-  };
-  
   // Validate actions
   if (params.actions) {
     validateObjectKeys<ActionKey<K>, ThActionsTokens>(
-      [params.actions.reflowOrder as Array<ActionKey<K>>, params.actions.fxlOrder as Array<ActionKey<K>>, params.actions.webPubOrder as Array<ActionKey<K>>],
+      [
+        params.actions.reflowOrder as Array<ActionKey<K>>,
+        params.actions.fxlOrder as Array<ActionKey<K>>,
+        params.actions.webPubOrder as Array<ActionKey<K>>,
+        ...(params.actions.divinaOrder ? [params.actions.divinaOrder as Array<ActionKey<K>>] : []),
+      ],
       params.actions.keys as Record<string, ThActionsTokens>,
       "actions"
     );
   }
-  
+
   // Validate themes
   if (params.theming?.themes) {
     validateObjectKeys<ThemeKey<K> | "auto", ThemeTokens>(
-      [params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">, params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">],
+      [
+        params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">,
+        params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">,
+        ...(params.theming.themes.divinaOrder ? [params.theming.themes.divinaOrder as Array<ThemeKey<K> | "auto">] : []),
+      ],
       params.theming.themes.keys as Record<string, ThemeTokens>,
       "theming.themes",
       "auto" // Special case for themes
@@ -456,6 +434,28 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
       }
     });
   }
+
+  // Validate sliderWithPresets presets are reachable given range and step
+  const validateRangePresets = (pref: ThSettingsRangePrefRequired, context: string): void => {
+    if (pref.variant !== ThSettingsRangeVariant.sliderWithPresets || !pref.presets?.length) return;
+    const [min, max] = [Math.min(...pref.range), Math.max(...pref.range)];
+    const step = pref.step;
+    const tolerance = step * 1e-9;
+    const invalid = pref.presets.filter(p => {
+      if (p < min || p > max) return true;
+      const offset = (p - min) / step;
+      return Math.abs(offset - Math.round(offset)) > tolerance;
+    });
+    if (invalid.length > 0) {
+      console.warn(`${ context }: presets [${ invalid.join(", ") }] are not reachable with range=[${ min }, ${ max }] and step=${ step }.`);
+    }
+  };
+
+  Object.entries(params.settings?.keys ?? {}).forEach(([key, pref]) => {
+    if (pref && typeof pref === "object" && "variant" in pref) {
+      validateRangePresets(pref as ThSettingsRangePrefRequired, `settings.keys.${ key }`);
+    }
+  });
 
   return params;
 };

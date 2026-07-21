@@ -21,6 +21,11 @@
 
 .link[data-hovered] {
   background-color: var(--th-theme-hover);
+  color: var(--th-theme-onHover);
+}
+
+.link[data-hovered] svg {
+  fill: var(--th-theme-onHover)
 }
 
 .link[data-focus-visible] {
@@ -32,5 +37,5 @@
 }
 
 .link[data-disabled] svg {
-  fill: var(--th-theme-disable);
+  fill: var(--th-theme-disable)
 }

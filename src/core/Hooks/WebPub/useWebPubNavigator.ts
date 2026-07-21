@@ -15,7 +15,10 @@ import {
   IWebPubDefaults,
   IWebPubPreferences,
   IInjectablesConfig,
-  IContentProtectionConfig
+  IContentProtectionConfig,
+  IKeyboardPeripheralsConfig,
+  getScriptMode,
+  ScriptMode
 } from "@readium/navigator";
 
 type cbb = (ok: boolean) => void;
@@ -32,6 +35,7 @@ export interface WebPubNavigatorLoadProps {
   defaults?: IWebPubDefaults;
   injectables?: IInjectablesConfig;
   contentProtection?: IContentProtectionConfig;
+  keyboardPeripherals?: IKeyboardPeripheralsConfig;
 }
 
 export const useWebPubNavigator = () => {
@@ -43,7 +47,7 @@ export const useWebPubNavigator = () => {
       await navigatorInstance?.submitPreferences(new WebPubPreferences(preferences));
     }, []);
   
-    const getSetting = useCallback(<K extends keyof WebPubSettings>(settingKey: K) => {
+  const getSetting = useCallback(<K extends keyof WebPubSettings>(settingKey: K) => {
       return navigatorInstance?.settings[settingKey] as WebPubSettings[K];
     }, []);
 
@@ -59,11 +63,12 @@ export const useWebPubNavigator = () => {
         config.publication, 
         config.listeners, 
         config.initialPosition, 
-        { 
-          preferences: config.preferences || {}, 
-          defaults: config.defaults || {}, 
+        {
+          preferences: config.preferences || {},
+          defaults: config.defaults || {},
           injectables: config.injectables || undefined,
-          contentProtection: config.contentProtection || undefined
+          contentProtection: config.contentProtection || undefined,
+          keyboardPeripherals: config.keyboardPeripherals || []
         }
       );
 
@@ -160,6 +165,12 @@ export const useWebPubNavigator = () => {
     return navigatorInstance?._cframes;
   }, []);
 
+  const currentScriptMode = useCallback((): ScriptMode | undefined => {
+    const metadata = navigatorInstance?.publication?.metadata;
+    if (!metadata) return undefined;
+    return getScriptMode(metadata);
+  }, []);
+
   return {
     WebPubNavigatorLoad, 
     WebPubNavigatorDestroy, 
@@ -180,6 +191,7 @@ export const useWebPubNavigator = () => {
     preferencesEditor: navigatorInstance?.preferencesEditor,
     getSetting,
     submitPreferences,
-    getCframes
+    getCframes,
+    getScriptMode: currentScriptMode
   }
 }

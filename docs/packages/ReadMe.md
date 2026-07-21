@@ -4,7 +4,12 @@ Thorium Web provides a collection of React components, hooks, and helpers that c
 
 ## Docs
 
-The Thorium Web package is a collection of components that can be used to build a web application. You will find docs in folders [Core](./Core/) and [Epub](./Epub/).
+The Thorium Web package is organized into several sub-packages:
+
+- **[Core](./Core/)**: Low-level hooks, components, and utilities for building custom readers
+- **[Audio](./Audio/)**: Audio player with plugins system for UI customization, Redux state management, and built-in preferences
+- **[Epub](./Epub/)**: EPUB reader with plugins system for UI customization, Redux state management, and built-in preferences
+- **[Reader](./Reader/)**: Universal reader wrapper that automatically routes to appropriate format-specific readers (EPUB/WebPub/Audio) based on publication profile
 
 ## Usage
 

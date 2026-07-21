@@ -20,7 +20,10 @@ export class ThReduxPreferencesAdapter<T extends CustomizableKeys = Customizable
     this.store.subscribe(() => {
       const state = this.store.getState();
       const prefs = this.mapStateToPreferences(state);
-      this.notifyListeners(prefs);
+      if (JSON.stringify(prefs) !== JSON.stringify(this.currentPreferences)) {
+        this.currentPreferences = prefs;
+        this.notifyListeners(prefs);
+      }
     });
   }
 

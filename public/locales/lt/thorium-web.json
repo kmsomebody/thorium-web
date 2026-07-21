@@ -48,6 +48,16 @@
                 "wrapper": "Dabartinė eiga",
                 "referenceFallback": "dabartinis skyrius",
                 "pubFallback": "leidinys"
+            },
+            "printingDisabled": "Spausdinimas išjungtas",
+            "errors": {
+                "title": "Klaida",
+                "notFound": "Leidinys nerastas.",
+                "accessDenied": "Prieiga uždrausta.",
+                "network": "Serveris nepasiekiamas – prašome pabandyti vėliau.",
+                "serverError": "Serverio klaida – prašome pabandyti vėliau.",
+                "clientError": "Netaisyklinga užklausa.",
+                "generic": "Nepavyko įkelti leidinio."
             }
         },
         "navigation": {
@@ -65,7 +75,10 @@
         },
         "jumpToPosition": {
             "go": "Eiti",
-            "label": "Pasirinkite poziciją nuo {{ positionStart }} iki {{ positionEnd }}:"
+            "label": "Pasirinkite poziciją nuo {{ positionStart }} iki {{ positionEnd }}:",
+            "error": {
+                "notFound": "Pozicija nerasta."
+            }
         },
         "overflowMenu": {
             "active": {
@@ -90,6 +103,28 @@
                     "trigger": "Daugiau išretinimo parinkčių"
                 }
             }
+        }
+    },
+    "audio": {
+        "player": {
+            "coverAlt": "Garsinės knygos viršelis",
+            "progress": "Atkūrimo eiga",
+            "controls": "Atkūrimo valdikliai",
+            "mediaControls": "Garso nuostatos"
+        },
+        "settings": {
+            "sleepTimer": {
+                "hours": "val.",
+                "minutes": "min.",
+                "seconds": "sek.",
+                "start": "Paleisti",
+                "instruction": "Atkūrimas bus pristabdytas po nustatyto laikotarpio.",
+                "remaining": "Atkūrimas bus pristabdytas po {{ remaining }}"
+            }
+        },
+        "remotePlayback": {
+            "trigger": "Nuotolinė perklausa",
+            "connected": "Prisijungta nuotoliniu būdu"
         }
     }
 }

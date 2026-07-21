@@ -100,8 +100,8 @@ export const ThSlider = ({
           </Label>
         }
         <SliderOutput { ...compounds?.output }>
-          { value !== undefined
-            ? value
+          {({ state }) => value !== undefined
+            ? state.getFormattedValue(state.values[0])
             : placeholder
               ? <span { ...compounds?.placeholder }>{ placeholder }</span>
               : null

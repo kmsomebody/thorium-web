@@ -1,0 +1,24 @@
+.wrapper {
+  --th-color-text: #333;
+  --th-color-text-secondary: #666;
+  --th-color-background: #fff;
+
+  padding: 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--th-color-text);
+  margin: 0 0 1rem 0;
+}
+
+.message {
+  font-size: 1.125rem;
+  color: var(--th-color-text-secondary);
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}

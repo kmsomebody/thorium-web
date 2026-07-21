@@ -11,18 +11,27 @@ import { dockAction, setActionOpen } from "@/lib/actionsReducer";
 
 import { usePrevious } from "@/core/Hooks/usePrevious";
 import { useActions } from "@/core/Components/Actions/hooks/useActions";
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionComponentStatus } from "../../Actions/hooks/useActionComponentStatus";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 
 let dockingMap: Required<BreakpointsMap<ThDockingTypes>> | null = null;
 
 export const useDocking = <T extends string>(key: T) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const breakpoint = useAppSelector(state => state.theming.breakpoint);
-  const actionsMap = useAppSelector(state => state.actions.keys);
-  const actionState = actionsMap[key];
+  const profile = useAppSelector(state => state.reader.profile);
+  const actionsMap = useAppSelector(state => profile ? state.actions.keys[profile] : undefined);
+  const actionState = actionsMap?.[key];
+  const dock = useAppSelector(state => profile ? state.actions.dock[profile] : undefined);
   const dispatch = useAppDispatch();
 
-  const actions = useActions(actionsMap);
+  const actions = useActions(actionsMap || {});
+  
+  // Check if docked actions still exist in plugin registry
+  const startActionKey = dock?.[ThDockingKeys.start]?.actionKey;
+  const endActionKey = dock?.[ThDockingKeys.end]?.actionKey;
+  const startStatus = useActionComponentStatus({ actionKey: startActionKey || "" });
+  const endStatus = useActionComponentStatus({ actionKey: endActionKey || "" });
 
   if (!dockingMap) {
     dockingMap = makeBreakpointsMap<ThDockingTypes>({
@@ -35,14 +44,14 @@ export const useDocking = <T extends string>(key: T) => {
   const currentDockConfig = breakpoint && dockingMap[breakpoint];
   
   // Use type assertion to tell TypeScript that the key is valid
-  const dockablePref = (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.docked?.dockable || ThDockingTypes.none;
-  
-  const defaultSheet = (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.sheet?.defaultSheet || ThSheetTypes.popover;
-  
+  const dockablePref = (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.docked?.dockable || ThDockingTypes.none;
+
+  const defaultSheet = (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.sheet?.defaultSheet || ThSheetTypes.popover;
+
   const sheetMap = makeBreakpointsMap<ThSheetTypes>({
-    defaultValue: (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.sheet?.defaultSheet || ThSheetTypes.popover,
+    defaultValue: (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.sheet?.defaultSheet || ThSheetTypes.popover,
     fromEnum: ThSheetTypes,
-    pref: (preferences.actions.keys[key as keyof typeof preferences.actions.keys])?.sheet?.breakpoints
+    pref: (preferences.actionsKeys[key as keyof typeof preferences.actionsKeys])?.sheet?.breakpoints
   });
   const sheetPref = breakpoint && sheetMap[breakpoint] || defaultSheet;
 
@@ -200,38 +209,45 @@ export const useDocking = <T extends string>(key: T) => {
 
     if (sheetType !== ThSheetTypes.dockedStart && sheetType !== ThSheetTypes.dockedEnd) {
       if (previousSheetType === ThSheetTypes.dockedStart || previousSheetType === ThSheetTypes.dockedEnd) {
-        dispatch(setActionOpen({
-          key: key,
-          isOpen: false
-        }));
+        if (profile) {
+          dispatch(setActionOpen({
+            key: key,
+            isOpen: false,
+            profile
+          }));
+        }
       }
     }
-  }, [dispatch, key, sheetType, previousSheetType, actionState?.docking]);
+  }, [dispatch, key, sheetType, previousSheetType, actionState?.docking, profile]);
 
   // on mount, check whether we should update states for docked sheets from pref
   useEffect(() => {
-    if (actionState?.isOpen == null) {
+    if (actionState?.isOpen == null && profile) {
       if (sheetType === ThSheetTypes.dockedStart) {
         dispatch(dockAction({
           key: key,
-          dockingKey: ThDockingKeys.start
+          dockingKey: ThDockingKeys.start,
+          profile: profile
         }));
         dispatch(setActionOpen({
           key: key,
-          isOpen: true
+          isOpen: true,
+          profile
         }));
       } else if (sheetType === ThSheetTypes.dockedEnd) {
         dispatch(dockAction({
           key: key,
-          dockingKey: ThDockingKeys.end
+          dockingKey: ThDockingKeys.end,
+          profile: profile
         }));
         dispatch(setActionOpen({
           key: key,
-          isOpen: true
+          isOpen: true,
+          profile
         }));
       }
     }
-  });
+  }, [actionState?.isOpen, sheetType, key, dispatch, profile]);
 
   // Edge case where the sheet has been opened/closed and
   // is of dockable type, but the dock panel is not populated
@@ -246,7 +262,7 @@ export const useDocking = <T extends string>(key: T) => {
     // has not be instantiated yet, and 
     // couldn’t be on first mount because
     // a different type was used in prefs
-    if (actionState?.isOpen != null && actionState?.docking == null) {
+    if (actionState?.isOpen != null && actionState?.docking == null && profile) {
       if (sheetType === ThSheetTypes.dockedStart) {
         // Check if the action is docked in practice
         // if it isn’t dispatch docking of the action
@@ -254,7 +270,8 @@ export const useDocking = <T extends string>(key: T) => {
         if (dockingKey !== ThDockingKeys.start) {
           dispatch(dockAction({
             key: key,
-            dockingKey: ThDockingKeys.start
+            dockingKey: ThDockingKeys.start,
+            profile: profile
           }));
         }
       } else if (sheetType === ThSheetTypes.dockedEnd) {
@@ -264,12 +281,72 @@ export const useDocking = <T extends string>(key: T) => {
         if (dockingKey !== ThDockingKeys.end) {
           dispatch(dockAction({
             key: key,
-            dockingKey: ThDockingKeys.end
+            dockingKey: ThDockingKeys.end,
+            profile: profile
           }));
         }
       }
     }
-  }, [dispatch, key, sheetType, actionState?.isOpen, actionState?.docking, actions]);
+  }, [dispatch, key, sheetType, actionState?.isOpen, actionState?.docking, actions, profile]);
+
+  // Sync action docking property with profile dock state when profile changes
+  useEffect(() => {
+    if (profile && dock) {
+      const isDockedInStart = dock[ThDockingKeys.start]?.actionKey === key;
+      const isDockedInEnd = dock[ThDockingKeys.end]?.actionKey === key;
+      
+      if (isDockedInStart && actionState?.docking !== ThDockingKeys.start) {
+        dispatch(dockAction({
+          key: key,
+          dockingKey: ThDockingKeys.start,
+          profile: profile
+        }));
+        // Restore isOpen state if action was docked
+        if (actionState?.isOpen === false) {
+          dispatch(setActionOpen({
+            key: key,
+            isOpen: true,
+            profile
+          }));
+        }
+      } else if (isDockedInEnd && actionState?.docking !== ThDockingKeys.end) {
+        dispatch(dockAction({
+          key: key,
+          dockingKey: ThDockingKeys.end,
+          profile: profile
+        }));
+        // Restore isOpen state if action was docked
+        if (actionState?.isOpen === false) {
+          dispatch(setActionOpen({
+            key: key,
+            isOpen: true,
+            profile
+          }));
+        }
+      }
+    }
+  }, [profile, dock, actionState?.docking, actionState?.isOpen, key, dispatch]);
+
+  // Clean up stale docked actions that no longer exist in plugin registry
+  useEffect(() => {
+    if (!profile || !dock) return;
+
+    if (startActionKey && !startStatus.isComponentRegistered) {
+      dispatch(dockAction({
+        key: startActionKey,
+        dockingKey: ThDockingKeys.transient,
+        profile
+      }));
+    }
+
+    if (endActionKey && !endStatus.isComponentRegistered) {
+      dispatch(dockAction({
+        key: endActionKey,
+        dockingKey: ThDockingKeys.transient,
+        profile
+      }));
+    }
+  }, [profile, dock, startActionKey, endActionKey, startStatus.isComponentRegistered, endStatus.isComponentRegistered, dispatch]);
 
   return {
     getDocker,

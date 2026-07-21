@@ -8,10 +8,11 @@ import {
 } from "@/preferences/models";
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
-import { usePreferenceKeys } from "@/preferences/hooks/usePreferenceKeys";
+import { useFilteredPreferenceKeys } from "@/preferences/hooks/useFilteredPreferenceKeys";
 import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
 
 import { useAppSelector, useAppDispatch } from "@/lib";
+import { useReaderSetting } from "@/components/Settings/hooks/useReaderSetting";
 import {
   SpacingStateKey,
   setLetterSpacing,
@@ -43,19 +44,9 @@ export const useSpacingPresets = () => {
   const isWebPub = readerProfile === "webPub";
   const isFXL = useAppSelector(state => state.publication.isFXL);
   
-  // Select the appropriate settings based on reader profile
-  const settings = useAppSelector(state => 
-    isWebPub ? state.webPubSettings : state.settings
-  );
-  
-  // Get spacing with fallback
-  const spacing = settings?.spacing || { 
-    preset: ThSpacingPresetKeys.publisher, 
-    custom: {}, 
-    baseline: {} 
-  };
+  const spacing = useReaderSetting("spacing");
 
-  const { reflowSpacingPresetKeys, fxlSpacingPresetKeys, webPubSpacingPresetKeys } = usePreferenceKeys();
+  const { reflowSpacingPresetKeys, fxlSpacingPresetKeys, webPubSpacingPresetKeys } = useFilteredPreferenceKeys();
 
   const { preferences } = usePreferences();
 
@@ -73,18 +64,14 @@ export const useSpacingPresets = () => {
   const { isComponentUsed: shouldApplyPresets } = useSettingsComponentStatus({
     settingsKey: ThSettingsKeys.spacingPresets,
     publicationType: isWebPub ? "webpub" : isFXL ? "fxl" : "reflow",
-    componentType: "spacing",
     additionalCondition: spacingKeys.length > 0
   });
 
-  // Get current state values from the already selected settings
-  const {
-    letterSpacing,
-    lineHeight,
-    paragraphIndent,
-    paragraphSpacing,
-    wordSpacing
-  } = settings || {};
+  const letterSpacing = useReaderSetting("letterSpacing");
+  const lineHeight = useReaderSetting("lineHeight");
+  const paragraphIndent = useReaderSetting("paragraphIndent");
+  const paragraphSpacing = useReaderSetting("paragraphSpacing");
+  const wordSpacing = useReaderSetting("wordSpacing");
 
   // Helper function to get base Redux state value for a setting key
   const getBaseReduxValue = (key: ThSpacingSettingsKeys): any => {

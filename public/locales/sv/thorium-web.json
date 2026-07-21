@@ -2,11 +2,11 @@
     "reader": {
         "app": {
             "loading": "Laddar",
-            "publicationWrapper": "Du är nu i boken.",
+            "publicationWrapper": "Du är nu i publikationen.",
             "docking": {
                 "dockingLeft": "Dockad panel till vänster",
                 "dockingRight": "Dockad panel till höger",
-                "dockingEmpty": "Inget innehåll",
+                "dockingEmpty": "För närvarande tom",
                 "dockingClosed": "Är stängd, innehåller {{ action }}",
                 "dockingCollapsed": "Är minimerad, innehåller {{ action }}"
             },
@@ -48,6 +48,16 @@
             },
             "back": {
                 "trigger": "Tillbaka"
+            },
+            "printingDisabled": "Utskrift har inaktiverats",
+            "errors": {
+                "title": "Fel",
+                "notFound": "Ingen bok hittades.",
+                "accessDenied": "Access nekas.",
+                "network": "Servern kan inte nås – försök igen senare.",
+                "serverError": "Serverfel – försök igen senare.",
+                "clientError": "Ogiltig begäran.",
+                "generic": "Kan inte ladda boken."
             }
         },
         "navigation": {
@@ -65,15 +75,18 @@
         },
         "jumpToPosition": {
             "go": "Hoppa",
-            "label": "Välj en position från {{ positionStart }} till {{ positionEnd }}:"
+            "label": "Välj en position mellan {{ positionStart }} till {{ positionEnd }}:",
+            "error": {
+                "notFound": "Positionen hittades inte."
+            }
         },
         "overflowMenu": {
             "active": {
                 "tooltip": "Fler åtgärder",
-                "trigger": "Växla meny"
+                "trigger": "Visa eller dölj meny"
             },
             "hint": {
-                "tooltip": "Växla åtgärder",
+                "tooltip": "Visa eller dölj åtgärder",
                 "trigger": "Visa åtgärder"
             }
         },
@@ -89,6 +102,28 @@
                     "tooltip": "Fler alternativ",
                     "trigger": "Fler avståndsalternativ"
                 }
+            }
+        }
+    },
+    "audio": {
+        "player": {
+            "progress": "Läsposition",
+            "controls": "Uppspelningskontroller",
+            "mediaControls": "Ljudinställningar",
+            "coverAlt": "Omslag för ljudbok"
+        },
+        "remotePlayback": {
+            "trigger": "Fjärruppspelning",
+            "connected": "Fjärruppspelning aktiv"
+        },
+        "settings": {
+            "sleepTimer": {
+                "hours": "h",
+                "minutes": "min",
+                "seconds": "s",
+                "instruction": "Uppspelningen stoppas efter den inställda tiden.",
+                "remaining": "Stoppar uppspelning om {{ remaining }}",
+                "start": "Starta sömntimer"
             }
         }
     }

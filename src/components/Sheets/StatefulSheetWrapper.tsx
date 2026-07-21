@@ -6,12 +6,16 @@ import { ThDockingKeys, ThSheetTypes } from "@/preferences/models";
 
 import { ThTypedComponentRenderer } from "@/core/Components/Containers/ThTypedComponentRenderer";
 import { StatefulPopoverSheet, StatefulPopoverSheetProps } from "./StatefulPopoverSheet";
+import { StatefulModalSheet, StatefulModalSheetProps } from "./StatefulModalSheet";
 import { StatefulBottomSheet, StatefulBottomSheetProps } from "./StatefulBottomSheet";
 import { StatefulFullScreenSheet, StatefulFullScreenSheetProps } from "./StatefulFullScreenSheet";
 import { StatefulDockedSheet, StatefulDockedSheetProps } from "./StatefulDockedSheet";
+import { StatefulCompactPopoverSheet } from "./StatefulCompactPopoverSheet";
 
 const componentMap = {
+  [ThSheetTypes.compactPopover]: StatefulCompactPopoverSheet,
   [ThSheetTypes.popover]: StatefulPopoverSheet,
+  [ThSheetTypes.modal]: StatefulModalSheet,
   [ThSheetTypes.bottomSheet]: StatefulBottomSheet,
   [ThSheetTypes.fullscreen]: StatefulFullScreenSheet,
   [ThSheetTypes.dockedStart]: (props: StatefulDockedSheetProps) => <StatefulDockedSheet { ...props } flow={ ThDockingKeys.start } />,
@@ -24,7 +28,7 @@ export const StatefulSheetWrapper = ({
   children
 }: {
   sheetType: ThSheetTypes,
-  sheetProps: StatefulPopoverSheetProps | StatefulFullScreenSheetProps | StatefulDockedSheetProps | StatefulBottomSheetProps,
+  sheetProps: StatefulPopoverSheetProps | StatefulModalSheetProps | StatefulFullScreenSheetProps | StatefulDockedSheetProps | StatefulBottomSheetProps,
   children: ReactNode
 }) => {
 

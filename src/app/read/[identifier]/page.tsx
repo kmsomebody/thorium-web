@@ -1,12 +1,13 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import { StatefulLoader } from "@/components/Misc/StatefulLoader";
+import { ErrorDisplay } from "@/components/Misc";
 import { PUBLICATION_MANIFESTS } from "@/config/publications";
 import { usePublication } from "@/hooks/usePublication";
 import { useAppSelector } from "@/lib/hooks";
 import { verifyManifestUrl } from "@/app/api/verify-manifest/verifyDomain";
+import { StatefulReaderWrapper } from "@/components/Reader/StatefulReaderWrapper";
+import { ErrorHandler, ProcessedError } from "@/helpers/errorHandler";
 
 type Params = { identifier: string };
 
@@ -14,27 +15,38 @@ type Props = {
   params: Promise<Params>;
 };
 
-const StatefulReader = dynamic(() => import("@/components/Epub").then(mod => ({ default: mod.StatefulReader })), {
-  ssr: false
-});
-
 export default function BookPage({ params }: Props) {
-  const [domainError, setDomainError] = useState<string | null>(null);
+  const [domainError, setDomainError] = useState<ProcessedError | null>(null);
   const identifier = use(params).identifier;
   const isLoading = useAppSelector(state => state.reader.isLoading);
-  const manifestUrl = identifier ? PUBLICATION_MANIFESTS[identifier as keyof typeof PUBLICATION_MANIFESTS] : "";
+  
+  // Check predefined publications, fallback to direct URL
+  const manifestUrl = identifier 
+    ? PUBLICATION_MANIFESTS[identifier as keyof typeof PUBLICATION_MANIFESTS] || 
+      identifier
+    : "";
 
   useEffect(() => {
     if (manifestUrl) {
       verifyManifestUrl(manifestUrl).then(allowed => {
         if (!allowed) {
-          setDomainError(`Domain not allowed: ${ new URL(manifestUrl).hostname }`);
+          const processedDomainError = ErrorHandler.process(
+            new Error("Domain not allowed"), 
+            "Domain Validation"
+          );
+          setDomainError(processedDomainError);
         }
       });
     }
   }, [manifestUrl]);
 
-  const { error, manifest, selfLink } = usePublication({
+  const { 
+    isLoading: publicationLoading, 
+    error, 
+    publication, 
+    profile,
+    localDataKey
+  } = usePublication({
     url: manifestUrl,
     onError: (error) => {
       console.error("Publication loading error:", error);
@@ -43,25 +55,24 @@ export default function BookPage({ params }: Props) {
 
   if (domainError) {
     return (
-      <div className="container">
-        <h1>Access Denied</h1>
-        <p>{ domainError }</p>
-      </div>
+      <ErrorDisplay 
+        error={ domainError }
+      />
     );
   }
 
   return (
     <>
       { error ? (
-        <div className="container">
-          <h1>Error</h1>
-          <p>{ error }</p>
-        </div>
-      ) : (
-        <StatefulLoader isLoading={ isLoading }>
-          { manifest && selfLink && <StatefulReader rawManifest={ manifest } selfHref={ selfLink } /> }
-        </StatefulLoader>
-      )}
+        <ErrorDisplay error={ error } />
+      ) : publication ? (
+        <StatefulReaderWrapper
+          profile={ profile }
+          publication={ publication }
+          localDataKey={ localDataKey }
+          isLoading={ isLoading || publicationLoading }
+        />
+      ) : null }
     </>
   );
 }

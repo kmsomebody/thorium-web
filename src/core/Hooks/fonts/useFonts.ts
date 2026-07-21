@@ -50,7 +50,7 @@ export const useFonts = (fontResources?: InjectableFontResources | null) => {
         element.parentNode.removeChild(element);
       }
       // Revoke blob URLs to prevent memory leaks
-      if (element instanceof HTMLLinkElement && element.href.startsWith('blob:')) {
+      if (element instanceof HTMLLinkElement && element.href.startsWith("blob:")) {
         URL.revokeObjectURL(element.href);
       }
     });

@@ -44,13 +44,36 @@ Enums `ThTextSettingsKeys` and `ThSpacingSettingsKeys` list which components can
 When used, a button will be added to access the nested components.
 
 
+## Script Mode Filtering
+
+Settings that are not applicable to the current publication's script mode are automatically hidden. `useFilteredPreferenceKeys` is a drop-in replacement for `usePreferenceKeys` that applies this filtering based on `state.publication.scriptMode`:
+
+| Script mode | Hidden settings |
+|---|---|
+| `ltr` | `noRuby` |
+| `rtl` | `hyphens`, `letterSpacing`, `textNormalize`, `noRuby` |
+| `cjk-horizontal` | `textAlign`, `hyphens`, `ligatures`, `paragraphIndent`, `wordSpacing`, `textNormalize` |
+| `cjk-vertical` | Same as CJK-horizontal + `layout`; also hides `columns` when not FXL |
+| `mongolian-vertical` | Same as CJK-vertical |
+
+```tsx
+import { useFilteredPreferenceKeys } from "@edrlab/thorium-web/preferences";
+
+const keys = useFilteredPreferenceKeys();
+// keys.reflowSettingsKeys — already filtered for the current script mode
+```
+
+---
+
 ## Keys
 
 The `keys` object is used to configure settings:
 
 - `fontFamily`;
 - `letterSpacing`;
+- `ligatures`;
 - `lineHeight`;
+- `noRuby`;
 - `paragraphIndent`;
 - `paragraphSpacing`;
 - `wordSpacing`;
@@ -59,6 +82,14 @@ The `keys` object is used to configure settings:
 ### FontFamily
 
 See [Custom Fonts](CustomFonts.md).
+
+### Ligatures
+
+`ThSettingsKeys.ligatures` is a boolean toggle. Enabled by default. Hidden automatically in CJK script modes.
+
+### NoRuby
+
+`ThSettingsKeys.noRuby` is a boolean toggle that suppresses ruby annotations. Disabled by default. Only shown for CJK publications (`scriptMode: "cjk-horizontal"` or `"cjk-vertical"`).
 
 ### LineHeight
 

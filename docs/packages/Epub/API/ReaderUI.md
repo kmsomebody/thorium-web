@@ -10,9 +10,10 @@ Main reader component that manages the EPUB reading experience.
 
 ```typescript
 interface StatefulReaderProps {
-  rawManifest: object;      // EPUB manifest data
-  selfHref: string;         // Reference to the reader location
-  plugins?: ThPlugin[];     // Optional reader plugins
+  publication: Publication;     // Parsed publication object
+  localDataKey: string | null;  // Key for storing reader state locally
+  plugins?: ThPlugin[];         // Optional reader plugins
+  positionStorage?: PositionStorage; // Custom storage for position data
 }
 ```
 

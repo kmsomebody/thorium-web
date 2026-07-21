@@ -1,18 +1,37 @@
 # Core Hooks
 
-The Core package provides various hooks, including a custom hook for handling EPUB publications, accessibility, and responsive design.
+The Core package provides various hooks, including custom hooks for handling audio, EPUB, and WebPub publications, accessibility, and responsive design.
+
+## Audio Support Hook
+
+```tsx
+import {
+  useAudioNavigator,
+  useAudioSettingsCache
+} from "@edrlab/thorium-web/core/hooks";
+```
+
+`useAudioNavigator` exposes the Readium TS-Toolkit `AudioNavigator` and provides methods to load and destroy the navigator, control playback, navigate to positions, and submit preferences.
+
+`useAudioSettingsCache` provides a stateless cache for audio settings that maps React state to mutable refs — useful for settings that need to persist across re-renders without triggering navigator re-initialization.
+
+> [!IMPORTANT]
+> When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/audio` package so that they all share the same instance, not from `@edrlab/thorium-web/core`.
 
 ## EPUB Support Hook
 
 ```tsx
 import {
-  useEpubNavigator
+  useEpubNavigator,
+  useEpubSettingsCache
 } from "@edrlab/thorium-web/core/hooks";
 ```
 
 This hook exposes Readium TS-Toolkit `Navigator` object and provides methods to navigate through the publication, apply preferences, etc.
 
 It is the most important hook of the Core package, as it provides the foundation for building an Epub Reader.
+
+The `useEpubSettingsCache` hook provides a stateless cache for EPUB settings that maps React state to mutable refs. It's useful for storing settings that need to persist across component re-renders without causing navigator re-initialization, and the cached values never go stale.
 
 > [!IMPORTANT]
 > When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/epub` package so that they all use the same one, not from `@edrlab/thorium-web/core`.
@@ -21,11 +40,14 @@ It is the most important hook of the Core package, as it provides the foundation
 
 ```tsx
 import {
-  useWebPubNavigator
+  useWebPubNavigator,
+  useWebPubSettingsCache
 } from "@edrlab/thorium-web/core/hooks";
 ```
 
 Similar to the EPUB navigator hook, this hook provides navigation functionality for Web Publications using the Readium TS-Toolkit `Navigator` object.
+
+The `useWebPubSettingsCache` hook provides a stateless cache for WebPub settings that maps React state to mutable refs. It's useful for storing settings that need to persist across component re-renders without causing navigator re-initialization, and the cached values never go stale.
 
 > [!IMPORTANT]
 > When using Stateful Components, you must use the hook from the `@edrlab/thorium-web/webpub` package so that they all use the same one, not from `@edrlab/thorium-web/core`.
@@ -35,23 +57,52 @@ Similar to the EPUB navigator hook, this hook provides navigation functionality 
 ```tsx
 import { 
   useBreakpoints,
+  useContainerBreakpoints,
   useMediaQuery 
 } from "@edrlab/thorium-web/core/hooks";
-
-const MyComponent = () => {
-  const isLandscape = useMediaQuery("(orientation: landscape)");
-    
-  return (
-    <div>
-      <p>Is landscape: { isLandscape ? "Yes" : "No" }</p>
-    </div>
-  );
-};
 ```
 
-These hooks are used in `useTheming` hook from `@edrlab/thorium-web/core/preferences` package. They are exposed in case they can be useful or if you want to use them in your own implementation of an app.
+These hooks are used internally by `useTheming` from `@edrlab/thorium-web/core/preferences`. They are exposed for custom implementations.
 
-TBD.
+### `useMediaQuery`
+
+Returns `true` when the given media query string matches, `false` otherwise. Responds to changes in real time.
+
+```tsx
+const isLandscape = useMediaQuery("(orientation: landscape)");
+```
+
+### `useBreakpoints`
+
+Converts the `breakpointsMap` from preferences into CSS media queries evaluated against the **viewport (window) width**. Returns a `ThBreakpointsObject` with a boolean per breakpoint and a `current` property holding the active `ThBreakpoints` key.
+
+```tsx
+const breakpoints = useBreakpoints(preferences.theming.breakpoints, (bp) => {
+  // called when the active breakpoint changes
+  console.log("window breakpoint:", bp);
+});
+
+if (breakpoints.current === ThBreakpoints.compact) { ... }
+```
+
+### `useContainerBreakpoints`
+
+Resolves the active `ThBreakpoints` value against the **width of a specific DOM element** (the reader's root container) rather than the viewport. Uses a ResizeObserver so it updates whenever the element resizes — equivalent to a CSS container query.
+
+```tsx
+const setContainerRef = useContainerBreakpoints(
+  preferences.theming.breakpoints,
+  (breakpoint) => {
+    // called each time the container crosses a breakpoint threshold
+    dispatch(setContainerBreakpoint(breakpoint));
+  }
+);
+
+// Attach to whichever element defines the reader's available width
+return <div ref={ setContainerRef } className={ styles.readerShell }>...</div>;
+```
+
+`setContainerRef` is a stable callback ref — pass it directly as a `ref` prop. You do not need to manage the element reference yourself.
 
 ## Accessibility Hooks
 

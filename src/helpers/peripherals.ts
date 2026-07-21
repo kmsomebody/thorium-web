@@ -1,148 +1,88 @@
-// Peripherals based on XBReader
-import { ThActionsPref, DefaultKeys } from "@/preferences";
+export const NavPeripheralType = {
+  progressForward:  "th_nav_progress_forward",
+  progressBackward: "th_nav_progress_backward",
+  moveRight:        "th_nav_move_right",
+  moveLeft:         "th_nav_move_left",
+  moveUp:           "th_nav_move_up",
+  moveDown:         "th_nav_move_down",
+  moveHome:         "th_nav_move_home",
+  moveEnd:          "th_nav_move_end",
+  zoomIn:           "th_nav_zoom_in",
+  zoomOut:          "th_nav_zoom_out",
+  zoomReset:        "th_nav_zoom_reset",
+} as const;
 
-import { ThActionsKeys } from "@/preferences/models";
+// Ctrl/Cmd + = or Numpad+, covering Blink (187) and Gecko (61) key codes
+export const ZOOM_IN_KEY_COMBOS = [
+  { keyCode: 187, ctrl: true  },
+  { keyCode: 61,  ctrl: true  },
+  { keyCode: 107, ctrl: true  },
+  { keyCode: 187, meta: true  },
+  { keyCode: 61,  meta: true  },
+  { keyCode: 107, meta: true  },
+] as const;
 
-import { buildShortcut, UnstablePShortcut } from "@/core/Helpers/keyboardUtilities";
-import { isInteractiveElement } from "@/core/Helpers/focusUtilities";
+// Ctrl/Cmd + - or Numpad-, covering Blink (189) and Gecko (173) key codes
+export const ZOOM_OUT_KEY_COMBOS = [
+  { keyCode: 189, ctrl: true  },
+  { keyCode: 173, ctrl: true  },
+  { keyCode: 109, ctrl: true  },
+  { keyCode: 189, meta: true  },
+  { keyCode: 173, meta: true  },
+  { keyCode: 109, meta: true  },
+] as const;
 
-import { useAppStore } from "@/lib/hooks";
+// Ctrl/Cmd + 0 or Numpad0
+export const ZOOM_RESET_KEY_COMBOS = [
+  { keyCode: 48, ctrl: true  },
+  { keyCode: 96, ctrl: true  },
+  { keyCode: 48, meta: true  },
+  { keyCode: 96, meta: true  },
+] as const;
 
-export interface PCallbacks {
-  moveTo: (direction: "left" | "right" | "up" | "down" | "home" | "end") => void;
-  goProgression: (shiftKey?: boolean) => void;
-  toggleAction: (action: ThActionsKeys) => void;
-}
+// Gecko reports different keyCodes for =/+/- (61, 171, 173) than Blink.
+// These MUST stay Gecko-gated: in Blink, 173 is the AudioVolumeMute media
+// key and 171 can be a media/launcher key, so registering them bare would
+// hijack hardware keys on Chrome-family browsers.
+const isGecko = typeof navigator !== "undefined" && navigator.userAgent.includes("Gecko/");
 
-export interface PShortcuts {
-  [key: string]: {
-    actionKey: ThActionsKeys;
-    modifiers: UnstablePShortcut["modifiers"];
-  }
-}
+// Bare +/=/Numpad+ for image-based publications (divina), xbreader-style
+export const IMAGE_ZOOM_IN_KEY_COMBOS: { keyCode: number; shift?: boolean }[] = [
+  { keyCode: 187              },
+  { keyCode: 187, shift: true },
+  { keyCode: 107              },
+  ...(isGecko ? [
+    { keyCode: 61               },
+    { keyCode: 61,  shift: true },
+    // Dedicated + key on e.g. German/Nordic layouts
+    { keyCode: 171              },
+    { keyCode: 171, shift: true },
+  ] : []),
+];
 
-export default class Peripherals {
-  private readonly observers = ["keydown"];
-  private targets: EventTarget[] = [];
-  private readonly callbacks: PCallbacks;
-  private readonly store: ReturnType<typeof useAppStore>;
-  private readonly actionsPref: ThActionsPref<DefaultKeys> | undefined;
-  private readonly shortcuts: PShortcuts;
+// Bare -/Numpad- for image-based publications (divina), xbreader-style
+export const IMAGE_ZOOM_OUT_KEY_COMBOS: { keyCode: number }[] = [
+  { keyCode: 189 },
+  { keyCode: 109 },
+  ...(isGecko ? [{ keyCode: 173 }] : []),
+];
 
-  constructor(store: ReturnType<typeof useAppStore>, actionsPref: ThActionsPref<DefaultKeys> | undefined, callbacks: PCallbacks) {
-    this.observers.forEach((method) => {
-      (this as any)["on" + method] = (this as any)["on" + method].bind(this);
-    });
-    this.store = store;
-    this.actionsPref = actionsPref;
-    this.callbacks = callbacks;
-    this.shortcuts = this.retrieveShortcuts();
-  }
+// Bare 0/Numpad0 for image-based publications (divina), xbreader-style
+export const IMAGE_ZOOM_RESET_KEY_COMBOS = [
+  { keyCode: 48 },
+  { keyCode: 96 },
+] as const;
 
-  private getPlatformModifier(): "ctrlKey" | "metaKey" {
-    return this.store.getState().reader.platformModifier.modifier;
-  }
+export const ACTION_PERIPHERAL_PREFIX = "th_action_" as const;
 
-  private retrieveShortcuts() {
-    if (!this.actionsPref) return {};
+export const toActionPeripheralType = (key: string) => `${ ACTION_PERIPHERAL_PREFIX }${ key }`;
 
-    const shortcutsObj: PShortcuts = {};
+export const fromActionPeripheralType = (type: string): string | null =>
+  type.startsWith(ACTION_PERIPHERAL_PREFIX) ? type.slice(ACTION_PERIPHERAL_PREFIX.length) : null;
 
-    const displayOrder = this.store.getState().publication.isFXL
-      ? this.actionsPref.fxlOrder
-      : this.actionsPref.reflowOrder;
+export const DOCKING_PERIPHERAL_PREFIX = "th_docking_" as const;
 
-    for (const actionKey of displayOrder) {
-      const shortcutString = this.actionsPref.keys[actionKey].shortcut;
-      
-      if (shortcutString) {
-        const shortcutObj = buildShortcut(shortcutString);
+export const toDockingPeripheralType = (key: string) => `${ DOCKING_PERIPHERAL_PREFIX }${ key }`;
 
-        if (shortcutObj?.key) {
-          Object.defineProperty(shortcutsObj, shortcutObj.key, {
-            value: {
-              actionKey: actionKey,
-              modifiers: shortcutObj.modifiers
-            },
-            writable: false,
-            enumerable: true
-          });
-        }
-      }
-    };
-    
-    return shortcutsObj;
-  }
-
-  destroy() {
-    this.targets.forEach((t) => this.unobserve(t));
-  }
-
-  unobserve(item: EventTarget) {
-    if (!item) return;
-    this.observers.forEach((EventName) => {
-      item.removeEventListener(
-        EventName,
-        (this as any)["on" + EventName],
-        false
-      );
-    });
-    this.targets = this.targets.filter((t) => t !== item);
-  }
-
-  observe(item: EventTarget) {
-    if (!item) return;
-    if (this.targets.includes(item)) return;
-    this.observers.forEach((EventName) => {
-      item.addEventListener(EventName, (this as any)["on" + EventName], false);
-    });
-    this.targets.push(item);
-  }
-
-  onkeydown(e: KeyboardEvent) {
-    const focusIsSafe = !isInteractiveElement(document.activeElement);
-    
-    switch(e.code) {
-      case "Space":
-        focusIsSafe && this.callbacks.goProgression(e.shiftKey);
-        break;
-      case "ArrowRight":
-        focusIsSafe && this.callbacks.moveTo("right");
-        break;
-      case "ArrowLeft":
-        focusIsSafe && this.callbacks.moveTo("left");
-        break;
-      case "ArrowUp":
-      case "PageUp":
-        focusIsSafe && this.callbacks.moveTo("up");
-        break;
-      case "ArrowDown":
-      case "PageDown":
-        focusIsSafe && this.callbacks.moveTo("down");
-        break;
-      case "Home":
-        focusIsSafe && this.callbacks.moveTo("home");
-        break;
-      case "End":
-        focusIsSafe && this.callbacks.moveTo("end");
-        break;
-      default:
-        if (this.shortcuts.hasOwnProperty(e.code)) {
-          const customShortcutObj = this.shortcuts[e.code];
-          const sendCallback = Object.entries(customShortcutObj.modifiers).every(( [modifier, value] ) => {
-            if (modifier === "platformKey") {
-              return e[this.getPlatformModifier()] === value;
-            } else {
-              return e[modifier as "altKey" | "ctrlKey" | "metaKey" | "shiftKey"] === value;
-            }
-          })
-            
-          if (sendCallback) {
-            e.preventDefault();
-            this.callbacks.toggleAction(customShortcutObj.actionKey)
-          };
-        }
-        break;
-    }
-  }
-}
+export const fromDockingPeripheralType = (type: string): string | null =>
+  type.startsWith(DOCKING_PERIPHERAL_PREFIX) ? type.slice(DOCKING_PERIPHERAL_PREFIX.length) : null;

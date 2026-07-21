@@ -1,0 +1,57 @@
+.audioPlayerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: var(--th-layout-spacing);
+  padding: var(--th-layout-spacing);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.audioPlayerWrapperExpanded {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  box-sizing: border-box;
+  gap: var(--th-layout-spacing);
+  padding: var(--th-layout-spacing);
+  height: 100%;
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
+  container-type: inline-size;
+}
+
+.audioPlayerExpandedStart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: var(--th-layout-spacing);
+  container-type: inline-size;
+}
+
+.audioPlayerExpandedEnd {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: var(--th-layout-spacing);
+  container-type: inline-size;
+}
+
+.coverMetadataGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--th-layout-spacing);
+  flex: 0 1 auto;
+  width: 100%;
+}

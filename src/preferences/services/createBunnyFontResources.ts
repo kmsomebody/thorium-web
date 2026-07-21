@@ -19,7 +19,7 @@ const buildBunnyFontsUrl = ({
   }
   const weightValues = weights.values;
   
-  // For Bunny Fonts, we need to handle italic variants by appending 'i' to the weight
+  // For Bunny Fonts, we need to handle italic variants by appending "i" to the weight
   const variants = new Set<string>();
   
   for (const weight of weightValues) {

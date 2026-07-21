@@ -17,7 +17,8 @@ import { ThContainerBody } from "@/core/Components/Containers/ThContainerBody";
 import { ThNavigationButton } from "@/core/Components/Buttons/ThNavigationButton";
 import { ThCloseButton } from "@/core/Components/Buttons/ThCloseButton";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
+import { useSharedPreferences } from "@/preferences/hooks/useSharedPreferences";
 import { useI18n } from "@/i18n";
 
 import { useAppSelector } from "@/lib/hooks";
@@ -53,7 +54,8 @@ export const StatefulBottomSheet = ({
   scrollTopOnFocus,
   dismissEscapeKeyClose
 }: StatefulBottomSheetProps) => {
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
+  const sharedPreferences = useSharedPreferences();
   const { t } = useI18n()
   const direction = useAppSelector((state) => state.reader.direction);
   const prefersReducedMotion = useAppSelector(state => state.theming.prefersReducedMotion);
@@ -81,7 +83,7 @@ export const StatefulBottomSheet = ({
     // If it doesn’t have a max, then peek is @ index 1.
     let snapArray: number[] = [0];
 
-    const snapPref = preferences.actions.keys[id as keyof typeof preferences.actions.keys].snapped;
+    const snapPref = preferences.actionsKeys[id].snapped;
     if (snapPref) {
       // We must start with minHeight to see if it’s 
       // constrained by a detent as it means
@@ -207,7 +209,7 @@ export const StatefulBottomSheet = ({
   }, [snapArray, onClosePress]);
 
   const maxWidthPref = useMemo(() => {
-    const maxWidth = preferences.actions.keys[id as keyof typeof preferences.actions.keys].snapped?.maxWidth;
+    const maxWidth = preferences.actionsKeys[id].snapped?.maxWidth;
     if (typeof maxWidth === "undefined") {
       return undefined;
     } else if (maxWidth === null) {
@@ -222,7 +224,7 @@ export const StatefulBottomSheet = ({
       active: false,
       override: undefined
     }
-    const scrim = preferences.actions.keys[id as keyof typeof preferences.actions.keys].snapped?.scrim;
+    const scrim = preferences.actionsKeys[id].snapped?.scrim ?? sharedPreferences.theming.layout.defaults.scrim;
     if (scrim) {
       scrimPref.active = true;
 
@@ -232,7 +234,7 @@ export const StatefulBottomSheet = ({
     }
 
     return scrimPref;
-  }, [id, preferences]);
+  }, [id, preferences, sharedPreferences]);
 
   const detentClassName = useMemo(() => {
     let className = "";
@@ -297,10 +299,11 @@ export const StatefulBottomSheet = ({
         prefersReducedMotion={ prefersReducedMotion }
         compounds={ {
           container: {
+            id: id,
             className: classNames(sheetStyles.draggable, detentClassName),
             ref: sheetContainerRef,
             style: {
-              maxWidth: maxWidthPref 
+              maxWidth: maxWidthPref
             } as CSSProperties
           },
           dragIndicator: {

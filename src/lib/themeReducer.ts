@@ -7,12 +7,13 @@ import { ThBreakpoints } from "@/preferences/models";
 export interface ThemeStateObject {
   reflow?: string;
   fxl?: string;
+  audio?: string;
 }
 
 export interface ThemeStateChangePayload {
   type: string;
   payload: {
-    key: "reflow" | "fxl";
+    key: "reflow" | "fxl" | "audio";
     value?: string;
   }
 }
@@ -26,6 +27,7 @@ export interface ThemeReducerState {
   prefersContrast: ThContrast;
   forcedColors: boolean;
   breakpoint?: ThBreakpoints;
+  containerBreakpoint?: ThBreakpoints;
 }
 
 const initialState: ThemeReducerState = {
@@ -33,13 +35,15 @@ const initialState: ThemeReducerState = {
   colorScheme: ThColorScheme.light,
   theme: {
     reflow: "auto",
-    fxl: "auto"
+    fxl: "auto",
+    audio: "auto"
   },
   prefersReducedMotion: false,
   prefersReducedTransparency: false, 
   prefersContrast: ThContrast.none,
   forcedColors: false, 
-  breakpoint: undefined
+  breakpoint: undefined,
+  containerBreakpoint: undefined
 }
 
 export const themeSlice = createSlice({
@@ -69,20 +73,24 @@ export const themeSlice = createSlice({
     },
     setBreakpoint: (state, action) => {
       state.breakpoint = action.payload
+    },
+    setContainerBreakpoint: (state, action) => {
+      state.containerBreakpoint = action.payload
     }
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { 
-  setMonochrome, 
-  setColorScheme, 
-  setTheme, 
+export const {
+  setMonochrome,
+  setColorScheme,
+  setTheme,
   setReducedMotion, 
   setReducedTransparency, 
   setContrast, 
   setForcedColors, 
   setBreakpoint,
+  setContainerBreakpoint,
 } = themeSlice.actions;
 
 export default themeSlice.reducer;

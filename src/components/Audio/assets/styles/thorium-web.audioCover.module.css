@@ -1,0 +1,70 @@
+.audioCoverSection {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 auto;
+  min-height: 100px;
+  max-height: var(--th-layout-constraints-cover, 300px);
+  width: 100%;
+  margin: 0;
+}
+
+.audioCoverImage {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: var(--th-layout-radius);
+  filter: drop-shadow(var(--th-theme-elevate));
+}
+
+.audioCoverPlaceholder {
+  height: 100%;
+  max-height: var(--th-layout-constraints-cover, 300px);
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--th-theme-background);
+  border-radius: var(--th-layout-radius);
+  border: 1px solid var(--th-theme-subdue);
+  filter: drop-shadow(var(--th-theme-elevate));
+}
+
+.audioCoverPlaceholder svg {
+  width: 50%;
+  height: 50%;
+  fill: var(--th-theme-text);
+}
+
+.audioCoverSyncOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: var(--th-layout-constraints-cover, 300px);
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--th-layout-radius);
+  background-color: color-mix(in srgb, var(--th-theme-background) 60%, transparent);
+}
+
+.audioCoverSyncIcon {
+  width: calc(var(--th-icon-size, 24px) * 2);
+  height: calc(var(--th-icon-size, 24px) * 2);
+  fill: var(--th-theme-text);
+  animation: audioCoverSpin 1.2s linear infinite;
+}
+
+@keyframes audioCoverSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

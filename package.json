@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/edrlab/thorium-web/issues"
   },
-  "version": "1.1.5",
+  "version": "1.5.5",
   "private": false,
   "files": [
     "./dist"
@@ -32,14 +32,20 @@
     "./core/components": "./dist/core/Components/index.mjs",
     "./core/helpers": "./dist/core/Helpers/index.mjs",
     "./core/hooks": "./dist/core/Hooks/index.mjs",
-    "./core/i18n": "./dist/core/i18n/index.mjs",
+    "./core/i18n": "./dist/i18n/index.mjs",
     "./core/lib": "./dist/lib/index.mjs",
     "./core/preferences": "./dist/preferences/index.mjs",
+    "./audio": "./dist/components/Audio/index.mjs",
+    "./audio/styles": "./dist/components/Audio/index.css",
+    "./divina": "./dist/components/Divina/index.mjs",
+    "./divina/styles": "./dist/components/Divina/index.css",
     "./epub": "./dist/components/Epub/index.mjs",
     "./epub/styles": "./dist/components/Epub/index.css",
     "./misc": "./dist/components/Misc/index.mjs",
     "./misc/styles": "./dist/components/Misc/index.css",
     "./next": "./dist/next-lib/index.mjs",
+    "./reader": "./dist/components/Reader/index.mjs",
+    "./reader/styles": "./dist/components/Reader/index.css",
     "./webpub": "./dist/components/WebPub/index.mjs",
     "./webpub/styles": "./dist/components/WebPub/index.css"
   },
@@ -56,13 +62,14 @@
     "extract-locales": "node scripts/extract-locales.mjs",
     "check-locales": "node scripts/check-locales.mjs",
     "update-locales": "pnpm remove @edrlab/thorium-locales && pnpm add @edrlab/thorium-locales@github:edrlab/thorium-locales && pnpm extract-locales && pnpm check-locales --summary --show-missing",
-    "bundle": "pnpm extract-locales && tsup --config tsup.config.ts && pnpm copy-locales && pnpm copy-fonts"
+    "bundle": "pnpm extract-locales && tsup --config tsup.config.ts && pnpm copy-locales && pnpm copy-fonts",
+    "increment": "node scripts/increment.mjs"
   },
   "peerDependencies": {
-    "@readium/css": "^2.0.0",
-    "@readium/navigator": "2.4.0-alpha.17",
-    "@readium/navigator-html-injectables": "2.3.1-alpha.2",
-    "@readium/shared": "2.2.0-alpha.2",
+    "@readium/css": ">=2.0.5",
+    "@readium/shared": "2.4.0-alpha.1",
+    "@readium/navigator-html-injectables": "2.5.0",
+    "@readium/navigator": "2.7.0-alpha.3",
     "@reduxjs/toolkit": "^2.11.2",
     "i18next": "^25.8.13",
     "i18next-browser-languagedetector": "^8.2.1",
@@ -73,19 +80,20 @@
     "react-aria-components": "^1.15.1",
     "react-dom": "^19.2.4",
     "react-i18next": "^16.5.4",
-    "react-modal-sheet": "^5.2.1",
+    "react-modal-sheet": "5.2.1",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^3.0.6",
     "react-stately": "^3.44.0"
   },
   "dependencies": {
     "@edrlab/thorium-locales": "github:edrlab/thorium-locales",
-    "@readium/css": "^2.0.0",
-    "@readium/navigator": "2.4.0-alpha.16",
-    "@readium/navigator-html-injectables": "2.3.1-alpha.2",
-    "@readium/shared": "2.2.0-alpha.2",
+    "@readium/css": ">=2.0.5",
+    "@readium/shared": "2.4.0-alpha.1",
+    "@readium/navigator-html-injectables": "2.5.0",
+    "@readium/navigator": "2.7.0-alpha.3",
     "@reduxjs/toolkit": "^2.11.2",
     "classnames": "^2.5.1",
+    "colorthief": "^3.3.1",
     "debounce": "^3.0.0",
     "i18next": "^25.8.13",
     "i18next-browser-languagedetector": "^8.2.1",
@@ -93,14 +101,14 @@
     "motion": "^12.34.3",
     "next": "16.1.6",
     "react": "^19.2.4",
-    "react-aria": "^3.46.0",
-    "react-aria-components": "^1.15.1",
+    "react-aria": "^3.49.0",
+    "react-aria-components": "^1.18.0",
     "react-dom": "^19.2.4",
     "react-i18next": "^16.5.4",
-    "react-modal-sheet": "^5.2.1",
+    "react-modal-sheet": "5.2.1",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^3.0.6",
-    "react-stately": "^3.44.0"
+    "react-stately": "^3.47.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
@@ -112,9 +120,11 @@
     "esbuild-plugin-svgr": "^3.1.1",
     "eslint": "^9.39.2",
     "eslint-config-next": "16.1.6",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "glob": "^13.0.6",
     "immer": "11.1.2",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
-  }
+  },
+  "packageManager": "pnpm@10.28.2"
 }

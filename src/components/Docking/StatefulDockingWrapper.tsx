@@ -10,8 +10,9 @@ import { ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from "rea
 import { ThDockingTypes, ThDockingKeys, ThLayoutDirection } from "@/preferences/models";
 import { ActionsStateKeys } from "@/lib/actionsReducer";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 import { useResizablePanel } from "./hooks/useResizablePanel";
+import { useDockCleanup } from "./hooks/useDockCleanup";
 import { useI18n } from "@/i18n/useI18n";
 
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -74,8 +75,9 @@ const DockPanel = ({
   isPopulated,
   isCollapsed,
   forceExpand,
-  hasDragIndicator 
-}: {
+  hasDragIndicator,
+  profile
+}: { 
   actionKey: ActionsStateKeys | null;
   flow: ThDockingKeys.start | ThDockingKeys.end;
   sizes: DockPanelSizes;
@@ -84,6 +86,7 @@ const DockPanel = ({
   isCollapsed: boolean;
   forceExpand: boolean;
   hasDragIndicator?: boolean;
+  profile: string;
 }) => {
   const { t } = useI18n();
 
@@ -117,24 +120,24 @@ const DockPanel = ({
   const collapsePanel = useCallback(() => {
     if (panelRef.current) {
       panelRef.current.collapse();
-      dispatch(collapseDockPanel(flow));
+      dispatch(collapseDockPanel({ slot: flow, profile }));
     }
-  }, [dispatch, flow]);
+  }, [dispatch, flow, profile]);
 
   const expandPanel = useCallback(() => {
     if (panelRef.current) {
       panelRef.current.expand();
-      dispatch(expandDockPanel(flow));
+      dispatch(expandDockPanel({ slot: flow, profile }));
     }
-  }, [dispatch, flow]);
+  }, [dispatch, flow, profile]);
 
   useEffect(() => {
-    dispatch(activateDockPanel(flow));
+    dispatch(activateDockPanel({ slot: flow, profile }));
 
     return () => {
-      dispatch(deactivateDockPanel(flow));
+      dispatch(deactivateDockPanel({ slot: flow, profile }));
     }
-  }, [dispatch, flow]);
+  }, [dispatch, flow, profile]);
 
   useEffect(() => {
     isPopulated || forceExpand ? expandPanel() : collapsePanel();
@@ -163,7 +166,8 @@ const DockPanel = ({
       onExpand={ expandPanel }
       onResize={ (size: number) => size !== 0 && dispatch(setDockPanelWidth({
         key: flow,
-        width: sizes.getCurrentPxWidth(size)
+        width: sizes.getCurrentPxWidth(size),
+        profile: profile
       }))}
       inert={ isCollapsed } 
     >
@@ -190,9 +194,14 @@ export const StatefulDockingWrapper = ({
 }: { 
   children: ReactNode; 
 }) => {
-  const { preferences } = usePreferences();
-  const dockingStart = useAppSelector(state => state.actions.dock[ThDockingKeys.start]);
-  const dockingEnd = useAppSelector(state => state.actions.dock[ThDockingKeys.end])
+  const preferences = useActionsPreferences();
+  const profile = useAppSelector(state => state.reader.profile);
+  
+  // Clean up stale docked actions
+  useDockCleanup(profile);
+  
+  const dockingStart = useAppSelector(state => profile && state.actions.dock[profile] ? state.actions.dock[profile][ThDockingKeys.start] : undefined);
+  const dockingEnd = useAppSelector(state => profile && state.actions.dock[profile] ? state.actions.dock[profile][ThDockingKeys.end] : undefined)
   const startPanel = useResizablePanel(dockingStart);
   const endPanel = useResizablePanel(dockingEnd);
 
@@ -219,7 +228,7 @@ export const StatefulDockingWrapper = ({
       <PanelGroup direction="horizontal">
         { 
           (dockConfig === ThDockingTypes.both || dockConfig === ThDockingTypes.start) 
-          && <DockPanel 
+          && profile && <DockPanel 
             actionKey={ startPanel.currentKey() }
             flow={ ThDockingKeys.start } 
             sizes={{
@@ -233,6 +242,7 @@ export const StatefulDockingWrapper = ({
             isCollapsed={ startPanel.isCollapsed() } 
             forceExpand={ startPanel.forceExpand() }
             hasDragIndicator={ startPanel.hasDragIndicator() }
+            profile={ profile }
           />
         }
     
@@ -241,8 +251,8 @@ export const StatefulDockingWrapper = ({
         </Panel>
     
         { 
-          (dockConfig === ThDockingTypes.both || dockConfig === ThDockingTypes.end)
-          && <DockPanel 
+          (dockConfig === ThDockingTypes.both || dockConfig === ThDockingTypes.end) 
+          && profile && <DockPanel 
             actionKey={ endPanel.currentKey() }
             flow={ ThDockingKeys.end } 
             sizes={{
@@ -256,8 +266,9 @@ export const StatefulDockingWrapper = ({
             isCollapsed={ endPanel.isCollapsed() } 
             forceExpand={ endPanel.forceExpand() }
             hasDragIndicator={ endPanel.hasDragIndicator() }
+            profile={ profile }
           />
-      }
+        }
       </PanelGroup>
     </>
     )

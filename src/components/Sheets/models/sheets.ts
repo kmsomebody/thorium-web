@@ -7,7 +7,9 @@ export interface StatefulSheet {
   triggerRef: RefObject<HTMLElement | null>;
   heading: string;
   headerVariant?: ThSheetHeaderVariant;
-  className: string;
+  className?: string;
+  underlayClassName?: string;
+  headerClassName?: string;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   onClosePress: () => void;

@@ -2,7 +2,8 @@
 
 import { useCallback } from "react";
 
-import { ThLayoutOptions } from "@/preferences/models";
+import { ThLayoutOptions, ThSettingsKeys } from "@/preferences/models";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../../Settings/helpers/settingsKeyMapping";
 
 import ScrollableIcon from "./assets/icons/contract.svg";
 import PaginatedIcon from "./assets/icons/docs.svg";
@@ -12,14 +13,13 @@ import { StatefulRadioGroup } from "../../Settings/StatefulRadioGroup";
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
 import { useI18n } from "@/i18n/useI18n";
 
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch } from "@/lib/hooks";
 import { setScroll } from "@/lib/settingsReducer";
+import { useIsScroll } from "@/hooks";
 
 export const StatefulLayout = () => {
   const { t } = useI18n();
-  const scroll = useAppSelector(state => state.settings.scroll);
-  const isFXL = useAppSelector(state => state.publication.isFXL);
-  const isScroll = scroll && !isFXL;
+  const isScroll = useIsScroll();
 
   const dispatch = useAppDispatch();
 
@@ -40,11 +40,13 @@ export const StatefulLayout = () => {
     }
   ];
 
-  const updatePreference = useCallback(async (value: string) => { 
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.layout];
+
+  const updatePreference = useCallback(async (value: string) => {
     const derivedValue = value === ThLayoutOptions.scroll;
-    await submitPreferences({ scroll: derivedValue });
-    dispatch(setScroll(getSetting("scroll")));
-  }, [submitPreferences, getSetting, dispatch]);
+    await submitPreferences({ [prefKey]: derivedValue });
+    dispatch(setScroll(getSetting(prefKey)));
+  }, [prefKey, submitPreferences, getSetting, dispatch]);
 
   return (
     <>

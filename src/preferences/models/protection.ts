@@ -1,4 +1,4 @@
-import { IContentProtectionConfig } from "@readium/navigator";
+import { IContentProtectionConfig, IAudioContentProtectionConfig } from "@readium/navigator";
 import { I18nValue } from "./i18n";
 
 export interface CopyProtectionConfig {
@@ -53,6 +53,9 @@ export interface ContentProtectionConfig {
 
   /** Monitor developer tools for suspicious activity. We need it for the shortcut protection */
   monitorDevTools?: boolean;
+
+  /** Prevent casting to remote devices via the Remote Playback API. */
+  disableRemotePlayback?: boolean;
 }
 
 /**
@@ -86,16 +89,63 @@ export const resolveContentProtectionConfig = (
     protectCopy: contentProtection.protectCopy,
     disableContextMenu: contentProtection.disableContextMenu,
     disableDragAndDrop: contentProtection.disableDragAndDrop,
-    protectPrinting: contentProtection.protectPrinting ? {
-      disable: contentProtection.protectPrinting.disable,
+    protectPrinting: contentProtection.protectPrinting?.disable ? {
+      disable: true,
       watermark: resolvedWatermark
     } : undefined,
     disableSelectAll: contentProtection.disableSelectAll,
     disableSave: contentProtection.disableSave,
-    monitorDevTools: contentProtection.monitorDevTools
+    monitorDevTools: contentProtection.monitorDevTools,
+    // TODO: When we implement it in non-audio navigators, uncomment
+    // disableRemotePlayback: contentProtection.disableRemotePlayback
   };
-  
+
   return resolved;
+};
+
+/**
+ * Audio-specific content protection configuration.
+ * Differs from ContentProtectionConfig in that protectCopy is boolean only,
+ * since audio does not support selection-based copy protection.
+ */
+export type AudioContentProtectionConfig = Omit<ContentProtectionConfig, "protectCopy"> & {
+  /** Block copy events (Ctrl+C / Cmd+C) */
+  protectCopy?: boolean;
+};
+
+/**
+ * Resolves audio content protection configuration with localized strings
+ */
+export const resolveAudioContentProtectionConfig = (
+  contentProtection: AudioContentProtectionConfig | undefined,
+  t: (key: string, options?: { defaultValue?: string }) => string
+): IAudioContentProtectionConfig | undefined => {
+  if (!contentProtection) return undefined;
+
+  let resolvedWatermark: string | undefined;
+  if (contentProtection.protectPrinting?.watermark) {
+    if (typeof contentProtection.protectPrinting.watermark === "object" && "key" in contentProtection.protectPrinting.watermark) {
+      resolvedWatermark = t(contentProtection.protectPrinting.watermark.key, {
+        defaultValue: contentProtection.protectPrinting.watermark.fallback
+      });
+    } else if (typeof contentProtection.protectPrinting.watermark === "string") {
+      resolvedWatermark = t(contentProtection.protectPrinting.watermark);
+    }
+  }
+
+  return {
+    protectCopy: contentProtection.protectCopy,
+    disableContextMenu: contentProtection.disableContextMenu,
+    disableDragAndDrop: contentProtection.disableDragAndDrop,
+    protectPrinting: contentProtection.protectPrinting?.disable ? {
+      disable: true,
+      watermark: resolvedWatermark
+    } : undefined,
+    disableSelectAll: contentProtection.disableSelectAll,
+    disableSave: contentProtection.disableSave,
+    monitorDevTools: contentProtection.monitorDevTools,
+    disableRemotePlayback: contentProtection.disableRemotePlayback,
+  };
 };
 
 /**
@@ -115,9 +165,26 @@ export const defaultContentProtectionConfig: ContentProtectionConfig = {
 };
 
 /**
+ * Default audio content protection configuration
+ */
+export const defaultAudioContentProtectionConfig: AudioContentProtectionConfig = {
+  protectCopy: false,
+  disableContextMenu: false,
+  disableDragAndDrop: false,
+  protectPrinting: {
+    disable: false,
+    watermark: "reader.app.printingDisabled"
+  },
+  disableSelectAll: false,
+  disableSave: false,
+  monitorDevTools: false,
+  disableRemotePlayback: false,
+};
+
+/**
  * Development content protection configuration - disables all protections
  */
-export const devContentProtectionConfig: ContentProtectionConfig = {
+export const devContentProtectionConfig = {
   protectCopy: false,
   disableContextMenu: false,
   disableDragAndDrop: false,
@@ -126,5 +193,6 @@ export const devContentProtectionConfig: ContentProtectionConfig = {
   },
   disableSelectAll: false,
   disableSave: false,
-  monitorDevTools: false
+  monitorDevTools: false,
+  disableRemotePlayback: false,
 };

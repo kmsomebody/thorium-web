@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ThStoreProvider } from "@/lib/ThStoreProvider";
-import { ThPreferencesProvider } from "@/preferences/ThPreferencesProvider";
-import { ThI18nProvider } from "@/i18n/ThI18nProvider";
+import { ThGlobalPreferencesProvider } from "@/preferences/ThGlobalPreferencesProvider";
 
 import "./reset.css";
 
@@ -22,14 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={ inter.className }>
         <ThStoreProvider>
-          <ThPreferencesProvider devMode={ process.env.NODE_ENV !== "production" }>
-            <ThI18nProvider>
-              { children }
-            </ThI18nProvider>
-          </ThPreferencesProvider>
+          <ThGlobalPreferencesProvider>
+            { children }
+          </ThGlobalPreferencesProvider>
         </ThStoreProvider>
       </body>
     </html>

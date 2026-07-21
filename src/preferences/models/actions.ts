@@ -1,19 +1,43 @@
 import { ThCollapsibility, ThCollapsibilityVisibility } from "@/core/Components/Actions/hooks/useCollapsibility";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 import { ThBreakpoints } from "./ui";
+import type { KeyCombo } from "@readium/navigator-html-injectables";
+import type { I18nValue } from "./i18n";
+
+export interface ThShortcutConfig {
+  keyCombos: KeyCombo[];
+  label?: I18nValue<string>;
+}
+
+export const TEXT_INPUT_SELECTORS: string[] = [
+  "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='file']):not([type='checkbox']):not([type='radio'])",
+  "textarea",
+  "[contenteditable]"
+];
 
 export type ThBottomSheetDetent = "content-height" | "full-height";
 
 export interface ThActionsTokens {
   visibility: ThCollapsibilityVisibility;
-  shortcut: string | null;
+  shortcut: ThShortcutConfig | null;
   sheet?: {
-    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd>;
-    breakpoints: BreakpointsMap<ThSheetTypes>;
+    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd | ThSheetTypes.compactPopover>;
+    breakpoints: BreakpointsMap<Exclude<ThSheetTypes, ThSheetTypes.compactPopover>>;
   };
   docked?: ThActionsDockedPref;
   snapped?: ThActionsSnappedPref;
-};
+}
+
+export interface ThAudioActionsTokens {
+  visibility: ThCollapsibilityVisibility;
+  shortcut: ThShortcutConfig | null;
+  sheet?: {
+    defaultSheet: Exclude<ThSheetTypes, ThSheetTypes.dockedStart | ThSheetTypes.dockedEnd | ThSheetTypes.popover>;
+    breakpoints: BreakpointsMap<Exclude<ThSheetTypes, ThSheetTypes.popover>>;
+  };
+  docked?: ThActionsDockedPref;
+  snapped?: ThActionsSnappedPref;
+}
 
 export interface ThActionsDockedPref {
   dockable: ThDockingTypes,
@@ -62,6 +86,8 @@ export enum ThDockingTypes {
 
 export enum ThSheetTypes {
   popover = "popover",
+  compactPopover = "compactPopover",
+  modal = "modal",
   fullscreen = "fullscreen",
   dockedStart = "docked start",
   dockedEnd = "docked end",
@@ -80,7 +106,10 @@ export const defaultActionKeysObject: ThActionsTokens = {
 
 export const defaultSettingsAction: ThActionsTokens = {
   visibility: ThCollapsibilityVisibility.partially,
-  shortcut: null, // `${ UnstableShortcutMetaKeywords.shift }+${ ShortcutMetaKeywords.alt }+P`,
+  shortcut: {
+    label: "P",
+    keyCombos: [{ keyCode: 80, shift: true, alt: true, suppressOnInteractiveElement: TEXT_INPUT_SELECTORS }]
+  },
   sheet: {
     defaultSheet: ThSheetTypes.popover,
     breakpoints: {
@@ -106,7 +135,10 @@ export const defaultFullscreenAction: ThActionsTokens = {
 
 export const defaultTocAction: ThActionsTokens = {
   visibility: ThCollapsibilityVisibility.partially,
-  shortcut: null, // `${ UnstableShortcutMetaKeywords.shift }+${ ShortcutMetaKeywords.alt }+T`,
+  shortcut: {
+    label: "T",
+    keyCombos: [{ keyCode: 84, shift: true, alt: true, suppressOnInteractiveElement: TEXT_INPUT_SELECTORS }]
+  },
   sheet: {
     defaultSheet: ThSheetTypes.popover,
     breakpoints: {
@@ -125,7 +157,10 @@ export const defaultTocAction: ThActionsTokens = {
 
 export const defaultJumpToPositionAction: ThActionsTokens = {
   visibility: ThCollapsibilityVisibility.overflow,
-  shortcut: null, // `${ UnstableShortcutMetaKeywords.shift }+${ ShortcutMetaKeywords.alt }+J`,
+  shortcut: {
+    label: "J",
+    keyCombos: [{ keyCode: 74, shift: true, alt: true, suppressOnInteractiveElement: TEXT_INPUT_SELECTORS }]
+  },
   sheet: {
     defaultSheet: ThSheetTypes.popover,
     breakpoints: {

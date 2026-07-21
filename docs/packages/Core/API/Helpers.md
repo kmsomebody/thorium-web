@@ -36,16 +36,14 @@ function isInteractiveElement(element: Element | null): boolean
 
 ## Keyboard Utilities
 
-Utilities for handling keyboard shortcuts, modifiers, and platform-specific key mappings.
+Utilities for displaying keyboard shortcuts and mapping platform-specific modifier keys.
 
 ```typescript
-import { 
+import {
   metaKeys,
   defaultPlatformModifier,
   getPlatformModifier,
-  buildShortcut,
-  UnstableShortcutMetaKeywords,
-  UnstableShortcutRepresentation
+  ShortcutRepresentation
 } from "@edrlab/thorium-web/core/helpers";
 ```
 
@@ -64,7 +62,7 @@ const metaKeys: UnstableMetaKeys = {
 
 Each modifier key contains:
 - `longform`: Full name (e.g., "Command", "Control")
-- `shortform`: Short name (e.g., "Cmd", "Ctrl") 
+- `shortform`: Short name (e.g., "Cmd", "Ctrl")
 - `modifier`: Event property name (e.g., "metaKey", "ctrlKey")
 - `symbol`: Unicode symbol (e.g., "⌘", "^")
 
@@ -86,51 +84,15 @@ Default platform modifier key (Control key).
 const defaultPlatformModifier: UnstablePlatformModifier
 ```
 
-### `buildShortcut`
+### `ShortcutRepresentation`
 
-Parses a string representation of a keyboard shortcut into a structured object.
-
-```typescript
-function buildShortcut(str: string): UnstablePShortcut | null
-```
-
-**Parameters:**
-- `str` - Shortcut string (e.g., "Ctrl+C", "Cmd+Shift+A")
-
-**Returns:** Parsed shortcut object with key, character, and modifier states, or `null` if invalid.
-
-**Example:**
-```typescript
-const shortcut = buildShortcut("Ctrl+C");
-// Result:
-// {
-//   key: "KeyC",
-//   char: "C",
-//   modifiers: {
-//     altKey: false,
-//     ctrlKey: true,
-//     metaKey: false,
-//     platformKey: false,
-//     shiftKey: false
-//   }
-// }
-```
-
-### Enums
+Enum controlling how modifier keys are rendered in the `StatefulShortcut` component.
 
 ```typescript
-enum UnstableShortcutMetaKeywords {
-  alt = "altKey",
-  ctrl = "ctrlKey", 
-  meta = "metaKey",
-  platform = "platformKey",
-  shift = "shiftKey"
-}
-
-enum UnstableShortcutRepresentation {
-  symbol = "symbol",
-  short = "shortform", 
-  long = "longform"
+enum ShortcutRepresentation {
+  symbol = "symbol",   // ⌥, ⇧, ⌘ …
+  short  = "shortform", // Alt, Shift, Cmd …
+  long   = "longform"  // Option, Shift, Command …
 }
 ```
 

@@ -21,6 +21,7 @@ export interface ThPlugin {
   components: {
     actions?: Record<string, ActionComponent>;
     settings?: Record<string, SettingComponent>;
+    primaryAudioActions?: Record<string, ActionComponent>;
   };
 }
 
@@ -50,30 +51,39 @@ class PluginRegistryClass {
     return [...pluginsStore];
   }
   
-  getComponentMaps() {    
+  getComponentMaps() {
     const actionsComponentsMap: Record<string, ActionComponent> = {} as Record<string, ActionComponent>;
     const settingsComponentsMap: Record<string, SettingComponent> = {} as Record<string, SettingComponent>;
-    
+    const primaryAudioActionsMap: Record<string, ActionComponent> = {} as Record<string, ActionComponent>;
+
     // Process plugins in reverse order so later plugins override earlier ones
-    [...pluginsStore].reverse().forEach(plugin => {      
+    [...pluginsStore].reverse().forEach(plugin => {
       // Merge actions components
       if (plugin.components.actions) {
         Object.entries(plugin.components.actions).forEach(([key, component]) => {
           actionsComponentsMap[key as string] = component;
         });
       }
-      
+
       // Merge settings components
       if (plugin.components.settings) {
         Object.entries(plugin.components.settings).forEach(([key, component]) => {
           settingsComponentsMap[key as string] = component;
         });
       }
+
+      // Merge primary audio action components
+      if (plugin.components.primaryAudioActions) {
+        Object.entries(plugin.components.primaryAudioActions).forEach(([key, component]) => {
+          primaryAudioActionsMap[key as string] = component;
+        });
+      }
     });
-    
+
     return {
       actionsComponentsMap,
-      settingsComponentsMap
+      settingsComponentsMap,
+      primaryAudioActionsMap
     };
   }
 }

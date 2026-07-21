@@ -14,19 +14,18 @@ import FullscreenExit from "./assets/icons/fullscreen_exit.svg";
 import { StatefulOverflowMenuItem } from "../Triggers/StatefulOverflowMenuItem";
 import { StatefulActionIcon } from "../Triggers/StatefulActionIcon";
 
-import { usePreferences } from "@/preferences/hooks/usePreferences";
+import { useActionsPreferences } from "@/preferences/hooks/useActionsPreferences";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { useI18n } from "@/i18n/useI18n";
 
 import { useAppDispatch } from "@/lib/hooks";
 import { setFullscreen, setHovering } from "@/lib/readerReducer";
-import { isIOSish } from "@/core/Helpers/getPlatform";
 
 export const StatefulFullscreenTrigger = ({ variant }: StatefulActionTriggerProps) => {
   // Note: Not using React Aria ToggleButton here as fullscreen is quite
   // difficult to control in isolation due to collapsibility + shortcuts
 
-  const { preferences } = usePreferences();
+  const preferences = useActionsPreferences();
   const { t } = useI18n();
 
   const dispatch = useAppDispatch();
@@ -50,7 +49,7 @@ export const StatefulFullscreenTrigger = ({ variant }: StatefulActionTriggerProp
   // And Actions is still a work in progress, with opportunities to rewrite/refactor
   // Note we don’t check window.matchMedia("(display-mode: standalone)").matches as this is not a PWA yet
   // And more values here: https://web.dev/learn/pwa/detection
-  if (!document.fullscreenEnabled || isIOSish()) return null;
+  if (!fs.isSupported) return null;
 
   return(
     <>
@@ -58,17 +57,18 @@ export const StatefulFullscreenTrigger = ({ variant }: StatefulActionTriggerProp
       ? <StatefulOverflowMenuItem 
           label={ label }
           SVGIcon={ Icon } 
-          shortcut={ preferences.actions.keys[ThActionsKeys.fullscreen].shortcut }
+          shortcut={ preferences.actionsKeys[ThActionsKeys.fullscreen].shortcut }
           onAction={ fs.handleFullscreen } 
           id={ ThActionsKeys.fullscreen }
         />
-      : <StatefulActionIcon 
+      : <StatefulActionIcon
           className={ readerSharedUI.iconCompSm }
-          visibility={ preferences.actions.keys[ThActionsKeys.fullscreen].visibility }  
+          visibility={ preferences.actionsKeys[ThActionsKeys.fullscreen].visibility }
           aria-label={ label }
-          placement="bottom" 
-          tooltipLabel={ t("reader.fullscreen.tooltip") } 
-          onPress={ handlePress } 
+          placement="bottom"
+          tooltipLabel={ t("reader.fullscreen.tooltip") }
+          shortcut={ preferences.actionsKeys[ThActionsKeys.fullscreen].shortcut }
+          onPress={ handlePress }
         >
           <Icon aria-hidden="true" focusable="false" />
         </StatefulActionIcon>

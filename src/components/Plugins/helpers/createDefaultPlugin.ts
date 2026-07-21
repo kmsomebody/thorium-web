@@ -5,11 +5,15 @@ import { StatefulFullscreenTrigger } from "../../Actions/Fullscreen/StatefulFull
 import { StatefulJumpToPositionTrigger } from "../../Actions/JumpToPosition/StatefulJumpToPositionTrigger";
 import { StatefulJumpToPositionContainer } from "../../Actions/JumpToPosition/StatefulJumpToPositionContainer";
 import { StatefulSettingsTrigger } from "../../Actions/Settings/StatefulSettingsTrigger";
-import { StatefulSettingsContainer } from "../../Actions/Settings/StatefulSettingsContainer";
+import { StatefulVisualSettingsContainer } from "../../Actions/Settings/StatefulVisualSettingsContainer";
 import { StatefulTocTrigger } from "../../Actions/Toc/StatefulTocTrigger";
 import { StatefulTocContainer } from "../../Actions/Toc/StatefulTocContainer";
 
 import { StatefulColumns } from "../../Epub/Settings/StatefulColumns";
+import { StatefulDivinaLayout } from "../../Divina/Settings/StatefulDivinaLayout";
+import { StatefulDivinaQuality } from "../../Divina/Settings/StatefulDivinaQuality";
+import { StatefulDivinaSpreads } from "../../Divina/Settings/StatefulDivinaSpreads";
+import { StatefulDivinaStripWidth } from "../../Divina/Settings/StatefulDivinaStripWidth";
 import { StatefulFontFamily } from "../../Settings/Text/StatefulFontFamily";
 import { UnstableStatefulFontWeight } from "../../Settings/Text/StatefulFontWeight";
 import { StatefulHyphens } from "../../Settings/Text/StatefulHyphens";
@@ -24,7 +28,9 @@ import { StatefulSpacingPresets } from "../../Settings/Spacing/StatefulSpacingPr
 import { StatefulTextAlign } from "../../Settings/Text/StatefulTextAlign";
 import { StatefulTextGroup } from "../../Settings/Text/StatefulTextGroup";
 import { StatefulTextNormalize } from "../../Settings/Text/StatefulTextNormalize";
-import { StatefulTheme } from "../../Epub/Settings/StatefulTheme";
+import { StatefulLigatures } from "../../Settings/Text/StatefulLigatures";
+import { StatefulNoRuby } from "../../Settings/Text/StatefulNoRuby";
+import { StatefulTheme } from "../../Settings/StatefulTheme";
 import { StatefulWordSpacing } from "../../Settings/Spacing/StatefulWordSpacing";
 import { StatefulZoom } from "../../Settings/StatefulZoom";
 
@@ -33,7 +39,7 @@ export const createDefaultPlugin = (): ThPlugin => {
     id: "core",
     name: "Core Components",
     description: "Default components for Thorium Web Epub StatefulReader",
-    version: "1.1.5",
+    version: "1.5.5",
     components: {
       actions: {
         [ThActionsKeys.fullscreen]: {
@@ -45,7 +51,7 @@ export const createDefaultPlugin = (): ThPlugin => {
         },
         [ThActionsKeys.settings]: {
           Trigger: StatefulSettingsTrigger,
-          Target: StatefulSettingsContainer
+          Target: StatefulVisualSettingsContainer
         },
         [ThActionsKeys.toc]: {
           Trigger: StatefulTocTrigger,
@@ -55,6 +61,18 @@ export const createDefaultPlugin = (): ThPlugin => {
       settings: {
         [ThSettingsKeys.columns]: {
           Comp: StatefulColumns
+        },
+        [ThSettingsKeys.divinaLayout]: {
+          Comp: StatefulDivinaLayout
+        },
+        [ThSettingsKeys.divinaQuality]: {
+          Comp: StatefulDivinaQuality
+        },
+        [ThSettingsKeys.divinaSpreads]: {
+          Comp: StatefulDivinaSpreads
+        },
+        [ThSettingsKeys.divinaStripWidth]: {
+          Comp: StatefulDivinaStripWidth
         },
         [ThSettingsKeys.fontFamily]: {
           Comp: StatefulFontFamily,
@@ -107,6 +125,14 @@ export const createDefaultPlugin = (): ThPlugin => {
         },
         [ThSettingsKeys.textNormalize]: {
           Comp: StatefulTextNormalize,
+          type: "text"
+        },
+        [ThSettingsKeys.ligatures]: {
+          Comp: StatefulLigatures,
+          type: "text"
+        },
+        [ThSettingsKeys.noRuby]: {
+          Comp: StatefulNoRuby,
           type: "text"
         },
         [ThSettingsKeys.theme]: {

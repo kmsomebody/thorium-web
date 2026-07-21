@@ -10,8 +10,10 @@ export interface StatefulActionsMapObject {
 export interface StatefulActionTriggerProps {
   variant: ThActionsTriggerVariant;
   associatedKey?: ActionsStateKeys;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 export interface StatefulActionContainerProps {
   triggerRef: RefObject<HTMLElement | null>;
+  placement?: "top" | "bottom";
 }

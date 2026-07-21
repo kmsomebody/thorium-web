@@ -1,5 +1,3 @@
-"use client";
-
 import { ThColorScheme } from "@/core/Hooks/useColorScheme";
 import { ThemeTokens } from "../hooks/useTheming";
 

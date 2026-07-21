@@ -3,6 +3,7 @@
 import { useCallback, useMemo } from "react";
 
 import { ThLineHeightOptions, ThSpacingSettingsKeys, ThSettingsKeys } from "@/preferences";
+import { SETTINGS_KEY_TO_PREFERENCE } from "../helpers/settingsKeyMapping";
 
 import { StatefulSettingsItemProps } from "../models/settings";
 
@@ -20,6 +21,8 @@ import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useAppSelector } from "@/lib/hooks";
 import { useLineHeight } from "./hooks/useLineHeight";
 import { useSpacingPresets } from "./hooks/useSpacingPresets";
+import { useReaderSetting } from "../hooks/useReaderSetting";
+
 
 export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemProps) => {
   const { t } = useI18n();
@@ -28,17 +31,27 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
   const profile = useAppSelector(state => state.reader.profile);
   const isWebPub = profile === "webPub";
 
-  const publisherStyles = useAppSelector(state => isWebPub ? state.webPubSettings.publisherStyles : state.settings.publisherStyles) ?? true;
+  const publisherStyles = useReaderSetting("publisherStyles");
 
-  const { getSetting, submitPreferences } = useNavigator();
+  const { getSetting, submitPreferences } = useNavigator().visual;
+
+  const prefKey = SETTINGS_KEY_TO_PREFERENCE[ThSettingsKeys.lineHeight];
 
   const { getEffectiveSpacingValue, setLineHeight } = useSpacingPresets();
 
   const lineHeight = getEffectiveSpacingValue(ThSpacingSettingsKeys.lineHeight);
 
-  const lineHeightOptions = useLineHeight();
+  const { processedValues } = useLineHeight();
 
-  // Dynamically build items array based on allowUnset preference
+  // Build map from processed values for settings UI
+  const processedPresets = useMemo(() => {
+    const result = new Map<ThLineHeightOptions, number>();
+    result.set(ThLineHeightOptions.small, processedValues[ThLineHeightOptions.small]);
+    result.set(ThLineHeightOptions.medium, processedValues[ThLineHeightOptions.medium]);
+    result.set(ThLineHeightOptions.large, processedValues[ThLineHeightOptions.large]);
+    return result;
+  }, [processedValues]);
+
   const items = useMemo(() => {
     const baseItems = [
       {
@@ -59,9 +72,8 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
         label: t("reader.preferences.lineHeight.large"),
         value: ThLineHeightOptions.large
       },
-    ];
+    ].filter(item => processedPresets.has(item.id));
 
-    // Only add publisher option if allowUnset is true
     if (preferences.settings.keys[ThSettingsKeys.lineHeight].allowUnset !== false) {
       baseItems.unshift({
         id: ThLineHeightOptions.publisher,
@@ -72,22 +84,21 @@ export const StatefulLineHeight = ({ standalone = true }: StatefulSettingsItemPr
     }
 
     return baseItems;
-  }, [preferences.settings.keys, t]);
+  }, [preferences.settings.keys, processedPresets, t]);
 
   const updatePreference = useCallback(async (value: string) => {
-    const computedValue = value === ThLineHeightOptions.publisher
+    const submitValue = value === ThLineHeightOptions.publisher
       ? null
-      : lineHeightOptions[value as keyof typeof ThLineHeightOptions];
-
+      : processedPresets.get(value as ThLineHeightOptions) ?? null;
     await submitPreferences({
-      lineHeight: computedValue
+      [prefKey]: submitValue
     });
 
-    const currentLineHeight = getSetting("lineHeight");
-    const currentDisplayLineHeightOption = Object.entries(lineHeightOptions).find(([key, value]) => value === currentLineHeight)?.[0] as ThLineHeightOptions;
+    const storedLineHeight = getSetting(prefKey) as number | null;
+    const currentDisplayLineHeightOption = [...processedPresets.entries()].find(([, v]) => v === storedLineHeight)?.[0] as ThLineHeightOptions;
 
     setLineHeight(currentDisplayLineHeightOption);
-  }, [submitPreferences, getSetting, setLineHeight, lineHeightOptions]);
+  }, [prefKey, submitPreferences, getSetting, setLineHeight, processedPresets]);
 
   return (
     <>
