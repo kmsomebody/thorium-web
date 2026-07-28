@@ -18,6 +18,16 @@ export interface ThBackLinkPref {
   content?: ThBackLinkContent;
 }
 
+export interface ThOverlayClassNamesPref {
+  dockedPanel?: string;
+  popover?: string;
+  menu?: string;
+  dropdown?: string;
+  tooltip?: string;
+  modal?: string;
+  sheet?: string;
+}
+
 export interface ThFormatPrefValue<T extends string | Array<string>> {
   variants: T;
   displayInImmersive?: boolean;

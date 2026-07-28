@@ -10,7 +10,7 @@ import { Dialog, DialogProps, Popover, PopoverProps } from "react-aria-component
 
 import { useObjectRef } from "react-aria";
 import { useFirstFocusable } from "./hooks/useFirstFocusable";
-import { usePreferences } from "@/preferences";
+import { useSharedPreferences } from "@/preferences";
 
 export interface ThPopoverProps extends Omit<PopoverProps, "children">, ThContainerProps {
   triggerRef: React.RefObject<HTMLElement | null>;
@@ -31,7 +31,7 @@ export const ThPopover = ({
   ...props
 }: ThPopoverProps) => {
   const resolvedRef = useObjectRef(ref as React.RefObject<HTMLDivElement | null>);
-  const { preferences } = usePreferences();
+  const { theming } = useSharedPreferences();
 
   const updatedFocusOptions = focusOptions ? {
     ...focusOptions,
@@ -51,7 +51,7 @@ export const ThPopover = ({
       triggerRef={ triggerRef }
       maxHeight={ maxHeight || computeMaxHeight() }
       className={(state) => {
-        const pref = preferences.theming.classNames?.popover;
+        const pref = theming.classNames?.popover;
         const cls =
           typeof className === "function" ? className(state) : className;
         return [pref, cls].filter((v) => !!v).join(" ");

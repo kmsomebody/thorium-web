@@ -14,6 +14,7 @@ import {
   ThSettingsTimerPref,
   ThBackLinkPref,
   ThDockingPref,
+  ThOverlayClassNamesPref,
   ThAudioPlayerComponent,
   ThAudioProgressBarVariant,
   ThAudioPublicationMetadataComponent,
@@ -166,6 +167,7 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
       };
       keys: Record<Exclude<ThAudioThemeKey<K>, "auto"> & string, ThemeTokens>;
     };
+    classNames?: ThOverlayClassNamesPref;
   };
 
   actions: ThAudioActionsPref<K>;

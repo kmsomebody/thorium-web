@@ -6,7 +6,7 @@ import { WithRef } from "../customTypes";
 
 import { Button, ButtonProps, Tooltip, TooltipProps, TooltipTrigger } from "react-aria-components";
 import { TooltipTriggerProps } from "react-aria";
-import { usePreferences } from "@/preferences";
+import { useSharedPreferences } from "@/preferences";
 
 export interface ThActionButtonProps extends ButtonProps {
   label?: string,
@@ -33,7 +33,7 @@ export const ThActionButton = ({
   children,
   ...props
 }: ThActionButtonProps) => {  
-  const { preferences } = usePreferences();
+  const { theming } = useSharedPreferences();
   if (compounds) {
     return (
       <>
@@ -51,7 +51,7 @@ export const ThActionButton = ({
           { ...compounds.tooltip }
           className={(state) => {
             const className = compounds?.tooltip?.className;
-            const pref = preferences.theming.classNames?.menu;
+            const pref = theming.classNames?.menu;
             const cls = typeof className === "function" ? className(state) : className;
             return [pref, cls].filter((v) => !!v).join(" ");
           }}

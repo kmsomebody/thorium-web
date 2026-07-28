@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { ThIconPref, ThLayoutDefaultsPref, ThShortcutsPref } from "../preferences";
 import { ThAudioPreferencesContext } from "../ThAudioPreferencesContext";
 import { ThPreferencesContext } from "../ThPreferencesContext";
-import { ThBackLinkPref, ThDockingKeys, ThDockingPref } from "../models";
+import { ThBackLinkPref, ThDockingKeys, ThDockingPref, ThOverlayClassNamesPref } from "../models";
 import { ThemeTokens } from "./useTheming";
 import { BreakpointsMap } from "@/core/Hooks/useBreakpoints";
 
@@ -28,6 +28,7 @@ export interface SharedPreferences {
       defaults: ThLayoutDefaultsPref;
     };
     breakpoints: BreakpointsMap<number | null>;
+    classNames?: ThOverlayClassNamesPref;
   };
 }
 
@@ -66,6 +67,7 @@ export const useSharedPreferences = (): SharedPreferences => {
         defaults: prefs.theming.layout.defaults,
       },
       breakpoints: prefs.theming.breakpoints,
+      classNames: prefs.theming.classNames,
     },
   };
 };

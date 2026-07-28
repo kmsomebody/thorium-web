@@ -30,7 +30,7 @@ import {
 
 import { useTransform } from "motion/react";
 import { useFirstFocusable, UseFirstFocusableProps } from "../hooks/useFirstFocusable";
-import { usePreferences } from "@/preferences";
+import { useSharedPreferences } from "@/preferences";
 
 export interface ThBottomSheetHeaderProps extends ThContainerHeaderProps {
   wrapper: React.ComponentProps<typeof Sheet.Header>,
@@ -210,7 +210,7 @@ export const ThBottomSheet = ({
   ...props
 }: ThBottomSheetProps) => {
   const resolvedRef = useObjectRef(ref);
-  const { preferences } = usePreferences();
+  const { theming } = useSharedPreferences();
 
   let sheetState = useOverlayTriggerState({
     isOpen: isOpen,
@@ -228,7 +228,7 @@ export const ThBottomSheet = ({
       detent={ detent }
       snapPoints={ snapPoints }
       { ...props }
-      className={[preferences.theming.classNames?.sheet, props.className].filter((v) => !!v).join(" ")}
+      className={[theming.classNames?.sheet, props.className].filter((v) => !!v).join(" ")}
     >
       <OverlayProvider>
         <FocusScope 

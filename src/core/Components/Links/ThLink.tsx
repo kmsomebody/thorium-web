@@ -3,7 +3,7 @@
 import { Link, LinkProps, Tooltip, TooltipProps, TooltipTrigger } from "react-aria-components";
 import { WithRef } from "../customTypes";
 import { TooltipTriggerProps } from "react-aria";
-import { usePreferences } from "@/preferences";
+import { useSharedPreferences } from "@/preferences";
 
 export interface ThLinkProps extends LinkProps {
   ref?: React.ForwardedRef<HTMLAnchorElement>;
@@ -36,7 +36,7 @@ export const ThLink = ({
   compounds,
   ...props 
 }: ThLinkProps) => {
-  const { preferences } = usePreferences();
+  const { theming } = useSharedPreferences();
   if (compounds) {
     return (
       <TooltipTrigger
@@ -54,7 +54,7 @@ export const ThLink = ({
           { ...compounds.tooltip }
           className={(state) => {
             const className = compounds?.tooltip?.className;
-            const pref = preferences.theming.classNames?.menu;
+            const pref = theming.classNames?.menu;
             const cls = typeof className === "function" ? className(state) : className;
             return [pref, cls].filter((v) => !!v).join(" ");
           }}
