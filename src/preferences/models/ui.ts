@@ -20,6 +20,7 @@ export interface ThBackLinkPref {
 
 export interface ThOverlayClassNamesPref {
   dockedPanel?: string;
+  compactPopover?:string;
   popover?: string;
   menu?: string;
   dropdown?: string;
