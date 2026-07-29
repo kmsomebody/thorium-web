@@ -12,7 +12,7 @@ import { useWebkitPatch } from "./hooks/useWebkitPatch";
 import { useFirstFocusable } from "@/core/Components/Containers/hooks/useFirstFocusable";
 
 import classNames from "classnames";
-import { usePreferences } from "@/preferences";
+import { usePreferences, useSharedPreferences } from "@/preferences";
 
 export interface StatefulCompactPopoverSheetProps extends StatefulSheet {
   placement?: PopoverProps["placement"];
@@ -35,8 +35,8 @@ export const StatefulCompactPopoverSheet = ({
   }: StatefulCompactPopoverSheetProps) => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverBodyRef = useRef<HTMLDivElement | null>(null);
-  const { preferences } = usePreferences();
-  const additionalClassName = preferences.theming.classNames?.compactPopover;
+  const { theming } = useSharedPreferences();
+  const additionalClassName = theming.classNames?.compactPopover;
 
   useFirstFocusable({
     withinRef: focusWithinRef ?? popoverBodyRef,
