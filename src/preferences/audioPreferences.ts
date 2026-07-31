@@ -14,6 +14,7 @@ import {
   ThSettingsTimerPref,
   ThBackLinkPref,
   ThDockingPref,
+  ThOverlayClassNamesPref,
   ThAudioPlayerComponent,
   ThAudioProgressBarVariant,
   ThAudioPublicationMetadataComponent,
@@ -156,6 +157,7 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
       constraints?: {
         [key in ThAudioConstraintKeys]?: number | null;
       };
+      breakpoint?: number;
     };
     breakpoints: BreakpointsMap<number | null>;
     themes: {
@@ -166,6 +168,7 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
       };
       keys: Record<Exclude<ThAudioThemeKey<K>, "auto"> & string, ThemeTokens>;
     };
+    classNames?: ThOverlayClassNamesPref;
   };
 
   actions: ThAudioActionsPref<K>;

@@ -12,6 +12,7 @@ import { useWebkitPatch } from "./hooks/useWebkitPatch";
 import { useFirstFocusable } from "@/core/Components/Containers/hooks/useFirstFocusable";
 
 import classNames from "classnames";
+import { usePreferences, useSharedPreferences } from "@/preferences";
 
 export interface StatefulCompactPopoverSheetProps extends StatefulSheet {
   placement?: PopoverProps["placement"];
@@ -34,6 +35,8 @@ export const StatefulCompactPopoverSheet = ({
   }: StatefulCompactPopoverSheetProps) => {
   const popoverRef = useRef<HTMLDivElement | null>(null);
   const popoverBodyRef = useRef<HTMLDivElement | null>(null);
+  const { theming } = useSharedPreferences();
+  const additionalClassName = theming.classNames?.compactPopover;
 
   useFirstFocusable({
     withinRef: focusWithinRef ?? popoverBodyRef,
@@ -62,7 +65,7 @@ export const StatefulCompactPopoverSheet = ({
         isOpen={ isOpen }
         onOpenChange={ onOpenChange }
         isKeyboardDismissDisabled={ dismissEscapeKeyClose }
-        className={ classNames(sheetStyles.compactPopover, className) }
+        className={ classNames(additionalClassName, sheetStyles.compactPopover, className) }
       >
         <Dialog
           id={ id }

@@ -23,6 +23,7 @@ import {
   ThSettingsChoicesPref,
   I18nValue,
   ThBackLinkPref,
+  ThOverlayClassNamesPref,
   ThFormatPref,
   ThPaginatedAffordancePref,
   ThDockingPref,
@@ -227,15 +228,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       // keys never includes "auto"
       keys: Record<Exclude<ThemeKey<K>, "auto"> & string, ThemeTokens>;
     };
-    classNames?: {
-      dockedPanel?: string;
-      popover?: string;
-      menu?: string;
-      dropdown?: string;
-      tooltip?: string;
-      modal?: string;
-      sheet?: string;
-    };
+    classNames?: ThOverlayClassNamesPref;
   };
   contentProtection?: ContentProtectionConfig;
   affordances: {

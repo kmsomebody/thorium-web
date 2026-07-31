@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useLayoutEffect, useState, useMemo, useCallback, useRef, useEffect, CSSProperties } from "react";
 
 import audioLayoutStyles from "./assets/styles/thorium-web.audio.app.module.css";
 import audioStyles from "./assets/styles/thorium-web.audioPlayer.module.css";
@@ -13,7 +13,7 @@ import { NavigatorProvider } from "@/core/Navigator";
 import { Publication } from "@readium/shared";
 import { ContextMenuEvent, SuspiciousActivityEvent } from "@readium/navigator-html-injectables";
 import { fromActionPeripheralType, fromDockingPeripheralType } from "@/helpers/peripherals";
-import { AudioNavigatorListeners, KeyboardPeripheralEventData } from "@readium/navigator";
+import { AudioMseLoaderFactory, AudioNavigatorListeners, KeyboardPeripheralEventData } from "@readium/navigator";
 import { PositionStorage } from "../Reader/StatefulReaderWrapper";
 import { ThAudioPlayerComponent } from "@/preferences/models";
 
@@ -73,6 +73,8 @@ export interface StatefulPlayerProps {
   positionStorage?: PositionStorage;
   coverUrl?: string;
   containerRefSetter?: (el: Element | null) => void;
+  mediaElementSetup?: (element: HTMLMediaElement) => void | Promise<void>;
+  audioMseLoaderFactory?: AudioMseLoaderFactory;
 }
 
 export const StatefulPlayer = ({
@@ -81,7 +83,9 @@ export const StatefulPlayer = ({
   plugins,
   positionStorage,
   coverUrl,
-  containerRefSetter
+  containerRefSetter,
+  mediaElementSetup,
+  audioMseLoaderFactory
 }: StatefulPlayerProps) => {
   const [pluginsRegistered, setPluginsRegistered] = useState(false);
 
@@ -102,20 +106,37 @@ export const StatefulPlayer = ({
 
   return (
     <ThPluginProvider>
-      <StatefulPlayerInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverUrl } containerRefSetter={ containerRefSetter } />
+      <StatefulPlayerInner publication={ publication } localDataKey={ localDataKey } positionStorage={ positionStorage } coverUrl={ coverUrl } containerRefSetter={ containerRefSetter } mediaElementSetup={ mediaElementSetup } audioMseLoaderFactory={ audioMseLoaderFactory } />
     </ThPluginProvider>
   );
 };
 
-const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, coverUrl, containerRefSetter }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage; coverUrl?: string; containerRefSetter?: (el: Element | null) => void }) => {
+const getChildrenHeight = (container: HTMLElement): number => {
+  const children = [...container.children] as HTMLElement[];
+
+  if (children.length === 0) {
+    return 0;
+  }
+
+  const top = Math.min(
+    ...children.map(child => child.offsetTop)
+  );
+
+  const bottom = Math.max(
+    ...children.map(child => child.offsetTop + child.offsetHeight)
+  );
+
+  return bottom - top;
+}
+
+const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, coverUrl, containerRefSetter, mediaElementSetup, audioMseLoaderFactory }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage; coverUrl?: string; containerRefSetter?: (el: Element | null) => void; mediaElementSetup?: (element: HTMLMediaElement) => void | Promise<void>; audioMseLoaderFactory?: AudioMseLoaderFactory }) => {
   const { preferences } = useAudioPreferences();
   const { t } = useI18n();
   const profile = useAppSelector(state => state.reader.profile);
   const keyboardPeripherals = useAudioKeyboardPeripherals();
 
-  const wrapperRef = useRef<HTMLElement>(null);
-  const coverSectionRef = useRef<HTMLElement>(null);
-  const compactMinHeight = useRef<number>(0);
+  const [wrapperRef, setWrapperRef] = useState<HTMLElement | null>(null);
+  const [coverSectionRef, setCoverSectionRef] = useState<HTMLElement | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const sleepOnTrackEnd = useAppSelector(state => state.player.sleepTimer.onTrackEnd);
@@ -150,7 +171,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   const getFocusedDockableKey = useFocusedDockableKey();
 
   const audioNavigator = useAudioNavigator();
-  const { canGoBackward, canGoForward, submitPreferences, pause, isPlaying } = audioNavigator;
+  const { canGoBackward, canGoForward, isTrackStart, isTrackEnd, submitPreferences, pause, isPlaying } = audioNavigator;
 
   const { setLocalData, getLocalData } = usePositionStorage(localDataKey, positionStorage);
 
@@ -229,17 +250,13 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     positionChanged: (locator) => {
       setLocalData(locator);
 
-      if (canGoBackward()) {
-        dispatch(setPublicationStart(false));
-      } else {
-        dispatch(setPublicationStart(true));
-      }
-
-      if (canGoForward()) {
-        dispatch(setPublicationEnd(false));
-      } else {
-        dispatch(setPublicationEnd(true));
-      }
+      // canGoBackward/canGoForward only express whether another *track*
+      // exists, which conflates "on the last track" with "at the end of the
+      // publication" which is incorrect for single-file audiobooks (e.g. m4b), where
+      // they are false from the first second. isTrackStart/isTrackEnd also
+      // require the playback position to actually be at the boundary.
+      dispatch(setPublicationStart(!canGoBackward() && isTrackStart()));
+      dispatch(setPublicationEnd(!canGoForward() && isTrackEnd()));
     },
     trackLoaded: () => {
       dispatch(setTrackReady(true));
@@ -306,7 +323,7 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       }
     },
     contextMenu: (_data: ContextMenuEvent) => {}
-  }), [setLocalData, canGoBackward, canGoForward, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay, profile, getFocusedDockableKey]);
+  }), [setLocalData, canGoBackward, canGoForward, isTrackStart, isTrackEnd, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay, profile, getFocusedDockableKey]);
 
   const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
 
@@ -318,15 +335,17 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     cache,
     contentProtectionConfig: resolveAudioContentProtectionConfig(preferences.contentProtection, t),
     keyboardPeripherals,
+    mediaElementSetup,
+    mseLoaderFactory: audioMseLoaderFactory,
     onNavigatorLoaded: () => dispatch(setLoading(false)),
   });
 
-  const { compact, expanded } = preferences.theming.layout;
+  const { compact, expanded, breakpoint, constraints } = preferences.theming.layout;
 
   const renderPlayerComponent = useCallback((component: ThAudioPlayerComponent) => {
     switch (component) {
       case ThAudioPlayerComponent.cover:
-        return <StatefulAudioCover key={ component } ref={ coverSectionRef } coverUrl={ coverUrl } title={ publication?.metadata?.title?.getTranslation("en") } />;
+        return <StatefulAudioCover key={ component } ref={ setCoverSectionRef } coverUrl={ coverUrl } title={ publication?.metadata?.title?.getTranslation("en") } />;
       case ThAudioPlayerComponent.metadata:
         return publication ? <StatefulAudioMetadata key={ component } publication={ publication } /> : null;
       case ThAudioPlayerComponent.playbackControls:
@@ -365,44 +384,45 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     return nodes;
   }, [compact.order, renderPlayerComponent]);
 
+
+  const maxCoverHeight = constraints?.cover;
+  const [constraintsCover, setConstraintsCover] = useState<number | undefined>(undefined);
   useEffect(() => {
-    const el = wrapperRef.current;
-    if (!el) return;
+    const el = wrapperRef;
+    const coverEl = coverSectionRef;
+    if (!el || !coverEl || !breakpoint) return;
 
-    const check = debounce(() => {
-      if (!isExpanded) {
-        const overflow = el.scrollHeight - el.clientHeight;
-        if (overflow > 0) {
-          const coverEl = coverSectionRef.current;
-          if (coverEl) {
-            const minHeight = parseFloat(getComputedStyle(coverEl).minHeight) || 0;
-            const newMaxHeight = coverEl.clientHeight - overflow;
-            if (newMaxHeight >= minHeight) {
-              el.style.setProperty("--th-layout-constraints-cover", `${ newMaxHeight }px`);
-              return;
-            }
-          }
-          el.style.removeProperty("--th-layout-constraints-cover");
-          compactMinHeight.current = el.scrollHeight;
-          setIsExpanded(true);
-        } else {
-          el.style.removeProperty("--th-layout-constraints-cover");
-        }
-      } else {
-        if (el.clientHeight > compactMinHeight.current) {
-          setIsExpanded(false);
-        }
+    const updateLayout = () => {
+      const isExpanded = el.clientHeight < breakpoint;
+      setIsExpanded(isExpanded);
+
+      if (isExpanded) {
+        setConstraintsCover(undefined);
+        return;
       }
-    }, 100);
 
+      const elStyle = getComputedStyle(el);
+      const padding = parseFloat(elStyle.paddingTop) + parseFloat(elStyle.paddingBottom);
+      const maxContentHeight = el.clientHeight - padding;
+      const contentHeight = getChildrenHeight(el);
+      const overflow = contentHeight - maxContentHeight;
+      const minHeight = parseFloat(getComputedStyle(coverEl).minHeight) || 0;
+      const newMaxHeight = coverEl.clientHeight - overflow;
+      const constrainedMaxHeight = Math.min(maxCoverHeight ?? newMaxHeight, newMaxHeight);
+      setConstraintsCover(Math.max(minHeight, constrainedMaxHeight));
+    };
+
+    const check = debounce(updateLayout, 100);
     const observer = new ResizeObserver(check);
 
     observer.observe(el);
+    updateLayout();
+    
     return () => {
       check.clear();
       observer.disconnect();
     };
-  }, [isExpanded]);
+  }, [breakpoint, coverSectionRef, wrapperRef, maxCoverHeight]);
 
   return (
     <>
@@ -416,8 +436,9 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
             />
 
             <article
-              ref={ wrapperRef }
+              ref={ setWrapperRef }
               className={ isExpanded ? audioStyles.audioPlayerWrapperExpanded : audioStyles.audioPlayerWrapper }
+              style={{ "--th-layout-constraints-cover": constraintsCover && `${ constraintsCover }px`} as CSSProperties}
             >
               { isExpanded ? (
                 <>
