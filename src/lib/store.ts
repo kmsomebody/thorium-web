@@ -217,6 +217,10 @@ const migrateKeysStateToProfileKeyed = (state: Record<string, unknown>): Actions
 };
 
 const loadState = (storageKey: string = DEFAULT_STORAGE_KEY): Record<string, unknown> => {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
   try {
     const resolvedKey = storageKey || DEFAULT_STORAGE_KEY;
     const serializedState = localStorage.getItem(resolvedKey);
@@ -280,6 +284,10 @@ const loadState = (storageKey: string = DEFAULT_STORAGE_KEY): Record<string, unk
 };
 
 const saveState = (state: any, storageKey?: string, externalReducers: Record<string, ExternalReducerConfig> = {}) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
   try {
     const resolvedKey = storageKey || DEFAULT_STORAGE_KEY;
     
