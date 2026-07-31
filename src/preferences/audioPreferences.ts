@@ -157,6 +157,7 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
       constraints?: {
         [key in ThAudioConstraintKeys]?: number | null;
       };
+      breakpoint?: number;
     };
     breakpoints: BreakpointsMap<number | null>;
     themes: {
