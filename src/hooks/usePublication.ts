@@ -20,14 +20,12 @@ import {
   setScriptMode,
   setPositionsList,
   setHasDisplayTransformability,
-  setTocTree,
 } from "@/lib/publicationReducer";
 import { getScriptMode } from "@readium/navigator";
-import { buildTocTree } from "@/helpers/buildTocTree";
 import { setReaderProfile, ReaderProfile } from "@/lib/readerReducer";
-import { ensureProfileActions } from "@/lib/actionsReducer";
-import { deserializePositions } from "@/helpers/deserializePositions";
+import { serializePositions } from "@/helpers/serializePositions";
 import { ErrorHandler, ProcessedError } from "@/helpers/errorHandler";
+import { ensureProfileActions } from "@/lib";
 
 export interface UsePublicationOptions {
   url: string;
@@ -181,23 +179,12 @@ export const usePublication = ({
             if (detectedProfile === "epub") {
               try {
                 const rawPositions = await pub.positionsFromManifest();
-                const positionsList = deserializePositions(rawPositions);
-                dispatch(setPositionsList(positionsList));
+                const positionsList = serializePositions(rawPositions);
+                dispatch(setPositionsList(positionsList ?? []));
               } catch (error) {
                 console.error("Failed to fetch positions:", error);
                 dispatch(setPositionsList([]));
               }
-            }
-
-            // For audio, build the TOC tree from the publication
-            if (detectedProfile === "audio") {
-              const tocLinks = manifestObj.toc?.items && manifestObj.toc.items.length > 0
-                ? manifestObj.toc.items
-                : manifestObj.readingOrder?.items || [];
-              const publicationTitle = manifestObj.metadata.title.getTranslation("en");
-              let idCounter = 0;
-              const idGenerator = () => `toc-${ ++idCounter }`;
-              dispatch(setTocTree(buildTocTree(tocLinks, idGenerator, undefined, publicationTitle)));
             }
 
             setPublication(pub);
@@ -247,8 +234,8 @@ export const usePublication = ({
       const fetchPositions = async () => {
         try {
           const positionsList = await publication.positionsFromManifest();
-          const deserializedPositionsList = deserializePositions(positionsList);
-          dispatch(setPositionsList(deserializedPositionsList));
+          const deserializedPositionsList = serializePositions(positionsList);
+          dispatch(setPositionsList(deserializedPositionsList ?? []));
         } catch (error) {
           console.error("Failed to fetch positions:", error);
           dispatch(setPositionsList([]));
@@ -272,7 +259,7 @@ export const usePublication = ({
               totalProgression: n > 0 ? i / n : 0
             }));
           }
-          dispatch(setPositionsList(deserializePositions(positionsList)));
+          dispatch(setPositionsList(serializePositions(positionsList)));
         } catch (error) {
           console.error("Failed to fetch positions:", error);
           dispatch(setPositionsList([]));
