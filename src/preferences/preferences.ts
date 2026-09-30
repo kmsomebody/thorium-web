@@ -28,6 +28,7 @@ import {
   ThPaginatedAffordancePref,
   ThScrollAffordance,
   ThDockingPref,
+  ThDockingSizeValue,
   ThSettingsGroupPref,
   ValidatedLanguageCollection,
 } from "./models";
@@ -155,7 +156,7 @@ export interface ThIconPref {
 }
 
 export interface ThLayoutDefaultsPref {
-  dockingWidth: number;
+  dockingWidth: ThDockingSizeValue;
   scrim: string;
 }
 
