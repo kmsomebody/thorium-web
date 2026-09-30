@@ -1,5 +1,20 @@
-allowBuilds:
-  esbuild: true
-  sharp: true
-  unrs-resolver: true
-blockExoticSubdeps: false
+ignoreScripts: true
+
+manage-package-manager-versions: true
+
+minimumReleaseAge: 4320 # 3 days
+minimumReleaseAgeExclude:
+  - "@readium/*"
+blockExoticSubdeps: true
+trustPolicy: no-downgrade
+# undici's 5.x maintenance line was never wired into npm provenance attestation,
+# unlike its 6.x/7.x mainline releases from the same maintainer (matteo.collina) -
+# a publish-pipeline gap, not a trust downgrade.
+trustPolicyExclude:
+  - "undici"
+  - "chokidar"
+  - "eslint-import-resolver-typescript"
+  - "react-redux"
+  - "reselect"
+  - "semver"
+  - "undici-types"

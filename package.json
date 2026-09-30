@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/edrlab/thorium-web/issues"
   },
-  "version": "1.5.6",
+  "version": "1.5.7",
   "private": false,
   "files": [
     "./dist"
@@ -49,9 +49,16 @@
     "./webpub": "./dist/components/WebPub/index.mjs",
     "./webpub/styles": "./dist/components/WebPub/index.css"
   },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.1.0",
+      "onFail": "warn"
+    }
+  },
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm extract-locales && next build",
+    "build": "next build",
     "build:analyze": "npx next experimental-analyze",
     "start": "next start",
     "lint": "eslint .",
@@ -59,10 +66,9 @@
     "preinstall": "npx only-allow pnpm",
     "copy-locales": "cpx \"public/locales/**/*\" dist/locales",
     "copy-fonts": "cpx \"public/fonts/**/*\" dist/fonts",
-    "extract-locales": "node scripts/extract-locales.mjs",
     "check-locales": "node scripts/check-locales.mjs",
-    "update-locales": "pnpm remove @edrlab/thorium-locales && pnpm add @edrlab/thorium-locales@github:edrlab/thorium-locales && pnpm extract-locales && pnpm check-locales --summary --show-missing",
-    "bundle": "pnpm extract-locales && tsup --config tsup.config.ts && pnpm copy-locales && pnpm copy-fonts",
+    "update-locales": "node scripts/update-locales.mjs && pnpm check-locales --summary --show-missing",
+    "bundle": "tsup --config tsup.config.ts && pnpm copy-locales && pnpm copy-fonts",
     "increment": "node scripts/increment.mjs"
   },
   "peerDependencies": {
@@ -86,7 +92,6 @@
     "react-stately": "^3.44.0"
   },
   "dependencies": {
-    "@edrlab/thorium-locales": "github:edrlab/thorium-locales",
     "@readium/css": "^2.0.5",
     "@readium/navigator": "^2.8.0",
     "@readium/navigator-html-injectables": "^2.6.3",
@@ -128,6 +133,5 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "wrangler": "4.107.1"
-  },
-  "packageManager": "pnpm@10.28.2"
+  }
 }
