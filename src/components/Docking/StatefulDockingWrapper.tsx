@@ -336,7 +336,7 @@ export const StatefulDockingWrapper = ({
           />
         }
 
-        <Panel id="main-panel">
+        <Panel id="main-panel" style={{ overflow: "hidden" }}>
           { children }
         </Panel>
 
