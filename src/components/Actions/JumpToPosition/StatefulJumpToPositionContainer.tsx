@@ -11,6 +11,7 @@ import { StatefulSheetWrapper } from "../../Sheets/StatefulSheetWrapper";
 import { ThForm } from "@/core/Components/Form/ThForm";
 import { ThFormNumberField } from "@/core/Components/Form/Fields/ThFormNumberField";
 
+import { Locator } from "@readium/shared";
 import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
 import { useDocking } from "../../Docking/hooks/useDocking";
 import { useI18n } from "@/i18n/useI18n";
@@ -33,7 +34,7 @@ export const StatefulJumpToPositionContainer = ({
   // haven't changed; compare by value so the reset effect below doesn't clobber
   // user input mid-typing
   const positionNumbers = useAppSelector(
-    state => state.publication.unstableTimeline?.progression?.currentPositions,
+    state => state.publication.progress?.progression?.currentPositions,
     (a, b) => a === b || (!!a && !!b && a.length === b.length && a.every((v, i) => v === b[i]))
   );
 
@@ -88,13 +89,19 @@ export const StatefulJumpToPositionContainer = ({
 
     setErrorMessage(undefined); // Clear previous errors
 
-    const item = positionsList.find(item => item.locations.position === position);
+    const item = positionsList.find(item => item.locations?.position === position);
 
     if (!item) {
       setErrorMessage(t("reader.jumpToPosition.error.notFound"));
       return;
     }
-    
+
+    const locator = Locator.deserialize(item);
+    if (!locator) {
+      setErrorMessage(t("reader.jumpToPosition.error.notFound"));
+      return;
+    }
+
     if (positionInRange()) return setOpen(false);
 
     const cb = () => {
@@ -102,8 +109,8 @@ export const StatefulJumpToPositionContainer = ({
       dispatch(setImmersive(true));
       dispatch(setUserNavigated(true));
     };
-    
-    go(item, !reducedMotion, cb);
+
+    go(locator, !reducedMotion, cb);
   }, [position, positionsList, reducedMotion, t, positionInRange, go, setOpen, dispatch]);
 
   // Since we are using an intermediary local state, we must keep track when positionNumbers changes

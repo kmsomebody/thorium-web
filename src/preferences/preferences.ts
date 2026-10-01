@@ -26,7 +26,9 @@ import {
   ThOverlayClassNamesPref,
   ThFormatPref,
   ThPaginatedAffordancePref,
+  ThScrollAffordance,
   ThDockingPref,
+  ThDockingSizeValue,
   ThSettingsGroupPref,
   ValidatedLanguageCollection,
 } from "./models";
@@ -154,7 +156,7 @@ export interface ThIconPref {
 }
 
 export interface ThLayoutDefaultsPref {
-  dockingWidth: number;
+  dockingWidth: ThDockingSizeValue;
   scrim: string;
 }
 
@@ -237,6 +239,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
       toggleOnMiddlePointer: Array<"tap" | "click">;
       hideOnForwardScroll: boolean;
       showOnBackwardScroll: boolean;
+      affordance: ThScrollAffordance;
     },
     paginated: {
       reflow: ThPaginatedAffordancePref;

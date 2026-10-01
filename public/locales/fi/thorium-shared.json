@@ -29,6 +29,9 @@
         "actions": {
             "goBackward": "Siirry taaksepäin",
             "goForward": "Siirry eteenpäin",
+            "goToExtendedDescription": {
+                "compact": "Pitkä kuvaselostus"
+            },
             "goToNextChapter": {
                 "compact": "Seuraava",
                 "descriptive": "Seuraava luku"
@@ -64,6 +67,9 @@
             "goToPreviousSentence": {
                 "compact": "Edellinen",
                 "descriptive": "Edellinen lause"
+            },
+            "readAloud": {
+                "compact": "Luenta"
             }
         },
         "annotations": {

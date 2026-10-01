@@ -10,7 +10,7 @@ import { ThPluginRegistry } from "../Plugins/PluginRegistry";
 import { ThPluginProvider } from "../Plugins/PluginProvider";
 import { NavigatorProvider } from "@/core/Navigator";
 
-import { Publication } from "@readium/shared";
+import { Locator, Publication } from "@readium/shared";
 import { ContextMenuEvent, SuspiciousActivityEvent } from "@readium/navigator-html-injectables";
 import { fromActionPeripheralType, fromDockingPeripheralType } from "@/helpers/peripherals";
 import { AudioMseLoaderFactory, AudioNavigatorListeners, KeyboardPeripheralEventData } from "@readium/navigator";
@@ -46,10 +46,10 @@ import { ThDockingKeys } from "@/preferences/models";
 import {
   setPublicationStart,
   setPublicationEnd,
-  setTocEntry,
-  setAdjacentTimelineItems,
 } from "@/lib/publicationReducer";
-import { findTocItemByHref, TocItem } from "@/helpers/buildTocTree";
+import { useTocTreeBuilder } from "@/core/Hooks/useTocTreeBuilder";
+import { useTimelineAdjacency } from "@/core/Hooks/useTimelineAdjacency";
+import { useTocEntryTracking } from "@/components/Actions/Toc/useTocEntryTracking";
 import { isWebKit } from "@/helpers/browser";
 import { TimelineItem } from "@readium/shared";
 import { 
@@ -171,34 +171,23 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   const getFocusedDockableKey = useFocusedDockableKey();
 
   const audioNavigator = useAudioNavigator();
-  const { canGoBackward, canGoForward, isTrackStart, isTrackEnd, submitPreferences, pause, isPlaying } = audioNavigator;
+  const { canGoBackward, canGoForward,  isTrackStart, isTrackEnd, submitPreferences, pause, isPlaying, timeline: getNavigatorTimeline } = audioNavigator;
 
   const { setLocalData, getLocalData } = usePositionStorage(localDataKey, positionStorage);
 
   const documentTitle = publication?.metadata?.title?.getTranslation("en");
   useDocumentTitle(documentTitle);
 
-  const tocTree = useAppSelector(state => state.publication.unstableTimeline?.toc?.tree);
-  const tocTreeRef = useRef<TocItem[] | undefined>(undefined);
-  useEffect(() => {
-    tocTreeRef.current = tocTree;
-  }, [tocTree]);
+  const tocTree = useAppSelector(state => state.publication.toc?.tree);
+
+  const { updateAdjacentItems, clearAdjacentItems } = useTimelineAdjacency(getNavigatorTimeline);
+  const { updateCurrentTocEntry, clearCurrentTocEntry } = useTocEntryTracking(getNavigatorTimeline, tocTree);
 
   // Callback to handle timeline navigation state updates
   const handleTimelineNavigation = useCallback((item: TimelineItem) => {
-    const tl = publication.timeline;
-    const link = tl.linkFor(item);
-    if (link) {
-      const matched = findTocItemByHref(tocTreeRef.current || [], link.href);
-      dispatch(setTocEntry(matched || null));
-    }
-    const { previous, next } = tl.adjacentTo(item);
-    dispatch(setAdjacentTimelineItems({
-      previous: previous ? { title: previous.title, href: tl.linkFor(previous)?.href ?? "" } : null,
-      next: next ? { title: next.title, href: tl.linkFor(next)?.href ?? "" } : null,
-    }));
-    return { previous, next };
-  }, [dispatch, publication]);
+    updateAdjacentItems(item);
+    updateCurrentTocEntry(item);
+  }, [updateAdjacentItems, updateCurrentTocEntry]);
 
   // Callback to check if affordance is timeline or toc (fragment-based)
   const isFragmentAffordance = useCallback((affordance: string) => {
@@ -228,14 +217,14 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
   const listeners: AudioNavigatorListeners = useMemo(() => ({
     timelineItemChanged: (item: TimelineItem | undefined) => {
       if (!item) {
-        dispatch(setTocEntry(null));
-        dispatch(setAdjacentTimelineItems({ previous: null, next: null }));
+        clearCurrentTocEntry();
+        clearAdjacentItems();
         return;
       }
 
       // Capture the previous "next" item from cache BEFORE handleTimelineNavigation updates Redux state
       const previousNextItem = cache.current.adjacentTimelineItems.next;
-      const currentItemHref = publication.timeline.linkFor(item)?.href ?? "";
+      const currentItemHref = getNavigatorTimeline()?.linkFor(item)?.href ?? "";
 
       // Update TOC entry and adjacent items (this updates Redux state)
       handleTimelineNavigation(item);
@@ -316,18 +305,24 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
       const dockingKey = fromDockingPeripheralType(data.type);
 
       if (dockingKey && profile) {
-        const actionKey = getFocusedDockableKey(dockingKey as ThDockingKeys);
-        if (actionKey) {
-          dispatch(dockAction({ key: actionKey, dockingKey: dockingKey as ThDockingKeys, profile }));
+        const focused = getFocusedDockableKey(dockingKey as ThDockingKeys);
+        if (focused) {
+          dispatch(dockAction({ key: focused.key, dockingKey: dockingKey as ThDockingKeys, profile, reserved: focused.reserved }));
         }
       }
     },
     contextMenu: (_data: ContextMenuEvent) => {}
-  }), [setLocalData, canGoBackward, canGoForward, isTrackStart, isTrackEnd, isPlaying, dispatch, cache, submitPreferences, publication, handleTimelineNavigation, handleSleepTimerEndOfFragment, handleContinuousPlay, profile, getFocusedDockableKey]);
+  }), [setLocalData, canGoBackward, canGoForward, isTrackStart, isTrackEnd, isPlaying, dispatch, cache, submitPreferences, getNavigatorTimeline, handleTimelineNavigation, clearCurrentTocEntry, clearAdjacentItems, handleSleepTimerEndOfFragment, handleContinuousPlay, profile, getFocusedDockableKey]);
 
-  const initialPosition = useMemo(() => getLocalData(), [getLocalData]);
+  // getLocalData() returns a plain JSON.parse()'d object on cold load (not yet a real
+  // Locator instance) — the navigator calls Timeline.locate() on this at startup, which
+  // needs real prototype methods (.time(), etc.), so deserialize it here at the point of use.
+  const initialPosition = useMemo(() => {
+    const stored = getLocalData();
+    return stored ? (Locator.deserialize(stored) ?? null) : null;
+  }, [getLocalData]);
 
-  useAudioPlayerInit({
+  const { navigatorReady } = useAudioPlayerInit({
     publication,
     initialPosition,
     listeners,
@@ -339,6 +334,8 @@ const StatefulPlayerInner = ({ publication, localDataKey, positionStorage, cover
     mseLoaderFactory: audioMseLoaderFactory,
     onNavigatorLoaded: () => dispatch(setLoading(false)),
   });
+
+  useTocTreeBuilder(publication, navigatorReady, getNavigatorTimeline);
 
   const { compact, expanded, breakpoint, constraints } = preferences.theming.layout;
 

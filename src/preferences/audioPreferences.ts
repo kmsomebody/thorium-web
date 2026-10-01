@@ -14,11 +14,13 @@ import {
   ThSettingsTimerPref,
   ThBackLinkPref,
   ThDockingPref,
+  ThDockingSizeValue,
   ThOverlayClassNamesPref,
   ThAudioPlayerComponent,
   ThAudioProgressBarVariant,
   ThAudioPublicationMetadataComponent,
   ThPublicationMetadataOrder,
+  ThNavigationAffordance,
 } from "./models";
 import { AudioContentProtectionConfig } from "./models/protection";
 import {
@@ -33,11 +35,8 @@ export type AudioCustomizableKeys = {
   theme?: string;
 };
 
-export enum ThAudioAffordance {
-  "timeline" = "timeline",
-  "readingOrder" = "readingOrder",
-  "toc" = "toc"
-};
+export const ThAudioAffordance = ThNavigationAffordance;
+export type ThAudioAffordance = ThNavigationAffordance;
 
 export type ThAudioThemeKeys = ThThemeKeys.light | ThThemeKeys.dark;
 
@@ -151,7 +150,7 @@ export interface ThAudioPreferences<K extends AudioCustomizableKeys = {}> {
         variant?: ThAudioProgressBarVariant;
       };
       defaults: {
-        dockingWidth: number;
+        dockingWidth: ThDockingSizeValue;
         scrim: string;
       };
       constraints?: {

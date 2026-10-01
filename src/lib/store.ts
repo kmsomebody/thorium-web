@@ -113,15 +113,15 @@ const updateActionsState = (state: Record<string, unknown>) : ActionsReducerStat
           key,
           {
             ...value,
-            // Transient/undocked actions should never re-open on load
-            // Docked actions reset to null so useDocking re-establishes open state
-            // based on the actual breakpoint at load time (avoids opening docked
-            // sheets in fullscreen/compact where docking is unavailable)
+            // Transient/undocked actions should never re-open on load.
+            // Docked actions keep whatever isOpen the user last left them
+            // with — useDocking only fills the gap when isOpen was never
+            // set (see docked.reopenOnLoad), and separately guards against
+            // a remembered "open" leaking into a breakpoint where docking
+            // isn't even available
             isOpen: (value?.docking === ThDockingKeys.transient || value?.docking == null)
               ? false
-              : (value?.docking === ThDockingKeys.start || value?.docking === ThDockingKeys.end)
-                ? null
-                : value?.isOpen,
+              : value?.isOpen,
           },
         ])
       );
@@ -141,9 +141,7 @@ const updateActionsState = (state: Record<string, unknown>) : ActionsReducerStat
           ...value,
           isOpen: (value?.docking === ThDockingKeys.transient || value?.docking == null)
             ? false
-            : (value?.docking === ThDockingKeys.start || value?.docking === ThDockingKeys.end)
-              ? null
-              : value?.isOpen,
+            : value?.isOpen,
         },
       ])
     );
@@ -164,8 +162,8 @@ const migrateDockStateToProfileKeyed = (state: Record<string, unknown>): Actions
       // Migrate to new profile-keyed format, only for epub profile
       const newDock: any = {};
       newDock["epub"] = {
-        [ThDockingKeys.start]: oldDock[ThDockingKeys.start] || { actionKey: null, active: false, collapsed: false },
-        [ThDockingKeys.end]: oldDock[ThDockingKeys.end] || { actionKey: null, active: false, collapsed: false }
+        [ThDockingKeys.start]: oldDock[ThDockingKeys.start] || { actionKey: null, active: false },
+        [ThDockingKeys.end]: oldDock[ThDockingKeys.end] || { actionKey: null, active: false }
       };
       return {
         ...state,

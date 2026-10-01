@@ -29,6 +29,9 @@
         "actions": {
             "goBackward": "Go backward",
             "goForward": "Go forward",
+            "goToExtendedDescription": {
+                "compact": "Extended description"
+            },
             "goToNextChapter": {
                 "compact": "Next",
                 "descriptive": "Next chapter"
@@ -64,6 +67,9 @@
             "goToPreviousSentence": {
                 "compact": "Previous",
                 "descriptive": "Previous sentence"
+            },
+            "readAloud": {
+                "compact": "Read aloud"
             }
         },
         "annotations": {
