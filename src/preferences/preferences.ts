@@ -117,7 +117,7 @@ export interface ThActionsPref<K extends CustomizableKeys> {
   reflowOrder: Array<ActionKey<K>>;
   fxlOrder: Array<ActionKey<K>>;
   webPubOrder: Array<ActionKey<K>>;
-  divinaOrder?: Array<ActionKey<K>>;
+  divinaOrder: Array<ActionKey<K>>;
   collapse: ThCollapsibility;
   keys: Record<ActionKey<K>, ThActionsTokens>;
 };
@@ -222,7 +222,6 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     themes: {
       reflowOrder: Array<ThemeKey<K> | "auto">;
       fxlOrder: Array<ThemeKey<K> | "auto">;
-      divinaOrder?: Array<ThemeKey<K> | "auto">;
       systemThemes?: {
         light: ThemeKey<K>;
         dark: ThemeKey<K>;
@@ -244,6 +243,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     paginated: {
       reflow: ThPaginatedAffordancePref;
       fxl: ThPaginatedAffordancePref;
+      divina: ThPaginatedAffordancePref;
     }
   };
   actions: ThActionsPref<K>;
@@ -253,7 +253,7 @@ export interface ThPreferences<K extends CustomizableKeys = {}> {
     reflowOrder: Array<SettingsKey<K>>;
     fxlOrder: Array<SettingsKey<K>>;
     webPubOrder: Array<SettingsKey<K>>;
-    divinaOrder?: Array<SettingsKey<K>>;
+    divinaOrder: Array<SettingsKey<K>>;
     keys: ThSettingsKeyTypes<K>;
     text: ThSettingsGroupPref<TextSettingsKey<K>>;
     spacing: ThSettingsGroupPref<SpacingSettingsKey<K>> & { presets?: ThSettingsSpacingPresets<K> };
@@ -275,7 +275,7 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
         params.actions.reflowOrder as Array<ActionKey<K>>,
         params.actions.fxlOrder as Array<ActionKey<K>>,
         params.actions.webPubOrder as Array<ActionKey<K>>,
-        ...(params.actions.divinaOrder ? [params.actions.divinaOrder as Array<ActionKey<K>>] : []),
+        params.actions.divinaOrder as Array<ActionKey<K>>,
       ],
       params.actions.keys as Record<string, ThActionsTokens>,
       "actions"
@@ -288,7 +288,6 @@ export const createPreferences = <K extends CustomizableKeys = {}>(
       [
         params.theming.themes.reflowOrder as Array<ThemeKey<K> | "auto">,
         params.theming.themes.fxlOrder as Array<ThemeKey<K> | "auto">,
-        ...(params.theming.themes.divinaOrder ? [params.theming.themes.divinaOrder as Array<ThemeKey<K> | "auto">] : []),
       ],
       params.theming.themes.keys as Record<string, ThemeTokens>,
       "theming.themes",

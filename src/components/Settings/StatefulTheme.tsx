@@ -14,8 +14,7 @@ import { ThActionsKeys, ThLayoutDirection } from "@/preferences/models";
 import { StatefulRadioGroup } from "./StatefulRadioGroup";
 import { Radio } from "react-aria-components";
 
-import { useEpubNavigator } from "@/core/Hooks/Epub/useEpubNavigator";
-import { useDivinaNavigator } from "@/core/Hooks/Divina/useDivinaNavigator";
+import { useNavigator } from "@/core/Navigator";
 import { useI18n } from "@/i18n/useI18n";
 import { useGridNavigation } from "@/components/Settings/hooks/useGridNavigation";
 
@@ -29,7 +28,7 @@ import { buildThemeObject } from "@/preferences/helpers/buildThemeObject";
 export const StatefulTheme = () => {
   const profile = useAppSelector(state => state.reader.profile);
   const { theming } = useSharedPreferences();
-  const { systemThemes, keys: themeKeys, audioOrder: audioThemeOrder, reflowOrder: reflowThemeOrder, fxlOrder: fxlThemeOrder, divinaOrder: divinaThemeOrder } = theming.themes;
+  const { systemThemes, keys: themeKeys, audioOrder: audioThemeOrder, reflowOrder: reflowThemeOrder, fxlOrder: fxlThemeOrder } = theming.themes;
   const { t } = useI18n();
 
   const radioGroupRef = useRef<HTMLDivElement | null>(null);
@@ -39,17 +38,19 @@ export const StatefulTheme = () => {
   const direction = useAppSelector(state => state.reader.direction);
   const isRTL = direction === ThLayoutDirection.rtl;
 
+  // Divina shares the fxl theme order and slot
+  const usesFXLTheme = isFXL || profile === "divina";
+
   const themeArray: (ThemeKeyType | "auto")[] = profile === "audio"
     ? ((audioThemeOrder ?? []) as (ThemeKeyType | "auto")[])
-    : profile === "divina"
-      ? ((divinaThemeOrder ?? []) as (ThemeKeyType | "auto")[])
-      : (isFXL
-          ? ((fxlThemeOrder ?? []) as (ThemeKeyType | "auto")[])
-          : ((reflowThemeOrder ?? []) as (ThemeKeyType | "auto")[]));
+    : (usesFXLTheme
+        ? ((fxlThemeOrder ?? []) as (ThemeKeyType | "auto")[])
+        : ((reflowThemeOrder ?? []) as (ThemeKeyType | "auto")[]));
 
   const themeObject = useAppSelector(state => state.theming.theme);
-  // Divina shares the fxl theme slot
-  const theme = profile === "audio" ? (themeObject.audio ?? "auto") : (isFXL || profile === "divina" ? (themeObject.fxl ?? "auto") : (themeObject.reflow ?? "auto"));
+  const theme = profile === "audio"
+    ? (themeObject.audio ?? "auto")
+    : (usesFXLTheme ? (themeObject.fxl ?? "auto") : (themeObject.reflow ?? "auto"));
   const colorScheme = useAppSelector(state => state.theming.colorScheme);
   const coverTheme = useAppSelector(state => state.publication.coverTheme);
 
@@ -90,8 +91,7 @@ export const StatefulTheme = () => {
     }
   })
 
-  const { submitPreferences } = useEpubNavigator();
-  const { submitPreferences: submitDivinaPreferences } = useDivinaNavigator();
+  const readerNavigator = useNavigator();
 
   const updatePreference = useCallback(async (value: ThemeKeyType | "auto") => {
     const themeProps = buildThemeObject<typeof value>({
@@ -100,18 +100,16 @@ export const StatefulTheme = () => {
       systemThemes: systemThemes as { light: ThemeKeyType; dark: ThemeKeyType } | undefined,
       colorScheme
     })
-    if (profile === "divina") {
-      await submitDivinaPreferences(themeProps);
-    } else {
-      await submitPreferences(themeProps);
+    // Audio has no visual navigator, its theme only lives in the store
+    if (profile !== "audio") {
+      await readerNavigator.visual.submitPreferences(themeProps);
     }
 
     dispatch(setTheme({
-      // Divina shares the fxl theme slot
-      key: profile === "audio" ? "audio" : (isFXL || profile === "divina" ? "fxl" : "reflow"),
+      key: profile === "audio" ? "audio" : (usesFXLTheme ? "fxl" : "reflow"),
       value: value
     }));
-  }, [isFXL, themeKeys, systemThemes, submitPreferences, submitDivinaPreferences, dispatch, colorScheme, profile]);
+  }, [usesFXLTheme, themeKeys, systemThemes, readerNavigator, dispatch, colorScheme, profile]);
 
   // It's easier to inline styles from preferences for these
   // than spamming the entire app with all custom properties right now

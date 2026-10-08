@@ -171,7 +171,30 @@ const migrateDockStateToProfileKeyed = (state: Record<string, unknown>): Actions
       } as ActionsReducerState;
     }
   }
-  return state as ActionsReducerState;
+
+  if (!state.dock) {
+    return state as ActionsReducerState;
+  }
+
+  const dock = state.dock as any;
+
+  const emptyProfileDock = () => ({
+    [ThDockingKeys.start]: { actionKey: null, active: false },
+    [ThDockingKeys.end]: { actionKey: null, active: false }
+  });
+
+  // Ensure all profile docks exist even if some are missing
+  const migratedDock: any = {
+    epub: dock.epub || emptyProfileDock(),
+    webPub: dock.webPub || emptyProfileDock(),
+    audio: dock.audio || emptyProfileDock(),
+    divina: dock.divina || emptyProfileDock()
+  };
+
+  return {
+    ...state,
+    dock: migratedDock
+  } as ActionsReducerState;
 };
 
 const migrateKeysStateToProfileKeyed = (state: Record<string, unknown>): ActionsReducerState => {

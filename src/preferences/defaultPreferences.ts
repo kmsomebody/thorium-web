@@ -262,11 +262,6 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         ThThemeKeys.light,
         ThThemeKeys.dark
       ],
-      divinaOrder: [
-        "auto",
-        ThThemeKeys.light,
-        ThThemeKeys.dark
-      ],
       systemThemes: {
         light: ThThemeKeys.light,
         dark: ThThemeKeys.dark
@@ -311,6 +306,13 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
         // Note FXL arrows are always layered
         // FXL navigator is using the window width to calculate the layout
         // so we need to force the layered variant to prevent layout issues
+        default: {
+          variant: ThArrowVariant.layered,
+          discard: ["navigation"],
+          hint: "none"
+        }
+      },
+      divina: {
         default: {
           variant: ThArrowVariant.layered,
           discard: ["navigation"],
@@ -405,7 +407,7 @@ export const defaultPreferences: ThPreferences<DefaultKeys> = createPreferences<
     ],
     divinaOrder: [
       ThSettingsKeys.theme,
-      ThSettingsKeys.divinaLayout,
+      ThSettingsKeys.layout,
       ThSettingsKeys.divinaSpreads,
       ThSettingsKeys.divinaStripWidth,
       ThSettingsKeys.divinaQuality

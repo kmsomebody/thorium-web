@@ -15,7 +15,8 @@ import {
   ThDockingKeys,
   ThLayoutDirection,
   ThLayoutUI,
-  ThProgressionFormat
+  ThProgressionFormat,
+  ThSettingsKeys
 } from "../../preferences/models";
 
 import { ThPluginRegistry } from "../Plugins/PluginRegistry";
@@ -44,6 +45,7 @@ import { PositionStorage, StatefulReaderProps } from "../Reader/StatefulReaderWr
 
 import { usePreferences } from "@/preferences/hooks/usePreferences";
 import { useDivinaReaderInit } from "./Hooks/useReaderInit";
+import { usePaginatedArrows } from "@/hooks/usePaginatedArrows";
 import { useDivinaNavigator } from "@/core/Hooks/Divina/useDivinaNavigator";
 import { useFullscreen } from "@/core/Hooks/useFullscreen";
 import { usePrevious } from "@/core/Hooks/usePrevious";
@@ -51,6 +53,8 @@ import { useI18n } from "@/i18n/useI18n";
 import { usePositionStorage } from "@/hooks";
 
 import { toggleActionOpen, dockAction } from "@/lib/actionsReducer";
+import { setDivinaScrolled } from "@/lib/divinaSettingsReducer";
+import { useSettingsComponentStatus } from "@/components/Settings/hooks/useSettingsComponentStatus";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
 import { useFocusedDockableKey } from "../Docking/hooks/useFocusedDockableKey";
 
@@ -83,6 +87,8 @@ import { getPlatformModifier } from "@/core/Helpers/keyboardUtilities";
 import { getReaderClassNames } from "../Helpers/getReaderClassNames";
 import { resolveContentProtectionConfig } from "@/preferences/models/protection";
 import { usePublicationProgress } from "@/core/Hooks";
+import { useDocumentTitle } from "@/core/Hooks/useDocumentTitle";
+import { resolveDocumentTitle } from "@/helpers/resolveDocumentTitle";
 import { useTimelineAdjacency } from "@/core/Hooks/useTimelineAdjacency";
 import { useTocEntryTracking } from "@/components/Actions/Toc/useTocEntryTracking";
 import { useTocTreeBuilder } from "@/core/Hooks/useTocTreeBuilder";
@@ -125,12 +131,14 @@ export const StatefulDivinaReader = ({
 };
 
 const StatefulReaderInner = ({ publication, localDataKey, positionStorage, containerRefSetter }: { publication: Publication; localDataKey: string | null; positionStorage?: PositionStorage; containerRefSetter?: (el: Element | null) => void }) => {
-  const { divinaActionKeys, divinaThemeKeys } = useFilteredPreferenceKeys();
+  const { divinaActionKeys, fxlThemeKeys } = useFilteredPreferenceKeys();
   const { preferences } = usePreferences();
+  const { occupySpace: arrowsOccupySpace } = usePaginatedArrows();
   const { direction: uiDirection } = useLocale();
   const { t } = useI18n();
 
   const container = useRef<HTMLDivElement>(null);
+  const arrowsWidth = useRef(2 * ((preferences.theming.arrow.size || 40) + (preferences.theming.arrow.offset || 0)));
 
   const isRTL = useAppSelector(state => state.publication.isRTL);
   const positionsList = useAppSelector(state => state.publication.positionsList);
@@ -204,7 +212,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
   const { updateAdjacentItems, clearAdjacentItems } = useTimelineAdjacency(getNavigatorTimeline);
   const { updateCurrentTocEntry, clearCurrentTocEntry } = useTocEntryTracking(getNavigatorTimeline, tocTree);
 
-  usePublicationProgress({
+  const timeline = usePublicationProgress({
     publication: publication,
     getNavigatorTimeline,
     currentTimelineItem,
@@ -215,6 +223,8 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
       dispatch(setProgress(progress));
     }
   });
+
+  useDocumentTitle(resolveDocumentTitle(preferences.metadata?.documentTitle?.format, timeline, t));
 
   const activateImmersiveOnAction = useCallback(() => {
     if (!cache.current.isImmersive) dispatch(setImmersive(true));
@@ -318,7 +328,8 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
       updatePublicationNavigationState();
     }, 250), [setLocalData, updatePublicationNavigationState]);
 
-  useEffect(() => () => debouncedHandleProgression.clear(), [debouncedHandleProgression]);
+  // Flush rather than clear so a position change right before unmount is still saved
+  useEffect(() => () => debouncedHandleProgression.flush(), [debouncedHandleProgression]);
 
   const listeners: Partial<DivinaNavigatorListeners> = useMemo(() => ({
     positionChanged: function (locator: Locator): void {
@@ -449,6 +460,8 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
     publication,
     initialPosition,
     listeners,
+    arrowsOccupySpace,
+    arrowsWidth,
     contentProtectionConfig: resolveContentProtectionConfig(preferences.contentProtection, t),
     onNavigatorReady: () => {
       dispatch(setLoading(false));
@@ -457,12 +470,37 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
 
   useTocTreeBuilder(publication, navigatorReady, getNavigatorTimeline);
 
+  const applyConstraint = useCallback(async (value: number) => {
+    await submitPreferences({
+      constraint: value
+    })
+  }, [submitPreferences]);
+
+  useLayoutEffect(() => {
+    if (!navigatorReady) return;
+
+    applyConstraint(arrowsOccupySpace ? arrowsWidth.current : 0)
+      .catch(console.error);
+  }, [arrowsOccupySpace, applyConstraint, navigatorReady]);
+
   // Keep the effective layout in sync with the navigator, including
   // natively scrolled publications (webtoons) that force scrolled mode
   useEffect(() => {
     if (!navigatorReady) return;
     setIsScroll(getSetting("scrolled") ?? false);
   }, [navigatorReady, scrolledPref, getSetting]);
+
+  const { isComponentUsed: isLayoutUsed } = useSettingsComponentStatus({
+    settingsKey: ThSettingsKeys.layout,
+    publicationType: "divina",
+  });
+
+  // Without the layout setting the stored preference isn't submitted,
+  // so the store must reflect what the navigator actually applies
+  useEffect(() => {
+    if (!navigatorReady || isLayoutUsed) return;
+    dispatch(setDivinaScrolled(getSetting("scrolled")));
+  }, [navigatorReady, isLayoutUsed, getSetting, dispatch]);
 
   // Theme can also change on colorScheme change so
   // we have to handle this side-effect but we can’t
@@ -477,7 +515,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
     if (theme !== "auto" && previousTheme !== theme) return;
 
     const applyCurrentTheme = async () => {
-      const themeKey = divinaThemeKeys.includes(theme as any) ? theme : "auto";
+      const themeKey = fxlThemeKeys.includes(theme as any) ? theme : "auto";
       const themeProps = buildThemeObject<ThemeKeyType>({
         theme: themeKey,
         themeKeys: preferences.theming.themes.keys,
@@ -493,7 +531,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
 
     applyCurrentTheme()
       .catch(console.error);
-  }, [themeObject, previousTheme, preferences.theming.themes, divinaThemeKeys, colorScheme, submitPreferences, dispatch, navigatorReady]);
+  }, [themeObject, previousTheme, preferences.theming.themes, fxlThemeKeys, colorScheme, submitPreferences, dispatch, navigatorReady]);
 
   useLayoutEffect(() => {
     dispatch(setDirection(uiDirection as ThLayoutDirection));
@@ -521,7 +559,7 @@ const StatefulReaderInner = ({ publication, localDataKey, positionStorage, conta
           >
             <StatefulReaderHeader
               actionKeys={ divinaActionKeys }
-              actionsOrder={ preferences.actions.divinaOrder ?? preferences.actions.fxlOrder }
+              actionsOrder={ preferences.actions.divinaOrder }
               layout={ layoutUI }
               runningHeadFormatPref={ preferences.theming.header?.runningHead?.format?.divina }
             />
